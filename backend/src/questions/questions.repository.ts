@@ -1,6 +1,6 @@
 import { Question } from './questions.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { QuestionDto } from './interfaces/question.dto';
+import { QuestionDto } from './interfaces/questions.dto';
 
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
