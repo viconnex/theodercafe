@@ -6,16 +6,21 @@ import { QuestionsModule } from './questions/questions.module';
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            host: '127.0.0.1',
-            port: 5432,
-            username: 'the',
-            password: 'cafe',
-            database: 'theodercafe',
-            entities: [__dirname + 'backend/src/**/*.entity{.ts,.js}'],
-            synchronize: true,
-        }),
+        TypeOrmModule
+            .forRoot
+            //     {
+            //     keepConnectionAlive: true,
+            //     type: 'postgres',
+            //     host: '127.0.0.1',
+            //     port: 5432,
+            //     username: 'the',
+            //     password: 'cafe',
+            //     database: 'theodercafe',
+            //     entities: [Questions],
+            //     synchronize: true,
+            // }
+            // ),
+            (),
         QuestionsModule,
     ],
     controllers: [AppController],
