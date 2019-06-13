@@ -1,7 +1,6 @@
 import { Questions } from './questions.entity';
 import { EntityRepository, Repository, DeleteResult } from 'typeorm';
 import { QuestionsDto } from './interfaces/questions.dto';
-import { Question } from 'dist/questions/questions.entity';
 
 @EntityRepository(Questions)
 export class QuestionRepository extends Repository<Questions> {
@@ -10,14 +9,14 @@ export class QuestionRepository extends Repository<Questions> {
     };
 
     findOneQuestion = async (id: string): Promise<Questions> => {
-        return this.findOne(Number(id));
+        return this.findOne(id);
     };
 
-    updateQuestion = async (id: string, questionsDto: QuestionsDto): Promise<Question> => {
+    updateQuestion = async (id: string, questionsDto: QuestionsDto): Promise<Questions> => {
         return this.save({ ...questionsDto, id: Number(id) });
     };
 
-    removeQuestion = async (id: string): Promise<DeleteResult> => {
+    deleteQuestion = async (id: string): Promise<DeleteResult> => {
         return this.delete(Number(id));
     };
 }
