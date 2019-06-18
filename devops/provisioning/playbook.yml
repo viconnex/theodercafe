@@ -1,0 +1,17 @@
+---
+
+- hosts: all
+  gather_facts: False
+
+  tasks:
+  - name: install python 2
+    raw: sudo bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)"
+
+- name: Provisioning the web server
+  hosts: all
+  become: true
+  roles:
+    # - geerlingguy.nginx
+    # - geerlingguy.nodejs
+    # - geerlingguy.postgresql
+    # - geerlingguy.certbot
