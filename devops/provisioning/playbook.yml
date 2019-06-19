@@ -17,6 +17,5 @@
     - ubuntu-apt
     - certbot
     - nginx
-    # - geerlingguy.nodejs
+    - geerlingguy.nodejs
     # - geerlingguy.postgresql
-    # - geerlingguy.certbot
