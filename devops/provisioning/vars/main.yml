@@ -1,0 +1,16 @@
+---
+#PUT here your main variable
+project_name: theodercafe
+apt_specific_packages:
+  - git
+
+update_apt_cache: yes
+
+# List of databases to be created
+postgresql_databases:
+  - name: theodercafe
+
+# List of users to be created
+postgresql_users:
+  - name: the
+    password: cafe

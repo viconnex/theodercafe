@@ -1,2 +1,2 @@
 [prod]
-theodercafe.com  ansible_ssh_user=ubuntu
+theodercafe.com  ansible_ssh_user=root
