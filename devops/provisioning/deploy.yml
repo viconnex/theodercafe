@@ -17,4 +17,4 @@
     raw: "cd theodercafe && git fetch && git reset --hard origin/master"
 
   - name: Restart backend
-    raw: "cd theodercafe/backend && npm install && npm run build && npm run migration:run && pm2 restart npm"
+    raw: "cd theodercafe/backend && npm install && npm run migration:run && pm2 restart main"
