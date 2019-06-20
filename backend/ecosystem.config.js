@@ -2,10 +2,9 @@ module.exports = {
     apps: [
         {
             name: 'main',
-            script: 'src/mains.ts',
-
+            script: 'npm -- start',
             // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
-            args: '',
+            args: 'one two',
             instances: 1,
             autorestart: true,
             watch: false,
