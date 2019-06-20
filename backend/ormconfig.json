@@ -11,6 +11,6 @@
        "src/**/*.entity.ts", "src/*.entity.ts"
     ],
     "migrations": [
-       "src/migration/*.ts"
+       "migration/*.ts"
     ]
 }

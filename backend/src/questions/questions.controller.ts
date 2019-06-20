@@ -1,16 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, NotFoundException } from '@nestjs/common';
 import { QuestionsDto } from './interfaces/questions.dto';
-import { QuestionRepository } from './questions.repository';
-import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult } from 'typeorm';
 import { QuestionsService } from './questions.service';
 
 @Controller('questions')
 export class QuestionsController {
-    constructor(
-        @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
-        private readonly questionsService: QuestionsService,
-    ) {}
+    constructor(private readonly questionsService: QuestionsService) {}
 
     @Post()
     create(@Body() questionsDto: QuestionsDto): Promise<QuestionsDto> {
