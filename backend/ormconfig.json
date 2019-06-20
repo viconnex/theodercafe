@@ -1,0 +1,16 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "the",
+    "password": "cafe",
+    "database": "theodercafe",
+    "synchronize": false,
+    "logging": false,
+    "entities": [
+       "src/**/*.entity.ts", "src/*.entity.ts"
+    ],
+    "migrations": [
+       "src/migration/*.ts"
+    ]
+}
