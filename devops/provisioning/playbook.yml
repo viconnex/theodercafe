@@ -15,7 +15,7 @@
   roles:
     - create-www-data-user
   # - ubuntu-apt
-    - certbot
     - nginx
+    - certbot
     - geerlingguy.nodejs
     - geerlingguy.postgresql

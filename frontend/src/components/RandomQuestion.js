@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import config from '../utils/config.json';
 
-const API = 'http://localhost:4000/';
 const DEFAULT_QUERY = 'questions';
 
 class RandomQuestion extends Component {
@@ -9,7 +9,7 @@ class RandomQuestion extends Component {
   };
 
   componentDidMount() {
-    fetch(API + DEFAULT_QUERY)
+    fetch(config[process.env.NODE_ENV].BACKEND_URL + DEFAULT_QUERY)
       .then(response => response.json())
       .then(data => this.setState({ questions: data }));
   }

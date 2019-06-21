@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
+require('dotenv').config();
+
 async function bootstrap(): Promise<void> {
-    console.log(process.env.NODE_ENV);
+    console.log('node_env', process.env.NODE_ENV);
+    console.log('front base url', process.env.FRONT_BASE_URL);
     const app = await NestFactory.create(AppModule);
-    app.enableCors({ credentials: true, origin: 'http://localhost:3000' });
-    app.enableCors({ credentials: true, origin: 'theodercafe.com' });
+    app.enableCors({ credentials: true, origin: process.env.FRONT_BASE_URL });
     await app.listen(4000);
 }
 bootstrap();
