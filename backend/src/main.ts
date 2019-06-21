@@ -5,7 +5,7 @@ async function bootstrap(): Promise<void> {
     console.log(process.env.NODE_ENV);
     const app = await NestFactory.create(AppModule);
     app.enableCors({ credentials: true, origin: 'http://localhost:3000' });
-    app.enableCors({ credentials: true, origin: 'https://theodercafe.com' });
+    app.enableCors({ credentials: true, origin: 'theodercafe.com' });
     await app.listen(4000);
 }
 bootstrap();
