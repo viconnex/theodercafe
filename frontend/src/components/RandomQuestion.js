@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import config from '../utils/config.json';
+import { API_BASE_URL } from '../utils/constants';
 
 const DEFAULT_QUERY = 'questions';
 
@@ -9,7 +9,8 @@ class RandomQuestion extends Component {
   };
 
   componentDidMount() {
-    fetch(config[process.env.NODE_ENV].BACKEND_URL + DEFAULT_QUERY)
+    console.log(API_BASE_URL);
+    fetch(API_BASE_URL + DEFAULT_QUERY)
       .then(response => response.json())
       .then(data => this.setState({ questions: data }));
   }
