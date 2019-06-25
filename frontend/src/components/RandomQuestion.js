@@ -4,10 +4,6 @@ import { API_BASE_URL } from '../utils/constants';
 const DEFAULT_QUERY = 'questions';
 
 class RandomQuestion extends Component {
-  state = {
-    questions: [],
-  };
-
   componentDidMount() {
     console.log(API_BASE_URL);
     fetch(API_BASE_URL + DEFAULT_QUERY)
@@ -15,6 +11,9 @@ class RandomQuestion extends Component {
       .then(data => this.setState({ questions: data }));
   }
 
+  state = {
+    questions: [],
+  };
   randomQuestionIndex = () => {};
 
   render() {

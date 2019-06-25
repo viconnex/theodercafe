@@ -4,7 +4,7 @@ module.exports = {
     node: true,
     es6: true,
   },
-  extends: ['eslint:recommended', 'react-app', 'prettier', 'prettier/react'],
+  extends: ['eslint:recommended', 'react', 'prettier', 'prettier/react'],
   parserOptions: {
 		ecmaVersion: 2019,
     es6: true,
@@ -22,6 +22,6 @@ module.exports = {
     'react/prefer-stateless-function': 0,
     'react/prop-types': 0,
     'react/require-default-props': 0,
-    'react/no-array-index-key': 1
+    'react/no-array-index-key': 1,
   },
 };
