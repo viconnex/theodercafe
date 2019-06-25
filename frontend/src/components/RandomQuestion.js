@@ -5,7 +5,7 @@ const DEFAULT_QUERY = 'questions';
 
 class RandomQuestion extends Component {
   state = {
-    questions: []
+    questions: [],
   };
 
   componentDidMount() {
@@ -15,10 +15,18 @@ class RandomQuestion extends Component {
       .then(data => this.setState({ questions: data }));
   }
 
+  randomQuestionIndex = () => {};
+
   render() {
-    return this.state.questions.length > 0
-    ? <p>{`${this.state.questions[0].option1} ou ${this.state.questions[0].option2} ?`}</p>
-    :  <p>Pas de question</p>
+    if (this.state.questions.length === 0) return null;
+
+    const randomQuestionIndex = Math.floor(
+      Math.random() * this.state.questions.length,
+    );
+
+    return (
+      <p>{`${this.state.questions[randomQuestionIndex].option1} ou ${this.state.questions[randomQuestionIndex].option2} ?`}</p>
+    );
   }
 }
 
