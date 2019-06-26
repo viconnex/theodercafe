@@ -1,7 +1,7 @@
-import { Categories } from 'src/categories/categories.entity';
+import { Category } from 'src/categories/category.entity';
 
 export class QuestionsDto {
-    readonly category: Categories;
+    readonly category: Category;
     readonly option1: string;
     readonly option2: string;
 }

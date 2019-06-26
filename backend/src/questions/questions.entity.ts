@@ -1,13 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
-import { Categories } from '../categories/categories.entity';
+import { Category } from '../categories/category.entity';
 
 @Entity()
 export class Questions {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => Categories, category => category.questions)
-    category: Categories;
+    @ManyToOne(type => Category, category => category.questions)
+    category: Category;
 
     @Column()
     option1: string;

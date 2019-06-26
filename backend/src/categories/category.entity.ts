@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Questions } from '../questions/questions.entity';
 
-@Entity()
-export class Categories {
+@Entity('categories')
+export class Category {
     @PrimaryGeneratedColumn()
     id: number;
 
