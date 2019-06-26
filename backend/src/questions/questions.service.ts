@@ -13,7 +13,7 @@ export class QuestionsService {
     }
 
     findAll(): Promise<QuestionsDto[]> {
-        return this.questionRepository.find();
+        return this.questionRepository.find({ relations: ['category'] });
     }
 
     findOne(id: string): Promise<QuestionsDto> {

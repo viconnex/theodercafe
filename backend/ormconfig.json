@@ -12,5 +12,10 @@
     ],
     "migrations": [
        "migration/*.ts"
-    ]
+    ],
+    "cli": {
+      "entitiesDir":"src",
+      "migrationsDir": "migration",
+      "subscribersDir": "subscriber"
+   }
 }

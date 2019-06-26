@@ -8,9 +8,9 @@
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "tslint -p tsconfig.json -c tslint.json",
-    "migration:generate": "ts-node node_modules/.bin/typeorm migration:generate",
+    "migration:generate": "yarn run typeorm migration:generate -n",
     "migration:revert": "ts-node node_modules/.bin/typeorm migration:revert",
-    "migration:run": "ts-node node_modules/.bin/typeorm migration:run",
+    "migration:run": "yarn run typeorm migration:run",
     "prestart:prod": "rimraf dist && npm run build",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:debug": "nodemon --config nodemon-debug.json",
@@ -20,7 +20,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@nestjs/common": "^6.0.0",

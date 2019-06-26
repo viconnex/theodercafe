@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { Categories } from '../categories/categories.entity';
 
 @Entity()
 export class Questions {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ nullable: true })
-    category: string;
+    @ManyToOne(type => Categories, category => category.questions)
+    category: Categories;
 
     @Column()
     option1: string;
