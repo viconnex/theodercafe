@@ -4,7 +4,7 @@ import { QuestionsDto } from './interfaces/questions.dto';
 
 @EntityRepository(Questions)
 export class QuestionRepository extends Repository<Questions> {
-    createQuestion = async (questionsDto: QuestionsDto): Promise<QuestionsDto & Questions> => {
+    createQuestion = async (questionsDto: QuestionsDto | Questions): Promise<QuestionsDto & Questions> => {
         return this.save(questionsDto);
     };
 
