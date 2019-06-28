@@ -1,4 +1,4 @@
-import { Category } from 'src/categories/category.entity';
+import { Category } from 'src/category/category.entity';
 
 export class QuestionDto {
     readonly category: Category;

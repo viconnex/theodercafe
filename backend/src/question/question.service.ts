@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { QuestionRepository } from './question.repository';
-import { CategoryRepository } from '../categories/category.repository';
+import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult } from 'typeorm';
