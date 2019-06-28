@@ -1,20 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { QuestionRepository } from './questions.repository';
+import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../categories/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QuestionsDto } from './interfaces/questions.dto';
+import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult } from 'typeorm';
-import { Questions } from './questions.entity';
-import { Category } from '../categories/category.entity';
 
 @Injectable()
-export class QuestionsService {
+export class QuestionService {
     constructor(
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
     ) {}
 
-    async create(questionBody): Promise<QuestionsDto> {
+    async create(questionBody): Promise<QuestionDto> {
         let category = null;
 
         if (questionBody.categoryId) {
@@ -37,16 +35,16 @@ export class QuestionsService {
         return this.questionRepository.save(question);
     }
 
-    findAll(): Promise<QuestionsDto[]> {
+    findAll(): Promise<QuestionDto[]> {
         return this.questionRepository.find({ relations: ['category'] });
     }
 
-    findOne(id: string): Promise<QuestionsDto> {
+    findOne(id: string): Promise<QuestionDto> {
         return this.questionRepository.findOneQuestion(id);
     }
 
-    update(id: string, questionsDto: QuestionsDto): Promise<QuestionsDto> {
-        return this.questionRepository.updateQuestion(id, questionsDto);
+    update(id: string, questionDto: QuestionDto): Promise<QuestionDto> {
+        return this.questionRepository.updateQuestion(id, questionDto);
     }
 
     delete(id: string): Promise<DeleteResult> {

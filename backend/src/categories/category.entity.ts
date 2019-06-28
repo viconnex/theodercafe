@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { Questions } from '../questions/questions.entity';
+import { Question } from '../question/question.entity';
 
 @Entity('categories')
 export class Category {
@@ -9,8 +9,8 @@ export class Category {
     @Column({ unique: true })
     name: string;
 
-    @OneToMany(type => Questions, question => question.category)
-    questions: Questions[];
+    @OneToMany(type => Question, question => question.category)
+    question: Question[];
 
     @CreateDateColumn()
     createdAt: string;

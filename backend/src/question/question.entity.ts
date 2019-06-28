@@ -1,12 +1,12 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { Category } from '../categories/category.entity';
 
-@Entity()
-export class Questions {
+@Entity('questions')
+export class Question {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(type => Category, category => category.questions)
+    @ManyToOne(type => Category, category => category.question)
     category: Category;
 
     @Column()
