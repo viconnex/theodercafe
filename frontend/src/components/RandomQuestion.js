@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 import { API_BASE_URL } from '../utils/constants';
 
 const DEFAULT_QUERY = 'questions';
+
+const style = {
+  categoryContainer: {
+    marginBottom: '35px',
+  },
+  categoryTitle: {
+    fontSize: '18px',
+  },
+  categoryContent: {
+    fontSize: '16px',
+    fontStyle: 'italic',
+  },
+};
 
 class RandomQuestion extends Component {
   componentDidMount() {
@@ -22,15 +37,23 @@ class RandomQuestion extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     if (this.state.questions.length === 0) return null;
 
+    const question = this.state.questions[this.state.questionIndex];
     return (
       <div>
-        <p>{`${this.state.questions[this.state.questionIndex].option1} ou ${this.state.questions[this.state.questionIndex].option2} ?`}</p>
+        <div className={classes.categoryContainer}>
+          <div className={classes.categoryTitle}>Catégorie</div>
+          <p className={classes.categoryContent}>
+            {question.category ? question.category.name : 'hors catégorie'}
+          </p>
+        </div>
+        <p>{`${question.option1} ou ${question.option2} ?`}</p>
         <button onClick={this.changeQuestion}>Suivant</button>
       </div>
     );
   }
 }
 
-export default RandomQuestion;
+export default withStyles(style)(RandomQuestion);
