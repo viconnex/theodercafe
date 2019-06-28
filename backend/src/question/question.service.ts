@@ -14,7 +14,6 @@ export class QuestionService {
 
     async create(questionBody): Promise<QuestionDto> {
         let category = null;
-
         if (questionBody.categoryId) {
             category = await this.categoryRepository.findOne(questionBody.categoryId);
         } else if (questionBody.categoryName) {

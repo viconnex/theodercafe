@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
 import { API_BASE_URL } from '../utils/constants';
+import AddQuestionDialog from './AddQuestionDialog';
 
 const DEFAULT_QUERY = 'questions';
 
@@ -16,6 +18,17 @@ const style = {
     fontSize: '16px',
     fontStyle: 'italic',
   },
+  addButton: {
+    position: 'absolute',
+    bottom: '30px',
+    right: '30px',
+  },
+  matAddbut: {
+    backgroundColor: 'white',
+  },
+  modal: {
+    padding: '30px',
+  },
 };
 
 class RandomQuestion extends Component {
@@ -26,6 +39,7 @@ class RandomQuestion extends Component {
   }
 
   state = {
+    addQuestionDialog: false,
     questions: [],
     questionIndex: 0,
   };
@@ -35,6 +49,9 @@ class RandomQuestion extends Component {
   changeQuestion = () => {
     this.setState({ questionIndex: this.getRandomIndex() });
   };
+
+  openModal = () => this.setState({ addQuestionDialog: true });
+  closeModal = () => this.setState({ addQuestionDialog: false });
 
   render() {
     const { classes } = this.props;
@@ -51,6 +68,14 @@ class RandomQuestion extends Component {
         </div>
         <p>{`${question.option1} ou ${question.option2} ?`}</p>
         <button onClick={this.changeQuestion}>Suivant</button>
+        <Fab className={classes.addButton} size="small">
+          <AddIcon onClick={this.openModal} />
+        </Fab>
+        <AddQuestionDialog
+          className={classes.modal}
+          open={this.state.addQuestionDialog}
+          onClose={this.closeModal}
+        />
       </div>
     );
   }
