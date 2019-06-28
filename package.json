@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/victorbrun/theodercafe/issues"
   },
-  "homepage": "https://theodercafe.com"
+  "homepage": "https://theodercafe.com",
+  "dependencies": {
+    "@material-ui/icons": "^4.2.1"
+  }
 }
