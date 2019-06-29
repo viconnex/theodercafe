@@ -20,7 +20,7 @@
     raw: "cd theodercafe/backend && npm install && npm run migration:run && pm2 restart main"
 
   - name: Build frontend
-    raw: "cd theodercafe/frontend && npm i && npm run build"
+    raw: "cd theodercafe/frontend && npm install && npm run build"
 
   - name: Copy final build in the served folder
     raw: "cp -r theodercafe/frontend/build/. theodercafe/frontend/build-prod"
