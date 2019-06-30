@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
+import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
 import { API_BASE_URL } from '../utils/constants';
 import AddQuestionDialog from './AddQuestionDialog';
-
+import { IconButton } from '@material-ui/core';
 const DEFAULT_QUERY = 'questions';
 
 const style = {
@@ -24,7 +25,10 @@ const style = {
     padding: '5px',
   },
   questionPart: {
-    margingBottom: '5px',
+    marginBottom: '5px',
+  },
+  nextButton: {
+    color: 'white',
   },
   addButton: {
     position: 'absolute',
@@ -79,7 +83,9 @@ class RandomQuestion extends Component {
           <div className={classes.questionPart}> ou </div>
           <div>{`${question.option2} ?`}</div>
         </div>
-        <button onClick={this.changeQuestion}>Suivant</button>
+        <IconButton classes={{ root: classes.nextButton }} onClick={this.changeQuestion}>
+          <ArrowIcon />
+        </IconButton>
         <Fab className={classes.addButton} size="small">
           <AddIcon onClick={this.openModal} />
         </Fab>
