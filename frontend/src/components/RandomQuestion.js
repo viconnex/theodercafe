@@ -13,10 +13,18 @@ const style = {
   },
   categoryTitle: {
     fontSize: '18px',
+    marginBottom: '5px',
   },
   categoryContent: {
     fontSize: '16px',
     fontStyle: 'italic',
+  },
+  questionContainer: {
+    fontSize: '18px',
+    padding: '5px',
+  },
+  questionPart: {
+    margingBottom: '5px',
   },
   addButton: {
     position: 'absolute',
@@ -62,11 +70,15 @@ class RandomQuestion extends Component {
       <div>
         <div className={classes.categoryContainer}>
           <div className={classes.categoryTitle}>Catégorie</div>
-          <p className={classes.categoryContent}>
+          <div className={classes.categoryContent}>
             {question.category ? question.category.name : 'hors catégorie'}
-          </p>
+          </div>
         </div>
-        <p>{`${question.option1} ou ${question.option2} ?`}</p>
+        <div className={classes.questionContainer}>
+          <div className={classes.questionPart}>{question.option1}</div>
+          <div className={classes.questionPart}> ou </div>
+          <div>{`${question.option2} ?`}</div>
+        </div>
         <button onClick={this.changeQuestion}>Suivant</button>
         <Fab className={classes.addButton} size="small">
           <AddIcon onClick={this.openModal} />
