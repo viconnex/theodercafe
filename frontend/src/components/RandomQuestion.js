@@ -3,10 +3,9 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
-import { API_BASE_URL } from '../utils/constants';
+import { API_BASE_URL, QUESTION_QUERY } from '../utils/constants';
 import AddQuestionDialog from './AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
-const DEFAULT_QUERY = 'questions';
 
 const style = {
   categoryContainer: {
@@ -45,7 +44,7 @@ const style = {
 
 class RandomQuestion extends Component {
   componentDidMount() {
-    fetch(API_BASE_URL + DEFAULT_QUERY)
+    fetch(API_BASE_URL + QUESTION_QUERY)
       .then(response => response.json())
       .then(data => this.setState({ questions: data }));
   }
@@ -60,6 +59,10 @@ class RandomQuestion extends Component {
 
   changeQuestion = () => {
     this.setState({ questionIndex: this.getRandomIndex() });
+  };
+
+  addQuestion = (option1, option2, category) => {
+    this.state.questions.push({ option1, option2, category });
   };
 
   openModal = () => this.setState({ addQuestionDialog: true });
@@ -93,6 +96,7 @@ class RandomQuestion extends Component {
           className={classes.modal}
           open={this.state.addQuestionDialog}
           onClose={this.closeModal}
+          addQuestion={this.addQuestion}
         />
       </div>
     );

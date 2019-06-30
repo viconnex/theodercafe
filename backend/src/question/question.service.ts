@@ -14,10 +14,10 @@ export class QuestionService {
 
     async create(questionBody): Promise<QuestionDto> {
         let category = null;
-        if (questionBody.categoryId) {
-            category = await this.categoryRepository.findOne(questionBody.categoryId);
-        } else if (questionBody.categoryName) {
-            category = this.categoryRepository.create({ name: questionBody.categoryName });
+        if (typeof questionBody.category === 'number') {
+            category = await this.categoryRepository.findOne(questionBody.category);
+        } else if (typeof questionBody.category === 'string') {
+            category = this.categoryRepository.create({ name: questionBody.category });
             try {
                 await this.categoryRepository.save(category);
             } catch (err) {

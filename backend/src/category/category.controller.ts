@@ -9,6 +9,6 @@ export class CategoryController {
 
     @Get()
     findAll(): Promise<Category[]> {
-        return this.categoryRepository.find({ select: ['name'], order: { name: 'ASC' } });
+        return this.categoryRepository.find({ select: ['id', 'name'], order: { name: 'ASC' } });
     }
 }

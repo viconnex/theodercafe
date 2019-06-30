@@ -9,7 +9,7 @@ export class QuestionRepository extends Repository<Question> {
     };
 
     findOneQuestion = async (id: string): Promise<Question> => {
-        return this.findOne(id);
+        return this.findOne(id, { relations: ['category'] });
     };
 
     updateQuestion = async (id: string, questionDto: QuestionDto): Promise<Question> => {
