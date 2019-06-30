@@ -35,7 +35,7 @@ export class QuestionService {
     }
 
     findAll(): Promise<QuestionDto[]> {
-        return this.questionRepository.find({ relations: ['category'] });
+        return this.questionRepository.find({ relations: ['category'], order: { id: 'ASC' } });
     }
 
     findOne(id: string): Promise<QuestionDto> {
