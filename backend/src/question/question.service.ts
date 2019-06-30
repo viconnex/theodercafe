@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,10 +21,15 @@ export class QuestionService {
             try {
                 await this.categoryRepository.save(category);
             } catch (err) {
-                console.log(err);
+                throw new HttpException(
+                    {
+                        status: 'error',
+                        error: 'The question ',
+                    },
+                    500,
+                );
             }
         }
-
         const question = this.questionRepository.create({
             category,
             option1: questionBody.option1,

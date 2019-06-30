@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { withSnackbar } from 'notistack';
 import { API_BASE_URL } from '../utils/constants';
 
 const style = {
@@ -12,6 +13,9 @@ const style = {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
+  },
+  dialogTitle: {
+    padding: '16px 5px',
   },
   separatOR: {
     textAlign: 'center',
@@ -23,7 +27,7 @@ const style = {
 };
 
 const postQuestion = async (option1, option2) => {
-  await fetch(API_BASE_URL + 'questions', {
+  const response = await fetch(API_BASE_URL + 'questions', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -31,6 +35,8 @@ const postQuestion = async (option1, option2) => {
     },
     body: JSON.stringify({ option1, option2 }),
   });
+
+  return response;
 };
 
 class AddQuestionDialog extends Component {
@@ -50,7 +56,12 @@ class AddQuestionDialog extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     if (this.state.option1 !== '' && this.state.option2 !== '') {
-      postQuestion(this.state.option1, this.state.option2);
+      const response = await postQuestion(this.state.option1, this.state.option2);
+      if (response.status !== 201) {
+        this.props.enqueueSnackbar("La question n'a pas pu être créée", { variant: 'error' });
+      } else {
+        this.props.enqueueSnackbar('Question créée !', { variant: 'success' });
+      }
     }
   };
 
@@ -59,21 +70,23 @@ class AddQuestionDialog extends Component {
     return (
       <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open}>
         <div className={classes.dialog}>
-          <DialogTitle>Une question ?</DialogTitle>
+          <DialogTitle className={classes.dialogTitle}>Une question ?</DialogTitle>
           <form onSubmit={this.handleSubmit}>
             <TextField
               id="option1"
               fullWidth
-              value={this.state.option1}
+              label="thé"
               onChange={this.handleOption1Change}
+              value={this.state.option1}
             />
             <p className={classes.separatOR}>ou</p>
             <TextField
+              className={classes.option2}
               id="option2"
               fullWidth
-              className={classes.option2}
-              value={this.state.option2}
+              label="café"
               onChange={this.handleOption2Change}
+              value={this.state.option2}
             />
             <Button type="submit">Créer une question</Button>
           </form>
@@ -83,4 +96,4 @@ class AddQuestionDialog extends Component {
   }
 }
 
-export default withStyles(style)(AddQuestionDialog);
+export default withSnackbar(withStyles(style)(AddQuestionDialog));
