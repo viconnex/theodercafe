@@ -25,16 +25,16 @@ export class QuestionController {
         return question;
     }
 
-    @Put(':id')
-    update(@Param('id') id: string, @Body() questionDto: QuestionDto): Promise<QuestionDto> {
-        return this.questionService.update(id, questionDto);
-    }
+    // @Put(':id')
+    // update(@Param('id') id: string, @Body() questionDto: QuestionDto): Promise<QuestionDto> {
+    //     return this.questionService.update(id, questionDto);
+    // }
 
-    @Delete(':id')
-    async remove(@Param('id') id: string): Promise<DeleteResult> {
-        const deleteResult = await this.questionService.delete(id);
-        if (deleteResult.affected === 0) throw new NotFoundException();
+    // @Delete(':id')
+    // async remove(@Param('id') id: string): Promise<DeleteResult> {
+    //     const deleteResult = await this.questionService.delete(id);
+    //     if (deleteResult.affected === 0) throw new NotFoundException();
 
-        return deleteResult;
-    }
+    //     return deleteResult;
+    // }
 }

@@ -3,23 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { QuestionModule } from './question/question.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forRoot(),
-        //     {
-        //     keepConnectionAlive: true,
-        //     type: 'postgres',
-        //     host: 'localhost',
-        //     port: 5432,
-        //     username: 'the',
-        //     password: 'cafe',
-        //     database: 'theodercafe',
-        //     entities: [Question],
-        //     synchronize: false,
-        // }),
-        QuestionModule,
-    ],
+    imports: [TypeOrmModule.forRoot(), QuestionModule, CategoryModule],
     controllers: [AppController],
     providers: [AppService],
 })
