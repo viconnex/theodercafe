@@ -78,7 +78,7 @@ class RandomQuestion extends Component {
         <div className={classes.categoryContainer}>
           <div className={classes.categoryTitle}>Catégorie</div>
           <div className={classes.categoryContent}>
-            {question.category ? question.category.name : 'hors catégorie'}
+            {question.categoryName ? question.categoryName : 'hors catégorie'}
           </div>
         </div>
         <div className={classes.questionContainer}>

@@ -40,7 +40,12 @@ export class QuestionService {
     }
 
     findAll(): Promise<QuestionDto[]> {
-        return this.questionRepository.query('SELECT * FROM questions ORDER BY RANDOM()');
+        return this.questionRepository.query(`
+            SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
+            FROM questions
+            LEFT JOIN categories on "questions"."categoryId"="categories"."id"
+            ORDER BY random()
+        `);
     }
 
     findOne(id: string): Promise<QuestionDto> {
