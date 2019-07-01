@@ -40,7 +40,7 @@ export class QuestionService {
     }
 
     findAll(): Promise<QuestionDto[]> {
-        return this.questionRepository.find({ relations: ['category'], order: { id: 'ASC' } });
+        return this.questionRepository.query('SELECT * FROM questions ORDER BY RANDOM()');
     }
 
     findOne(id: string): Promise<QuestionDto> {
