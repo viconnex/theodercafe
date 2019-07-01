@@ -55,10 +55,10 @@ class RandomQuestion extends Component {
     questionIndex: 0,
   };
 
-  getRandomIndex = () => Math.floor(Math.random() * this.state.questions.length);
-
-  changeQuestion = () => {
-    this.setState({ questionIndex: this.getRandomIndex() });
+  nextQuestion = () => {
+    let index = this.state.questionIndex + 1;
+    if (index >= this.state.questions.length) index = 0;
+    this.setState({ questionIndex: index });
   };
 
   addQuestion = (option1, option2, category) => {
@@ -86,7 +86,7 @@ class RandomQuestion extends Component {
           <div className={classes.questionPart}> ou </div>
           <div>{`${question.option2} ?`}</div>
         </div>
-        <IconButton classes={{ root: classes.nextButton }} onClick={this.changeQuestion}>
+        <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
           <ArrowIcon />
         </IconButton>
         <Fab className={classes.addButton} size="small">
