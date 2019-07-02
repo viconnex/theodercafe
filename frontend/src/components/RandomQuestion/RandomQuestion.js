@@ -3,8 +3,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
-import { API_BASE_URL, QUESTION_QUERY } from '../utils/constants';
-import AddQuestionDialog from './AddQuestionDialog';
+import { API_BASE_URL, QUESTION_QUERY } from 'utils/constants';
+import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
 
 const style = {

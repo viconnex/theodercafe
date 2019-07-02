@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
-import { API_BASE_URL, QUESTION_QUERY, CATEGORY_QUERY } from '../utils/constants';
+import { API_BASE_URL, QUESTION_QUERY, CATEGORY_QUERY } from 'utils/constants';
 
 const style = {
   categoryTitle: {

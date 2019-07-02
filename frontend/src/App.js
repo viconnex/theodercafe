@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { SnackbarProvider } from 'notistack';
 import './App.css';
 import logo from './ui/logo/theodercafe.png';
-import RandomQuestion from './components/RandomQuestion';
+import { RandomQuestion } from './components/RandomQuestion';
 
 const style = {
   root: {
