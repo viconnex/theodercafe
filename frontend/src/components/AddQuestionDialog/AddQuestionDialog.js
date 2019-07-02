@@ -7,32 +7,7 @@ import Button from '@material-ui/core/Button';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
 import { API_BASE_URL, QUESTION_QUERY, CATEGORY_QUERY } from 'utils/constants';
-
-const style = {
-  categoryTitle: {
-    marginBottom: '10px',
-  },
-  creatable: {
-    fontSize: '14px',
-    marginBottom: '20px',
-  },
-  dialog: {
-    padding: '20px',
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  dialogTitle: {
-    padding: '16px 5px',
-  },
-  separatOR: {
-    textAlign: 'center',
-    marginBottom: 0,
-  },
-  option2: {
-    marginBottom: '30px',
-  },
-};
+import style from './style';
 
 const postQuestion = async (option1, option2, category) => {
   const response = await fetch(API_BASE_URL + QUESTION_QUERY, {
