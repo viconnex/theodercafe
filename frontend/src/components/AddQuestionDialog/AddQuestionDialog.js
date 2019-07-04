@@ -22,6 +22,8 @@ const postQuestion = async (option1, option2, category) => {
   return response;
 };
 
+const choisis = (option1, option2) => (Math.floor(Math.random() * 2) === 0 ? option1 : option2);
+
 class AddQuestionDialog extends Component {
   componentDidMount = async () => {
     this.fetchCategories(this.setState);
@@ -61,7 +63,8 @@ class AddQuestionDialog extends Component {
       this.state.categoryValue,
     );
     if (response.status === 201) {
-      this.props.enqueueSnackbar('Bonne question !', { variant: 'success' });
+      const ackResponse = choisis(this.state.option1, this.state.option2);
+      this.props.enqueueSnackbar(`${ackResponse} !`, { variant: 'success' });
       const categoryName = this.state.categoryValue ? this.state.categoryLabel : null;
       this.props.addQuestion(this.state.option1, this.state.option2, categoryName);
     } else {
@@ -100,15 +103,17 @@ class AddQuestionDialog extends Component {
               onChange={this.handleOption2Change}
               value={this.state.option2}
             />
-            <div className={classes.categoryTitle}>Category (optional)</div>
+            <div className={classes.categoryTitle}>Catégorie (optionnel)</div>
             <Creatable
               className={classes.creatable}
               options={options}
               onChange={this.handleCategoryChange}
               onInputChange={this.handleCategoryInputChange}
-              placeholder="Find or create..."
+              placeholder="Trouve ou crée..."
             />
-            <Button type="submit">Créer une question</Button>
+            <Button color="primary" type="submit">
+              Poser une question
+            </Button>
           </form>
         </div>
       </Dialog>

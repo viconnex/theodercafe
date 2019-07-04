@@ -1,6 +1,7 @@
 const style = {
   categoryTitle: {
     marginBottom: '10px',
+    textAlign: 'center',
   },
   creatable: {
     fontSize: '14px',
@@ -20,7 +21,7 @@ const style = {
     marginBottom: 0,
   },
   option2: {
-    marginBottom: '30px',
+    marginBottom: '35px',
   },
 };
 
