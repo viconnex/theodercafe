@@ -65,9 +65,7 @@ class RandomQuestion extends Component {
               <ArrowIcon />
             </IconButton>
           </div>
-        ) : (
-          <div>Thé ou café ?</div>
-        )}
+        ) : null}
         <Fab className={classes.addButton} size="small">
           <AddIcon onClick={this.openModal} />
         </Fab>
