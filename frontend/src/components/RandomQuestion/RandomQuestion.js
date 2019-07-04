@@ -32,8 +32,8 @@ class RandomQuestion extends Component {
     this.setState({ questionIndex: index });
   };
 
-  addQuestion = (option1, option2, category) => {
-    this.state.questions.push({ option1, option2, category });
+  addQuestion = (option1, option2, categoryName) => {
+    this.state.questions.push({ option1, option2, categoryName });
   };
 
   openModal = () => this.setState({ addQuestionDialog: true });
