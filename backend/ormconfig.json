@@ -7,15 +7,11 @@
     "database": "theodercafe",
     "synchronize": false,
     "logging": false,
-    "entities": [
-       "src/**/*.entity.ts", "src/*.entity.ts", "dist/**/*.entity.js"
-    ],
-    "migrations": [
-       "migration/*.ts", "dist/db/migrations/**/*.js"
-    ],
+    "entities": ["src/**/*.entity.ts", "src/*.entity.ts", "dist/**/*.entity.js"],
+    "migrations": ["migration/*.ts", "dist/db/migrations/**/*.js"],
     "cli": {
-      "entitiesDir":"src",
-      "migrationsDir": "migration",
-      "subscribersDir": "subscriber"
-   }
+        "entitiesDir": "src",
+        "migrationsDir": "migration",
+        "subscribersDir": "subscriber"
+    }
 }

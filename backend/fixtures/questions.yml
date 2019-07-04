@@ -1,0 +1,6 @@
+entity: Question
+items:
+    question{1..10}:
+        option1: '{{name.jobTitle}}'
+        option2: '{{name.jobTitle}}'
+        category: '@category*'
