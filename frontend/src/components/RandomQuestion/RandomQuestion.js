@@ -9,14 +9,19 @@ import { IconButton } from '@material-ui/core';
 import style from './style';
 
 class RandomQuestion extends Component {
-  componentDidMount() {
-    fetch(API_BASE_URL + QUESTION_QUERY)
-      .then(response => response.json())
-      .then(data => this.setState({ questions: data }));
-  }
+  componentDidMount = async () => {
+    const response = await fetch(API_BASE_URL + QUESTION_QUERY);
+    if (response.status === 500) {
+      this.setState({ fetchError: true });
+      return;
+    }
+    const data = await response.json();
+    this.setState({ questions: data });
+  };
 
   state = {
     addQuestionDialog: false,
+    fetchError: false,
     questions: [],
     questionIndex: 0,
   };
@@ -36,25 +41,33 @@ class RandomQuestion extends Component {
 
   render() {
     const { classes } = this.props;
-    if (this.state.questions.length === 0) return null;
+    if (this.state.questions.length === 0 && this.state.fetchError) {
+      return 'erreur inattendue';
+    }
 
     const question = this.state.questions[this.state.questionIndex];
     return (
       <div>
-        <div className={classes.categoryContainer}>
-          <div className={classes.categoryTitle}>Catégorie</div>
-          <div className={classes.categoryContent}>
-            {question.categoryName ? question.categoryName : 'hors catégorie'}
+        {question ? (
+          <div>
+            <div className={classes.categoryContainer}>
+              <div className={classes.categoryTitle}>Catégorie</div>
+              <div className={classes.categoryContent}>
+                {question.categoryName ? question.categoryName : 'hors catégorie'}
+              </div>
+            </div>
+            <div className={classes.questionContainer}>
+              <div className={classes.questionPart}>{question.option1}</div>
+              <div className={classes.questionPart}> ou </div>
+              <div>{`${question.option2} ?`}</div>
+            </div>
+            <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
+              <ArrowIcon />
+            </IconButton>
           </div>
-        </div>
-        <div className={classes.questionContainer}>
-          <div className={classes.questionPart}>{question.option1}</div>
-          <div className={classes.questionPart}> ou </div>
-          <div>{`${question.option2} ?`}</div>
-        </div>
-        <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
-          <ArrowIcon />
-        </IconButton>
+        ) : (
+          <div>Thé ou café ?</div>
+        )}
         <Fab className={classes.addButton} size="small">
           <AddIcon onClick={this.openModal} />
         </Fab>
