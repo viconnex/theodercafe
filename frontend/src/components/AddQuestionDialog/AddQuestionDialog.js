@@ -81,41 +81,45 @@ class AddQuestionDialog extends Component {
       value: category.id,
     }));
     return (
-      <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open}>
-        <div className={classes.dialog}>
-          <DialogTitle className={classes.dialogTitle}>Une question ?</DialogTitle>
-          <form onSubmit={this.handleSubmit}>
-            <TextField
-              required
-              id="option1"
-              fullWidth
-              label="thé"
-              onChange={this.handleOption1Change}
-              value={this.state.option1}
-            />
-            <p className={classes.separatOR}>ou</p>
-            <TextField
-              required
-              className={classes.option2}
-              id="option2"
-              fullWidth
-              label="café"
-              onChange={this.handleOption2Change}
-              value={this.state.option2}
-            />
-            <div className={classes.categoryTitle}>Catégorie (optionnel)</div>
-            <Creatable
-              className={classes.creatable}
-              options={options}
-              onChange={this.handleCategoryChange}
-              onInputChange={this.handleCategoryInputChange}
-              placeholder="Trouve ou crée..."
-            />
-            <Button color="primary" type="submit">
-              Poser une question
-            </Button>
-          </form>
-        </div>
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        onClose={onClose}
+        open={open}
+        PaperProps={{ className: classes.dialog }}
+      >
+        <DialogTitle className={classes.dialogTitle}>Une question ?</DialogTitle>
+        <form onSubmit={this.handleSubmit}>
+          <TextField
+            required
+            id="option1"
+            fullWidth
+            label="thé"
+            onChange={this.handleOption1Change}
+            value={this.state.option1}
+          />
+          <p className={classes.separatOR}>ou</p>
+          <TextField
+            required
+            className={classes.option2}
+            id="option2"
+            fullWidth
+            label="café"
+            onChange={this.handleOption2Change}
+            value={this.state.option2}
+          />
+          <div className={classes.categoryTitle}>Catégorie (optionnel)</div>
+          <Creatable
+            className={classes.creatable}
+            options={options}
+            onChange={this.handleCategoryChange}
+            onInputChange={this.handleCategoryInputChange}
+            placeholder="Trouve ou crée..."
+          />
+          <Button color="primary" type="submit">
+            Poser une question
+          </Button>
+        </form>
       </Dialog>
     );
   }

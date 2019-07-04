@@ -12,8 +12,10 @@ const style = {
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
+    overflow: 'visible',
   },
   dialogTitle: {
+    fontSize: '14px',
     padding: '16px 5px',
   },
   separatOR: {
