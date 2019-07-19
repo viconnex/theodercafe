@@ -1,0 +1,22 @@
+.plus-one {
+    align-items: center;
+    background-color: white;
+    border-radius: 50%;
+    color: black;
+    display: flex;
+    font-size: 10px;
+    height: 25px;
+    justify-content: center;
+    width: 25px;
+    animation: vanish 1s infinite;
+}
+
+@keyframes vanish {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-25px);
+    }
+}

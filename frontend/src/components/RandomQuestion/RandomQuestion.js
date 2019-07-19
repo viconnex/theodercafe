@@ -7,6 +7,7 @@ import { API_BASE_URL, QUESTION_QUERY } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
 import style from './style';
+import { PlusOne } from '../PlusOne';
 
 class RandomQuestion extends Component {
   componentDidMount = async () => {
@@ -57,6 +58,7 @@ class RandomQuestion extends Component {
               </div>
             </div>
             <div className={classes.questionContainer}>
+              <PlusOne />
               <div className={classes.questionPart}>{question.option1}</div>
               <div className={classes.questionPart}> ou </div>
               <div>{`${question.option2} ?`}</div>
