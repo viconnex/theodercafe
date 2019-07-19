@@ -23,6 +23,8 @@ class RandomQuestion extends Component {
   state = {
     addQuestionDialog: false,
     fetchError: false,
+    option1VoteTrigger: 0,
+    option2VoteTrigger: 0,
     questions: [],
     questionIndex: 0,
   };
@@ -40,6 +42,14 @@ class RandomQuestion extends Component {
   openModal = () => this.setState({ addQuestionDialog: true });
   closeModal = () => this.setState({ addQuestionDialog: false });
 
+  voteForOption1 = () => {
+    this.setState(state => ({ option1VoteTrigger: state.option1VoteTrigger + 1 }));
+  };
+
+  voteForOption2 = () => {
+    this.setState(state => ({ option2VoteTrigger: state.option2VoteTrigger + 1 }));
+  };
+
   render() {
     const { classes } = this.props;
     if (this.state.questions.length === 0 && this.state.fetchError) {
@@ -50,7 +60,7 @@ class RandomQuestion extends Component {
     return (
       <div>
         {question ? (
-          <div>
+          <div className={classes.pageContainer}>
             <div className={classes.categoryContainer}>
               <div className={classes.categoryTitle}>Catégorie</div>
               <div className={classes.categoryContent}>
@@ -58,10 +68,24 @@ class RandomQuestion extends Component {
               </div>
             </div>
             <div className={classes.questionContainer}>
-              <PlusOne />
-              <div className={classes.questionPart}>{question.option1}</div>
+              <div className={classes.optionContainer}>
+                <div onClick={this.voteForOption1} className={classes.questionPart}>
+                  <span className={classes.option}>{question.option1}</span>
+                </div>
+                {this.state.option1VoteTrigger > 0 && (
+                  <PlusOne update={this.state.option1VoteTrigger} />
+                )}
+              </div>
               <div className={classes.questionPart}> ou </div>
-              <div>{`${question.option2} ?`}</div>
+              <div className={classes.optionContainer}>
+                <div onClick={this.voteForOption2}>
+                  <span className={classes.option}>{question.option2}</span>
+                  <span> ?</span>
+                </div>
+                {this.state.option2VoteTrigger > 0 && (
+                  <PlusOne update={this.state.option2VoteTrigger} />
+                )}
+              </div>
             </div>
             <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
               <ArrowIcon />
