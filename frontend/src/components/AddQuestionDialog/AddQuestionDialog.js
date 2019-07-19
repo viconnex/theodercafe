@@ -7,17 +7,13 @@ import Button from '@material-ui/core/Button';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
 import { API_BASE_URL, QUESTION_QUERY, CATEGORY_QUERY } from 'utils/constants';
+import { fetchRequest } from 'utils/helpers';
 import style from './style';
 
 const postQuestion = async (option1, option2, category) => {
-  const response = await fetch(API_BASE_URL + QUESTION_QUERY, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ option1, option2, category }),
-  });
+  const url = API_BASE_URL + QUESTION_QUERY;
+  const body = { option1, option2, category };
+  const response = await fetchRequest(url, 'POST', body);
 
   return response;
 };

@@ -4,6 +4,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
 import { API_BASE_URL, QUESTION_QUERY } from 'utils/constants';
+import { fetchRequest } from 'utils/helpers';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
 import style from './style';
@@ -44,10 +45,20 @@ class RandomQuestion extends Component {
 
   voteForOption1 = () => {
     this.setState(state => ({ option1VoteTrigger: state.option1VoteTrigger + 1 }));
+    this.vote(1);
   };
 
   voteForOption2 = () => {
     this.setState(state => ({ option2VoteTrigger: state.option2VoteTrigger + 1 }));
+    this.vote(2);
+  };
+
+  vote = optionIndex => {
+    const questionId = this.state.questions[this.state.questionIndex].id;
+    const url = API_BASE_URL + QUESTION_QUERY + `/${questionId}/vote`;
+    const body = { optionIndex };
+
+    fetchRequest(url, 'PUT', body);
   };
 
   render() {
