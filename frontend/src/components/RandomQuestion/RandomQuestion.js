@@ -4,9 +4,11 @@ import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
 import { API_BASE_URL, QUESTION_QUERY } from 'utils/constants';
+import { fetchRequest } from 'utils/helpers';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
 import style from './style';
+import { PlusOne } from '../PlusOne';
 
 class RandomQuestion extends Component {
   componentDidMount = async () => {
@@ -22,6 +24,8 @@ class RandomQuestion extends Component {
   state = {
     addQuestionDialog: false,
     fetchError: false,
+    option1VoteTrigger: 0,
+    option2VoteTrigger: 0,
     questions: [],
     questionIndex: 0,
   };
@@ -39,6 +43,24 @@ class RandomQuestion extends Component {
   openModal = () => this.setState({ addQuestionDialog: true });
   closeModal = () => this.setState({ addQuestionDialog: false });
 
+  voteForOption1 = () => {
+    this.setState(state => ({ option1VoteTrigger: state.option1VoteTrigger + 1 }));
+    this.vote(1);
+  };
+
+  voteForOption2 = () => {
+    this.setState(state => ({ option2VoteTrigger: state.option2VoteTrigger + 1 }));
+    this.vote(2);
+  };
+
+  vote = optionIndex => {
+    const questionId = this.state.questions[this.state.questionIndex].id;
+    const url = API_BASE_URL + QUESTION_QUERY + `/${questionId}/vote`;
+    const body = { optionIndex };
+
+    fetchRequest(url, 'PUT', body);
+  };
+
   render() {
     const { classes } = this.props;
     if (this.state.questions.length === 0 && this.state.fetchError) {
@@ -49,7 +71,7 @@ class RandomQuestion extends Component {
     return (
       <div>
         {question ? (
-          <div>
+          <div className={classes.pageContainer}>
             <div className={classes.categoryContainer}>
               <div className={classes.categoryTitle}>Catégorie</div>
               <div className={classes.categoryContent}>
@@ -57,9 +79,24 @@ class RandomQuestion extends Component {
               </div>
             </div>
             <div className={classes.questionContainer}>
-              <div className={classes.questionPart}>{question.option1}</div>
+              <div className={classes.optionContainer}>
+                <div onClick={this.voteForOption1} className={classes.questionPart}>
+                  <span className={classes.option}>{question.option1}</span>
+                </div>
+                {this.state.option1VoteTrigger > 0 && (
+                  <PlusOne update={this.state.option1VoteTrigger} />
+                )}
+              </div>
               <div className={classes.questionPart}> ou </div>
-              <div>{`${question.option2} ?`}</div>
+              <div className={classes.optionContainer}>
+                <div onClick={this.voteForOption2}>
+                  <span className={classes.option}>{question.option2}</span>
+                  <span> ?</span>
+                </div>
+                {this.state.option2VoteTrigger > 0 && (
+                  <PlusOne update={this.state.option2VoteTrigger} />
+                )}
+              </div>
             </div>
             <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
               <ArrowIcon />

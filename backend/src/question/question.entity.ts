@@ -15,6 +15,12 @@ export class Question {
     @Column()
     option2: string;
 
+    @Column({ default: 0 })
+    option1Votes: number;
+
+    @Column({ default: 0 })
+    option2Votes: number;
+
     @CreateDateColumn()
     createdAt: string;
 

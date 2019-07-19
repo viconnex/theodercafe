@@ -1,0 +1,8 @@
+entity: Question
+items:
+    question{1..15}:
+        option1: '{{name.jobTitle}}'
+        option2: '{{name.jobTitle}}'
+        category: '@category*'
+        option1Votes: '{{random.number}}'
+        option2Votes: '{{random.number}}'

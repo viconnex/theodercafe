@@ -31,6 +31,18 @@ const style = {
   modal: {
     padding: '30px',
   },
+  optionContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  option: {
+    borderBottom: '0.7px dashed',
+    background: 'none',
+    border: 'none',
+  },
+  pageContainer: {
+    marginTop: '30px',
+  },
 };
 
 export default style;

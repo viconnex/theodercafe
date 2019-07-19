@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, NotFoundException } from '@nestjs/common';
 import { QuestionDto } from './interfaces/question.dto';
-import { DeleteResult } from 'typeorm';
 import { QuestionService } from './question.service';
+import { UpdateResult } from 'typeorm';
 
 @Controller('questions')
 export class QuestionController {
@@ -25,10 +25,10 @@ export class QuestionController {
         return question;
     }
 
-    // @Put(':id')
-    // update(@Param('id') id: string, @Body() questionDto: QuestionDto): Promise<QuestionDto> {
-    //     return this.questionService.update(id, questionDto);
-    // }
+    @Put(':id/vote')
+    update(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
+        return this.questionService.vote(id, voteBody.optionIndex);
+    }
 
     // @Delete(':id')
     // async remove(@Param('id') id: string): Promise<DeleteResult> {

@@ -3,7 +3,8 @@ import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { Question } from './question.entity';
 
 @Injectable()
 export class QuestionService {
@@ -58,5 +59,15 @@ export class QuestionService {
 
     delete(id: string): Promise<DeleteResult> {
         return this.questionRepository.deleteQuestion(id);
+    }
+
+    async vote(questionId: number, optionIndex: number): Promise<UpdateResult> {
+        const category = await this.questionRepository.findOne(questionId);
+        if (optionIndex === 1) {
+            return this.questionRepository.update(questionId, { option1Votes: category.option1Votes + 1 });
+        }
+        if (optionIndex === 2) {
+            return this.questionRepository.update(questionId, { option2Votes: category.option2Votes + 1 });
+        }
     }
 }
