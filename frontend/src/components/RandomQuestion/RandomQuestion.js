@@ -7,6 +7,7 @@ import { API_BASE_URL, QUESTION_QUERY } from 'utils/constants';
 import { fetchRequest } from 'utils/helpers';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
+import Chip from '@material-ui/core/Chip';
 import style from './style';
 import { PlusOne } from '../PlusOne';
 
@@ -74,9 +75,12 @@ class RandomQuestion extends Component {
           <div className={classes.pageContainer}>
             <div className={classes.categoryContainer}>
               <div className={classes.categoryTitle}>Catégorie</div>
-              <div className={classes.categoryContent}>
-                {question.categoryName ? question.categoryName : 'hors catégorie'}
-              </div>
+              <Chip
+                variant="outlined"
+                size="small"
+                label={question.categoryName ? question.categoryName : 'hors catégorie'}
+                className={classes.categoryContent}
+              />
             </div>
             <div className={classes.questionContainer}>
               <div className={classes.optionContainer}>

@@ -3,11 +3,11 @@ const style = {
     marginBottom: '35px',
   },
   categoryTitle: {
-    fontSize: '18px',
-    marginBottom: '5px',
+    fontSize: '16px',
+    marginBottom: '7px',
   },
   categoryContent: {
-    fontSize: '16px',
+    backgroundColor: 'white',
     fontStyle: 'italic',
   },
   questionContainer: {
