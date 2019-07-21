@@ -6,12 +6,12 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
-import { API_BASE_URL, QUESTION_QUERY, CATEGORY_QUERY } from 'utils/constants';
+import { API_BASE_URL } from 'utils/constants';
 import { fetchRequest } from 'utils/helpers';
 import style from './style';
 
 const postQuestion = async (option1, option2, category) => {
-  const url = API_BASE_URL + QUESTION_QUERY;
+  const url = API_BASE_URL + 'questions';
   const body = { option1, option2, category };
   const response = await fetchRequest(url, 'POST', body);
 
@@ -26,7 +26,7 @@ class AddQuestionDialog extends Component {
   };
 
   fetchCategories = async () => {
-    const response = await fetch(API_BASE_URL + CATEGORY_QUERY);
+    const response = await fetch(API_BASE_URL + 'categories');
     const data = await response.json();
     this.setState({ categories: data });
   };
@@ -53,11 +53,7 @@ class AddQuestionDialog extends Component {
 
   handleSubmit = async event => {
     event.preventDefault();
-    const response = await postQuestion(
-      this.state.option1,
-      this.state.option2,
-      this.state.categoryValue,
-    );
+    const response = await postQuestion(this.state.option1, this.state.option2, this.state.categoryValue);
     if (response.status === 201) {
       const ackResponse = choisis(this.state.option1, this.state.option2);
       this.props.enqueueSnackbar(`${ackResponse} !`, { variant: 'success' });
@@ -77,13 +73,7 @@ class AddQuestionDialog extends Component {
       value: category.id,
     }));
     return (
-      <Dialog
-        fullWidth
-        maxWidth="sm"
-        onClose={onClose}
-        open={open}
-        PaperProps={{ className: classes.dialog }}
-      >
+      <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} PaperProps={{ className: classes.dialog }}>
         <DialogTitle className={classes.dialogTitle}>Une question ?</DialogTitle>
         <form onSubmit={this.handleSubmit}>
           <TextField
