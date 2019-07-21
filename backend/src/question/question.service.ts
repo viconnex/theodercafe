@@ -5,6 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 
+const findWhereIsClassic = (isClassic: boolean): string => {
+    return `
+        SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
+        FROM questions
+        LEFT JOIN categories on "questions"."categoryId"="categories"."id"
+        WHERE "questions"."isClassic" = ${isClassic}
+        ORDER BY random()
+    `;
+};
+
 @Injectable()
 export class QuestionService {
     constructor(
@@ -40,13 +50,10 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    findAll(): Promise<QuestionDto[]> {
-        return this.questionRepository.query(`
-            SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
-            FROM questions
-            LEFT JOIN categories on "questions"."categoryId"="categories"."id"
-            ORDER BY random()
-        `);
+    async findAll(): Promise<{ classics: QuestionDto[]; nonClassics: QuestionDto[] }> {
+        const classics = await this.questionRepository.query(findWhereIsClassic(true));
+        const nonClassics = await this.questionRepository.query(findWhereIsClassic(false));
+        return { classics, nonClassics };
     }
 
     findOne(id: string): Promise<QuestionDto> {

@@ -13,7 +13,7 @@ export class QuestionController {
     }
 
     @Get()
-    findAll(): Promise<QuestionDto[]> {
+    findAll(): Promise<{ classics: QuestionDto[]; nonClassics: QuestionDto[] }> {
         return this.questionService.findAll();
     }
 

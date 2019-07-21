@@ -4,7 +4,13 @@ items:
         option1: '{{name.jobTitle}}'
         option2: '{{name.jobTitle}}'
         category: '@category*'
-        isClassic: '{{random.boolean}}'
+        isClassic: false
         option1Votes: '{{random.number(20)}}'
         option2Votes: '{{random.number(20)}}'
-        language: french
+    classics{1..5}:
+        option1: '{{name.jobTitle}}'
+        option2: '{{name.jobTitle}}'
+        category: '@categoryClassic'
+        isClassic: true
+        option1Votes: '{{random.number(20)}}'
+        option2Votes: '{{random.number(20)}}'
