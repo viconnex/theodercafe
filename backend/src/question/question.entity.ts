@@ -15,6 +15,9 @@ export class Question {
     @Column()
     option2: string;
 
+    @Column({ default: false })
+    isClassic: boolean;
+
     @Column({ default: 0 })
     option1Votes: number;
 
