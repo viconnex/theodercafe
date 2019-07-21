@@ -7,7 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { SnackbarProvider } from 'notistack';
 
 import { Drawer } from 'components/Drawer';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import logo from './ui/logo/theodercafe.png';
@@ -37,7 +37,9 @@ const App = ({ classes }) => {
         <div className="App">
           <AppBar classes={{ root: classes.appBar }} position="fixed">
             <ToolBar className={classes.toolBar}>
-              <img src={logo} alt="logo" height="20" />
+              <Link to="/">
+                <img src={logo} alt="logo" height="20" />
+              </Link>
               <IconButton edge="start" className={classes.menuButton} aria-label="Menu" onClick={toggleDrawer(true)}>
                 <MenuIcon />
               </IconButton>
@@ -45,8 +47,8 @@ const App = ({ classes }) => {
           </AppBar>
           <header className="App-header">
             <Switch>
-              <Route exact path="/" component={RandomQuestion} />
-              <Route path="/a-propos" component={About} />
+              <Route exact path="/a-propos" component={About} />
+              <Route path="/" component={RandomQuestion} />
             </Switch>
           </header>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
