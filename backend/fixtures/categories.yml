@@ -2,3 +2,5 @@ entity: Category
 items:
     category{1..10}:
         name: '{{random.word}}'
+    categoryClassic:
+        name: 'Les classiques'

@@ -4,7 +4,6 @@ import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { Question } from './question.entity';
 
 @Injectable()
 export class QuestionService {
@@ -25,7 +24,7 @@ export class QuestionService {
                 throw new HttpException(
                     {
                         status: 'error',
-                        error: 'The question ',
+                        error: 'The category could not be saved, maybe it already exists',
                     },
                     500,
                 );
@@ -35,6 +34,7 @@ export class QuestionService {
             category,
             option1: questionBody.option1,
             option2: questionBody.option2,
+            isClassic: category ? category.name === 'Les classiques' : false,
         });
 
         return this.questionRepository.save(question);
