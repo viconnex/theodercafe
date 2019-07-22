@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Get, Query, Param, Post, Put, NotFoundException } from '@nestjs/common';
 import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { UpdateResult } from 'typeorm';
@@ -12,8 +12,13 @@ export class QuestionController {
         return this.questionService.create(questionDto);
     }
 
-    @Get()
-    findAll(): Promise<{ classics: QuestionDto[]; nonClassics: QuestionDto[] }> {
+    @Get('/asakai')
+    findAllClassicsAndRest(@Query() query: { maxNumber: number }): Promise<QuestionDto[]> {
+        return this.questionService.findAllClassicsAndRest(query.maxNumber);
+    }
+
+    @Get('/all')
+    findAll(): Promise<QuestionDto[]> {
         return this.questionService.findAll();
     }
 

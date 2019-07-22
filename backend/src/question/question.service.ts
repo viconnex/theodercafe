@@ -5,13 +5,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 
-const findWhereIsClassic = (isClassic: boolean): string => {
+const FIND_QUESTION_QUERY = `
+    SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
+    FROM questions
+    LEFT JOIN categories on "questions"."categoryId"="categories"."id"
+`;
+
+const findWhereIsClassic = (isClassic: boolean, limit = null): string => {
     return `
         SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
         FROM questions
         LEFT JOIN categories on "questions"."categoryId"="categories"."id"
         WHERE "questions"."isClassic" = ${isClassic}
-        ORDER BY random()
+        ${null === limit ? '' : `LIMIT ${limit}`}
     `;
 };
 
@@ -50,10 +56,21 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    async findAll(): Promise<{ classics: QuestionDto[]; nonClassics: QuestionDto[] }> {
-        const classics = await this.questionRepository.query(findWhereIsClassic(true));
-        const nonClassics = await this.questionRepository.query(findWhereIsClassic(false));
-        return { classics, nonClassics };
+    async findAllClassicsAndRest(maxNumber: number): Promise<QuestionDto[]> {
+        const countClassics = await this.questionRepository.query(
+            `SELECT count(*) from "questions" WHERE "isClassic" = true`,
+        );
+        const nonClassicsCount = Math.max(maxNumber - countClassics[0].count, 0);
+
+        return this.questionRepository.query(`
+            SELECT *
+            FROM (${findWhereIsClassic(true)} UNION (${findWhereIsClassic(false, nonClassicsCount)})) t
+            ORDER BY random()
+        `);
+    }
+
+    findAll(): Promise<QuestionDto[]> {
+        return this.questionRepository.query(`${FIND_QUESTION_QUERY} ORDER BY random()`);
     }
 
     findOne(id: string): Promise<QuestionDto> {

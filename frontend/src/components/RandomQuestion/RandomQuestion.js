@@ -9,28 +9,39 @@ import { IconButton } from '@material-ui/core';
 import style from './style';
 import { Question } from 'components/Question';
 
+const asakaiQuestionNumber = 10;
+
+const ASAKAI_MODE = 'asakai';
+const ALL_QUESTIONS_MODE = 'all';
+
 class RandomQuestion extends Component {
-  componentDidMount = async () => {
-    const response = await fetch(API_BASE_URL + 'questions');
-    if (response.status === 500) {
-      this.setState({ fetchError: true });
-      return;
-    }
-    const data = await response.json();
-    this.setState({ questions: data });
+  componentDidMount = () => {
+    this.fetchQuestions(this.state.mode);
   };
 
   state = {
     addQuestionDialog: false,
     fetchError: false,
+    mode: ASAKAI_MODE,
     questions: [],
-    questionIndex: 0,
+    questionsIndex: 0,
+  };
+
+  fetchQuestions = async mode => {
+    const queryParam = mode === ASAKAI_MODE ? `?maxNumber=${asakaiQuestionNumber}` : '';
+    const response = await fetch(API_BASE_URL + 'questions/' + mode + queryParam);
+    if (response.status === 500) {
+      this.setState({ fetchError: true });
+      return;
+    }
+    const data = await response.json();
+    this.setState({ questions: data, questionsIndex: 0 });
   };
 
   nextQuestion = () => {
-    let index = this.state.questionIndex + 1;
+    let index = this.state.questionsIndex + 1;
     if (index >= this.state.questions.length) index = 0;
-    this.setState({ questionIndex: index });
+    this.setState({ questionsIndex: index });
   };
 
   addQuestion = (option1, option2, categoryName) => {
@@ -46,7 +57,7 @@ class RandomQuestion extends Component {
       return 'erreur inattendue';
     }
 
-    const question = this.state.questions[this.state.questionIndex];
+    const question = this.state.questions[this.state.questionsIndex];
     return (
       <div>
         {question ? (
