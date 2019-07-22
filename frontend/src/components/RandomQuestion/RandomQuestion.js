@@ -6,8 +6,11 @@ import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
 import { API_BASE_URL } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
-import style from './style';
 import { Question } from 'components/Question';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
+import style from './style';
 
 const asakaiQuestionNumber = 10;
 
@@ -48,8 +51,13 @@ class RandomQuestion extends Component {
     this.state.questions.push({ option1, option2, categoryName });
   };
 
-  openModal = () => this.setState({ addQuestionDialog: true });
-  closeModal = () => this.setState({ addQuestionDialog: false });
+  toggleModal = open => () => this.setState({ addQuestionDialog: open });
+
+  handleSwitch = event => {
+    const mode = event.target.checked ? ASAKAI_MODE : ALL_QUESTIONS_MODE;
+    this.setState({ mode });
+    this.fetchQuestions(mode);
+  };
 
   render() {
     const { classes } = this.props;
@@ -59,24 +67,36 @@ class RandomQuestion extends Component {
 
     const question = this.state.questions[this.state.questionsIndex];
     return (
-      <div>
-        {question ? (
-          <div>
-            <Question question={question} />
-            <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
-              <ArrowIcon />
-            </IconButton>
-          </div>
-        ) : null}
-        <Fab className={classes.addButton} size="small">
-          <AddIcon onClick={this.openModal} />
-        </Fab>
-        <AddQuestionDialog
-          className={classes.modal}
-          open={this.state.addQuestionDialog}
-          onClose={this.closeModal}
-          addQuestion={this.addQuestion}
+      <div className={classes.pageContainer}>
+        <FormControlLabel
+          className={classes.switch}
+          control={<Switch checked={this.state.mode === ASAKAI_MODE} onChange={this.handleSwitch} value="asakai" />}
+          label="Asakai"
         />
+        <div>
+          {question ? (
+            <div>
+              <Question question={question} />
+              <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
+                <ArrowIcon />
+              </IconButton>
+              {this.state.mode === ASAKAI_MODE && (
+                <div className={classes.counter}>
+                  {`${this.state.questionsIndex + 1} / ${this.state.questions.length}`}
+                </div>
+              )}
+            </div>
+          ) : null}
+          <Fab className={classes.addButton} size="small">
+            <AddIcon onClick={this.toggleModal(true)} />
+          </Fab>
+          <AddQuestionDialog
+            className={classes.modal}
+            open={this.state.addQuestionDialog}
+            onClose={this.toggleModal(false)}
+            addQuestion={this.addQuestion}
+          />
+        </div>
       </div>
     );
   }

@@ -45,12 +45,10 @@ const App = ({ classes }) => {
               </IconButton>
             </ToolBar>
           </AppBar>
-          <header className="App-header">
-            <Switch>
-              <Route exact path="/a-propos" component={About} />
-              <Route path="/" component={RandomQuestion} />
-            </Switch>
-          </header>
+          <Switch>
+            <Route exact path="/a-propos" component={About} />
+            <Route path="/" component={RandomQuestion} />
+          </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
         </div>
       </SnackbarProvider>
