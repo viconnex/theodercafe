@@ -68,11 +68,16 @@ class RandomQuestion extends Component {
     const question = this.state.questions[this.state.questionsIndex];
     return (
       <div className={classes.pageContainer}>
-        <FormControlLabel
-          className={classes.switch}
-          control={<Switch checked={this.state.mode === ASAKAI_MODE} onChange={this.handleSwitch} value="asakai" />}
-          label="Asakai"
-        />
+        <div className={classes.modeSelector}>
+          <FormControlLabel
+            className={classes.switch}
+            control={<Switch checked={this.state.mode === ASAKAI_MODE} onChange={this.handleSwitch} value="asakai" />}
+            label="Asakai"
+          />
+          {this.state.mode === ASAKAI_MODE && (
+            <div className={classes.modeSelectorInfo}>{`Set de ${asakaiQuestionNumber} questions`}</div>
+          )}
+        </div>
         <div>
           {question ? (
             <div>

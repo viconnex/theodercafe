@@ -22,9 +22,14 @@ const style = theme => {
     counter: {
       fontSize: '12px',
     },
-    switch: {
+    modeSelector: {
+      display: 'flex',
+      flexDirection: 'column',
       position: 'absolute',
       top: '80px',
+    },
+    modeSelectorInfo: {
+      fontSize: '11px',
     },
   };
 };
