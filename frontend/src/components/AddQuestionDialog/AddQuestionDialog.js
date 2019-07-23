@@ -68,14 +68,18 @@ class AddQuestionDialog extends Component {
 
   render() {
     const { classes, onClose, open } = this.props;
-    const options = this.state.categories.map(category => ({
+    const categoryOptions = this.state.categories.map(category => ({
       label: category.name,
       value: category.id,
     }));
+    const categorySelectValue = this.state.categoryValue
+      ? { label: this.state.categoryLabel, value: this.state.categoryValue }
+      : null;
+
     return (
       <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} PaperProps={{ className: classes.dialog }}>
         <DialogTitle className={classes.dialogTitle}>Une question ?</DialogTitle>
-        <form onSubmit={this.handleSubmit}>
+        <form className={classes.form} onSubmit={this.handleSubmit}>
           <TextField
             required
             id="option1"
@@ -94,13 +98,14 @@ class AddQuestionDialog extends Component {
             onChange={this.handleOption2Change}
             value={this.state.option2}
           />
-          <div className={classes.categoryTitle}>Catégorie (optionnel)</div>
+          <div className={classes.categoryTitle}>Catégorie</div>
+          <div className={classes.categorySubTitle}>Choisis une catégorie ou crée-z-en une</div>
           <Creatable
             className={classes.creatable}
-            options={options}
+            options={categoryOptions}
             onChange={this.handleCategoryChange}
-            onInputChange={this.handleCategoryInputChange}
-            placeholder="Trouve ou crée..."
+            placeholder="Choisis ou crée..."
+            value={categorySelectValue}
           />
           <Button color="primary" type="submit">
             Poser une question

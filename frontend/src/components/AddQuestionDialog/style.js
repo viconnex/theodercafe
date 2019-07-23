@@ -1,11 +1,16 @@
 const style = {
   categoryTitle: {
-    marginBottom: '10px',
+    textAlign: 'center',
+  },
+  categorySubTitle: {
+    fontSize: '12px',
+    marginTop: '5px',
     textAlign: 'center',
   },
   creatable: {
     fontSize: '14px',
     marginBottom: '20px',
+    marginTop: '10px',
   },
   dialog: {
     padding: '20px',
@@ -17,6 +22,10 @@ const style = {
   dialogTitle: {
     fontSize: '14px',
     padding: '16px 5px',
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   separatOR: {
     textAlign: 'center',
