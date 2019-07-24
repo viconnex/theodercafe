@@ -49,7 +49,9 @@ class RandomQuestion extends Component {
   };
 
   addQuestion = (option1, option2, categoryName) => {
-    this.state.questions.push({ option1, option2, categoryName });
+    if (this.state.mode !== ASAKAI_MODE) {
+      this.state.questions.push({ option1, option2, categoryName });
+    }
   };
 
   toggleModal = open => () => this.setState({ addQuestionDialog: open });
