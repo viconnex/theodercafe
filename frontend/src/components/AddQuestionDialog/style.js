@@ -7,6 +7,10 @@ const style = {
     marginTop: '5px',
     textAlign: 'center',
   },
+  closeButton: {
+    position: 'absolute',
+    right: '20px',
+  },
   creatable: {
     fontSize: '14px',
     marginBottom: '20px',
@@ -33,6 +37,13 @@ const style = {
   },
   option2: {
     marginBottom: '35px',
+  },
+  option2Wrapper: {
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  interroBang: {
+    marginLeft: '10px',
   },
 };
 

@@ -3,7 +3,9 @@ import { withStyles } from '@material-ui/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import Close from '@material-ui/icons/Close';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
 import { API_BASE_URL } from 'utils/constants';
@@ -78,6 +80,9 @@ class AddQuestionDialog extends Component {
 
     return (
       <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} PaperProps={{ className: classes.dialog }}>
+        <IconButton onClick={onClose} className={classes.closeButton}>
+          <Close />
+        </IconButton>
         <DialogTitle className={classes.dialogTitle}>Une question ?</DialogTitle>
         <form className={classes.form} onSubmit={this.handleSubmit}>
           <TextField
@@ -89,15 +94,18 @@ class AddQuestionDialog extends Component {
             value={this.state.option1}
           />
           <p className={classes.separatOR}>ou</p>
-          <TextField
-            required
-            className={classes.option2}
-            id="option2"
-            fullWidth
-            label="café"
-            onChange={this.handleOption2Change}
-            value={this.state.option2}
-          />
+          <div className={classes.option2Wrapper}>
+            <TextField
+              required
+              className={classes.option2}
+              id="option2"
+              fullWidth
+              label="café"
+              onChange={this.handleOption2Change}
+              value={this.state.option2}
+            />
+            <span className={classes.interroBang}>?</span>
+          </div>
           <div className={classes.categoryTitle}>Catégorie</div>
           <div className={classes.categorySubTitle}>Choisis une catégorie ou crée-z-en une</div>
           <Creatable
