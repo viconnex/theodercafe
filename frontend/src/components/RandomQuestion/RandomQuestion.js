@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
+import ArrowBack from '@material-ui/icons/ArrowBack';
 import Fab from '@material-ui/core/Fab';
-import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import AddIcon from '@material-ui/icons/Add';
 import { API_BASE_URL } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { IconButton } from '@material-ui/core';
@@ -41,9 +42,9 @@ class RandomQuestion extends Component {
     this.setState({ questions: data, questionsIndex: 0 });
   };
 
-  nextQuestion = () => {
-    let index = this.state.questionsIndex + 1;
-    if (index >= this.state.questions.length) index = 0;
+  changeQuestion = increment => () => {
+    let index = this.state.questionsIndex + increment;
+    if (index >= this.state.questions.length || index < 0) index = 0;
     this.setState({ questionsIndex: index });
   };
 
@@ -82,8 +83,15 @@ class RandomQuestion extends Component {
           {question ? (
             <div>
               <Question question={question} />
-              <IconButton classes={{ root: classes.nextButton }} onClick={this.nextQuestion}>
-                <ArrowIcon />
+              <IconButton
+                disabled={this.state.questionsIndex === 0}
+                classes={{ root: classes.nextButton }}
+                onClick={this.changeQuestion(-1)}
+              >
+                <ArrowBack />
+              </IconButton>
+              <IconButton classes={{ root: classes.nextButton }} onClick={this.changeQuestion(1)}>
+                <ArrowForward />
               </IconButton>
               {this.state.mode === ASAKAI_MODE && (
                 <div className={classes.counter}>
