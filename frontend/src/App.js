@@ -9,7 +9,7 @@ import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
 import logo from './ui/logo/theodercafe.png';
-import { RandomQuestion } from './components/RandomQuestion';
+import { Questioning } from './components/Questioning';
 
 import style from './App.style';
 
@@ -36,7 +36,7 @@ const App = ({ classes }) => {
           </AppBar>
           <Switch>
             <Route exact path="/a-propos" component={About} />
-            <Route path="/" component={RandomQuestion} />
+            <Route path="/" component={Questioning} />
           </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
         </div>

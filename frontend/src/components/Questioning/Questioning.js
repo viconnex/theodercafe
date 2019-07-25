@@ -18,7 +18,7 @@ const asakaiQuestionNumber = 10;
 const ASAKAI_MODE = 'asakai';
 const ALL_QUESTIONS_MODE = 'all';
 
-class RandomQuestion extends Component {
+class Questioning extends Component {
   componentDidMount = () => {
     this.fetchQuestions(this.state.mode);
   };
@@ -124,4 +124,4 @@ class RandomQuestion extends Component {
   }
 }
 
-export default withStyles(style)(RandomQuestion);
+export default withStyles(style)(Questioning);
