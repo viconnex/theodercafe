@@ -1,3 +1,5 @@
+import colors from 'ui/colors';
+
 const style = {
   categoryContainer: {
     marginBottom: '35px',
@@ -7,7 +9,7 @@ const style = {
     marginBottom: '7px',
   },
   categoryContent: {
-    backgroundColor: 'white',
+    backgroundColor: colors.theodoGreen,
     fontStyle: 'italic',
   },
   questionContainer: {

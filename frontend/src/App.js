@@ -5,24 +5,13 @@ import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { SnackbarProvider } from 'notistack';
-
 import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
-import './App.scss';
+import { About } from 'components/About';
 import logo from './ui/logo/theodercafe.png';
 import { RandomQuestion } from './components/RandomQuestion';
-import { About } from 'components/About';
 
-const style = theme => ({
-  appBar: {
-    background: 'white',
-  },
-  toolBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
+import style from './App.style';
 
 const App = ({ classes }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -34,7 +23,7 @@ const App = ({ classes }) => {
   return (
     <Router>
       <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
-        <div className="App">
+        <div className={classes.app}>
           <AppBar classes={{ root: classes.appBar }} position="fixed">
             <ToolBar className={classes.toolBar}>
               <Link to="/">
