@@ -9,7 +9,7 @@ import { SnackbarProvider } from 'notistack';
 import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import './App.css';
+import './App.scss';
 import logo from './ui/logo/theodercafe.png';
 import { RandomQuestion } from './components/RandomQuestion';
 import { About } from 'components/About';

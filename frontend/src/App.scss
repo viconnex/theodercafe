@@ -1,5 +1,7 @@
+@import 'ui/colors.scss';
+
 .App {
-  background-color: #282c34;
+  background-color: $theodoBlue;
   color: white;
   display: flex;
   flex-direction: column;
