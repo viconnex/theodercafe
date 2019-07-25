@@ -73,8 +73,15 @@ class RandomQuestion extends Component {
       <div className={classes.pageContainer}>
         <div className={classes.modeSelector}>
           <FormControlLabel
-            className={classes.switch}
-            control={<Switch checked={this.state.mode === ASAKAI_MODE} onChange={this.handleSwitch} value="asakai" />}
+            control={
+              <Switch
+                color="default"
+                classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
+                checked={this.state.mode === ASAKAI_MODE}
+                onChange={this.handleSwitch}
+                value="asakai"
+              />
+            }
             label="Asakai"
           />
           {this.state.mode === ASAKAI_MODE && (

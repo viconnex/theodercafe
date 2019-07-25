@@ -1,3 +1,5 @@
+import colors from 'ui/colors';
+
 const style = theme => {
   return {
     pageContainer: {
@@ -30,6 +32,12 @@ const style = theme => {
     },
     modeSelectorInfo: {
       fontSize: '11px',
+    },
+    switchChecked: {
+      color: colors.theodoGreen,
+    },
+    switchTrack: {
+      backgroundColor: 'grey',
     },
   };
 };
