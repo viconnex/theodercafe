@@ -6,7 +6,7 @@
     "password": "cafe",
     "database": "theodercafe",
     "synchronize": false,
-    "logging": false,
+    "logging": true,
     "entities": ["src/**/*.entity.ts", "src/*.entity.ts", "dist/**/*.entity.js"],
     "migrations": ["migration/*.ts", "dist/db/migrations/**/*.js"],
     "cli": {
