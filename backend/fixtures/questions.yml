@@ -1,13 +1,13 @@
 entity: Question
 items:
-    question{1..15}:
+    question{1..25}:
         option1: '{{name.jobTitle}}'
         option2: '{{name.jobTitle}}'
         category: '@category*'
         isClassic: false
         option1Votes: '{{random.number(20)}}'
         option2Votes: '{{random.number(20)}}'
-    classics{1..5}:
+    classics{1..3}:
         option1: '{{name.jobTitle}}'
         option2: '{{name.jobTitle}}'
         category: '@categoryClassic'

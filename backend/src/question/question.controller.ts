@@ -14,7 +14,8 @@ export class QuestionController {
 
     @Get('/asakai')
     findAllClassicsAndRest(@Query() query: { maxNumber: number }): Promise<QuestionDto[]> {
-        return this.questionService.findAllClassicsAndRest(query.maxNumber);
+        const maxNumber = query.maxNumber || 10;
+        return this.questionService.findAllClassicsAndRest(maxNumber);
     }
 
     @Get('/all')

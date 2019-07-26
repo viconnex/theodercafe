@@ -11,13 +11,12 @@ const FIND_QUESTION_QUERY = `
     LEFT JOIN categories on "questions"."categoryId"="categories"."id"
 `;
 
-const findWhereIsClassic = (isClassic: boolean, limit = null): string => {
+const findWhereIsClassic = (isClassic: boolean, limit = null, isRandom: boolean = false): string => {
     return `
-        SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
-        FROM questions
-        LEFT JOIN categories on "questions"."categoryId"="categories"."id"
+        ${FIND_QUESTION_QUERY}
         WHERE "questions"."isClassic" = ${isClassic}
-        ${null === limit ? '' : `LIMIT ${limit}`}
+        ${isRandom ? 'ORDER BY random()' : ''}
+        ${null === limit ? ' ' : `LIMIT ${limit}`}
     `;
 };
 
@@ -61,10 +60,9 @@ export class QuestionService {
             `SELECT count(*) from "questions" WHERE "isClassic" = true`,
         );
         const nonClassicsCount = Math.max(maxNumber - countClassics[0].count, 0);
-
         return this.questionRepository.query(`
             SELECT *
-            FROM (${findWhereIsClassic(true)} UNION (${findWhereIsClassic(false, nonClassicsCount)})) t
+            FROM (${findWhereIsClassic(true)} UNION (${findWhereIsClassic(false, nonClassicsCount, true)})) t
             ORDER BY random()
         `);
     }
