@@ -22,7 +22,10 @@ const style = theme => {
       justifyContent: 'center',
     },
     counter: {
-      fontSize: '12px',
+      fontSize: '14px',
+    },
+    browser: {
+      marginTop: '15px',
     },
     modeSelector: {
       display: 'flex',

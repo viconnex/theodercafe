@@ -92,21 +92,23 @@ class Questioning extends Component {
           {question ? (
             <div>
               <Question question={question} />
-              <IconButton
-                disabled={this.state.questionsIndex === 0}
-                classes={{ root: classes.nextButton }}
-                onClick={this.changeQuestion(-1)}
-              >
-                <ArrowBack />
-              </IconButton>
-              <IconButton classes={{ root: classes.nextButton }} onClick={this.changeQuestion(1)}>
-                <ArrowForward />
-              </IconButton>
-              {this.state.mode === ASAKAI_MODE && (
-                <div className={classes.counter}>
-                  {`${this.state.questionsIndex + 1} / ${this.state.questions.length}`}
-                </div>
-              )}
+              <div className={classes.browser}>
+                <IconButton
+                  disabled={this.state.questionsIndex === 0}
+                  classes={{ root: classes.nextButton }}
+                  onClick={this.changeQuestion(-1)}
+                >
+                  <ArrowBack />
+                </IconButton>
+                <IconButton classes={{ root: classes.nextButton }} onClick={this.changeQuestion(1)}>
+                  <ArrowForward />
+                </IconButton>
+                {this.state.mode === ASAKAI_MODE && (
+                  <div className={classes.counter}>
+                    {`${this.state.questionsIndex + 1} / ${this.state.questions.length}`}
+                  </div>
+                )}
+              </div>
             </div>
           ) : null}
           <Fab className={classes.addButton} size="small">

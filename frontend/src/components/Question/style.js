@@ -13,7 +13,7 @@ const style = {
     fontStyle: 'italic',
   },
   questionContainer: {
-    fontSize: '18px',
+    fontSize: '20px',
     padding: '5px',
   },
   questionPart: {
