@@ -5,21 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 
-const FIND_QUESTION_QUERY = `
-    SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName"
-    FROM questions
-    LEFT JOIN categories on "questions"."categoryId"="categories"."id"
-`;
-
-const findWhereIsClassic = (isClassic: boolean, limit = null, isRandom: boolean = false): string => {
-    return `
-        ${FIND_QUESTION_QUERY}
-        WHERE "questions"."isClassic" = ${isClassic}
-        ${isRandom ? 'ORDER BY random()' : ''}
-        ${null === limit ? ' ' : `LIMIT ${limit}`}
-    `;
-};
-
 @Injectable()
 export class QuestionService {
     constructor(
@@ -56,19 +41,14 @@ export class QuestionService {
     }
 
     async findAllClassicsAndRest(maxNumber: number): Promise<QuestionDto[]> {
-        const countClassics = await this.questionRepository.query(
-            `SELECT count(*) from "questions" WHERE "isClassic" = true`,
-        );
+        const countClassics = await this.questionRepository.countClassics();
         const nonClassicsCount = Math.max(maxNumber - countClassics[0].count, 0);
-        return this.questionRepository.query(`
-            SELECT *
-            FROM (${findWhereIsClassic(true)} UNION (${findWhereIsClassic(false, nonClassicsCount, true)})) t
-            ORDER BY random()
-        `);
+
+        return this.questionRepository.findAllClassicsAndRest(nonClassicsCount);
     }
 
     findAll(): Promise<QuestionDto[]> {
-        return this.questionRepository.query(`${FIND_QUESTION_QUERY} ORDER BY random()`);
+        return this.questionRepository.findAll();
     }
 
     findOne(id: string): Promise<QuestionDto> {
