@@ -30,7 +30,7 @@ const style = theme => {
     modeSelector: {
       display: 'flex',
       flexDirection: 'column',
-      position: 'absolute',
+      position: 'fixed',
       top: '80px',
     },
     modeSelectorInfo: {
