@@ -13,9 +13,8 @@ const Question = ({ classes, question }) => {
     option1VoteTrigger: 0,
     option2VoteTrigger: 0,
   });
-
   const vote = optionIndex => () => {
-    setState(state => ({ [`option${optionIndex}VoteTrigger`]: state.option1VoteTrigger + 1 }));
+    setState({ ...state, [`option${optionIndex}VoteTrigger`]: state[`option${optionIndex}VoteTrigger`] + 1 });
 
     const url = API_BASE_URL + `questions/${question.id}/vote`;
     const body = { optionIndex };
