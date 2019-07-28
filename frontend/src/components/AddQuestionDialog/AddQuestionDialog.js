@@ -110,6 +110,7 @@ class AddQuestionDialog extends Component {
           <div className={classes.categorySubTitle}>Choisis une catégorie ou crée-z-en une</div>
           <Creatable
             className={classes.creatable}
+            menuPlacement="auto"
             options={categoryOptions}
             onChange={this.handleCategoryChange}
             placeholder="Choisis ou crée..."

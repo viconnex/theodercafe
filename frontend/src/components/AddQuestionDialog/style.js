@@ -9,7 +9,8 @@ const style = {
   },
   closeButton: {
     position: 'absolute',
-    right: '20px',
+    right: '5px',
+    top: '5px',
   },
   creatable: {
     fontSize: '14px',
