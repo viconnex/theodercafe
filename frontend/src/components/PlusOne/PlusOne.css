@@ -5,10 +5,10 @@
     color: black;
     display: flex;
     font-size: 8px;
-    height: 20px;
+    height: 25px;
     justify-content: center;
-    width: 20px;
-    animation: vanish 0.7s 1 linear forwards;
+    width: 25px;
+    animation: vanish 0.8s 1 linear forwards;
     position: absolute;
 }
 
@@ -18,6 +18,6 @@
     }
     100% {
         opacity: 0;
-        transform: translateY(-33px);
+        transform: translateY(-40px);
     }
 }

@@ -31,7 +31,7 @@ const style = theme => {
       display: 'flex',
       flexDirection: 'column',
       position: 'fixed',
-      top: '80px',
+      top: '70px',
     },
     modeSelectorInfo: {
       fontSize: '11px',
