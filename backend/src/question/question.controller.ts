@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Query, Param, Post, Put, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Get, Query, Param, Post, Put, NotFoundException, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { UpdateResult } from 'typeorm';
@@ -21,6 +22,14 @@ export class QuestionController {
     @Get('/all')
     findAll(): Promise<QuestionDto[]> {
         return this.questionService.findAll();
+    }
+
+    @Get('')
+    async getAdminList(@Res() res: Response): Promise<void> {
+        const result = await this.questionService.findAdminList();
+        res.set('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.set('X-Total-Count', result.length.toString());
+        res.send(result);
     }
 
     @Get(':id')

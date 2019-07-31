@@ -51,6 +51,10 @@ export class QuestionService {
         return this.questionRepository.findAll();
     }
 
+    findAdminList(): Promise<QuestionDto[]> {
+        return this.questionRepository.findAdminList();
+    }
+
     findOne(id: string): Promise<QuestionDto> {
         return this.questionRepository.findOneQuestion(id);
     }

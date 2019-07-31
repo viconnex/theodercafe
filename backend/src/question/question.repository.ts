@@ -37,6 +37,10 @@ export class QuestionRepository extends Repository<Question> {
         return this.query(`${FIND_QUESTION_QUERY} ORDER BY random()`);
     };
 
+    findAdminList = async (): Promise<QuestionDto[]> => {
+        return this.find({ relations: ['category'], order: { id: 'ASC' } });
+    };
+
     findAllClassicsAndRest = async (nonClassicsCount: number): Promise<QuestionDto[]> => {
         return this.query(`
             SELECT *
