@@ -8,6 +8,7 @@ import { SnackbarProvider } from 'notistack';
 import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
+import { Table } from 'components/Table';
 import logo from './ui/logo/theodercafe.png';
 import { Questioning } from './components/Questioning';
 
@@ -36,6 +37,7 @@ const App = ({ classes }) => {
           </AppBar>
           <Switch>
             <Route exact path="/a-propos" component={About} />
+            <Route exact path="/tableau" component={Table} />
             <Route path="/" component={Questioning} />
           </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
