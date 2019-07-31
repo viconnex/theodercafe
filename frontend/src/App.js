@@ -10,6 +10,7 @@ import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
 import logo from './ui/logo/theodercafe.png';
 import { Questioning } from './components/Questioning';
+// import { Admin } from './admin';
 
 import style from './App.style';
 
@@ -36,6 +37,7 @@ const App = ({ classes }) => {
           </AppBar>
           <Switch>
             <Route exact path="/a-propos" component={About} />
+            {/* <Route exact path="/tableau" component={Admin} /> */}
             <Route path="/" component={Questioning} />
           </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
