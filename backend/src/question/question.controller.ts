@@ -41,7 +41,7 @@ export class QuestionController {
     }
 
     @Put(':id/vote')
-    update(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
+    updateVote(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
         return this.questionService.vote(id, voteBody.optionIndex);
     }
 
@@ -51,5 +51,10 @@ export class QuestionController {
         if (deleteResult.affected === 0) throw new NotFoundException();
 
         return deleteResult;
+    }
+
+    @Put(':id')
+    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<QuestionDto> {
+        return this.questionService.update(id, questionBody);
     }
 }

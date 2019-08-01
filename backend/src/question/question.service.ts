@@ -59,7 +59,7 @@ export class QuestionService {
         return this.questionRepository.findOneQuestion(id);
     }
 
-    update(id: string, questionDto: QuestionDto): Promise<QuestionDto> {
+    update(id: string | number, questionDto: QuestionDto): Promise<QuestionDto> {
         return this.questionRepository.updateQuestion(id, questionDto);
     }
 

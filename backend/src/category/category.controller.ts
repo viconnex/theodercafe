@@ -1,14 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryRepository } from './category.repository';
-import { Category } from './category.entity';
+import { Response } from 'express';
 
 @Controller('categories')
 export class CategoryController {
     constructor(@InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository) {}
 
-    @Get()
-    findAll(): Promise<Category[]> {
-        return this.categoryRepository.find({ select: ['id', 'name'], order: { name: 'ASC' } });
+    @Get('')
+    async findAll(@Res() response: Response): Promise<void> {
+        const result = await this.categoryRepository.find({ order: { name: 'ASC' } });
+        response.set('Access-Control-Expose-Headers', 'X-Total-Count');
+        response.set('X-Total-Count', result.length.toString());
+        response.send(result);
     }
 }

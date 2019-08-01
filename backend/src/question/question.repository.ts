@@ -25,7 +25,7 @@ export class QuestionRepository extends Repository<Question> {
         return this.findOne(id, { relations: ['category'] });
     };
 
-    updateQuestion = async (id: string, questionDto: QuestionDto): Promise<Question> => {
+    updateQuestion = async (id: string | number, questionDto: QuestionDto): Promise<Question> => {
         return this.save({ ...questionDto, id: Number(id) });
     };
 
