@@ -33,7 +33,7 @@ class Questioning extends Component {
 
   fetchQuestions = async mode => {
     const queryParam = mode === ASAKAI_MODE ? `?maxNumber=${asakaiQuestionNumber}` : '';
-    const response = await fetch(API_BASE_URL + 'questions/' + mode + queryParam);
+    const response = await fetch(API_BASE_URL + '/questions/' + mode + queryParam);
     if (response.status === 500) {
       this.setState({ fetchError: true });
       return;

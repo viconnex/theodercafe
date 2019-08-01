@@ -16,7 +16,7 @@ const Question = ({ classes, question }) => {
   const vote = optionIndex => () => {
     setState({ ...state, [`option${optionIndex}VoteTrigger`]: state[`option${optionIndex}VoteTrigger`] + 1 });
 
-    const url = API_BASE_URL + `questions/${question.id}/vote`;
+    const url = API_BASE_URL + `/questions/${question.id}/vote`;
     const body = { optionIndex };
     fetchRequest(url, 'PUT', body);
   };
