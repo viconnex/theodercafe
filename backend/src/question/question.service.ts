@@ -47,6 +47,10 @@ export class QuestionService {
         return this.questionRepository.findAllClassicsAndRest(nonClassicsCount);
     }
 
+    findInOrder(orderedIds: number[]): Promise<QuestionDto[]> {
+        return this.questionRepository.findInOrder(orderedIds);
+    }
+
     findAll(): Promise<QuestionDto[]> {
         return this.questionRepository.findAll();
     }

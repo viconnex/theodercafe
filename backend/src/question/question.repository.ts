@@ -42,16 +42,35 @@ export class QuestionRepository extends Repository<Question> {
     };
 
     findAllClassicsAndRest = async (nonClassicsCount: number): Promise<QuestionDto[]> => {
-        // return this.query(`
-        //     SELECT *
-        //     FROM (
-        //         ${findWhereIsClassic(true)}
-        //         UNION (
-        //         ${findWhereIsClassic(false, nonClassicsCount, true)})
-        //     ) t
-        //     ORDER BY random()
-        // `);
-        return this.findByIds([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
+        return this.query(`
+            SELECT *
+            FROM (
+                ${findWhereIsClassic(true)}
+                UNION (
+                ${findWhereIsClassic(false, nonClassicsCount, true)})
+            ) t
+            ORDER BY random()
+        `);
+    };
+
+    findInOrder = async (orderedIds: number[]): Promise<QuestionDto[]> => {
+        var sqlIdsWithOrder = '';
+        var sqlIds = '';
+        orderedIds.forEach((id, index): void => {
+            const additionalKomma = index !== orderedIds.length - 1 ? ', ' : '';
+            sqlIds = sqlIds + id + additionalKomma;
+            sqlIdsWithOrder = sqlIdsWithOrder + `(${id},${index + 1})` + additionalKomma;
+        });
+        return this.query(
+            `SELECT * FROM(
+                ${FIND_QUESTION_QUERY}
+                WHERE "questions"."id" in (${sqlIds})
+            ) q
+            JOIN (
+                VALUES ${sqlIdsWithOrder}
+            ) as x (id, ordering) on q.id = x.id
+            ORDER BY x.ordering`,
+        );
     };
 
     countClassics = async (): Promise<number> => {
