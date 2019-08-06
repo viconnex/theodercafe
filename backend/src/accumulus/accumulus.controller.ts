@@ -13,9 +13,7 @@ export class AccumulusController {
     }
 
     @Post()
-    async create(@Body() accumulusBody, @Res() response): Promise<void> {
-        const result = await this.accumulusRepository.save(accumulusBody);
-        response.header('Access-Control-Allow-Origin', 'https://victorbrun.github.io');
-        response.send(result);
+    async create(@Body() accumulusBody): Promise<Accumulus> {
+        return this.accumulusRepository.save(accumulusBody);
     }
 }
