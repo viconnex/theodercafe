@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Body, Post } from '@nestjs/common';
+import { Controller, Get, Body, Post, Res } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccumulusRepository } from './accumulus.repository';
 import { Accumulus } from './accumulus.entity';
@@ -13,7 +13,9 @@ export class AccumulusController {
     }
 
     @Post()
-    create(@Body() accumulusBody): Promise<Accumulus> {
-        return this.accumulusRepository.save(accumulusBody);
+    async create(@Body() accumulusBody, @Res() response): Promise<void> {
+        const result = await this.accumulusRepository.save(accumulusBody);
+        response.header('Access-Control-Allow-Origin', 'https://victorbrun.github.io');
+        response.send(result);
     }
 }
