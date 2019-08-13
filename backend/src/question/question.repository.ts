@@ -10,7 +10,7 @@ const FIND_QUESTION_QUERY = `
 
 const findWhereIsClassic = (isClassic: boolean, limit = null, isRandom: boolean = false): string => {
     return `${FIND_QUESTION_QUERY}
-            WHERE "questions"."isClassic" = ${isClassic}
+            WHERE "questions"."isClassic" = ${isClassic} AND "questions"."isValidated" = true
             ${isRandom ? 'ORDER BY random()' : ''}
             ${null === limit ? '' : `LIMIT ${limit}`}`;
 };
@@ -41,7 +41,7 @@ export class QuestionRepository extends Repository<Question> {
         return this.find({ relations: ['category'], order: { id: 'ASC' } });
     };
 
-    findAllClassicsAndRest = async (nonClassicsCount: number): Promise<QuestionDto[]> => {
+    findAllClassicsAndValidated = async (nonClassicsCount: number): Promise<QuestionDto[]> => {
         return this.query(`
             SELECT *
             FROM (

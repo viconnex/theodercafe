@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Post, Res } from '@nestjs/common';
+import { Controller, Get, Body, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccumulusRepository } from './accumulus.repository';
 import { Accumulus } from './accumulus.entity';

@@ -68,6 +68,11 @@ class Questioning extends Component {
       return 'erreur inattendue';
     }
 
+    const modeSelectorInfo =
+      this.state.mode === ASAKAI_MODE
+        ? `Set de ${asakaiQuestionNumber} questions validées`
+        : 'Toutes les questions (même pas encore / non validées)';
+
     const question = this.state.questions[this.state.questionsIndex];
     return (
       <div className={classes.pageContainer}>
@@ -84,9 +89,7 @@ class Questioning extends Component {
             }
             label="Asakai"
           />
-          {this.state.mode === ASAKAI_MODE && (
-            <div className={classes.modeSelectorInfo}>{`Set de ${asakaiQuestionNumber} questions`}</div>
-          )}
+          <div className={classes.modeSelectorInfo}>{modeSelectorInfo}</div>
         </div>
         <div>
           {question ? (

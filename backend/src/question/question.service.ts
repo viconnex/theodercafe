@@ -40,11 +40,11 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    async findAllClassicsAndRest(maxNumber: number): Promise<QuestionDto[]> {
+    async findAllClassicsAndValidated(maxNumber: number): Promise<QuestionDto[]> {
         const countClassics = await this.questionRepository.countClassics();
         const nonClassicsCount = Math.max(maxNumber - countClassics[0].count, 0);
 
-        return this.questionRepository.findAllClassicsAndRest(nonClassicsCount);
+        return this.questionRepository.findAllClassicsAndValidated(nonClassicsCount);
     }
 
     findInOrder(orderedIds: number[]): Promise<QuestionDto[]> {

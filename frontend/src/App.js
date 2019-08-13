@@ -37,7 +37,7 @@ const App = ({ classes }) => {
           </AppBar>
           <Switch>
             <Route exact path="/a-propos" component={About} />
-            <Route exact path="/admin" component={Admin} />
+            <Route exact path="/nimda" component={Admin} />
             <Route path="/" component={Questioning} />
           </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />

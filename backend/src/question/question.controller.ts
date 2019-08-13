@@ -14,9 +14,9 @@ export class QuestionController {
     }
 
     @Get('/asakai')
-    findAllClassicsAndRest(@Query() query: { maxNumber: number }): Promise<QuestionDto[]> {
+    findAllClassicsAndValidated(@Query() query: { maxNumber: number }): Promise<QuestionDto[]> {
         const maxNumber = query.maxNumber || 10;
-        return this.questionService.findAllClassicsAndRest(maxNumber);
+        return this.questionService.findAllClassicsAndValidated(maxNumber);
         // return this.questionService.findInOrder([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
     }
 

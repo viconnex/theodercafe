@@ -18,6 +18,9 @@ export class Question {
     @Column({ default: false })
     isClassic: boolean;
 
+    @Column({ nullable: true })
+    isValidated: boolean;
+
     @Column({ default: 0 })
     option1Votes: number;
 

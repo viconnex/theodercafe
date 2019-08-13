@@ -12,6 +12,7 @@ export const QuestionList = props => {
           <TextField source="name" />
         </ReferenceField>
         <BooleanField source="isClassic" label="Classique ?" />
+        <BooleanField source="isValidated" label="Validée ?" />
         <NumberField source="option1Votes" label="Votes 1" />
         <NumberField source="option2Votes" label="Votes 2" />
       </Datagrid>
