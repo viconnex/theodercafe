@@ -5,7 +5,7 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    marginBottom: '45px',
+    marginBottom: '40px',
   },
   modeSelector: {
     display: 'flex',
