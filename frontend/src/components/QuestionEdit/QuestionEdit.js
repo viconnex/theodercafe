@@ -7,8 +7,9 @@ export const QuestionEdit = props => (
       <TextInput source="id" />
       <TextInput source="option1" label="Option1" />
       <TextInput source="option2" label="Option2" />
-      <BooleanInput source="isClassic" label="Classique ?" />
       <BooleanInput source="isValidated" label="Validée ?" />
+      <BooleanInput source="isJokeOnSomeone" label="Jeu de nom ?" />
+      <BooleanInput source="isClassic" label="Classique ?" />
       <ReferenceInput source="category.id" reference="categories" label="Catégorie">
         <SelectInput source="name" />
       </ReferenceInput>

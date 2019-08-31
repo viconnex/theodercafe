@@ -11,8 +11,9 @@ export const QuestionList = props => {
         <ReferenceField source="category.id" reference="categories" label="Catégorie">
           <TextField source="name" />
         </ReferenceField>
-        <BooleanField source="isClassic" label="Classique ?" />
-        <BooleanField source="isValidated" label="Validée ?" />
+        <BooleanField source="isValidated" label="Validée" />
+        <BooleanField source="isJokeOnSomeone" label="Jeu de nom" />
+        <BooleanField source="isClassic" label="Classique" />
         <NumberField source="option1Votes" label="Votes 1" />
         <NumberField source="option2Votes" label="Votes 2" />
       </Datagrid>

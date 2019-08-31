@@ -18,6 +18,9 @@ export class Question {
     @Column({ default: false })
     isClassic: boolean;
 
+    @Column({ default: false })
+    isJokeOnSomeone: boolean;
+
     @Column({ nullable: true })
     isValidated: boolean;
 
