@@ -6,18 +6,14 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import AddIcon from '@material-ui/icons/Add';
 import { API_BASE_URL } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
-import { IconButton, MenuItem } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { Question } from 'components/Question';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Select from '@material-ui/core/Select';
+import { ASAKAI_MODE } from 'utils/constants';
 
 import style from './style';
+import { ModeSelector } from 'components/ModeSelector';
 
 const asakaiQuestionNumber = 10;
-
-const ASAKAI_MODE = 'asakai';
-const ALL_QUESTIONS_MODE = 'all';
 
 class Questioning extends Component {
   componentDidMount = () => {
@@ -55,18 +51,12 @@ class Questioning extends Component {
       this.state.questions.push({ option1, option2, categoryName });
     }
   };
+  handleModeChange = mode => {
+    this.fetchQuestions(mode);
+    this.setState({ mode });
+  };
 
   toggleModal = open => () => this.setState({ addQuestionDialog: open });
-
-  handleSwitch = event => {
-    const mode = event.target.checked ? ASAKAI_MODE : ALL_QUESTIONS_MODE;
-    this.setState({ mode });
-    this.fetchQuestions(mode);
-  };
-
-  handleValidationStatusChange = event => {
-    this.setState({ validationStatusSelected: event.target.value });
-  };
 
   render() {
     const { classes } = this.props;
@@ -77,40 +67,8 @@ class Questioning extends Component {
     const question = this.state.questions[this.state.questionsIndex];
     return (
       <div className={classes.pageContainer}>
-        <div className={classes.modeSelectorContainer}>
-          <FormControlLabel
-            control={
-              <Switch
-                color="default"
-                classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
-                checked={this.state.mode === ASAKAI_MODE}
-                onChange={this.handleSwitch}
-                value="asakai"
-              />
-            }
-            label="Asakai"
-          />
-          {this.state.mode === ASAKAI_MODE ? (
-            <div className={classes.modeSelectorInfo}>{`Set de ${asakaiQuestionNumber} questions validées`}</div>
-          ) : (
-            <Select
-              className={classes.validationStatusSelect}
-              inputProps={{
-                classes: {
-                  icon: classes.validationStatusSelectIcon,
-                },
-              }}
-              value={this.state.validationStatusSelected}
-              onChange={this.handleValidationStatusChange}
-            >
-              <MenuItem value="all">Toutes les questions</MenuItem>
-              <MenuItem value="validated">Validées</MenuItem>
-              <MenuItem value="inValidation">En attente de validation</MenuItem>
-              <MenuItem value="notValidated">Invalidée</MenuItem>
-            </Select>
-          )}
-        </div>
         <div>
+          <ModeSelector questionNumber={asakaiQuestionNumber} handleModeChange={this.handleModeChange} />
           {question ? (
             <div>
               <Question question={question} />
@@ -125,11 +83,9 @@ class Questioning extends Component {
                 <IconButton classes={{ root: classes.nextButton }} onClick={this.changeQuestion(1)}>
                   <ArrowForward />
                 </IconButton>
-                {this.state.mode === ASAKAI_MODE && (
-                  <div className={classes.counter}>
-                    {`${this.state.questionsIndex + 1} / ${this.state.questions.length}`}
-                  </div>
-                )}
+                <div className={classes.counter}>
+                  {`${this.state.questionsIndex + 1} / ${this.state.questions.length}`}
+                </div>
               </div>
             </div>
           ) : null}
