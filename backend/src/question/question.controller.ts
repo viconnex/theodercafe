@@ -46,6 +46,11 @@ export class QuestionController {
         return this.questionService.vote(id, voteBody.optionIndex);
     }
 
+    @Put(':id/upVote')
+    updateUpVote(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
+        return this.questionService.upVote(id, voteBody.isUpVote);
+    }
+
     @Delete(':id')
     async remove(@Param('id') id: string): Promise<DeleteResult> {
         const deleteResult = await this.questionService.delete(id);

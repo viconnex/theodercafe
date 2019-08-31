@@ -72,12 +72,21 @@ export class QuestionService {
     }
 
     async vote(questionId: number, optionIndex: number): Promise<UpdateResult> {
-        const category = await this.questionRepository.findOne(questionId);
+        const question = await this.questionRepository.findOne(questionId);
         if (optionIndex === 1) {
-            return this.questionRepository.update(questionId, { option1Votes: category.option1Votes + 1 });
+            return this.questionRepository.update(questionId, { option1Votes: question.option1Votes + 1 });
         }
         if (optionIndex === 2) {
-            return this.questionRepository.update(questionId, { option2Votes: category.option2Votes + 1 });
+            return this.questionRepository.update(questionId, { option2Votes: question.option2Votes + 1 });
         }
+    }
+
+    async upVote(questionId: number, isUpvote: boolean): Promise<UpdateResult> {
+        const question = await this.questionRepository.findOne(questionId);
+        if (isUpvote) {
+            return this.questionRepository.update(questionId, { upVotes: question.upVotes + 1 });
+        }
+
+        return this.questionRepository.update(questionId, { downVotes: question.downVotes + 1 });
     }
 }

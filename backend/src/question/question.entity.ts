@@ -27,6 +27,12 @@ export class Question {
     @Column({ default: 0 })
     option2Votes: number;
 
+    @Column({ default: 0 })
+    upVotes: number;
+
+    @Column({ default: 0 })
+    downVotes: number;
+
     @CreateDateColumn()
     createdAt: string;
 
