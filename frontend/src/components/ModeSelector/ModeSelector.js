@@ -7,7 +7,7 @@ import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ASAKAI_MODE, ALL_QUESTIONS_MODE } from 'utils/constants';
 
-const ModeSelector = ({ classes, handleModeChange, questionNumber }) => {
+const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, questionNumber }) => {
   const [modeSelected, setMode] = React.useState(ASAKAI_MODE);
   const [validationStatusSelected, setValidationStatus] = React.useState('all');
 
@@ -42,7 +42,10 @@ const ModeSelector = ({ classes, handleModeChange, questionNumber }) => {
             },
           }}
           value={validationStatusSelected}
-          onChange={event => setValidationStatus(event.target.value)}
+          onChange={event => {
+            setValidationStatus(event.target.value);
+            handleValidationStatusChange(event.target.value);
+          }}
         >
           <MenuItem value="all">Toutes les questions</MenuItem>
           <MenuItem value="validated">Validées</MenuItem>

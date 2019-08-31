@@ -15,6 +15,12 @@ import { ModeSelector } from 'components/ModeSelector';
 
 const asakaiQuestionNumber = 10;
 
+const isValidated = {
+  validated: true,
+  notValidated: false,
+  inValidation: null,
+};
+
 class Questioning extends Component {
   componentDidMount = () => {
     this.fetchQuestions(this.state.mode);
@@ -23,10 +29,11 @@ class Questioning extends Component {
   state = {
     addQuestionDialog: false,
     fetchError: false,
+    filteredQuestions: [],
     mode: ASAKAI_MODE,
     questions: [],
     questionsIndex: 0,
-    validationStatusSelected: 'all',
+    validationStatus: 'all',
   };
 
   fetchQuestions = async mode => {
@@ -37,12 +44,16 @@ class Questioning extends Component {
       return;
     }
     const data = await response.json();
-    this.setState({ questions: data, questionsIndex: 0 });
+    this.setState({
+      questions: data,
+      questionsIndex: 0,
+      filteredQuestions: this.getFilteredQuestions(data, this.state.validationStatus),
+    });
   };
 
   changeQuestion = increment => () => {
     let index = this.state.questionsIndex + increment;
-    if (index >= this.state.questions.length || index < 0) index = 0;
+    if (index >= this.state.filteredQuestions.length || index < 0) index = 0;
     this.setState({ questionsIndex: index });
   };
 
@@ -55,8 +66,21 @@ class Questioning extends Component {
     this.fetchQuestions(mode);
     this.setState({ mode });
   };
+  handleValidationStatusChange = validationStatus => {
+    this.setState({
+      filteredQuestions: this.getFilteredQuestions(this.state.questions, validationStatus),
+      validationStatus: validationStatus,
+      questionsIndex: 0,
+    });
+  };
 
   toggleModal = open => () => this.setState({ addQuestionDialog: open });
+
+  getFilteredQuestions = (questions, validationStatus) => {
+    if (this.state.mode === ASAKAI_MODE || validationStatus === 'all') return questions;
+
+    return questions.filter(question => question.isValidated === isValidated[validationStatus]);
+  };
 
   render() {
     const { classes } = this.props;
@@ -64,11 +88,15 @@ class Questioning extends Component {
       return 'erreur inattendue';
     }
 
-    const question = this.state.questions[this.state.questionsIndex];
+    const question = this.state.filteredQuestions[this.state.questionsIndex];
     return (
       <div className={classes.pageContainer}>
         <div>
-          <ModeSelector questionNumber={asakaiQuestionNumber} handleModeChange={this.handleModeChange} />
+          <ModeSelector
+            questionNumber={asakaiQuestionNumber}
+            handleModeChange={this.handleModeChange}
+            handleValidationStatusChange={this.handleValidationStatusChange}
+          />
           {question ? (
             <div>
               <Question question={question} />
@@ -84,7 +112,7 @@ class Questioning extends Component {
                   <ArrowForward />
                 </IconButton>
                 <div className={classes.counter}>
-                  {`${this.state.questionsIndex + 1} / ${this.state.questions.length}`}
+                  {`${this.state.questionsIndex + 1} / ${this.state.filteredQuestions.length}`}
                 </div>
               </div>
             </div>
