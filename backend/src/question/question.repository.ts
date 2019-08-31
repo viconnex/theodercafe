@@ -8,9 +8,14 @@ const FIND_QUESTION_QUERY = `
     LEFT JOIN categories on "questions"."categoryId"="categories"."id"
 `;
 
-const findWhereIsClassic = (isClassic: boolean, limit = null, isRandom: boolean = false): string => {
+const findAsakaiSubSet = (
+    isClassic: boolean,
+    isJokeOnSomeone: boolean,
+    limit = null,
+    isRandom: boolean = false,
+): string => {
     return `${FIND_QUESTION_QUERY}
-            WHERE "questions"."isClassic" = ${isClassic} AND "questions"."isValidated" = true
+            WHERE "questions"."isClassic" = ${isClassic} AND "questions"."isJokeOnSomeone" = ${isJokeOnSomeone} AND "questions"."isValidated" = true
             ${isRandom ? 'ORDER BY random()' : ''}
             ${null === limit ? '' : `LIMIT ${limit}`}`;
 };
@@ -41,13 +46,15 @@ export class QuestionRepository extends Repository<Question> {
         return this.find({ relations: ['category'], order: { id: 'ASC' } });
     };
 
-    findAllClassicsAndValidated = async (nonClassicsCount: number): Promise<QuestionDto[]> => {
+    findAsakaiSet = async (standardQuestionCount: number, jokeOnSomeoneCount: number): Promise<QuestionDto[]> => {
         return this.query(`
             SELECT *
             FROM (
-                ${findWhereIsClassic(true)}
+                ${findAsakaiSubSet(true, false)}
                 UNION (
-                ${findWhereIsClassic(false, nonClassicsCount, true)})
+                ${findAsakaiSubSet(false, true, jokeOnSomeoneCount, true)})
+                UNION (
+                ${findAsakaiSubSet(false, false, standardQuestionCount, true)})
             ) t
             ORDER BY random()
         `);

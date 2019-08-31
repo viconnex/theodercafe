@@ -40,11 +40,12 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    async findAllClassicsAndValidated(maxNumber: number): Promise<QuestionDto[]> {
+    async findAsakaiSet(maxNumber: number): Promise<QuestionDto[]> {
         const countClassics = await this.questionRepository.countClassics();
-        const nonClassicsCount = Math.max(maxNumber - countClassics[0].count, 0);
+        const jokeAboutSomeoneCount = Math.random() >= 0.4 ? Math.min(1, maxNumber - countClassics[0].count) : 0;
+        const standardQuestionCount = Math.max(maxNumber - countClassics[0].count - jokeAboutSomeoneCount, 0);
 
-        return this.questionRepository.findAllClassicsAndValidated(nonClassicsCount);
+        return this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount);
     }
 
     findInOrder(orderedIds: number[]): Promise<QuestionDto[]> {
