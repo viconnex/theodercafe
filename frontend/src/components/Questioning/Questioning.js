@@ -6,10 +6,11 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import AddIcon from '@material-ui/icons/Add';
 import { API_BASE_URL } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
-import { IconButton } from '@material-ui/core';
+import { IconButton, MenuItem } from '@material-ui/core';
 import { Question } from 'components/Question';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Select from '@material-ui/core/Select';
 
 import style from './style';
 
@@ -29,6 +30,7 @@ class Questioning extends Component {
     mode: ASAKAI_MODE,
     questions: [],
     questionsIndex: 0,
+    validationStatusSelected: 'all',
   };
 
   fetchQuestions = async mode => {
@@ -62,21 +64,20 @@ class Questioning extends Component {
     this.fetchQuestions(mode);
   };
 
+  handleValidationStatusChange = event => {
+    this.setState({ validationStatusSelected: event.target.value });
+  };
+
   render() {
     const { classes } = this.props;
     if (this.state.questions.length === 0 && this.state.fetchError) {
       return 'erreur inattendue';
     }
 
-    const modeSelectorInfo =
-      this.state.mode === ASAKAI_MODE
-        ? `Set de ${asakaiQuestionNumber} questions validées`
-        : 'Toutes les questions (même pas encore / non validées)';
-
     const question = this.state.questions[this.state.questionsIndex];
     return (
       <div className={classes.pageContainer}>
-        <div className={classes.modeSelector}>
+        <div className={classes.modeSelectorContainer}>
           <FormControlLabel
             control={
               <Switch
@@ -89,7 +90,25 @@ class Questioning extends Component {
             }
             label="Asakai"
           />
-          <div className={classes.modeSelectorInfo}>{modeSelectorInfo}</div>
+          {this.state.mode === ASAKAI_MODE ? (
+            <div className={classes.modeSelectorInfo}>{`Set de ${asakaiQuestionNumber} questions validées`}</div>
+          ) : (
+            <Select
+              className={classes.validationStatusSelect}
+              inputProps={{
+                classes: {
+                  icon: classes.validationStatusSelectIcon,
+                },
+              }}
+              value={this.state.validationStatusSelected}
+              onChange={this.handleValidationStatusChange}
+            >
+              <MenuItem value="all">Toutes les questions</MenuItem>
+              <MenuItem value="validated">Validées</MenuItem>
+              <MenuItem value="inValidation">En attente de validation</MenuItem>
+              <MenuItem value="notValidated">Invalidée</MenuItem>
+            </Select>
+          )}
         </div>
         <div>
           {question ? (

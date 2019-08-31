@@ -20,7 +20,6 @@ const App = ({ classes }) => {
   const toggleDrawer = open => () => {
     setIsDrawerOpen(open);
   };
-
   return (
     <Router>
       <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
@@ -35,6 +34,7 @@ const App = ({ classes }) => {
               </IconButton>
             </ToolBar>
           </AppBar>
+          <ToolBar className={classes.shim} />
           <Switch>
             <Route exact path="/a-propos" component={About} />
             <Route exact path="/nimda" component={Admin} />
