@@ -8,6 +8,10 @@ import { SnackbarProvider } from 'notistack';
 import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
+import { PrivateRoute } from 'modules/PrivateRoute';
+import { LoginSuccess } from 'modules/LoginSuccess';
+import { LoginPage } from 'pages/LoginPage.js';
+
 import logo from './ui/logo/theodercafe.png';
 import { Questioning } from './components/Questioning';
 import { Admin } from './admin';
@@ -37,7 +41,9 @@ const App = ({ classes }) => {
           <ToolBar className={classes.shim} />
           <Switch>
             <Route exact path="/a-propos" component={About} />
-            <Route exact path="/nimda" component={Admin} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route path="/login/success" component={LoginSuccess} />
+            <PrivateRoute exact path="/nimda" component={Admin} />
             <Route path="/" component={Questioning} />
           </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />

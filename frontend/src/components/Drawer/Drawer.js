@@ -22,7 +22,11 @@ const style = theme => ({
   },
 });
 
-const drawerLinks = [{ label: 'Questions', path: '/' }, { label: 'A propos', path: '/a-propos' }];
+const drawerLinks = [
+  { label: 'Questions', path: '/' },
+  { label: 'A propos', path: '/a-propos' },
+  { label: 'Login', path: '/login' },
+];
 
 const AppDrawer = ({ classes, toggleDrawer, open }) => {
   return (

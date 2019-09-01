@@ -27,7 +27,6 @@ export class CategoryController {
 
     @Put(':id')
     async edit(@Param('id') id: string, @Body() categoryBody): Promise<Category> {
-        console.log('idea', { ...categoryBody, id });
         const category = await this.categoryRepository.save({ ...categoryBody, id: Number(id) });
         if (!category) throw new NotFoundException();
 

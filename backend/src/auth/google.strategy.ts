@@ -18,7 +18,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     async validate(request: any, accessToken: string, refreshToken: string, profile, done: Function): Promise<void> {
         try {
             console.log(profile);
-
             const jwt = await this.authService.validateOAuthLogin(profile.id, Provider.GOOGLE);
             const user = {
                 jwt,
@@ -26,7 +25,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
             done(null, user);
         } catch (err) {
-            console.log(err);
             done(err, false);
         }
     }

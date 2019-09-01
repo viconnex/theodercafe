@@ -1,8 +1,21 @@
-import { Body, Controller, Delete, Get, Query, Param, Post, Put, NotFoundException, Res } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Query,
+    Param,
+    Post,
+    Put,
+    NotFoundException,
+    Res,
+    UseGuards,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('questions')
 export class QuestionController {
@@ -26,6 +39,7 @@ export class QuestionController {
     }
 
     @Get('')
+    @UseGuards(AuthGuard('jwt'))
     async getAdminList(@Res() res: Response): Promise<void> {
         const result = await this.questionService.findAdminList();
         res.set('Access-Control-Expose-Headers', 'X-Total-Count');
@@ -52,6 +66,7 @@ export class QuestionController {
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuard('jwt'))
     async remove(@Param('id') id: string): Promise<DeleteResult> {
         const deleteResult = await this.questionService.delete(id);
         if (deleteResult.affected === 0) throw new NotFoundException();
@@ -60,6 +75,7 @@ export class QuestionController {
     }
 
     @Put(':id')
+    @UseGuards(AuthGuard('jwt'))
     updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<QuestionDto> {
         return this.questionService.update(id, questionBody);
     }
