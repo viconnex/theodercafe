@@ -15,7 +15,7 @@ export class AuthController {
         // handles the Google OAuth2 callback
         const jwt: string = req.user.jwt;
         if (jwt) res.redirect(`${process.env.FRONT_BASE_URL}/login/success/` + jwt);
-        else res.redirect(`${process.env.FRONT_BASE_URL}/login/success/login/failure`);
+        else res.redirect(`${process.env.FRONT_BASE_URL}/login/failure`);
     }
 
     @Get('protected')

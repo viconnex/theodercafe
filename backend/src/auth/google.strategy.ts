@@ -11,14 +11,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
             clientSecret: process.env.CLIENT_SECRET,
             callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`,
             passReqToCallback: true,
-            scope: ['profile'],
+            scope: ['profile', 'email'],
         });
     }
 
     async validate(request: any, accessToken: string, refreshToken: string, profile, done: Function): Promise<void> {
         try {
             console.log(profile);
-            const jwt = await this.authService.validateOAuthLogin(profile.id, Provider.GOOGLE);
+            console.log(profile.emails[0].value);
+            const jwt = await this.authService.validateOAuthLogin(profile.id, profile.emails, Provider.GOOGLE);
             const user = {
                 jwt,
             };
