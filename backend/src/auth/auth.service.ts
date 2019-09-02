@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
+import { UserService } from '../user/user.service';
 
 export enum Provider {
     GOOGLE = 'google',
@@ -18,7 +19,7 @@ const getEmail = (emails: { value: string }[]): string | null => {
 export class AuthService {
     private readonly JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
-    constructor(/*private readonly usersService: UsersService*/) {}
+    constructor(private readonly userService: UserService) {}
 
     async validateOAuthLogin(thirdPartyId: string, emails: { value: string }[], provider: Provider): Promise<string> {
         try {
@@ -31,10 +32,14 @@ export class AuthService {
             const email = getEmail(emails);
             if (!email) return;
 
+            const user = await this.userService.findByEmail(email);
+            const role = user && user.isAdmin ? 'admin' : 'nonAdmin';
+
             const payload = {
                 thirdPartyId,
                 provider,
                 email,
+                role,
             };
 
             const jwt: string = sign(payload, this.JWT_SECRET_KEY, { expiresIn: 3600 });
@@ -42,5 +47,10 @@ export class AuthService {
         } catch (err) {
             throw new InternalServerErrorException('validateOAuthLogin', err.message);
         }
+    }
+
+    async verifyAdminRequest(email: string): Promise<boolean> {
+        const user = await this.userService.findByEmail(email);
+        return user && user.isAdmin;
     }
 }
