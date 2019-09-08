@@ -16,6 +16,8 @@ export const QuestionList = props => {
         <BooleanField source="isClassic" label="Classique" />
         <NumberField source="option1Votes" label="Votes 1" />
         <NumberField source="option2Votes" label="Votes 2" />
+        <NumberField source="upVotes" label="Up Votes" />
+        <NumberField source="downVotes" label="Down Votes" />
       </Datagrid>
     </List>
   );

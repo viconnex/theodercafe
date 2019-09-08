@@ -3,7 +3,8 @@ import { EntityRepository, Repository, DeleteResult } from 'typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 
 const FIND_QUESTION_QUERY = `
-    SELECT "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName", "questions"."isValidated"
+    SELECT
+        "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName", "questions"."isValidated"
     FROM questions
     LEFT JOIN categories on "questions"."categoryId"="categories"."id"
 `;

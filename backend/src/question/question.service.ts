@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 
+const JOKE_ON_SOMEONE_PROBABILITY = 0;
+
 @Injectable()
 export class QuestionService {
     constructor(
@@ -34,7 +36,7 @@ export class QuestionService {
             category,
             option1: questionBody.option1,
             option2: questionBody.option2,
-            isClassic: category ? category.name === 'Les classiques' : false,
+            isClassic: false,
         });
 
         return this.questionRepository.save(question);
@@ -42,7 +44,8 @@ export class QuestionService {
 
     async findAsakaiSet(maxNumber: number): Promise<QuestionDto[]> {
         const countClassics = await this.questionRepository.countClassics();
-        const jokeAboutSomeoneCount = Math.random() >= 0.4 ? Math.min(1, maxNumber - countClassics[0].count) : 0;
+        const jokeAboutSomeoneCount =
+            Math.random() < JOKE_ON_SOMEONE_PROBABILITY ? Math.min(1, maxNumber - countClassics[0].count) : 0;
         const standardQuestionCount = Math.max(maxNumber - countClassics[0].count - jokeAboutSomeoneCount, 0);
 
         return this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount);
