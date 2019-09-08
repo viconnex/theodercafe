@@ -9,7 +9,7 @@ import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
 import { PrivateRoute } from 'modules/PrivateRoute';
-import { LoginSuccess } from 'modules/LoginSuccess';
+import { LoginSuccess, LoginFailure } from 'modules/Login';
 import { LoginPage } from 'pages/LoginPage.js';
 
 import logo from './ui/logo/theodercafe.png';
@@ -43,7 +43,8 @@ const App = ({ classes }) => {
             <Route exact path="/a-propos" component={About} />
             <Route exact path="/login" component={LoginPage} />
             <Route path="/login/success" component={LoginSuccess} />
-            <PrivateRoute exact path="/nimda" component={Admin} />
+            <Route path="/login/failure" component={LoginFailure} />
+            <PrivateRoute exact path="/admin" component={Admin} />
             <Route path="/" component={Questioning} />
           </Switch>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
