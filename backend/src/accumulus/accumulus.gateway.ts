@@ -5,13 +5,13 @@ import { Client } from 'socket.io';
 export class AccumulusGateway implements OnGatewayConnection {
     @SubscribeMessage('events')
     handleConnection(client: Client, data: string): WsResponse {
-        console.log(data);
+        console.log('connection data', data);
         client.server.emit('nuage', 'voyage');
         return { event: 'events', data: 'réponse' };
     }
     @SubscribeMessage('upload')
     handleUpload(client: Client, data: string): void {
-        console.log(data);
+        console.log('upload data', data);
         client.server.emit('upload', data);
     }
 }
