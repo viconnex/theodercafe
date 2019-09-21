@@ -1,11 +1,14 @@
 import { WebSocketGateway, OnGatewayConnection, SubscribeMessage, WsResponse } from '@nestjs/websockets';
 import { Client } from 'socket.io';
+require('dotenv').config();
 
-@WebSocketGateway(4002)
+const origin = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://victorbrun.github.io';
+
+@WebSocketGateway(4002, { origins: origin })
 export class AccumulusGateway implements OnGatewayConnection {
     @SubscribeMessage('events')
-    handleConnection(client: Client, data: string): WsResponse {
-        console.log('connection data', data);
+    handleConnection(client: Client): WsResponse {
+        console.log('connection');
         client.server.emit('nuage', 'voyage');
         return { event: 'events', data: 'réponse' };
     }
