@@ -2,9 +2,7 @@ import { WebSocketGateway, OnGatewayConnection, SubscribeMessage, WsResponse } f
 import { Client } from 'socket.io';
 require('dotenv').config();
 
-const origin = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://victorbrun.github.io';
-
-@WebSocketGateway(4002, { origins: origin })
+@WebSocketGateway(4002)
 export class AccumulusGateway implements OnGatewayConnection {
     @SubscribeMessage('events')
     handleConnection(client: Client): WsResponse {
