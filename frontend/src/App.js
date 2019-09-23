@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,9 +14,10 @@ import { LoginPage } from 'pages/LoginPage.js';
 
 import logo from './ui/logo/theodercafe.png';
 import { Questioning } from './components/Questioning';
-import { Admin } from './admin';
 
 import style from './App.style';
+
+const Admin = lazy(() => import('./admin/Admin'));
 
 const App = ({ classes }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -39,14 +40,16 @@ const App = ({ classes }) => {
             </ToolBar>
           </AppBar>
           <ToolBar className={classes.shim} />
-          <Switch>
-            <Route exact path="/a-propos" component={About} />
-            <Route exact path="/login" component={LoginPage} />
-            <Route path="/login/success" component={LoginSuccess} />
-            <Route path="/login/failure" component={LoginFailure} />
-            <PrivateRoute exact path="/admin" component={Admin} />
-            <Route path="/" component={Questioning} />
-          </Switch>
+          <Suspense fallback={<div>Loading</div>}>
+            <Switch>
+              <Route exact path="/a-propos" component={About} />
+              <Route exact path="/login" component={LoginPage} />
+              <Route path="/login/success" component={LoginSuccess} />
+              <Route path="/login/failure" component={LoginFailure} />
+              <PrivateRoute exact path="/admin" component={Admin} />
+              <Route path="/" component={Questioning} />
+            </Switch>
+          </Suspense>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
         </div>
       </SnackbarProvider>
