@@ -8,6 +8,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
+import { decodeJWT } from 'services/jwtDecode';
 
 const style = theme => ({
   drawerHeader: {
@@ -22,13 +23,19 @@ const style = theme => ({
   },
 });
 
-const drawerLinks = [
-  { label: 'Questions', path: '/' },
-  { label: 'A propos', path: '/a-propos' },
-  { label: 'Login', path: '/login' },
-];
-
 const AppDrawer = ({ classes, toggleDrawer, open }) => {
+  const drawerLinks = [
+    { label: 'Questions', path: '/' },
+    { label: 'A propos', path: '/a-propos' },
+    { label: 'Login', path: '/login' },
+  ];
+  if (localStorage.jwt_token) {
+    const decoded = decodeJWT(localStorage.jwt_token);
+    if (decoded.role === 'admin') {
+      drawerLinks.push({ label: 'Admin', path: '/admin' });
+    }
+  }
+
   return (
     <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
       <div className={classes.drawerHeader}>

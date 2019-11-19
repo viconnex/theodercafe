@@ -9,7 +9,7 @@ import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
 import { PrivateRoute } from 'modules/PrivateRoute';
-import { LoginSuccess, LoginFailure } from 'modules/Login';
+import { Login } from 'modules/Login';
 import { LoginPage } from 'pages/LoginPage.js';
 
 import logo from './ui/logo/theodercafe.png';
@@ -25,6 +25,7 @@ const App = ({ classes }) => {
   const toggleDrawer = open => () => {
     setIsDrawerOpen(open);
   };
+
   return (
     <Router>
       <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
@@ -44,8 +45,8 @@ const App = ({ classes }) => {
             <Switch>
               <Route exact path="/a-propos" component={About} />
               <Route exact path="/login" component={LoginPage} />
-              <Route path="/login/success" component={LoginSuccess} />
-              <Route path="/login/failure" component={LoginFailure} />
+              <Route path="/login/success" render={() => <Login loginSuccess />} />
+              <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
               <PrivateRoute exact path="/admin" component={Admin} />
               <Route path="/" component={Questioning} />
             </Switch>
