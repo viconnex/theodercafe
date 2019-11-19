@@ -1,11 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
+export const getCompanyFromEmail = (email: string): string => {
+    return email.split('@')[1].split('.')[0];
+};
+
 @Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({ unique: true })
     email: string;
 
     @Column({ nullable: true })
@@ -13,6 +17,12 @@ export class User {
 
     @Column({ nullable: true })
     familyName: string;
+
+    @Column({ nullable: true })
+    company: string;
+
+    @Column({ nullable: true })
+    pictureUrl: string;
 
     @Column({ default: false })
     isAdmin: boolean;

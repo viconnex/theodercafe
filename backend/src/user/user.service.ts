@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
-import { User } from './user.entity';
+import { User, getCompanyFromEmail } from './user.entity';
 import { GoogleProfile } from 'src/auth/google.strategy';
 
 @Injectable()
@@ -17,6 +17,8 @@ export class UserService {
             email,
             givenName: profile.name.givenName,
             familyName: profile.name.familyName,
+            pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
+            company: getCompanyFromEmail(email),
             isAdmin: isAdmin || false,
         });
     }
