@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import { decodeJWT } from 'services/jwtDecode';
+import { API_BASE_URL } from 'utils/constants';
 
 const style = theme => ({
   drawerHeader: {
@@ -24,17 +25,24 @@ const style = theme => ({
 });
 
 const AppDrawer = ({ classes, toggleDrawer, open }) => {
-  const drawerLinks = [
-    { label: 'Questions', path: '/' },
-    { label: 'A propos', path: '/a-propos' },
-    { label: 'Login', path: '/login' },
-  ];
+  const drawerLinks = [{ label: 'Questions', path: '/' }, { label: 'A propos', path: '/a-propos' }];
+
+  let isLogin = false;
+
   if (localStorage.jwt_token) {
     const decoded = decodeJWT(localStorage.jwt_token);
+    if (!decoded.hasExpired) {
+      isLogin = true;
+    }
     if (decoded.role === 'admin') {
       drawerLinks.push({ label: 'Admin', path: '/admin' });
     }
   }
+
+  const logout = () => {
+    localStorage.removeItem('jwt_token');
+    toggleDrawer(false)();
+  };
 
   return (
     <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
@@ -52,6 +60,15 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
             </ListItem>
           </Link>
         ))}
+        {isLogin ? (
+          <ListItem button onClick={logout}>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        ) : (
+          <ListItem button onClick={() => (window.location = API_BASE_URL + '/auth/google')}>
+            <ListItemText primary="Google Login" />
+          </ListItem>
+        )}
       </List>
     </Drawer>
   );
