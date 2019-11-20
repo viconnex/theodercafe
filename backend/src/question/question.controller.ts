@@ -11,20 +11,18 @@ import {
     Res,
     UseGuards,
     Request,
+    BadRequestException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
-import { UserToQuestionChoiceService } from '../userToQuestionChoice/userToQuestionChoice.service';
+import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
 
 @Controller('questions')
 export class QuestionController {
-    constructor(
-        private readonly questionService: QuestionService,
-        private readonly userToQuestionChoiceService: UserToQuestionChoiceService,
-    ) {}
+    constructor(private readonly questionService: QuestionService) {}
 
     @Post()
     create(@Body() questionDto): Promise<QuestionDto> {
@@ -60,11 +58,19 @@ export class QuestionController {
         return question;
     }
 
-    @Put(':id/vote')
+    @Put(':id/choice')
     @UseGuards(AuthGuard('registered_user'))
-    updateVote(@Param('id') id: number, @Body() voteBody, @Request() req): Promise<UpdateResult> {
+    chose(
+        @Param('id') questionId: number,
+        @Body() body: { choice: number },
+        @Request() req,
+    ): Promise<UserToQuestionChoice> {
         console.log('req', req);
-        return this.questionService.vote(id, voteBody.optionIndex);
+        if (!req || !req.user || !req.user.email) {
+            throw new BadRequestException('user email not provided in request token');
+        }
+
+        return this.questionService.saveUserToQuestionChoice(questionId, req.user.email, body.choice);
     }
 
     @Put(':id/upVote')

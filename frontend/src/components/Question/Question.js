@@ -13,11 +13,11 @@ const Question = ({ classes, question }) => {
     option1VoteTrigger: 0,
     option2VoteTrigger: 0,
   });
-  const vote = optionIndex => () => {
-    setState({ ...state, [`option${optionIndex}VoteTrigger`]: state[`option${optionIndex}VoteTrigger`] + 1 });
+  const vote = choice => () => {
+    setState({ ...state, [`option${choice}VoteTrigger`]: state[`option${choice}VoteTrigger`] + 1 });
 
-    const url = API_BASE_URL + `/questions/${question.id}/vote`;
-    const body = { optionIndex };
+    const url = API_BASE_URL + `/questions/${question.id}/choice`;
+    const body = { choice };
     fetchRequest(url, 'PUT', body);
   };
 
