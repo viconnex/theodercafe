@@ -5,7 +5,6 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import Fab from '@material-ui/core/Fab';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import AddIcon from '@material-ui/icons/Add';
-import { API_BASE_URL } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import IconButton from '@material-ui/core/IconButton';
 import { Question } from 'components/Question';
@@ -14,6 +13,7 @@ import { ASAKAI_MODE } from 'utils/constants';
 import style from './style';
 import { ModeSelector } from 'components/ModeSelector';
 import Voter from './Voter';
+import { fetchRequest } from 'utils/helpers';
 
 const asakaiQuestionNumber = 10;
 
@@ -36,6 +36,7 @@ const getValidationInformation = validationStatus => {
 class Questioning extends Component {
   componentDidMount = () => {
     this.fetchQuestions(this.state.mode);
+    fetchRequest('/users/choices', 'GET');
   };
 
   state = {
@@ -51,7 +52,7 @@ class Questioning extends Component {
 
   fetchQuestions = async mode => {
     const queryParam = mode === ASAKAI_MODE ? `?maxNumber=${asakaiQuestionNumber}` : '';
-    const response = await fetch(API_BASE_URL + '/questions/' + mode + queryParam);
+    const response = await fetchRequest('/questions/' + mode + queryParam, 'GET');
     if (response.status === 500) {
       this.setState({ fetchError: true });
       return;

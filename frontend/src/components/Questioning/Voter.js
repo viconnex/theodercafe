@@ -4,7 +4,6 @@ import IconButton from '@material-ui/core/IconButton';
 import ThumbUp from '@material-ui/icons/ThumbUp';
 import ThumbDown from '@material-ui/icons/ThumbDown';
 import { fetchRequest } from 'utils/helpers';
-import { API_BASE_URL } from 'utils/constants';
 import { withStyles } from '@material-ui/styles';
 import { useSnackbar } from 'notistack';
 import style from './style';
@@ -13,7 +12,7 @@ const Voter = ({ classes, questionId, hasVoted }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleUpVote = (isUpVote, questionId) => async () => {
-    const url = API_BASE_URL + `/questions/${questionId}/upVote`;
+    const url = `/questions/${questionId}/upVote`;
     const body = { isUpVote };
     const response = await fetchRequest(url, 'PUT', body);
     if (response.status === 200) {

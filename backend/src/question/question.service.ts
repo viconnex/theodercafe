@@ -4,9 +4,11 @@ import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { UserToQuestionChoiceService } from 'src/userToQuestionChoice/userToQuestionChoice.service';
+import { UserToQuestionChoiceService } from '../userToQuestionChoice/userToQuestionChoice.service';
 import { Question } from './question.entity';
 import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
+import { UserService } from '../user/user.service';
+import { User } from 'src/user/user.entity';
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.7;
 
@@ -16,6 +18,7 @@ export class QuestionService {
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
         private readonly userToQuestionChoiceService: UserToQuestionChoiceService,
+        private readonly userService: UserService,
     ) {}
 
     async create(questionBody): Promise<QuestionDto> {
@@ -97,12 +100,20 @@ export class QuestionService {
         if (!question) {
             throw new NotFoundException('question id not found');
         }
-        if (choice === 1) {
-            this.questionRepository.update(questionId, { option1Votes: question.option1Votes + 1 });
-        } else if (choice === 2) {
-            this.questionRepository.update(questionId, { option2Votes: question.option2Votes + 1 });
-        }
 
-        return this.userToQuestionChoiceService.saveChoice(question, userEmail, choice);
+        const user: User = await this.userService.findByEmail(userEmail);
+        if (!user) throw new NotFoundException('user not found');
+
+        this.updateQuestionChoice(question, choice);
+
+        return this.userToQuestionChoiceService.saveChoice(question, user, choice);
+    }
+
+    updateQuestionChoice(question: Question, choice: number): void {
+        if (choice === 1) {
+            this.questionRepository.update(question.id, { option1Votes: question.option1Votes + 1 });
+        } else if (choice === 2) {
+            this.questionRepository.update(question.id, { option2Votes: question.option2Votes + 1 });
+        }
     }
 }

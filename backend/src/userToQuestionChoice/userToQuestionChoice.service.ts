@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { Question } from '../question/question.entity';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
-import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 
 @Injectable()
@@ -11,13 +10,9 @@ export class UserToQuestionChoiceService {
     constructor(
         @InjectRepository(UserToQuestionChoiceRepository)
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
-        private readonly userService: UserService,
     ) {}
 
-    async saveChoice(question: Question, userEmail: string, choice: number): Promise<UserToQuestionChoice> {
-        const user: User = await this.userService.findByEmail(userEmail);
-        if (!user) return;
-
+    async saveChoice(question: Question, user: User, choice: number): Promise<UserToQuestionChoice> {
         const initialChoice = await this.userToQuestionChoiceRepository.findOne({
             user,
             question,
@@ -37,5 +32,9 @@ export class UserToQuestionChoiceService {
         this.userToQuestionChoiceRepository.save(newChoice);
 
         return newChoice;
+    }
+
+    async getAllUserChoices(user: User): Promise<UserToQuestionChoice[]> {
+        return this.userToQuestionChoiceRepository.find({ user });
     }
 }

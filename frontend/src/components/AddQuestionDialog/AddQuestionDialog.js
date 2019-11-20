@@ -8,12 +8,11 @@ import Button from '@material-ui/core/Button';
 import Close from '@material-ui/icons/Close';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
-import { API_BASE_URL } from 'utils/constants';
 import { fetchRequest } from 'utils/helpers';
 import style from './style';
 
 const postQuestion = async (option1, option2, category) => {
-  const url = API_BASE_URL + '/questions';
+  const url = '/questions';
   const body = { option1, option2, category };
   const response = await fetchRequest(url, 'POST', body);
 
@@ -28,7 +27,7 @@ class AddQuestionDialog extends Component {
   };
 
   fetchCategories = async () => {
-    const response = await fetch(API_BASE_URL + '/categories');
+    const response = await fetch('/categories');
     const data = await response.json();
     this.setState({ categories: data });
   };

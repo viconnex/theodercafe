@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 
-import { API_BASE_URL } from 'utils/constants';
 import { fetchRequest } from 'utils/helpers';
 
 import { PlusOne } from '../PlusOne';
@@ -16,7 +15,7 @@ const Question = ({ classes, question }) => {
   const vote = choice => () => {
     setState({ ...state, [`option${choice}VoteTrigger`]: state[`option${choice}VoteTrigger`] + 1 });
 
-    const url = API_BASE_URL + `/questions/${question.id}/choice`;
+    const url = `/questions/${question.id}/choice`;
     const body = { choice };
     fetchRequest(url, 'PUT', body);
   };
