@@ -4,19 +4,16 @@ import { withStyles } from '@material-ui/core/styles';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import Fab from '@material-ui/core/Fab';
 import ArrowForward from '@material-ui/icons/ArrowForward';
-import ThumbUp from '@material-ui/icons/ThumbUp';
-import ThumbDown from '@material-ui/icons/ThumbDown';
 import AddIcon from '@material-ui/icons/Add';
 import { API_BASE_URL } from 'utils/constants';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
-import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import { Question } from 'components/Question';
 import { ASAKAI_MODE } from 'utils/constants';
 
 import style from './style';
 import { ModeSelector } from 'components/ModeSelector';
-import { fetchRequest } from 'utils/helpers';
+import Voter from './Voter';
 
 const asakaiQuestionNumber = 10;
 
@@ -98,20 +95,6 @@ class Questioning extends Component {
     return questions.filter(question => question.isValidated === isValidated[validationStatusSelected]);
   };
 
-  handleUpVote = (isUpVote, questionId) => async () => {
-    if (this.state.hasVotedQuestions.has(questionId)) {
-      return this.props.enqueueSnackbar('Tu as déjà voté pour cette question', { variant: 'error' });
-    }
-    this.state.hasVotedQuestions.add(questionId);
-
-    const url = API_BASE_URL + `/questions/${questionId}/upVote`;
-    const body = { isUpVote };
-    const response = await fetchRequest(url, 'PUT', body);
-    if (response.status === 200) {
-      this.props.enqueueSnackbar('Merci pour ton avis sur cette question', { variant: 'success' });
-    }
-  };
-
   render() {
     const { classes } = this.props;
     if (this.state.questions.length === 0 && this.state.fetchError) {
@@ -149,18 +132,7 @@ class Questioning extends Component {
               {this.state.mode !== ASAKAI_MODE && (
                 <div className={classes.validationStatus}>{getValidationInformation(question.isValidated)}</div>
               )}
-              <div className={classes.upVote}>
-                <Tooltip title="Je n'aime pas cette question">
-                  <IconButton color="primary" onClick={this.handleUpVote(false, question.id)} disabled={hasVoted}>
-                    <ThumbDown />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="J'aime cette question">
-                  <IconButton color="primary" onClick={this.handleUpVote(true, question.id)} disabled={hasVoted}>
-                    <ThumbUp />
-                  </IconButton>
-                </Tooltip>
-              </div>
+              <Voter questionId={question.id} hasVoted={hasVoted} />
             </div>
           ) : null}
           <Fab className={classes.addButton} size="small">
