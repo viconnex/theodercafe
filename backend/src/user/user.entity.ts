@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { UserToQuestionChoice } from 'src/userToQuestionChoice/userToQuestionChoice.entity';
 
 export const getCompanyFromEmail = (email: string): string => {
     return email.split('@')[1].split('.')[0];
@@ -26,6 +27,9 @@ export class User {
 
     @Column({ default: false })
     isAdmin: boolean;
+
+    @OneToMany(type => UserToQuestionChoice, userToQuestionChoice => userToQuestionChoice.user, { cascade: true })
+    userToQuestionChoices: UserToQuestionChoice[];
 
     @CreateDateColumn()
     createdAt: string;

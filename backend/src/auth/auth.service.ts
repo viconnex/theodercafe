@@ -43,4 +43,11 @@ export class AuthService {
         const user = await this.userService.findByEmail(email);
         return user && user.isAdmin;
     }
+
+    async verifyRegisteredUserRequest(email: string): Promise<boolean> {
+        const user = await this.userService.findByEmail(email);
+        if (user) {
+            return true;
+        }
+    }
 }

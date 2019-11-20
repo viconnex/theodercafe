@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ManyToOne,
+    OneToMany,
+} from 'typeorm';
 import { Category } from '../category/category.entity';
+import { UserToQuestionChoice } from 'src/userToQuestionChoice/userToQuestionChoice.entity';
 
 @Entity('questions')
 export class Question {
@@ -35,6 +44,9 @@ export class Question {
 
     @Column({ default: 0 })
     downVotes: number;
+
+    @OneToMany(type => UserToQuestionChoice, userToQuestionChoice => userToQuestionChoice.question, { cascade: true })
+    userToQuestionChoices: UserToQuestionChoice[];
 
     @CreateDateColumn()
     createdAt: string;

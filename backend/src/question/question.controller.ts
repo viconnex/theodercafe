@@ -10,16 +10,21 @@ import {
     NotFoundException,
     Res,
     UseGuards,
+    Request,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
+import { UserToQuestionChoiceService } from '../userToQuestionChoice/userToQuestionChoice.service';
 
 @Controller('questions')
 export class QuestionController {
-    constructor(private readonly questionService: QuestionService) {}
+    constructor(
+        private readonly questionService: QuestionService,
+        private readonly userToQuestionChoiceService: UserToQuestionChoiceService,
+    ) {}
 
     @Post()
     create(@Body() questionDto): Promise<QuestionDto> {
@@ -56,7 +61,9 @@ export class QuestionController {
     }
 
     @Put(':id/vote')
-    updateVote(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
+    @UseGuards(AuthGuard('registered_user'))
+    updateVote(@Param('id') id: number, @Body() voteBody, @Request() req): Promise<UpdateResult> {
+        console.log('req', req);
         return this.questionService.vote(id, voteBody.optionIndex);
     }
 
