@@ -25,13 +25,17 @@ export class UserToQuestionChoiceService {
 
         if (initialChoice) {
             initialChoice.choice = choice;
-            return await this.userToQuestionChoiceRepository.save(initialChoice);
+
+            return this.userToQuestionChoiceRepository.save(initialChoice);
         }
 
-        return this.userToQuestionChoiceRepository.save({
+        const newChoice = this.userToQuestionChoiceRepository.create({
             user,
             question,
             choice,
         });
+        this.userToQuestionChoiceRepository.save(newChoice);
+
+        return newChoice;
     }
 }

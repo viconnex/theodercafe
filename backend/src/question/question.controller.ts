@@ -12,6 +12,8 @@ import {
     UseGuards,
     Request,
     BadRequestException,
+    UseInterceptors,
+    ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionDto } from './interfaces/question.dto';
@@ -60,12 +62,12 @@ export class QuestionController {
 
     @Put(':id/choice')
     @UseGuards(AuthGuard('registered_user'))
-    chose(
+    @UseInterceptors(ClassSerializerInterceptor)
+    async chose(
         @Param('id') questionId: number,
         @Body() body: { choice: number },
         @Request() req,
     ): Promise<UserToQuestionChoice> {
-        console.log('req', req);
         if (!req || !req.user || !req.user.email) {
             throw new BadRequestException('user email not provided in request token');
         }
