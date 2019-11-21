@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import { decodeJWT } from 'services/jwtDecode';
-import { API_BASE_URL } from 'utils/constants';
+import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants';
 
 const style = theme => ({
   drawerHeader: {
@@ -65,7 +65,7 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
-          <ListItem button onClick={() => (window.location = API_BASE_URL + '/auth/google')}>
+          <ListItem button onClick={() => (window.location = API_BASE_URL + GOOGLE_AUTH_URI)}>
             <ListItemText primary="Google Login" />
           </ListItem>
         )}

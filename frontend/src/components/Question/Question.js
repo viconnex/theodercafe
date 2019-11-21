@@ -20,17 +20,20 @@ const Question = ({ classes, question, choice, chose }) => {
         <div className={classes.optionContainer}>
           <div
             onClick={() => chose(question.id, 1)}
-            className={`${classes.questionPart} ${choice === 1 ? classes.chosenQuestion : ''}`}
+            className={`${classes.option} ${choice === 1 ? classes.chosenQuestion : ''}`}
           >
-            <span className={classes.option}>{question.option1}</span>
+            <span className={!choice ? classes.chosable : ''}>{question.option1}</span>
           </div>
         </div>
-        <div className={classes.questionPart}> ou </div>
+        <div className={classes.separator}> ou </div>
         <div className={classes.optionContainer}>
-          <div onClick={() => chose(question.id, 2)} className={`${choice === 2 ? classes.chosenQuestion : ''}`}>
-            <span className={classes.option}>{question.option2}</span>
-            <span> ?</span>
+          <div
+            onClick={() => chose(question.id, 2)}
+            className={`${classes.option} ${classes.option2} ${choice === 2 ? classes.chosenQuestion : ''}`}
+          >
+            <span className={!choice ? classes.chosable : ''}>{question.option2}</span>
           </div>
+          <span style={{ padding: '8px' }}> ?</span>
         </div>
       </div>
     </div>

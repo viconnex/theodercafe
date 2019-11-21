@@ -16,17 +16,26 @@ const style = {
     fontSize: '20px',
     padding: '5px',
   },
-  questionPart: {
-    marginBottom: '5px',
+  option: {
+    cursor: 'pointer',
+    padding: '8px',
+  },
+  option2: {
+    marginLeft: '20px',
+  },
+  separator: {
+    margin: '5px',
   },
   chosenQuestion: {
-    color: 'red',
+    backgroundColor: 'white',
+    color: 'black',
   },
   optionContainer: {
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
   },
-  option: {
+  chosable: {
     borderBottom: '0.7px dashed',
     background: 'none',
     border: 'none',

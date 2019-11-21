@@ -14,6 +14,7 @@ import style from './style';
 import { ModeSelector } from 'components/ModeSelector';
 import Voter from './Voter';
 import { fetchRequest } from 'utils/helpers';
+import { LoginDialog } from 'components/Login';
 
 const asakaiQuestionNumber = 10;
 
@@ -41,6 +42,7 @@ class Questioning extends Component {
 
   state = {
     addQuestionDialog: false,
+    loginDialog: false,
     fetchError: false,
     filteredQuestions: [],
     mode: ASAKAI_MODE,
@@ -110,7 +112,8 @@ class Questioning extends Component {
   };
 
   chose = async (questionId, choice) => {
-    if (localStorage.jwt_token) {
+    return this.setState({ loginDialog: true });
+    if (localStorage.jwt_token && this.state.choices[questionId] !== choice) {
       const url = `/questions/${questionId}/choice`;
       const body = { choice };
       const response = await fetchRequest(url, 'PUT', body);
@@ -172,6 +175,7 @@ class Questioning extends Component {
             onClose={this.toggleModal(false)}
             addQuestion={this.addQuestion}
           />
+          <LoginDialog isOpen={this.state.loginDialog} handleClose={() => this.setState({ loginDialog: false })} />
         </div>
       </div>
     );
