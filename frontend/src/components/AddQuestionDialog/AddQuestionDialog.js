@@ -27,7 +27,7 @@ class AddQuestionDialog extends Component {
   };
 
   fetchCategories = async () => {
-    const response = await fetch('/categories');
+    const response = await fetchRequest('/categories');
     const data = await response.json();
     this.setState({ categories: data });
   };

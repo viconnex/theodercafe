@@ -19,6 +19,9 @@ const style = {
   questionPart: {
     marginBottom: '5px',
   },
+  chosenQuestion: {
+    color: 'red',
+  },
   optionContainer: {
     display: 'flex',
     justifyContent: 'center',

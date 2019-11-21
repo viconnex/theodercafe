@@ -36,7 +36,7 @@ const getValidationInformation = validationStatus => {
 class Questioning extends Component {
   componentDidMount = () => {
     this.fetchQuestions(this.state.mode);
-    fetchRequest('/users/choices', 'GET');
+    this.fetchChoices();
   };
 
   state = {
@@ -48,6 +48,7 @@ class Questioning extends Component {
     questionsIndex: 0,
     validationStatusSelected: 'all',
     hasVotedQuestions: new Set(),
+    choices: {},
   };
 
   fetchQuestions = async mode => {
@@ -63,6 +64,18 @@ class Questioning extends Component {
       questionsIndex: 0,
       filteredQuestions: this.getFilteredQuestions(data, this.state.validationStatusSelected),
     });
+  };
+
+  fetchChoices = async () => {
+    if (!localStorage.jwt_token) return;
+
+    const response = await fetchRequest('/users/choices', 'GET');
+    const userChoices = await response.json();
+    const choicesDic = {};
+    userChoices.forEach(choice => {
+      choicesDic[choice.questionId] = choice.choice;
+    });
+    this.setState({ choices: choicesDic });
   };
 
   changeQuestion = increment => () => {
@@ -96,12 +109,26 @@ class Questioning extends Component {
     return questions.filter(question => question.isValidated === isValidated[validationStatusSelected]);
   };
 
+  chose = async (questionId, choice) => {
+    if (localStorage.jwt_token) {
+      const url = `/questions/${questionId}/choice`;
+      const body = { choice };
+      const response = await fetchRequest(url, 'PUT', body);
+      if (response.status !== 200) {
+        return this.props.enqueueSnackbar("Votre choix n'a pas pu être enregistré", { variant: 'error' });
+      }
+      this.props.enqueueSnackbar('Choix enregistré', { variant: 'success' });
+      const newChoices = { ...this.state.choices };
+      newChoices[questionId] = choice;
+      this.setState({ choices: newChoices });
+    }
+  };
+
   render() {
     const { classes } = this.props;
     if (this.state.questions.length === 0 && this.state.fetchError) {
       return 'erreur inattendue';
     }
-
     const question = this.state.filteredQuestions[this.state.questionsIndex];
     const hasVoted = question ? this.state.hasVotedQuestions.has(question.id) : false;
     return (
@@ -114,7 +141,7 @@ class Questioning extends Component {
           />
           {question ? (
             <div>
-              <Question question={question} />
+              <Question question={question} choice={this.state.choices[question.id]} chose={this.chose} />
               <div className={classes.browser}>
                 <IconButton
                   disabled={this.state.questionsIndex === 0}
