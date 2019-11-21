@@ -32,7 +32,7 @@ export class AuthService {
                 role,
             };
 
-            const jwt: string = sign(payload, this.JWT_SECRET_KEY, { expiresIn: '7d' });
+            const jwt: string = sign(payload, this.JWT_SECRET_KEY);
             return jwt;
         } catch (err) {
             throw new InternalServerErrorException('validateOAuthLogin', err.message);

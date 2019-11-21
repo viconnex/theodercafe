@@ -6,14 +6,9 @@ import { CategoryRepository } from '../category/category.repository';
 import { Question } from './question.entity';
 import { QuestionService } from './question.service';
 import { UserToQuestionChoiceModule } from '../userToQuestionChoice/userToQuestionChoice.module';
-import { UserModule } from '../user/user.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Question, QuestionRepository, CategoryRepository]),
-        UserToQuestionChoiceModule,
-        UserModule,
-    ],
+    imports: [TypeOrmModule.forFeature([Question, QuestionRepository, CategoryRepository]), UserToQuestionChoiceModule],
     controllers: [QuestionController],
     providers: [QuestionService],
 })

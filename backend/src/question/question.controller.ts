@@ -68,11 +68,11 @@ export class QuestionController {
         @Body() body: { choice: number },
         @Request() req,
     ): Promise<UserToQuestionChoice> {
-        if (!req || !req.user || !req.user.email) {
-            throw new BadRequestException('user email not provided in request token');
+        if (!req || !req.user) {
+            throw new BadRequestException('user not found');
         }
 
-        return this.questionService.saveUserToQuestionChoice(questionId, req.user.email, body.choice);
+        return this.questionService.saveUserToQuestionChoice(questionId, req.user, body.choice);
     }
 
     @Put(':id/upVote')

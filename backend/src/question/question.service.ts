@@ -7,8 +7,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { UserToQuestionChoiceService } from '../userToQuestionChoice/userToQuestionChoice.service';
 import { Question } from './question.entity';
 import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
-import { UserService } from '../user/user.service';
-import { User } from 'src/user/user.entity';
+import { User } from '../user/user.entity';
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.7;
 
@@ -18,7 +17,6 @@ export class QuestionService {
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
         private readonly userToQuestionChoiceService: UserToQuestionChoiceService,
-        private readonly userService: UserService,
     ) {}
 
     async create(questionBody): Promise<QuestionDto> {
@@ -91,18 +89,11 @@ export class QuestionService {
         return this.questionRepository.update(questionId, { downVotes: question.downVotes + 1 });
     }
 
-    async saveUserToQuestionChoice(
-        questionId: number,
-        userEmail: string,
-        choice: number,
-    ): Promise<UserToQuestionChoice> {
+    async saveUserToQuestionChoice(questionId: number, user: User, choice: number): Promise<UserToQuestionChoice> {
         const question: Question = await this.questionRepository.findOne(questionId);
         if (!question) {
             throw new NotFoundException('question id not found');
         }
-
-        const user: User = await this.userService.findByEmail(userEmail);
-        if (!user) throw new NotFoundException('user not found');
 
         this.updateQuestionChoice(question, choice);
 
