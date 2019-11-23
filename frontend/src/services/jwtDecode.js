@@ -7,3 +7,9 @@ export const decodeJWT = jwtToken => {
     role: decoded.role,
   };
 };
+
+export const isUser = () => {
+  if (!localStorage.jwt_token) return false;
+  const decoded = decodeJWT(localStorage.jwt_token);
+  return !decoded.hasExpired;
+};

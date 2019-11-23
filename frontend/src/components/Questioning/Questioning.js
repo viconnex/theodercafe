@@ -8,13 +8,14 @@ import AddIcon from '@material-ui/icons/Add';
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import IconButton from '@material-ui/core/IconButton';
 import { Question } from 'components/Question';
-import { ASAKAI_MODE } from 'utils/constants';
+import { ASAKAI_MODE, ALL_QUESTIONS_MODE } from 'utils/constants';
 
 import style from './style';
 import { ModeSelector } from 'components/ModeSelector';
 import Voter from './Voter';
 import { fetchRequest } from 'utils/helpers';
 import { LoginDialog } from 'components/Login';
+import { isUser } from 'services/jwtDecode';
 
 const asakaiQuestionNumber = 10;
 
@@ -36,7 +37,7 @@ const getValidationInformation = validationStatus => {
 
 class Questioning extends Component {
   componentDidMount = () => {
-    this.fetchQuestions(this.state.mode);
+    this.fetchQuestions(this.state.isAsakaiMode);
     this.fetchChoices();
   };
 
@@ -45,17 +46,20 @@ class Questioning extends Component {
     loginDialog: false,
     fetchError: false,
     filteredQuestions: [],
-    mode: ASAKAI_MODE,
+    isAsakaiMode: true,
     questions: [],
     questionsIndex: 0,
     validationStatusSelected: 'all',
     hasVotedQuestions: new Set(),
     choices: {},
+    asakaiChoices: {},
+    isAsakaiResult: false,
   };
 
-  fetchQuestions = async mode => {
-    const queryParam = mode === ASAKAI_MODE ? `?maxNumber=${asakaiQuestionNumber}` : '';
-    const response = await fetchRequest('/questions/' + mode + queryParam, 'GET');
+  fetchQuestions = async isAsakaiMode => {
+    const queryParam = isAsakaiMode ? `?maxNumber=${asakaiQuestionNumber}` : '';
+    const uri = isAsakaiMode ? ASAKAI_MODE : ALL_QUESTIONS_MODE;
+    const response = await fetchRequest('/questions/' + uri + queryParam, 'GET');
     if (response.status === 500) {
       this.setState({ fetchError: true });
       return;
@@ -82,18 +86,24 @@ class Questioning extends Component {
 
   changeQuestion = increment => () => {
     let index = this.state.questionsIndex + increment;
-    if (index >= this.state.filteredQuestions.length || index < 0) index = 0;
-    this.setState({ questionsIndex: index });
+    if (index < 0) index = 0;
+    if (index < this.state.filteredQuestions.length && index >= 0) {
+      return this.setState({ questionsIndex: index });
+    }
+    if (this.state.isAsakaiMode === ALL_QUESTIONS_MODE) {
+      return this.setState({ questionsIndex: 0 });
+    }
+    return this.setState({ isAsakaiResult: true });
   };
 
   addQuestion = (option1, option2, categoryName) => {
-    if (this.state.mode !== ASAKAI_MODE) {
-      this.state.questions.push({ option1, option2, categoryName });
+    if (!this.state.isAsakaiMode) {
+      this.state.questions.push({ option1, option2, categoryName, isValidated: null });
     }
   };
-  handleModeChange = mode => {
-    this.fetchQuestions(mode);
-    this.setState({ mode });
+  handleModeChange = isAsakaiMode => {
+    this.fetchQuestions(isAsakaiMode);
+    this.setState({ isAsakaiMode, isAsakaiResult: false });
   };
   handleValidationStatusChange = validationStatusSelected => {
     this.setState({
@@ -106,14 +116,30 @@ class Questioning extends Component {
   toggleModal = open => () => this.setState({ addQuestionDialog: open });
 
   getFilteredQuestions = (questions, validationStatusSelected) => {
-    if (this.state.mode === ASAKAI_MODE || validationStatusSelected === 'all') return questions;
+    if (this.state.isAsakaiMode || validationStatusSelected === 'all') return questions;
 
     return questions.filter(question => question.isValidated === isValidated[validationStatusSelected]);
   };
 
   chose = async (questionId, choice) => {
-    return this.setState({ loginDialog: true });
-    if (localStorage.jwt_token && this.state.choices[questionId] !== choice) {
+    if (this.state.isAsakaiMode) {
+      return this.handleAsakaiChoice(questionId, choice);
+    }
+    return this.handleUserChoice(questionId, choice);
+  };
+
+  handleAsakaiChoice = (questionId, choice) => {
+    const choices = this.state.asakaiChoices;
+    choices[questionId] = choice;
+    this.setState({ asakaiChoices: choices });
+    this.changeQuestion(1)();
+  };
+
+  handleUserChoice = async (questionId, choice) => {
+    if (!isUser()) {
+      return this.setState({ loginDialog: true });
+    }
+    if (this.state.choices[questionId] !== choice) {
       const url = `/questions/${questionId}/choice`;
       const body = { choice };
       const response = await fetchRequest(url, 'PUT', body);
@@ -132,8 +158,10 @@ class Questioning extends Component {
     if (this.state.questions.length === 0 && this.state.fetchError) {
       return 'erreur inattendue';
     }
+    const isAsakaiMode = this.state.isAsakaiMode;
     const question = this.state.filteredQuestions[this.state.questionsIndex];
     const hasVoted = question ? this.state.hasVotedQuestions.has(question.id) : false;
+    const choice = isAsakaiMode ? null : this.state.choices[question.id];
     return (
       <div className={classes.pageContainer}>
         <div>
@@ -142,9 +170,9 @@ class Questioning extends Component {
             handleModeChange={this.handleModeChange}
             handleValidationStatusChange={this.handleValidationStatusChange}
           />
-          {question ? (
+          {question && !this.state.isAsakaiResult && (
             <div>
-              <Question question={question} choice={this.state.choices[question.id]} chose={this.chose} />
+              <Question question={question} choice={choice} chose={this.chose} />
               <div className={classes.browser}>
                 <IconButton
                   disabled={this.state.questionsIndex === 0}
@@ -160,12 +188,13 @@ class Questioning extends Component {
                   {`${this.state.questionsIndex + 1} / ${this.state.filteredQuestions.length}`}
                 </div>
               </div>
-              {this.state.mode !== ASAKAI_MODE && (
+              {!this.state.isAsakaiMode && (
                 <div className={classes.validationStatus}>{getValidationInformation(question.isValidated)}</div>
               )}
               <Voter questionId={question.id} hasVoted={hasVoted} />
             </div>
-          ) : null}
+          )}
+          {isAsakaiMode && this.state.isAsakaiResult && <div>fin des questions</div>}
           <Fab className={classes.addButton} size="small">
             <AddIcon onClick={this.toggleModal(true)} />
           </Fab>
