@@ -6,14 +6,13 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { AddQuestionDialog } from 'components/AddQuestionDialog';
 import { ModeSelector } from 'components/ModeSelector';
-import { LoginDialog } from 'components/Login';
 
 import style from './style';
-import AsakaiQuestioning from './AsakaiQuestioning';
-import AllQuestioning from './AllQuestioning';
+import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning';
+import AllQuestioning from 'components/Questioning/AllQuestioning';
 import { ALL_QUESTIONS_OPTION } from 'utils/constants';
 
-class Questioning extends Component {
+class Home extends Component {
   state = {
     addQuestionDialog: false,
     isAsakaiMode: true,
@@ -55,4 +54,4 @@ class Questioning extends Component {
   }
 }
 
-export default withSnackbar(withStyles(style)(Questioning));
+export default withSnackbar(withStyles(style)(Home));

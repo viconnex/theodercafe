@@ -5,7 +5,6 @@ import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import style from './style';
-import { LoginDialog } from 'components/Login';
 
 const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([]);

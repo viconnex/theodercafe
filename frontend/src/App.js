@@ -10,12 +10,12 @@ import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
 import { PrivateRoute } from 'modules/PrivateRoute';
 import { Login } from 'modules/Login';
-import { LoginPage } from 'pages/LoginPage.js';
+import { LoginPage } from 'pages/LoginPage';
 
 import logo from './ui/logo/theodercafe.png';
-import { Questioning } from './components/Questioning';
 
 import style from './App.style';
+import { Home } from 'pages/Home';
 
 const Admin = lazy(() => import('./admin/Admin'));
 
@@ -48,7 +48,7 @@ const App = ({ classes }) => {
               <Route path="/login/success" render={() => <Login loginSuccess />} />
               <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
               <PrivateRoute exact path="/admin" component={Admin} />
-              <Route path="/" component={Questioning} />
+              <Route path="/" component={Home} />
             </Switch>
           </Suspense>
           <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
