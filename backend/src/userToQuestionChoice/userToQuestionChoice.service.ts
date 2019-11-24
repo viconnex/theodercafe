@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { Question } from '../question/question.entity';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
-import { User } from '../user/user.entity';
 
 @Injectable()
 export class UserToQuestionChoiceService {
@@ -12,12 +11,11 @@ export class UserToQuestionChoiceService {
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
     ) {}
 
-    async saveChoice(question: Question, user: User, choice: number): Promise<UserToQuestionChoice> {
+    async saveChoice(question: Question, userId: number, choice: number): Promise<UserToQuestionChoice> {
         const initialChoice = await this.userToQuestionChoiceRepository.findOne({
-            user,
+            userId,
             question,
         });
-
         if (initialChoice) {
             initialChoice.choice = choice;
 
@@ -25,16 +23,15 @@ export class UserToQuestionChoiceService {
         }
 
         const newChoice = this.userToQuestionChoiceRepository.create({
-            user,
+            userId,
             question,
             choice,
         });
-        this.userToQuestionChoiceRepository.save(newChoice);
 
-        return newChoice;
+        return this.userToQuestionChoiceRepository.save(newChoice);
     }
 
-    async getAllUserChoices(user: User): Promise<UserToQuestionChoice[]> {
-        return this.userToQuestionChoiceRepository.find({ user });
+    async getAllUserChoices(userId: number): Promise<UserToQuestionChoice[]> {
+        return await this.userToQuestionChoiceRepository.find({ userId });
     }
 }

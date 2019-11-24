@@ -58,8 +58,7 @@ class AddQuestionDialog extends Component {
     if (response.status === 201) {
       const ackResponse = choisis(this.state.option1, this.state.option2);
       this.props.enqueueSnackbar(`${ackResponse} !`, { variant: 'success' });
-      const categoryName = this.state.categoryValue ? this.state.categoryLabel : null;
-      this.props.addQuestion(this.state.option1, this.state.option2, categoryName);
+      this.props.handleQuestionAdded();
     } else {
       this.props.enqueueSnackbar("La question n'a pas pu être créée", { variant: 'error' });
     }

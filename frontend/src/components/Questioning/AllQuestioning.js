@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
-import { ALL_QUESTIONS_MODE, ALL_QUESTIONS_OPTION, VALIDATION_STATUS_OPTIONS } from 'utils/constants';
+import { ALL_QUESTIONS_MODE, ALL_QUESTIONS_OPTION, VALIDATION_STATUS_OPTIONS } from 'utils/constants/questionConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -28,7 +28,7 @@ const AllQuestioning = ({ classes, validationStatus }) => {
     const fetchQuestions = async () => {
       const response = await fetchRequest(`/questions/${ALL_QUESTIONS_MODE}`, 'GET');
       if (response.state === 500) {
-        enqueueSnackbar('Un problème est survenu', { variant: 'error' });
+        return enqueueSnackbar('Un problème est survenu', { variant: 'error' });
       }
       const data = await response.json();
       setQuestions(data);
@@ -36,6 +36,13 @@ const AllQuestioning = ({ classes, validationStatus }) => {
     const fetchChoices = async () => {
       if (!localStorage.jwt_token) return;
       const response = await fetchRequest('/users/choices', 'GET');
+      if (response.status === 400)
+        return enqueueSnackbar('Un problème est survenu, essaie de te reconnecter', {
+          variant: 'error',
+          autoHideDuration: 5000,
+        });
+      if (response.status === 500) return enqueueSnackbar('Un problème est survenu', { variant: 'error' });
+
       const userChoices = await response.json();
       const choicesDic = {};
       userChoices.forEach(choice => {
@@ -43,6 +50,7 @@ const AllQuestioning = ({ classes, validationStatus }) => {
       });
       setChoices(choicesDic);
     };
+
     fetchQuestions();
     fetchChoices();
   }, []);

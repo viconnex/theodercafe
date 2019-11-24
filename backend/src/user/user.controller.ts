@@ -19,10 +19,10 @@ export class UserController {
     @UseGuards(AuthGuard('registered_user'))
     @UseInterceptors(ClassSerializerInterceptor)
     async getChoices(@Request() req): Promise<UserToQuestionChoice[]> {
-        if (!req || !req.user) {
+        if (!req || !req.user || !req.user.id) {
             throw new BadRequestException('user not found');
         }
 
-        return this.userToQuestionChoiceService.getAllUserChoices(req.user);
+        return await this.userToQuestionChoiceService.getAllUserChoices(req.user.id);
     }
 }

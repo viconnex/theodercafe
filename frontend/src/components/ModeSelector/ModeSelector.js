@@ -5,11 +5,9 @@ import Switch from '@material-ui/core/Switch';
 import Select from '@material-ui/core/Select';
 import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
-import { VALIDATION_STATUS_OPTIONS, ASAKAI_QUESTION_COUNT } from 'utils/constants';
+import { VALIDATION_STATUS_OPTIONS, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants';
 
-const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, isAsakaiMode }) => {
-  const [validationStatus, setValidationStatus] = React.useState('all');
-
+const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, isAsakaiMode, validationStatus }) => {
   const handleSwitch = event => {
     handleModeChange(!!event.target.checked);
   };
@@ -40,7 +38,6 @@ const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange,
           }}
           value={validationStatus}
           onChange={event => {
-            setValidationStatus(event.target.value);
             handleValidationStatusChange(event.target.value);
           }}
         >

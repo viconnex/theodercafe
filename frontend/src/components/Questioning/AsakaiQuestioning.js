@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
-import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants';
+import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import style from './style';

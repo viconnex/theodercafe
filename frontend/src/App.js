@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { SnackbarProvider } from 'notistack';
@@ -16,8 +16,21 @@ import logo from './ui/logo/theodercafe.png';
 
 import style from './App.style';
 import { Home } from 'pages/Home';
+import { ThemeProvider } from '@material-ui/styles';
+import colors from 'ui/colors';
+import { getPictureUrl } from 'services/jwtDecode';
 
 const Admin = lazy(() => import('./admin/Admin'));
+
+const theme = createMuiTheme({
+  palette: {
+    primary: { main: colors.theodoBlue },
+    secondary: { main: colors.theodoBlue },
+  },
+  status: {
+    danger: 'orange',
+  },
+});
 
 const App = ({ classes }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -26,35 +39,43 @@ const App = ({ classes }) => {
     setIsDrawerOpen(open);
   };
 
+  const AppMenuIcon = () => {
+    const pictureUrl = getPictureUrl();
+    if (!pictureUrl) return <MenuIcon />;
+    return <img src={pictureUrl} width="30" className={classes.profile} />;
+  };
+
   return (
-    <Router>
-      <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
-        <div className={classes.app}>
-          <AppBar classes={{ root: classes.appBar }} position="fixed">
-            <ToolBar className={classes.toolBar}>
-              <Link to="/">
-                <img src={logo} alt="logo" height="20" />
-              </Link>
-              <IconButton edge="start" className={classes.menuButton} aria-label="Menu" onClick={toggleDrawer(true)}>
-                <MenuIcon />
-              </IconButton>
-            </ToolBar>
-          </AppBar>
-          <ToolBar className={classes.shim} />
-          <Suspense fallback={<div>Loading</div>}>
-            <Switch>
-              <Route exact path="/a-propos" component={About} />
-              <Route exact path="/login" component={LoginPage} />
-              <Route path="/login/success" render={() => <Login loginSuccess />} />
-              <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
-              <PrivateRoute exact path="/admin" component={Admin} />
-              <Route path="/" component={Home} />
-            </Switch>
-          </Suspense>
-          <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
-        </div>
-      </SnackbarProvider>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <SnackbarProvider maxSnack={3} autoHideDuration={1300}>
+          <div className={classes.app}>
+            <AppBar classes={{ root: classes.appBar }} position="fixed">
+              <ToolBar className={classes.toolBar}>
+                <Link to="/">
+                  <img src={logo} alt="logo" height="20" />
+                </Link>
+                <IconButton edge="start" className={classes.menuButton} aria-label="Menu" onClick={toggleDrawer(true)}>
+                  <AppMenuIcon />
+                </IconButton>
+              </ToolBar>
+            </AppBar>
+            <ToolBar className={classes.shim} />
+            <Suspense fallback={<div>Loading</div>}>
+              <Switch>
+                <Route exact path="/a-propos" component={About} />
+                <Route exact path="/login" component={LoginPage} />
+                <Route path="/login/success" render={() => <Login loginSuccess />} />
+                <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
+                <PrivateRoute exact path="/admin" component={Admin} />
+                <Route path="/" component={Home} />
+              </Switch>
+            </Suspense>
+            <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
+          </div>
+        </SnackbarProvider>
+      </Router>
+    </ThemeProvider>
   );
 };
 

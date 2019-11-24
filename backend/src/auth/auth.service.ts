@@ -13,7 +13,7 @@ export class AuthService {
 
     constructor(private readonly userService: UserService) {}
 
-    async validateOAuthLogin(profile: GoogleProfile, provider: Provider): Promise<string> {
+    async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
         try {
             const email = profile.emails.length > 0 ? profile.emails[0].value : null;
             if (!email) return;
@@ -26,10 +26,10 @@ export class AuthService {
             const role = user && user.isAdmin ? 'admin' : 'nonAdmin';
 
             const payload = {
-                thirdPartyId: profile.id,
-                provider,
+                id: user.id,
                 email,
                 role,
+                pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             };
 
             const jwt: string = sign(payload, this.JWT_SECRET_KEY);

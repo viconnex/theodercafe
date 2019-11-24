@@ -10,10 +10,11 @@ const Question = ({ classes, question, choice, chose }) => {
       <div className={classes.categoryContainer}>
         <div className={classes.categoryTitle}>Catégorie</div>
         <Chip
-          variant="outlined"
+          // variant="outlined"
           size="small"
           label={question.categoryName ? question.categoryName : 'hors catégorie'}
-          className={classes.categoryContent}
+          color="primary"
+          // className={classes.categoryContent}
         />
       </div>
       <div className={classes.questionContainer}>

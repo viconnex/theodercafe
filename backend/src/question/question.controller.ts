@@ -68,11 +68,10 @@ export class QuestionController {
         @Body() body: { choice: number },
         @Request() req,
     ): Promise<UserToQuestionChoice> {
-        if (!req || !req.user) {
+        if (!req || !req.user || !req.user.id) {
             throw new BadRequestException('user not found');
         }
-
-        return this.questionService.saveUserToQuestionChoice(questionId, req.user, body.choice);
+        return this.questionService.saveUserToQuestionChoice(questionId, req.user.id, body.choice);
     }
 
     @Put(':id/upVote')

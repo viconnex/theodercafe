@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { withSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
@@ -10,48 +10,43 @@ import { ModeSelector } from 'components/ModeSelector';
 import style from './style';
 import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning';
 import AllQuestioning from 'components/Questioning/AllQuestioning';
-import { ALL_QUESTIONS_OPTION } from 'utils/constants';
+import { ALL_QUESTIONS_OPTION } from 'utils/constants/questionConstants';
 
-class Home extends Component {
-  state = {
-    addQuestionDialog: false,
-    isAsakaiMode: true,
-    validationStatus: ALL_QUESTIONS_OPTION,
+const Home = ({ classes }) => {
+  const [addQuestionDialog, setAddQuestionDialog] = useState(false);
+  const [isAsakaiMode, setIsAsakaiMode] = useState(true);
+  const [validationStatus, setValidationStatus] = useState(ALL_QUESTIONS_OPTION);
+
+  const handleModeChange = isAsakaiMode => {
+    setIsAsakaiMode(isAsakaiMode);
   };
 
-  handleModeChange = isAsakaiMode => {
-    this.setState({ isAsakaiMode, isAsakaiResult: false });
-  };
+  const handleValidationStatusChange = validationStatus => setValidationStatus(validationStatus);
 
-  handleValidationStatusChange = validationStatus => this.setState({ validationStatus });
+  const toggleModal = open => () => setAddQuestionDialog(open);
 
-  toggleModal = open => () => this.setState({ addQuestionDialog: open });
-
-  render() {
-    const { classes } = this.props;
-    const isAsakaiMode = this.state.isAsakaiMode;
-    return (
-      <div className={classes.pageContainer}>
-        <div>
-          <ModeSelector
-            isAsakaiMode={isAsakaiMode}
-            handleModeChange={this.handleModeChange}
-            handleValidationStatusChange={this.handleValidationStatusChange}
-          />
-          {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning validationStatus={this.state.validationStatus} />}
-          <Fab className={classes.addButton} size="small">
-            <AddIcon onClick={this.toggleModal(true)} />
-          </Fab>
-          <AddQuestionDialog
-            className={classes.modal}
-            open={this.state.addQuestionDialog}
-            onClose={this.toggleModal(false)}
-            addQuestion={this.addQuestion}
-          />
-        </div>
+  return (
+    <div className={classes.pageContainer}>
+      <div>
+        <ModeSelector
+          isAsakaiMode={isAsakaiMode}
+          handleModeChange={handleModeChange}
+          validationStatus={validationStatus}
+          handleValidationStatusChange={handleValidationStatusChange}
+        />
+        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning validationStatus={validationStatus} />}
+        <Fab className={classes.addButton} size="small">
+          <AddIcon onClick={toggleModal(true)} />
+        </Fab>
+        <AddQuestionDialog
+          className={classes.modal}
+          open={addQuestionDialog}
+          onClose={toggleModal(false)}
+          handleQuestionAdded={() => setAddQuestionDialog(false)}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default withSnackbar(withStyles(style)(Home));

@@ -89,15 +89,14 @@ export class QuestionService {
         return this.questionRepository.update(questionId, { downVotes: question.downVotes + 1 });
     }
 
-    async saveUserToQuestionChoice(questionId: number, user: User, choice: number): Promise<UserToQuestionChoice> {
+    async saveUserToQuestionChoice(questionId: number, userId: number, choice: number): Promise<UserToQuestionChoice> {
         const question: Question = await this.questionRepository.findOne(questionId);
         if (!question) {
             throw new NotFoundException('question id not found');
         }
 
         this.updateQuestionChoice(question, choice);
-
-        return this.userToQuestionChoiceService.saveChoice(question, user, choice);
+        return this.userToQuestionChoiceService.saveChoice(question, userId, choice);
     }
 
     updateQuestionChoice(question: Question, choice: number): void {
