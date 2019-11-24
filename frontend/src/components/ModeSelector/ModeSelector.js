@@ -5,16 +5,13 @@ import Switch from '@material-ui/core/Switch';
 import Select from '@material-ui/core/Select';
 import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ASAKAI_MODE, ALL_QUESTIONS_MODE } from 'utils/constants';
+import { VALIDATION_STATUS_OPTIONS, ASAKAI_QUESTION_COUNT } from 'utils/constants';
 
-const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, questionNumber }) => {
-  const [modeSelected, setMode] = React.useState(ASAKAI_MODE);
-  const [validationStatusSelected, setValidationStatus] = React.useState('all');
+const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, isAsakaiMode }) => {
+  const [validationStatus, setValidationStatus] = React.useState('all');
 
   const handleSwitch = event => {
-    const mode = event.target.checked ? ASAKAI_MODE : ALL_QUESTIONS_MODE;
-    setMode(mode);
-    handleModeChange(mode);
+    handleModeChange(!!event.target.checked);
   };
 
   return (
@@ -24,15 +21,15 @@ const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange,
           <Switch
             color="default"
             classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
-            checked={modeSelected === ASAKAI_MODE}
+            checked={isAsakaiMode}
             onChange={handleSwitch}
             value="asakai"
           />
         }
         label="Asakai"
       />
-      {modeSelected === ASAKAI_MODE ? (
-        <div className={classes.modeSelectorInfo}>{`Set de ${questionNumber} questions validées`}</div>
+      {isAsakaiMode ? (
+        <div className={classes.modeSelectorInfo}>{`Set de ${ASAKAI_QUESTION_COUNT} questions validées`}</div>
       ) : (
         <Select
           className={classes.validationStatusSelect}
@@ -41,16 +38,17 @@ const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange,
               icon: classes.validationStatusSelectIcon,
             },
           }}
-          value={validationStatusSelected}
+          value={validationStatus}
           onChange={event => {
             setValidationStatus(event.target.value);
             handleValidationStatusChange(event.target.value);
           }}
         >
-          <MenuItem value="all">Toutes les questions</MenuItem>
-          <MenuItem value="validated">Validées</MenuItem>
-          <MenuItem value="inValidation">En attente de validation</MenuItem>
-          <MenuItem value="notValidated">Invalidée</MenuItem>
+          {VALIDATION_STATUS_OPTIONS.map(option => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
         </Select>
       )}
     </div>
