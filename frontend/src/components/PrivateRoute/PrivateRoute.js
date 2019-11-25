@@ -6,7 +6,7 @@ const RedirectComponent = ({ component: Component, ...props }) => {
   if (!localStorage.jwt_token) return <Redirect to={{ pathname: '/login' }} />;
   try {
     const decoded = decodeJWT(localStorage.jwt_token);
-    if (decoded.hasExpired) return <Redirect to={{ pathname: '/login' }} />;
+    if (!decoded) return <Redirect to={{ pathname: '/login' }} />;
     if (decoded.role !== 'admin') return <div>Tu dois être admin pour accéder à cette page</div>;
     return <Component {...props} />;
   } catch (error) {

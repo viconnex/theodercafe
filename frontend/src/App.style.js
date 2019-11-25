@@ -21,9 +21,6 @@ const style = {
     display: 'flex',
     justifyContent: 'space-between',
   },
-  profile: {
-    borderRadius: '30px',
-  },
 };
 
 export default style;

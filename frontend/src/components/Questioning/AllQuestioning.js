@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
 import { ALL_QUESTIONS_MODE, ALL_QUESTIONS_OPTION, VALIDATION_STATUS_OPTIONS } from 'utils/constants/questionConstants';
@@ -12,6 +13,7 @@ import { isUser } from 'services/jwtDecode';
 import style from './style';
 import Voter from './Voter';
 import { LoginDialog } from 'components/Login';
+
 const initialIndexes = {};
 VALIDATION_STATUS_OPTIONS.forEach(option => {
   initialIndexes[option.value] = 0;
