@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 
-class Login extends Component {
+class LoginModule extends Component {
   componentWillMount() {
     const token = new URLSearchParams(window.location.search).get('jwt');
     if (this.props.loginSuccess && token) {
@@ -16,4 +16,4 @@ class Login extends Component {
   }
 }
 
-export default withSnackbar(Login);
+export default withSnackbar(LoginModule);

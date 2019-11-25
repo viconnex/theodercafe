@@ -11,9 +11,8 @@ import { ThemeProvider } from '@material-ui/styles';
 import { SnackbarProvider } from 'notistack';
 import { Drawer } from 'components/Drawer';
 import { About } from 'components/About';
-import { PrivateRoute } from 'modules/PrivateRoute';
-import { Login } from 'modules/Login';
-import { LoginPage } from 'pages/LoginPage';
+import { PrivateRoute } from 'components/PrivateRoute';
+import { LoginPage, LoginRedirection } from 'pages/Login';
 import { Home } from 'pages/Home';
 import colors from 'ui/colors';
 import { getPictureUrl } from 'services/jwtDecode';
@@ -66,8 +65,8 @@ const App = ({ classes }) => {
               <Switch>
                 <Route exact path="/a-propos" component={About} />
                 <Route exact path="/login" component={LoginPage} />
-                <Route path="/login/success" render={() => <Login loginSuccess />} />
-                <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
+                <Route path="/login/success" render={() => <LoginRedirection loginSuccess />} />
+                <Route path="/login/failure" render={() => <LoginRedirection loginSuccess={false} />} />
                 <PrivateRoute exact path="/admin" component={Admin} />
                 <Route path="/" component={Home} />
               </Switch>
