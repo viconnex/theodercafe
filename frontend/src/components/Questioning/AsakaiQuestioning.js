@@ -45,7 +45,7 @@ const AsakaiQuestioning = ({ classes }) => {
     <div>
       {question && (
         <div>
-          <Question question={question} chose={chose} />
+          <Question question={question} chose={chose} plusOneEnabled />
           <div className={classes.browser}>
             <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
           </div>
