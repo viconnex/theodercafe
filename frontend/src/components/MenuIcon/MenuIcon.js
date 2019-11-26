@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/styles';
 const AppMenuIcon = ({ classes }) => {
   const pictureUrl = getPictureUrl();
   if (!pictureUrl) return <MenuIcon />;
-  return <img alt="profile-picture" src={pictureUrl} width="30" className={classes.profile} />;
+  return <img alt="profile" src={pictureUrl} width="30" className={classes.profile} />;
 };
 
 export default withStyles(style)(AppMenuIcon);

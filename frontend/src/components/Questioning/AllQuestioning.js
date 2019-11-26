@@ -50,9 +50,9 @@ const AllQuestioning = ({ classes, validationStatus }) => {
       });
       setChoices(choicesDic);
     };
-
     fetchQuestions();
     fetchChoices();
+    // eslint-disable-next-line
   }, []);
 
   const getValidationInformation = questionValidation => {

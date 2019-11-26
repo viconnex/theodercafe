@@ -23,6 +23,7 @@ const AsakaiQuestioning = ({ classes }) => {
       setQuestionIndex(0);
     };
     fetchQuestions();
+    // eslint-disable-next-line
   }, []);
 
   const changeQuestion = increment => {
