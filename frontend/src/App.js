@@ -18,6 +18,7 @@ import style from './App.style';
 import { Home } from 'pages/Home';
 import { ThemeProvider } from '@material-ui/styles';
 import colors from 'ui/colors';
+import { getPictureUrl } from 'services/jwtDecode';
 
 const Admin = lazy(() => import('./admin/Admin'));
 
@@ -38,6 +39,8 @@ const App = ({ classes }) => {
     setIsDrawerOpen(open);
   };
 
+  const [pictureUrl, setPictureUrl] = React.useState(getPictureUrl());
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -49,7 +52,7 @@ const App = ({ classes }) => {
                   <img src={logo} alt="logo" height="20" />
                 </Link>
                 <IconButton edge="start" className={classes.menuButton} aria-label="Menu" onClick={toggleDrawer(true)}>
-                  <MenuIcon />
+                  <MenuIcon pictureUrl={pictureUrl} />
                 </IconButton>
               </ToolBar>
             </AppBar>
@@ -58,7 +61,7 @@ const App = ({ classes }) => {
               <Switch>
                 <Route exact path="/a-propos" component={About} />
                 <Route exact path="/login" component={LoginPage} />
-                <Route path="/login/success" render={() => <Login loginSuccess />} />
+                <Route path="/login/success" render={() => <Login loginSuccess setPictureUrl={setPictureUrl} />} />
                 <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
                 <PrivateRoute exact path="/admin" component={Admin} />
                 <Route path="/" component={Home} />
