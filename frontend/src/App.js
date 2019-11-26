@@ -3,7 +3,6 @@ import AppBar from '@material-ui/core/AppBar';
 import ToolBar from '@material-ui/core/Toolbar';
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { SnackbarProvider } from 'notistack';
 import { Drawer } from 'components/Drawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -11,6 +10,7 @@ import { About } from 'components/About';
 import { PrivateRoute } from 'modules/PrivateRoute';
 import { Login } from 'modules/Login';
 import { LoginPage } from 'pages/LoginPage';
+import MenuIcon from 'components/MenuIcon/MenuIcon';
 
 import logo from './ui/logo/theodercafe.png';
 
@@ -18,7 +18,6 @@ import style from './App.style';
 import { Home } from 'pages/Home';
 import { ThemeProvider } from '@material-ui/styles';
 import colors from 'ui/colors';
-import { getPictureUrl } from 'services/jwtDecode';
 
 const Admin = lazy(() => import('./admin/Admin'));
 
@@ -39,12 +38,6 @@ const App = ({ classes }) => {
     setIsDrawerOpen(open);
   };
 
-  const AppMenuIcon = () => {
-    const pictureUrl = getPictureUrl();
-    if (!pictureUrl) return <MenuIcon />;
-    return <img src={pictureUrl} width="30" className={classes.profile} />;
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -56,7 +49,7 @@ const App = ({ classes }) => {
                   <img src={logo} alt="logo" height="20" />
                 </Link>
                 <IconButton edge="start" className={classes.menuButton} aria-label="Menu" onClick={toggleDrawer(true)}>
-                  <AppMenuIcon />
+                  <MenuIcon />
                 </IconButton>
               </ToolBar>
             </AppBar>
