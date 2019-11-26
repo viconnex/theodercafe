@@ -31,13 +31,13 @@ const theme = createMuiTheme({
   },
 });
 
-const App = ({ classes }) => {
+const App = ({ classes, store }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const toggleDrawer = open => () => {
     setIsDrawerOpen(open);
   };
-
+  console.log('store', store);
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -60,7 +60,7 @@ const App = ({ classes }) => {
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/login/success" render={() => <LoginRedirection loginSuccess />} />
                 <Route path="/login/failure" render={() => <LoginRedirection loginSuccess={false} />} />
-                <PrivateRoute exact path="/admin" component={Admin} />
+                <PrivateRoute exact path="/admin" render={() => <Admin store={store} />} component={Admin} />
                 <Route path="/" component={Home} />
               </Switch>
             </Suspense>

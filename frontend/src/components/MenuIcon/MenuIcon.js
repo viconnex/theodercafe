@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 
 import { getPictureUrl } from 'services/jwtDecode';
 
@@ -20,10 +21,13 @@ const AppMenuIcon = ({ classes, user, setUser }) => {
   if (!user || !user.pictureUrl) {
     return <MenuIcon />;
   }
-  return <img alt="menu-icon" src={user.pictureUrl} width="30" className={classes.profile} />;
+  return <img alt="menu-icon" src={user.pictureUrl} width="30" />;
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withStyles(style)(AppMenuIcon));
+export default compose(
+  withStyles(style),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  ),
+)(AppMenuIcon);

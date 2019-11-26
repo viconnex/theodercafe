@@ -17,8 +17,8 @@ const httpClient = (url, options = {}) => {
 };
 
 const dataProvider = jsonServerProvider(API_BASE_URL, httpClient);
-const Admin = () => (
-  <ReactAdmin dataProvider={dataProvider}>
+const Admin = ({ store }) => (
+  <ReactAdmin authProvider={store.authProvider} dataProvider={store.dataProvider} history={store.history}>
     <Resource name="questions" list={QuestionList} edit={QuestionEdit} />
     <Resource name="categories" list={ListGuesser} edit={EditGuesser} create={CategoryCreate} />
   </ReactAdmin>

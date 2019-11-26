@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { withSnackbar } from 'notistack';
 import { actionTypes } from 'modules/user';
@@ -26,7 +27,10 @@ class LoginRedirection extends Component {
   }
 }
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(withSnackbar(LoginRedirection));
+export default compose(
+  withSnackbar,
+  connect(
+    null,
+    mapDispatchToProps,
+  ),
+)(LoginRedirection);
