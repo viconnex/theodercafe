@@ -34,10 +34,18 @@ const AsakaiQuestioning = ({ classes }) => {
     }
   };
 
+  const handleAsakaiFinish = async () => {
+    const response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
+    console.log(response);
+  };
+
   const chose = async (questionId, choice) => {
     const choices = asakaiChoices;
     choices[questionId] = choice;
     setAsakaiChoices(choices);
+    if (questionIndex === questions.length - 1) {
+      handleAsakaiFinish();
+    }
     changeQuestion(1);
   };
   const question = questions[questionIndex];

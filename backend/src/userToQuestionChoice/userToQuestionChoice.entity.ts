@@ -3,6 +3,8 @@ import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { Question } from '../question/question.entity';
 import { User } from '../user/user.entity';
 
+export type AsakaiChoices = Record<number, number>;
+
 @Entity('user_to_question_choices')
 export class UserToQuestionChoice {
     @PrimaryGeneratedColumn()
