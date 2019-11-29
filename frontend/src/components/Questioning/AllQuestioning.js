@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
 import { ALL_QUESTIONS_MODE, ALL_QUESTIONS_OPTION, VALIDATION_STATUS_OPTIONS } from 'utils/constants/questionConstants';
+import { USER_TO_QUESTIONS_URI } from 'utils/constants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -35,7 +36,7 @@ const AllQuestioning = ({ classes, validationStatus }) => {
     };
     const fetchChoices = async () => {
       if (!localStorage.jwt_token) return;
-      const response = await fetchRequest('/users/choices', 'GET');
+      const response = await fetchRequest(`/${USER_TO_QUESTIONS_URI}/user`, 'GET');
       if (response.status === 400)
         return enqueueSnackbar('Un problème est survenu, essaie de te reconnecter', {
           variant: 'error',
