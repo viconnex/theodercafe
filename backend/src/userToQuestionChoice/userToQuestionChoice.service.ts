@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { Question } from '../question/question.entity';
-import { UserToQuestionChoice, AsakaiChoices } from './userToQuestionChoice.entity';
+import { UserToQuestionChoice, AsakaiChoices, TotemSimilarity, Totem } from './userToQuestionChoice.entity';
 import { In } from 'typeorm';
 
 @Injectable()
@@ -36,11 +36,52 @@ export class UserToQuestionChoiceService {
         return await this.userToQuestionChoiceRepository.find({ userId });
     }
 
-    async findTotem(asakaiChoices: AsakaiChoices): Promise<void> {
+    async findTotem(asakaiChoices: AsakaiChoices): Promise<Totem> {
+        const answeredQuestionsIds = Object.keys(asakaiChoices);
+        if (answeredQuestionsIds.length === 0)
+            throw new BadRequestException('user must answer to at least one question');
+
+        const asakaiNorm = Math.sqrt(answeredQuestionsIds.length);
+
         const userToQuestionChoices = await this.userToQuestionChoiceRepository.find({
-            where: { questionId: In(Object.keys(asakaiChoices)) },
+            where: { questionId: In(answeredQuestionsIds) },
         });
         console.log(userToQuestionChoices);
-        return;
+        const totems: { [id: number]: TotemSimilarity } = {};
+
+        userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {
+            const isSameChoice = asakaiChoices[userToQuestionChoice.questionId] === userToQuestionChoice.choice;
+            const totemIncrement = {
+                similarity: isSameChoice ? 1 : 0,
+                sameAnswerCount: isSameChoice ? 1 : 0,
+                squareNorm: 1,
+            };
+            if (!totems.hasOwnProperty(userToQuestionChoice.userId)) {
+                totems[userToQuestionChoice.userId] = totemIncrement;
+                return;
+            }
+            const currentTotem = totems[userToQuestionChoice.userId];
+            totems[userToQuestionChoice.userId] = {
+                similarity: currentTotem.similarity + totemIncrement.similarity,
+                sameAnswerCount: currentTotem.sameAnswerCount + totemIncrement.sameAnswerCount,
+                squareNorm: currentTotem.squareNorm + totemIncrement.squareNorm,
+            };
+        });
+        let bestSimilarity = -1;
+        let totemId = '0';
+        for (const userId in totems) {
+            const similarity = totems[userId].similarity / (Math.sqrt(totems[userId].squareNorm) * asakaiNorm);
+            totems[userId].similarity = similarity;
+            if (similarity > bestSimilarity) {
+                totemId = userId;
+                bestSimilarity = similarity;
+            }
+        }
+        const totem = {
+            user: { userId: parseInt(totemId) },
+            similarity: totems[parseInt(totemId)],
+        };
+
+        return totem;
     }
 }

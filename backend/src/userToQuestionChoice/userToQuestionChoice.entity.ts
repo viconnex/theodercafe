@@ -4,6 +4,15 @@ import { Question } from '../question/question.entity';
 import { User } from '../user/user.entity';
 
 export type AsakaiChoices = Record<number, number>;
+export interface TotemSimilarity {
+    similarity: number;
+    sameAnswerCount: number;
+    squareNorm: number;
+}
+export interface Totem {
+    user: { userId: number };
+    similarity: TotemSimilarity;
+}
 
 @Entity('user_to_question_choices')
 export class UserToQuestionChoice {
