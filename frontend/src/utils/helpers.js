@@ -1,4 +1,4 @@
-import { API_BASE_URL } from './constants';
+import { API_BASE_URL } from './constants/apiConstants';
 
 export const fetchRequest = async (uri, method, body) => {
   const request = {

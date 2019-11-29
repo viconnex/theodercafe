@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants';
+import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
 
 const LoginPage = () => {
   return (

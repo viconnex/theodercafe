@@ -3,7 +3,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
-import { API_BASE_URL } from 'utils/constants';
+import { API_BASE_URL } from 'utils/constants/apiConstants';
 
 const LoginDialog = ({ isOpen, handleClose }) => {
   return (

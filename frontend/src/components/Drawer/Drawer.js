@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import { decodeJWT } from 'services/jwtDecode';
-import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants';
+import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
 import { useSnackbar } from 'notistack';
 
 const style = theme => ({

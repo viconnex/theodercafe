@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
 import { ALL_QUESTIONS_MODE, ALL_QUESTIONS_OPTION, VALIDATION_STATUS_OPTIONS } from 'utils/constants/questionConstants';
-import { USER_TO_QUESTIONS_URI } from 'utils/constants';
+import { USER_TO_QUESTIONS_URI } from 'utils/constants/apiConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
