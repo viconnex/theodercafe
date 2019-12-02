@@ -1,35 +1,50 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
-import { Question } from '../question/question.entity';
 import { UserToQuestionChoice, AsakaiChoices, TotemSimilarity, Totem } from './userToQuestionChoice.entity';
 import { In } from 'typeorm';
+import { QuestionService } from '../question/question.service';
 
 @Injectable()
 export class UserToQuestionChoiceService {
     constructor(
         @InjectRepository(UserToQuestionChoiceRepository)
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
+        private readonly questionService: QuestionService,
     ) {}
 
-    async saveChoice(question: Question, userId: number, choice: number): Promise<UserToQuestionChoice> {
+    async saveChoice(questionId: number, userId: number, choice: number): Promise<UserToQuestionChoice> {
         const initialChoice = await this.userToQuestionChoiceRepository.findOne({
             userId,
-            question,
+            questionId,
         });
-        if (initialChoice) {
-            initialChoice.choice = choice;
 
-            return this.userToQuestionChoiceRepository.save(initialChoice);
+        if (!initialChoice) {
+            this.questionService.updateQuestionChoicesCount(questionId, { 1: 0, 2: 0, [choice]: 1 });
+
+            const newChoice = this.userToQuestionChoiceRepository.create({
+                userId,
+                questionId,
+                choice,
+            });
+
+            return this.userToQuestionChoiceRepository.save(newChoice);
         }
 
-        const newChoice = this.userToQuestionChoiceRepository.create({
-            userId,
-            question,
-            choice,
+        if (initialChoice && initialChoice.choice === choice) {
+            return;
+        }
+
+        this.questionService.updateQuestionChoicesCount(questionId, {
+            1: 0,
+            2: 0,
+            [initialChoice.choice]: -1,
+            [choice]: 1,
         });
 
-        return this.userToQuestionChoiceRepository.save(newChoice);
+        initialChoice.choice = choice;
+
+        return this.userToQuestionChoiceRepository.save(initialChoice);
     }
 
     async getAllUserChoices(userId: number): Promise<UserToQuestionChoice[]> {
@@ -46,7 +61,6 @@ export class UserToQuestionChoiceService {
         const userToQuestionChoices = await this.userToQuestionChoiceRepository.find({
             where: { questionId: In(answeredQuestionsIds) },
         });
-        console.log(userToQuestionChoices);
         const totems: { [id: number]: TotemSimilarity } = {};
 
         userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {

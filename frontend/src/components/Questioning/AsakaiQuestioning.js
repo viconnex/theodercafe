@@ -14,7 +14,12 @@ const AsakaiQuestioning = ({ classes }) => {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     const fetchQuestions = async () => {
-      const response = await fetchRequest(`/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}`, 'GET');
+      let response;
+      try {
+        response = await fetchRequest(`/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}`, 'GET');
+      } catch {
+        return enqueueSnackbar('Problème de connexion', { variant: 'error' });
+      }
       if (response.state === 500) {
         enqueueSnackbar('Un problème est survenu', { variant: 'error' });
       }

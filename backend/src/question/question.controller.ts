@@ -10,17 +10,12 @@ import {
     NotFoundException,
     Res,
     UseGuards,
-    Request,
-    BadRequestException,
-    UseInterceptors,
-    ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
-import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
 
 @Controller('questions')
 export class QuestionController {
@@ -58,20 +53,6 @@ export class QuestionController {
         if (!question) throw new NotFoundException();
 
         return question;
-    }
-
-    @Put(':id/choice')
-    @UseGuards(AuthGuard('registered_user'))
-    @UseInterceptors(ClassSerializerInterceptor)
-    async chose(
-        @Param('id') questionId: number,
-        @Body() body: { choice: number },
-        @Request() req,
-    ): Promise<UserToQuestionChoice> {
-        if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found');
-        }
-        return this.questionService.saveUserToQuestionChoice(questionId, req.user.id, body.choice);
     }
 
     @Put(':id/upVote')

@@ -4,11 +4,11 @@ import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repositor
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserToQuestionChoiceController } from './userToQuestionChoice.controller';
+import { QuestionModule } from '../question/question.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([UserToQuestionChoice, UserToQuestionChoiceRepository])],
+    imports: [TypeOrmModule.forFeature([UserToQuestionChoice, UserToQuestionChoiceRepository]), QuestionModule],
     providers: [UserToQuestionChoiceService],
-    exports: [UserToQuestionChoiceService],
     controllers: [UserToQuestionChoiceController],
 })
 export class UserToQuestionChoiceModule {}

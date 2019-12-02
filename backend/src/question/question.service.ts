@@ -1,13 +1,9 @@
-import { Injectable, HttpException, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { UserToQuestionChoiceService } from '../userToQuestionChoice/userToQuestionChoice.service';
-import { Question } from './question.entity';
-import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
-import { User } from '../user/user.entity';
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.7;
 
@@ -16,7 +12,6 @@ export class QuestionService {
     constructor(
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
-        private readonly userToQuestionChoiceService: UserToQuestionChoiceService,
     ) {}
 
     async create(questionBody): Promise<QuestionDto> {
@@ -89,21 +84,11 @@ export class QuestionService {
         return this.questionRepository.update(questionId, { downVotes: question.downVotes + 1 });
     }
 
-    async saveUserToQuestionChoice(questionId: number, userId: number, choice: number): Promise<UserToQuestionChoice> {
-        const question: Question = await this.questionRepository.findOne(questionId);
-        if (!question) {
-            throw new NotFoundException('question id not found');
-        }
-
-        this.updateQuestionChoice(question, choice);
-        return this.userToQuestionChoiceService.saveChoice(question, userId, choice);
-    }
-
-    updateQuestionChoice(question: Question, choice: number): void {
-        if (choice === 1) {
-            this.questionRepository.update(question.id, { option1Votes: question.option1Votes + 1 });
-        } else if (choice === 2) {
-            this.questionRepository.update(question.id, { option2Votes: question.option2Votes + 1 });
-        }
+    async updateQuestionChoicesCount(questionId: number, choiceIncrement: { 1: number; 2: number }): Promise<void> {
+        const question = await this.questionRepository.findOne(questionId);
+        this.questionRepository.update(questionId, {
+            option1Votes: question.option1Votes + choiceIncrement[1],
+            option2Votes: question.option2Votes + choiceIncrement[2],
+        });
     }
 }

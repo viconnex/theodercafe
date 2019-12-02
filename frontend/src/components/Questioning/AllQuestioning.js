@@ -27,7 +27,12 @@ const AllQuestioning = ({ classes, validationStatus }) => {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     const fetchQuestions = async () => {
-      const response = await fetchRequest(`/questions/${ALL_QUESTIONS_MODE}`, 'GET');
+      let response;
+      try {
+        response = await fetchRequest(`/questions/${ALL_QUESTIONS_MODE}`, 'GET');
+      } catch {
+        return enqueueSnackbar('Problème de connexion', { variant: 'error' });
+      }
       if (response.state === 500) {
         return enqueueSnackbar('Un problème est survenu', { variant: 'error' });
       }
@@ -63,10 +68,10 @@ const AllQuestioning = ({ classes, validationStatus }) => {
 
   const chose = async (questionId, choice) => {
     if (!isUser()) {
-      setOpenLoginDialog(true);
+      return setOpenLoginDialog(true);
     }
     if (choices[questionId] !== choice) {
-      const url = `/questions/${questionId}/choice`;
+      const url = `/${USER_TO_QUESTIONS_URI}/${questionId}/choice`;
       const body = { choice };
       const response = await fetchRequest(url, 'PUT', body);
       if (response.status !== 200) {
