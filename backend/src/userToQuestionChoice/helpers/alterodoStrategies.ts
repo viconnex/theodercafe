@@ -7,12 +7,9 @@ export const findAlterodoFromChoices = async (
     asakaiChoices: AsakaiChoices,
 ): Promise<Alterodo> => {
     const answeredQuestionsIds = Object.keys(asakaiChoices);
-
     const totems: { [id: number]: AlterodoSimilarity } = {};
 
-    const userToQuestionChoices = await userToQuestionChoiceRepository.find({
-        where: { questionId: In(answeredQuestionsIds) },
-    });
+    const userToQuestionChoices = await userToQuestionChoiceRepository.findByQuestionIds(answeredQuestionsIds);
 
     userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {
         const isSameChoice = asakaiChoices[userToQuestionChoice.questionId] === userToQuestionChoice.choice;
