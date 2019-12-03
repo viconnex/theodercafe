@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { UserToQuestionChoice, AsakaiChoices, Alterodo } from './userToQuestionChoice.entity';
 import { QuestionService } from '../question/question.service';
-import { findAlterodoFromChoices } from './helpers/alterodoStrategies';
+import { findAlterodoFromCommonChoices, findAlterodoFromMatrixFactorization } from './helpers/alterodoStrategies';
 
 @Injectable()
 export class UserToQuestionChoiceService {
@@ -56,6 +56,7 @@ export class UserToQuestionChoiceService {
         if (answeredQuestionsIds.length === 0)
             throw new BadRequestException('user must answer to at least one question');
 
-        return findAlterodoFromChoices(this.userToQuestionChoiceRepository, asakaiChoices);
+        // return findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
+        return findAlterodoFromMatrixFactorization(this.userToQuestionChoiceRepository, asakaiChoices);
     }
 }
