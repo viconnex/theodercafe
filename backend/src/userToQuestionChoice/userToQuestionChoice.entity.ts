@@ -4,14 +4,14 @@ import { Question } from '../question/question.entity';
 import { User } from '../user/user.entity';
 
 export type AsakaiChoices = Record<number, number>;
-export interface TotemSimilarity {
+export interface AlterodoSimilarity {
     similarity: number;
     sameAnswerCount: number;
     squareNorm: number;
 }
-export interface Totem {
+export interface Alterodo {
     user: { userId: number };
-    similarity: TotemSimilarity;
+    similarity: AlterodoSimilarity;
 }
 
 @Entity('user_to_question_choices')
