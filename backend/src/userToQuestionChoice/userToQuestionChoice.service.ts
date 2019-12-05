@@ -1,9 +1,12 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
-import { UserToQuestionChoice, AsakaiChoices, Alterodo } from './userToQuestionChoice.entity';
+import { UserToQuestionChoice } from './userToQuestionChoice.entity';
+import { findAlterodoFromCommonChoices } from './helpers/alterodoStrategies';
+import { AsakaiChoices, Alterodo, AlterodoResponse } from './userToQuestionChoice.types';
+
 import { QuestionService } from '../question/question.service';
-import { findAlterodoFromCommonChoices, findAlterodoFromMatrixFactorization } from './helpers/alterodoStrategies';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class UserToQuestionChoiceService {
@@ -11,6 +14,7 @@ export class UserToQuestionChoiceService {
         @InjectRepository(UserToQuestionChoiceRepository)
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
         private readonly questionService: QuestionService,
+        private readonly userService: UserService,
     ) {}
 
     async saveChoice(questionId: number, userId: number, choice: number): Promise<UserToQuestionChoice> {
@@ -51,12 +55,25 @@ export class UserToQuestionChoiceService {
         return await this.userToQuestionChoiceRepository.find({ userId });
     }
 
-    async findAlterodo(asakaiChoices: AsakaiChoices): Promise<Alterodo> {
+    async findAlterodo(asakaiChoices: AsakaiChoices): Promise<AlterodoResponse> {
         const answeredQuestionsIds = Object.keys(asakaiChoices);
         if (answeredQuestionsIds.length === 0)
             throw new BadRequestException('user must answer to at least one question');
 
         // return findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
-        return findAlterodoFromMatrixFactorization(this.userToQuestionChoiceRepository, asakaiChoices);
+        const alterodo = await findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
+        const user = await this.userService.findOne(alterodo.user.userId);
+
+        const alterodoResponse: AlterodoResponse = {
+            ...alterodo,
+            user: {
+                email: user.email,
+                givenName: user.givenName,
+                familyName: user.familyName,
+                pictureUrl: user.pictureUrl,
+            },
+        };
+
+        return alterodoResponse;
     }
 }

@@ -4,9 +4,13 @@ import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
     async findByQuestionIds(questionIds): Promise<UserToQuestionChoice[]> {
+        const companies = ['theodo'];
+        if (process.env.NODE_ENV === 'development') {
+            companies.push('gmail');
+        }
         return this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: ['theodo', 'gmail'] })
+            .where('user.company IN (:...companies)', { companies })
             .andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds })
             .getMany();
     }

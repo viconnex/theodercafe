@@ -12,9 +12,10 @@ import {
     Param,
 } from '@nestjs/common';
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
-import { AsakaiChoices, Alterodo, UserToQuestionChoice } from './userToQuestionChoice.entity';
+import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { QuestionService } from 'src/question/question.service';
+import { AlterodoResponse, AsakaiChoices } from './userToQuestionChoice.types';
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
@@ -24,7 +25,7 @@ export class UserToQuestionChoiceController {
     ) {}
 
     @Post('asakai')
-    async findAlterodo(@Body() asakaiChoices: AsakaiChoices): Promise<Alterodo> {
+    async findAlterodo(@Body() asakaiChoices: AsakaiChoices): Promise<AlterodoResponse> {
         return this.userToQuestionChoiceService.findAlterodo(asakaiChoices);
     }
 

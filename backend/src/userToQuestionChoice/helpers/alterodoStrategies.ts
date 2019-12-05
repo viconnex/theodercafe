@@ -1,5 +1,8 @@
-import { UserToQuestionChoice, AsakaiChoices, AlterodoSimilarity, Alterodo } from '../userToQuestionChoice.entity';
+import { factorizeMatrix, buildCompletedMatrix } from 'matrix-factorization';
+
+import { UserToQuestionChoice } from '../userToQuestionChoice.entity';
 import { UserToQuestionChoiceRepository } from '../userToQuestionChoice.repository';
+import { AsakaiChoices, AlterodoSimilarity, Alterodo } from '../userToQuestionChoice.types';
 
 export const findAlterodoFromCommonChoices = async (
     userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
@@ -40,6 +43,7 @@ export const findAlterodoFromCommonChoices = async (
             bestSimilarity = similarity;
         }
     }
+    console.log(totems);
     const totem = {
         user: { userId: parseInt(totemId) },
         similarity: totems[parseInt(totemId)],
@@ -79,25 +83,27 @@ export const findAlterodoFromMatrixFactorization = async (
 
     const n = questionIds.length;
 
-    const userChoicesMatrix = [Array.from({ length: 2 * n }, (): number => 0)];
+    const userChoicesMatrix = [Array.from({ length: n }, (): number => 0)];
 
     for (const questionId in asakaiChoices) {
-        userChoicesMatrix[0][questionIdIndex[questionId] * 2 + asakaiChoices[questionId] - 1] = 1;
+        userChoicesMatrix[0][questionIdIndex[questionId]] = asakaiChoices[questionId] === 1 ? -1 : 1;
     }
 
     for (const userToQuestionChoice of userToQuestionChoices) {
         if (!userIdIndex.hasOwnProperty(userToQuestionChoice.userId)) {
             userIdIndex[userToQuestionChoice.userId] = currentUserIndex;
             currentUserIndex += 1;
-            userChoicesMatrix.push(Array.from({ length: 2 * n }, (): number => 0));
+            userChoicesMatrix.push(Array.from({ length: n }, (): number => 0));
         }
-        userChoicesMatrix[userIdIndex[userToQuestionChoice.userId]][
-            questionIdIndex[userToQuestionChoice.questionId] * 2 + userToQuestionChoice.choice - 1
-        ] = 1;
+        userChoicesMatrix[userIdIndex[userToQuestionChoice.userId]][questionIdIndex[userToQuestionChoice.questionId]] =
+            userToQuestionChoice.choice === 1 ? -1 : 1;
     }
     console.log('asakai choices', asakaiChoices);
     console.log('questionIndex', questionIdIndex);
     console.log('userIndex', userIdIndex);
-    console.log('matrix', userChoicesMatrix);
+    console.log('initial matrix', userChoicesMatrix);
+    const factors = factorizeMatrix(userChoicesMatrix, 2);
+    const completeMatrix = buildCompletedMatrix(factors);
+    console.log('factorized matrix', completeMatrix);
     return;
 };

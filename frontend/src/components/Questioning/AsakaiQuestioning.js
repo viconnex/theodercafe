@@ -10,6 +10,7 @@ const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [asakaiChoices, setAsakaiChoices] = useState({});
+  const [alterodo, setAlterodo] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
@@ -41,7 +42,9 @@ const AsakaiQuestioning = ({ classes }) => {
 
   const handleAsakaiFinish = async () => {
     const response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
-    console.log(response);
+    const data = await response.json();
+    console.log(data);
+    setAlterodo(data);
   };
 
   const chose = async (questionId, choice) => {
@@ -56,12 +59,22 @@ const AsakaiQuestioning = ({ classes }) => {
   const question = questions[questionIndex];
   return (
     <div>
-      {question && (
+      {question && !alterodo && (
         <div>
           <Question question={question} chose={chose} plusOneEnabled />
           <div className={classes.browser}>
             <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
           </div>
+        </div>
+      )}
+      {alterodo && (
+        <div>
+          <div>Ton alterodo est</div>
+          <img src={alterodo.user.pictureUrl} alt="alterodo_profile" width="50px" />
+          <div>
+            {alterodo.user.givenName} {alterodo.user.familyName}
+          </div>
+          <div>Similarité : {Math.round(alterodo.similarity.similarity * 100)} %</div>
         </div>
       )}
     </div>

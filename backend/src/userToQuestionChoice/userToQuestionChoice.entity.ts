@@ -3,17 +3,6 @@ import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
 import { Question } from '../question/question.entity';
 import { User } from '../user/user.entity';
 
-export type AsakaiChoices = Record<number, number>;
-export interface AlterodoSimilarity {
-    similarity: number;
-    sameAnswerCount: number;
-    squareNorm: number;
-}
-export interface Alterodo {
-    user: { userId: number };
-    similarity: AlterodoSimilarity;
-}
-
 @Entity('user_to_question_choices')
 export class UserToQuestionChoice {
     @PrimaryGeneratedColumn()
