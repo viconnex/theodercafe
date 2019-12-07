@@ -15,13 +15,13 @@ import { ALL_QUESTIONS_OPTION } from 'utils/constants/questionConstants';
 const Home = ({ classes }) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false);
   const [isAsakaiMode, setIsAsakaiMode] = useState(true);
-  const [validationStatus, setValidationStatus] = useState(ALL_QUESTIONS_OPTION);
+  const [filterOption, setFilterOption] = useState(ALL_QUESTIONS_OPTION);
 
   const handleModeChange = isAsakaiMode => {
     setIsAsakaiMode(isAsakaiMode);
   };
 
-  const handleValidationStatusChange = validationStatus => setValidationStatus(validationStatus);
+  const handleFilterOptionChange = filterOption => setFilterOption(filterOption);
 
   const toggleModal = open => () => setAddQuestionDialog(open);
 
@@ -31,10 +31,10 @@ const Home = ({ classes }) => {
         <ModeSelector
           isAsakaiMode={isAsakaiMode}
           handleModeChange={handleModeChange}
-          validationStatus={validationStatus}
-          handleValidationStatusChange={handleValidationStatusChange}
+          filterOption={filterOption}
+          handleFilterOptionChange={handleFilterOptionChange}
         />
-        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning validationStatus={validationStatus} />}
+        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning filterOption={filterOption} />}
         <Fab className={classes.addButton} size="small">
           <AddIcon onClick={toggleModal(true)} />
         </Fab>

@@ -25,7 +25,7 @@ const Admin = lazy(() => import('./admin/Admin'));
 const theme = createMuiTheme({
   palette: {
     primary: { main: colors.theodoBlue },
-    secondary: { main: colors.theodoBlue },
+    secondary: { main: colors.theodoGreen },
   },
   status: {
     danger: 'orange',

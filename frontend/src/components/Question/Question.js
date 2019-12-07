@@ -20,7 +20,7 @@ const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
     <div>
       <div className={classes.categoryContainer}>
         <div className={classes.categoryTitle}>Catégorie</div>
-        <Chip size="small" label={question.categoryName ? question.categoryName : 'hors catégorie'} color="primary" />
+        <Chip size="small" label={question.categoryName ? question.categoryName : 'hors catégorie'} color="secondary" />
       </div>
       <div className={classes.questionContainer}>
         <div className={classes.optionContainer}>

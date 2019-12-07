@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
-import { ALL_QUESTIONS_MODE, ALL_QUESTIONS_OPTION, VALIDATION_STATUS_OPTIONS } from 'utils/constants/questionConstants';
+import {
+  ALL_QUESTIONS_MODE,
+  ALL_QUESTIONS_OPTION,
+  FILTER_OPTIONS,
+  NOT_ANSWERED,
+} from 'utils/constants/questionConstants';
 import { USER_TO_QUESTIONS_URI } from 'utils/constants/apiConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
@@ -13,16 +18,18 @@ import { isUser } from 'services/jwtDecode';
 import style from './style';
 import Voter from './Voter';
 import { LoginDialog } from 'components/Login';
+
 const initialIndexes = {};
-VALIDATION_STATUS_OPTIONS.forEach(option => {
+FILTER_OPTIONS.forEach(option => {
   initialIndexes[option.value] = 0;
 });
 
-const AllQuestioning = ({ classes, validationStatus }) => {
+const AllQuestioning = ({ classes, filterOption }) => {
   const [questions, setQuestions] = useState([]);
   const [questionIndexByStatus, setQuestionIndexByStatus] = useState(initialIndexes);
   const [choices, setChoices] = useState({});
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
+  const [areChoicesFetched, setAreChoicesFetched] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
@@ -55,15 +62,45 @@ const AllQuestioning = ({ classes, validationStatus }) => {
         choicesDic[choice.questionId] = choice.choice;
       });
       setChoices(choicesDic);
+      setAreChoicesFetched(true);
     };
-    fetchQuestions();
     fetchChoices();
+    fetchQuestions();
     // eslint-disable-next-line
   }, []);
 
   const getValidationInformation = questionValidation => {
     if (questionValidation === null) return 'Question en attente de validation';
-    return questionValidation ? 'Question validée' : 'Question en attente de validation';
+    return questionValidation ? 'Question validée' : 'Question invalidée';
+  };
+
+  const isNotAnsweredQuestion = question => {
+    return areChoicesFetched ? !choices[question.id] : false;
+  };
+  const isStatus = filterOption => question => {
+    const status = FILTER_OPTIONS.find(option => option.value === filterOption);
+    return question.isValidated === status.isValidated;
+  };
+
+  const getFilteredQuestions = () => {
+    if (filterOption === ALL_QUESTIONS_OPTION) return questions;
+    if (filterOption === NOT_ANSWERED) return questions.filter(isNotAnsweredQuestion);
+
+    return questions.filter(isStatus(filterOption));
+  };
+
+  const filteredQuestions = getFilteredQuestions();
+  let questionIndex = questionIndexByStatus[filterOption];
+
+  const question = filteredQuestions[questionIndex];
+
+  const changeQuestion = increment => {
+    const questionIndex = questionIndexByStatus[filterOption];
+    let index = questionIndex + increment;
+    if (index < 0 || index === filteredQuestions.length) index = 0;
+    const newQuestionIndex = { ...questionIndexByStatus };
+    newQuestionIndex[filterOption] = index;
+    setQuestionIndexByStatus(newQuestionIndex);
   };
 
   const chose = async (questionId, choice) => {
@@ -73,7 +110,12 @@ const AllQuestioning = ({ classes, validationStatus }) => {
     if (choices[questionId] !== choice) {
       const url = `/${USER_TO_QUESTIONS_URI}/${questionId}/choice`;
       const body = { choice };
-      const response = await fetchRequest(url, 'PUT', body);
+      let response;
+      try {
+        response = await fetchRequest(url, 'PUT', body);
+      } catch {
+        return enqueueSnackbar("Votre choix n'a pas pu être enregistré", { variant: 'error' });
+      }
       if (response.status !== 200) {
         return enqueueSnackbar("Votre choix n'a pas pu être enregistré", { variant: 'error' });
       }
@@ -81,29 +123,14 @@ const AllQuestioning = ({ classes, validationStatus }) => {
       const newChoices = { ...choices };
       newChoices[questionId] = choice;
       setChoices(newChoices);
+      if (filterOption !== NOT_ANSWERED) {
+        changeQuestion(1);
+      } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
+        changeQuestion(-1);
+      }
     }
   };
 
-  const getFilteredQuestions = () => {
-    if (validationStatus === ALL_QUESTIONS_OPTION) return questions;
-    return questions.filter(question => {
-      const status = VALIDATION_STATUS_OPTIONS.find(option => option.value === validationStatus);
-      return question.isValidated === status.isValidated;
-    });
-  };
-
-  const filteredQuestions = getFilteredQuestions();
-  const questionIndex = questionIndexByStatus[validationStatus];
-  const question = filteredQuestions[questionIndex];
-
-  const changeQuestion = increment => {
-    const questionIndex = questionIndexByStatus[validationStatus];
-    let index = questionIndex + increment;
-    if (index < 0 || index === filteredQuestions.length) index = 0;
-    const newQuestionIndex = { ...questionIndexByStatus };
-    newQuestionIndex[validationStatus] = index;
-    setQuestionIndexByStatus(newQuestionIndex);
-  };
   return (
     <div>
       {question && (
@@ -122,9 +149,12 @@ const AllQuestioning = ({ classes, validationStatus }) => {
             </IconButton>
             <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
           </div>
-          <div className={classes.validationStatus}>{getValidationInformation(question.isValidated)}</div>
+          <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
           <Voter questionId={question.id} hasVoted={false} />
         </div>
+      )}
+      {filterOption === NOT_ANSWERED && areChoicesFetched && !question && (
+        <div>Tu as répondu à toutes les questions</div>
       )}
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
     </div>

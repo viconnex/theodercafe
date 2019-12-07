@@ -5,6 +5,7 @@ import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionCons
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import style from './style';
+import { Alterodo } from 'components/Alterodo';
 
 const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([]);
@@ -43,8 +44,12 @@ const AsakaiQuestioning = ({ classes }) => {
   const handleAsakaiFinish = async () => {
     const response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
     const data = await response.json();
-    console.log(data);
     setAlterodo(data);
+  };
+
+  const resetQuestioning = () => {
+    setAlterodo(null);
+    setQuestionIndex(0);
   };
 
   const chose = async (questionId, choice) => {
@@ -67,16 +72,7 @@ const AsakaiQuestioning = ({ classes }) => {
           </div>
         </div>
       )}
-      {alterodo && (
-        <div>
-          <div>Ton alterodo est</div>
-          <img src={alterodo.user.pictureUrl} alt="alterodo_profile" width="50px" />
-          <div>
-            {alterodo.user.givenName} {alterodo.user.familyName}
-          </div>
-          <div>Similarité : {Math.round(alterodo.similarity.similarity * 100)} %</div>
-        </div>
-      )}
+      {alterodo && <Alterodo alterodo={alterodo} resetQuestioning={resetQuestioning} />}
     </div>
   );
 };

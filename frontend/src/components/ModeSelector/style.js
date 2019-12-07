@@ -14,7 +14,7 @@ const style = {
   modeSelectorInfo: {
     fontSize: '11px',
   },
-  validationStatusSelect: {
+  filterOptionSelect: {
     color: 'white',
     fontSize: '11px',
     fontFamily: 'Open Sans',
@@ -26,7 +26,7 @@ const style = {
     },
     marginTop: '-5px',
   },
-  validationStatusSelectIcon: {
+  filterOptionSelectIcon: {
     fill: 'white',
   },
 

@@ -23,12 +23,12 @@ const Voter = ({ classes, questionId, hasVoted }) => {
   return (
     <div className={classes.upVote}>
       <Tooltip title="Je n'aime pas cette question">
-        <IconButton color="primary" onClick={handleUpVote(false, questionId)} disabled={hasVoted}>
+        <IconButton color="secondary" onClick={handleUpVote(false, questionId)} disabled={hasVoted}>
           <ThumbDown />
         </IconButton>
       </Tooltip>
       <Tooltip title="J'aime cette question">
-        <IconButton color="primary" onClick={handleUpVote(true, questionId)} disabled={hasVoted}>
+        <IconButton color="secondary" onClick={handleUpVote(true, questionId)} disabled={hasVoted}>
           <ThumbUp />
         </IconButton>
       </Tooltip>

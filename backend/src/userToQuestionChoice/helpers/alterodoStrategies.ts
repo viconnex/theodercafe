@@ -34,19 +34,23 @@ export const findAlterodoFromCommonChoices = async (
     const asakaiNorm = Math.sqrt(Object.keys(asakaiChoices).length);
 
     let bestSimilarity = -1;
-    let totemId = '0';
+    let bestTotemIds = [];
     for (const userId in totems) {
         const similarity = totems[userId].similarity / (Math.sqrt(totems[userId].squareNorm) * asakaiNorm);
         totems[userId].similarity = similarity;
         if (similarity > bestSimilarity) {
-            totemId = userId;
+            bestTotemIds = [userId];
             bestSimilarity = similarity;
+        } else if (similarity === bestSimilarity) {
+            bestTotemIds.push(userId);
         }
     }
     console.log(totems);
+    const totemIdIndex = Math.floor(Math.random() * bestTotemIds.length);
+
     const totem = {
-        user: { userId: parseInt(totemId) },
-        similarity: totems[parseInt(totemId)],
+        user: { userId: parseInt(bestTotemIds[totemIdIndex]) },
+        similarity: totems[parseInt(bestTotemIds[totemIdIndex])],
     };
 
     return totem;

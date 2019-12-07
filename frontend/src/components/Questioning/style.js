@@ -15,7 +15,7 @@ const style = {
   browser: {
     marginTop: '15px',
   },
-  validationStatus: {
+  filterOption: {
     fontSize: '11px',
   },
 };

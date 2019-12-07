@@ -5,9 +5,9 @@ import Switch from '@material-ui/core/Switch';
 import Select from '@material-ui/core/Select';
 import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
-import { VALIDATION_STATUS_OPTIONS, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants';
+import { FILTER_OPTIONS, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants';
 
-const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, isAsakaiMode, validationStatus }) => {
+const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isAsakaiMode, filterOption }) => {
   const handleSwitch = event => {
     handleModeChange(!!event.target.checked);
   };
@@ -30,18 +30,18 @@ const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange,
         <div className={classes.modeSelectorInfo}>{`Set de ${ASAKAI_QUESTION_COUNT} questions validées`}</div>
       ) : (
         <Select
-          className={classes.validationStatusSelect}
+          className={classes.filterOptionSelect}
           inputProps={{
             classes: {
-              icon: classes.validationStatusSelectIcon,
+              icon: classes.filterOptionSelectIcon,
             },
           }}
-          value={validationStatus}
+          value={filterOption}
           onChange={event => {
-            handleValidationStatusChange(event.target.value);
+            handleFilterOptionChange(event.target.value);
           }}
         >
-          {VALIDATION_STATUS_OPTIONS.map(option => (
+          {FILTER_OPTIONS.map(option => (
             <MenuItem key={option.value} value={option.value}>
               {option.label}
             </MenuItem>
