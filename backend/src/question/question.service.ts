@@ -3,7 +3,9 @@ import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionDto } from './interfaces/question.dto';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult, UpdateResult, In } from 'typeorm';
+import { QuestioningHistoricService } from 'src/questioningHistoric/questioningHistoric.service';
+import { Question } from './question.entity';
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.7;
 
@@ -12,6 +14,7 @@ export class QuestionService {
     constructor(
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
+        private readonly questioningHistoricService: QuestioningHistoricService,
     ) {}
 
     async create(questionBody): Promise<QuestionDto> {
@@ -42,13 +45,30 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    async findAsakaiSet(maxNumber: number): Promise<QuestionDto[]> {
+    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<QuestionDto[]> {
+        if (findFromHistoricIfExists) {
+            const currentSet = await this.questioningHistoricService.findLastOfTheDay();
+            if (currentSet) {
+                const sameQuestions = await this.questionRepository.findByIds(currentSet.questioning);
+
+                return sameQuestions.sort(
+                    (question1, question2): number =>
+                        currentSet.questioning.indexOf(question1.id.toString()) -
+                        currentSet.questioning.indexOf(question2.id.toString()),
+                );
+            }
+        }
+
         const countClassics = await this.questionRepository.countClassics();
         const jokeAboutSomeoneCount =
             Math.random() < JOKE_ON_SOMEONE_PROBABILITY && maxNumber - countClassics[0].count > 0 ? 1 : 0;
         const standardQuestionCount = Math.max(maxNumber - countClassics[0].count - jokeAboutSomeoneCount, 0);
 
-        return this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount);
+        const asakaiSet = await this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount);
+
+        this.questioningHistoricService.saveNew(asakaiSet.map((question): string => question.id.toString()));
+
+        return asakaiSet;
     }
 
     findInOrder(orderedIds: number[]): Promise<QuestionDto[]> {

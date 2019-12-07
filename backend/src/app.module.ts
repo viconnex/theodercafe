@@ -8,6 +8,7 @@ import { AccumulusModule } from './accumulus/accumulus.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { UserToQuestionChoiceModule } from './userToQuestionChoice/userToQuestionChoice.module';
+import { QuestioningHistoricModule } from './questioningHistoric/questioningHistoric.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { UserToQuestionChoiceModule } from './userToQuestionChoice/userToQuestio
         AuthModule,
         UserModule,
         UserToQuestionChoiceModule,
+        QuestioningHistoricModule,
     ],
     controllers: [AppController],
     providers: [AppService],

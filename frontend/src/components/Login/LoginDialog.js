@@ -11,7 +11,7 @@ const LoginDialog = ({ isOpen, handleClose }) => {
       <DialogTitle>Tu dois te logger pour sauvegarder ton choix</DialogTitle>
       <DialogActions>
         <Button onClick={() => handleClose()}>Annuler</Button>
-        <Button color="primary" onClick={() => (window.location = API_BASE_URL + '/auth/google')}>
+        <Button variant="contained" color="primary" onClick={() => (window.location = API_BASE_URL + '/auth/google')}>
           Login Google
         </Button>
       </DialogActions>

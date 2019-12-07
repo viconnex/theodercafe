@@ -14,24 +14,38 @@ const AsakaiQuestioning = ({ classes }) => {
   const [alterodo, setAlterodo] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const fetchAndSetQuestions = async newSet => {
+    let response;
+    try {
+      response = await fetchRequest(
+        `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
+        'GET',
+      );
+    } catch {
+      return enqueueSnackbar('Problème de connexion', { variant: 'error' });
+    }
+    if (response.state === 500) {
+      enqueueSnackbar('Un problème est survenu', { variant: 'error' });
+    }
+    const data = await response.json();
+    setQuestions(data);
+    setQuestionIndex(0);
+  };
+
   useEffect(() => {
-    const fetchQuestions = async () => {
-      let response;
-      try {
-        response = await fetchRequest(`/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}`, 'GET');
-      } catch {
-        return enqueueSnackbar('Problème de connexion', { variant: 'error' });
-      }
-      if (response.state === 500) {
-        enqueueSnackbar('Un problème est survenu', { variant: 'error' });
-      }
-      const data = await response.json();
-      setQuestions(data);
-      setQuestionIndex(0);
-    };
-    fetchQuestions();
-    // eslint-disable-next-line
+    fetchAndSetQuestions(false);
   }, []);
+
+  const resetQuestioning = () => {
+    setAlterodo(null);
+    setQuestionIndex(0);
+  };
+
+  const changeAsakaiSet = () => {
+    resetQuestioning();
+    fetchAndSetQuestions(true);
+  };
 
   const changeQuestion = increment => {
     let index = questionIndex + increment;
@@ -47,11 +61,6 @@ const AsakaiQuestioning = ({ classes }) => {
     setAlterodo(data);
   };
 
-  const resetQuestioning = () => {
-    setAlterodo(null);
-    setQuestionIndex(0);
-  };
-
   const chose = async (questionId, choice) => {
     const choices = asakaiChoices;
     choices[questionId] = choice;
@@ -63,16 +72,24 @@ const AsakaiQuestioning = ({ classes }) => {
   };
   const question = questions[questionIndex];
   return (
-    <div>
-      {question && !alterodo && (
-        <div>
-          <Question question={question} chose={chose} plusOneEnabled />
-          <div className={classes.browser}>
-            <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
-          </div>
+    <div className={classes.questioningContainer}>
+      <div className={classes.asakaiSubtitle}>
+        <div>Le set du jour</div>
+        <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
+          Changer
         </div>
-      )}
-      {alterodo && <Alterodo alterodo={alterodo} resetQuestioning={resetQuestioning} />}
+      </div>
+      <div className={classes.questioningContent}>
+        {question && !alterodo && (
+          <div>
+            <Question question={question} chose={chose} plusOneEnabled />
+            <div className={classes.browser}>
+              <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
+            </div>
+          </div>
+        )}
+        {alterodo && <Alterodo alterodo={alterodo} resetQuestioning={resetQuestioning} />}
+      </div>
     </div>
   );
 };

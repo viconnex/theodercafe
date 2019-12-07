@@ -5,7 +5,7 @@ import Switch from '@material-ui/core/Switch';
 import Select from '@material-ui/core/Select';
 import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
-import { FILTER_OPTIONS, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants';
+import { FILTER_OPTIONS } from 'utils/constants/questionConstants';
 
 const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isAsakaiMode, filterOption }) => {
   const handleSwitch = event => {
@@ -15,20 +15,10 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
   return (
     <div className={classes.modeSelectorContainer}>
       <FormControlLabel
-        control={
-          <Switch
-            color="default"
-            classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
-            checked={isAsakaiMode}
-            onChange={handleSwitch}
-            value="asakai"
-          />
-        }
+        control={<Switch color="secondary" checked={isAsakaiMode} onChange={handleSwitch} value="asakai" />}
         label="Asakai"
       />
-      {isAsakaiMode ? (
-        <div className={classes.modeSelectorInfo}>{`Set de ${ASAKAI_QUESTION_COUNT} questions validées`}</div>
-      ) : (
+      {!isAsakaiMode && (
         <Select
           className={classes.filterOptionSelect}
           inputProps={{
