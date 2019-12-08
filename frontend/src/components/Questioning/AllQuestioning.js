@@ -7,7 +7,7 @@ import {
   FILTER_OPTIONS,
   NOT_ANSWERED,
 } from 'utils/constants/questionConstants';
-import { USER_TO_QUESTIONS_URI } from 'utils/constants/apiConstants';
+import { USER_TO_QUESTIONS_URI, API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -123,14 +123,13 @@ const AllQuestioning = ({ classes, filterOption }) => {
       const newChoices = { ...choices };
       newChoices[questionId] = choice;
       setChoices(newChoices);
-      if (filterOption !== NOT_ANSWERED) {
-        changeQuestion(1);
-      } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
-        changeQuestion(-1);
-      }
+    }
+    if (filterOption !== NOT_ANSWERED) {
+      changeQuestion(1);
+    } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
+      changeQuestion(-1);
     }
   };
-
   return (
     <div>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
@@ -154,8 +153,17 @@ const AllQuestioning = ({ classes, filterOption }) => {
             <Voter questionId={question.id} hasVoted={false} />
           </div>
         )}
-        {filterOption === NOT_ANSWERED && areChoicesFetched && !question && (
+        {!question && filterOption === NOT_ANSWERED && areChoicesFetched && (
           <div>Tu as répondu à toutes les questions</div>
+        )}
+        {!question && filterOption === NOT_ANSWERED && !areChoicesFetched && !localStorage.jwt_token && (
+          <div>
+            Tu dois{' '}
+            <span className={classes.connect} onClick={() => (window.location = API_BASE_URL + GOOGLE_AUTH_URI)}>
+              te connecter
+            </span>{' '}
+            pour voir les questions auxquelles tu n'as pas répondu
+          </div>
         )}
       </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />

@@ -48,6 +48,10 @@ const style = {
     fontSize: '12px',
     marginTop: '4px',
   },
+  connect: {
+    color: colors.theodoGreen,
+    cursor: 'pointer',
+  },
 };
 
 export default style;

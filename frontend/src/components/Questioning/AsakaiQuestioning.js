@@ -35,6 +35,7 @@ const AsakaiQuestioning = ({ classes }) => {
 
   useEffect(() => {
     fetchAndSetQuestions(false);
+    // eslint-disable-next-line
   }, []);
 
   const resetQuestioning = () => {
@@ -56,7 +57,12 @@ const AsakaiQuestioning = ({ classes }) => {
   };
 
   const handleAsakaiFinish = async () => {
-    const response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
+    let response;
+    try {
+      response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
+    } catch {
+      return enqueueSnackbar('Problème de connexion', { variant: 'error' });
+    }
     if (response.status !== 201) {
       return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' });
     }
