@@ -8,6 +8,7 @@ import { AccumulusModule } from './accumulus/accumulus.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { UserToQuestionChoiceModule } from './userToQuestionChoice/userToQuestionChoice.module';
+import { UserToQuestionVoteModule } from './userToQuestionVote/userToQuestionVote.module';
 import { QuestioningHistoricModule } from './questioningHistoric/questioningHistoric.module';
 
 @Module({
@@ -19,6 +20,7 @@ import { QuestioningHistoricModule } from './questioningHistoric/questioningHist
         AuthModule,
         UserModule,
         UserToQuestionChoiceModule,
+        UserToQuestionVoteModule,
         QuestioningHistoricModule,
     ],
     controllers: [AppController],

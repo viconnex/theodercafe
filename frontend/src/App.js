@@ -44,7 +44,7 @@ const App = ({ classes }) => {
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <SnackbarProvider maxSnack={3} autoHideDuration={1300}>
+        <SnackbarProvider maxSnack={2} autoHideDuration={1300}>
           <div className={classes.app}>
             <AppBar classes={{ root: classes.appBar }} position="fixed">
               <ToolBar className={classes.toolBar}>

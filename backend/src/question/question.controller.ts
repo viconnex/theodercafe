@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { QuestionService } from './question.service';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
 import { Question } from './question.entity';
 import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto';
@@ -55,11 +55,6 @@ export class QuestionController {
         if (!question) throw new NotFoundException();
 
         return question;
-    }
-
-    @Put(':id/upVote')
-    updateUpVote(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
-        return this.questionService.upVote(id, voteBody.isUpVote);
     }
 
     @Delete(':id')

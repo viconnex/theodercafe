@@ -7,7 +7,12 @@ import {
   FILTER_OPTIONS,
   NOT_ANSWERED,
 } from 'utils/constants/questionConstants';
-import { USER_TO_QUESTIONS_URI, API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
+import {
+  USER_TO_QUESTIONS_CHOICES_URI,
+  API_BASE_URL,
+  GOOGLE_AUTH_URI,
+  USER_TO_QUESTIONS_VOTES_URI,
+} from 'utils/constants/apiConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,6 +23,7 @@ import { isUser } from 'services/jwtDecode';
 import style from './style';
 import Voter from './Voter';
 import { LoginDialog } from 'components/Login';
+import { fetchRequestResponse } from 'services/api';
 
 const initialIndexes = {};
 FILTER_OPTIONS.forEach(option => {
@@ -28,44 +34,56 @@ const AllQuestioning = ({ classes, filterOption }) => {
   const [questions, setQuestions] = useState([]);
   const [questionIndexByStatus, setQuestionIndexByStatus] = useState(initialIndexes);
   const [choices, setChoices] = useState({});
+  const [votes, setVotes] = useState({});
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
   const [areChoicesFetched, setAreChoicesFetched] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
+  const fetchQuestions = async () => {
+    const response = await fetchRequestResponse({ uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET' }, 200, {
+      enqueueSnackbar,
+    });
+    if (!response) {
+      return;
+    }
+    const data = await response.json();
+    setQuestions(data);
+  };
+  const fetchChoices = async () => {
+    if (!localStorage.jwt_token) return;
+    const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET' }, 200, {
+      enqueueSnackbar,
+    });
+    if (!response) {
+      return;
+    }
+    const userChoices = await response.json();
+    const choicesDic = {};
+    userChoices.forEach(choice => {
+      choicesDic[choice.questionId] = choice.choice;
+    });
+    setChoices(choicesDic);
+    setAreChoicesFetched(true);
+  };
+  const fetchVotes = async () => {
+    if (!localStorage.jwt_token) return;
+    const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_VOTES_URI}/user`, method: 'GET' }, 200, {
+      enqueueSnackbar,
+    });
+    if (!response) {
+      return;
+    }
+    const userVotes = await response.json();
+    const votesDic = {};
+    userVotes.forEach(vote => {
+      votesDic[vote.questionId] = vote.isUpVote;
+    });
+    setVotes(votesDic);
+  };
   useEffect(() => {
-    const fetchQuestions = async () => {
-      let response;
-      try {
-        response = await fetchRequest(`/questions/${ALL_QUESTIONS_MODE}`, 'GET');
-      } catch {
-        return enqueueSnackbar('Problème de connexion', { variant: 'error' });
-      }
-      if (response.state === 500) {
-        return enqueueSnackbar('Un problème est survenu', { variant: 'error' });
-      }
-      const data = await response.json();
-      setQuestions(data);
-    };
-    const fetchChoices = async () => {
-      if (!localStorage.jwt_token) return;
-      const response = await fetchRequest(`/${USER_TO_QUESTIONS_URI}/user`, 'GET');
-      if (response.status === 400)
-        return enqueueSnackbar('Un problème est survenu, essaie de te reconnecter', {
-          variant: 'error',
-          autoHideDuration: 5000,
-        });
-      if (response.status === 500) return enqueueSnackbar('Un problème est survenu', { variant: 'error' });
-
-      const userChoices = await response.json();
-      const choicesDic = {};
-      userChoices.forEach(choice => {
-        choicesDic[choice.questionId] = choice.choice;
-      });
-      setChoices(choicesDic);
-      setAreChoicesFetched(true);
-    };
     fetchChoices();
     fetchQuestions();
+    fetchVotes();
     // eslint-disable-next-line
   }, []);
 
@@ -108,16 +126,16 @@ const AllQuestioning = ({ classes, filterOption }) => {
       return setOpenLoginDialog(true);
     }
     if (choices[questionId] !== choice) {
-      const url = `/${USER_TO_QUESTIONS_URI}/${questionId}/choice`;
+      const url = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`;
       const body = { choice };
       let response;
       try {
         response = await fetchRequest(url, 'PUT', body);
       } catch {
-        return enqueueSnackbar("Votre choix n'a pas pu être enregistré", { variant: 'error' });
+        return enqueueSnackbar("Ton choix n'a pas pu être enregistré", { variant: 'error' });
       }
       if (response.status !== 200) {
-        return enqueueSnackbar("Votre choix n'a pas pu être enregistré", { variant: 'error' });
+        return enqueueSnackbar("Ton choix n'a pas pu être enregistré", { variant: 'error' });
       }
       enqueueSnackbar('Choix enregistré', { variant: 'success' });
       const newChoices = { ...choices };
@@ -129,6 +147,26 @@ const AllQuestioning = ({ classes, filterOption }) => {
     } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
       changeQuestion(-1);
     }
+  };
+  const vote = async (questionId, isUpVote) => {
+    if (!isUser()) {
+      return setOpenLoginDialog(true);
+    }
+    const newVote = { ...votes };
+    const uri = `/${USER_TO_QUESTIONS_VOTES_URI}/${questionId}/vote`;
+    let method = 'PUT';
+    let body;
+
+    if (votes.hasOwnProperty(questionId) && votes[questionId] === isUpVote) {
+      Reflect.deleteProperty(newVote, questionId);
+      method = 'DELETE';
+    } else {
+      newVote[questionId] = isUpVote;
+      body = { isUpVote };
+    }
+    setVotes(newVote);
+
+    return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar });
   };
   return (
     <div>
@@ -150,7 +188,7 @@ const AllQuestioning = ({ classes, filterOption }) => {
               <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
             </div>
             <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
-            <Voter questionId={question.id} hasVoted={false} />
+            <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
           </div>
         )}
         {!question && filterOption === NOT_ANSWERED && areChoicesFetched && (

@@ -103,13 +103,12 @@ export class QuestionService {
         return this.questionRepository.deleteQuestion(id);
     }
 
-    async upVote(questionId: number, isUpvote: boolean): Promise<UpdateResult> {
+    async updateQuestionVote(questionId: number, upVoteIncrement: number, downVoteIncrement): Promise<UpdateResult> {
         const question = await this.questionRepository.findOne(questionId);
-        if (isUpvote) {
-            return this.questionRepository.update(questionId, { upVotes: question.upVotes + 1 });
-        }
-
-        return this.questionRepository.update(questionId, { downVotes: question.downVotes + 1 });
+        return this.questionRepository.update(questionId, {
+            upVotes: question.upVotes + upVoteIncrement,
+            downVotes: question.downVotes + downVoteIncrement,
+        });
     }
 
     async updateQuestionChoicesCount(questionId: number, choiceIncrement: { 1: number; 2: number }): Promise<void> {

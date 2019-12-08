@@ -19,8 +19,14 @@ const style = {
   filterOption: {
     fontSize: '11px',
   },
-  neutralVoter: {
+  neutralVote: {
     color: colors.white,
+  },
+  upVote: {
+    color: colors.theodoGreen,
+  },
+  downVote: {
+    color: colors.red,
   },
   questioningContainer: {
     display: 'flex',
