@@ -133,29 +133,31 @@ const AllQuestioning = ({ classes, filterOption }) => {
 
   return (
     <div>
-      {question && (
-        <div>
-          <Question question={question} chose={chose} choice={choices[question.id]} />
-          <div className={classes.browser}>
-            <IconButton
-              disabled={questionIndex === 0}
-              classes={{ root: classes.nextButton }}
-              onClick={() => changeQuestion(-1)}
-            >
-              <ArrowBack />
-            </IconButton>
-            <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
-              <ArrowForward />
-            </IconButton>
-            <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
+      <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
+        {question && (
+          <div>
+            <Question question={question} chose={chose} choice={choices[question.id]} />
+            <div className={classes.browser}>
+              <IconButton
+                disabled={questionIndex === 0}
+                classes={{ root: classes.nextButton }}
+                onClick={() => changeQuestion(-1)}
+              >
+                <ArrowBack />
+              </IconButton>
+              <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
+                <ArrowForward />
+              </IconButton>
+              <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
+            </div>
+            <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
+            <Voter questionId={question.id} hasVoted={false} />
           </div>
-          <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
-          <Voter questionId={question.id} hasVoted={false} />
-        </div>
-      )}
-      {filterOption === NOT_ANSWERED && areChoicesFetched && !question && (
-        <div>Tu as répondu à toutes les questions</div>
-      )}
+        )}
+        {filterOption === NOT_ANSWERED && areChoicesFetched && !question && (
+          <div>Tu as répondu à toutes les questions</div>
+        )}
+      </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
     </div>
   );

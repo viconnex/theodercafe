@@ -3,6 +3,7 @@ import { factorizeMatrix, buildCompletedMatrix } from 'matrix-factorization';
 import { UserToQuestionChoice } from '../userToQuestionChoice.entity';
 import { UserToQuestionChoiceRepository } from '../userToQuestionChoice.repository';
 import { AsakaiChoices, AlterodoSimilarity, Alterodo } from '../userToQuestionChoice.types';
+import { BadRequestException } from '@nestjs/common';
 
 export const findAlterodoFromCommonChoices = async (
     userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
@@ -12,6 +13,9 @@ export const findAlterodoFromCommonChoices = async (
     const totems: { [id: number]: AlterodoSimilarity } = {};
 
     const userToQuestionChoices = await userToQuestionChoiceRepository.findByQuestionIds(answeredQuestionsIds);
+    if (userToQuestionChoices.length === 0) {
+        throw new BadRequestException('no choices have been made by other users');
+    }
 
     userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {
         const isSameChoice = asakaiChoices[userToQuestionChoice.questionId] === userToQuestionChoice.choice;
@@ -45,7 +49,7 @@ export const findAlterodoFromCommonChoices = async (
             bestTotemIds.push(userId);
         }
     }
-    console.log(totems);
+    console.log('totems', totems);
     const totemIdIndex = Math.floor(Math.random() * bestTotemIds.length);
 
     const totem = {

@@ -12,22 +12,23 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
+import { Question } from './question.entity';
+import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto';
 
 @Controller('questions')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) {}
 
     @Post()
-    create(@Body() questionDto): Promise<QuestionDto> {
+    create(@Body() questionDto: QuestionPostDTO): Promise<Question> {
         return this.questionService.create(questionDto);
     }
 
     @Get('/asakai')
-    findAsakaiSet(@Query() query: { maxNumber: number; newSet: boolean }): Promise<QuestionDto[]> {
+    findAsakaiSet(@Query() query: { maxNumber: number; newSet: boolean }): Promise<QuestionWithCategoryNameDto[]> {
         const maxNumber = query.maxNumber || 10;
         const findFromHistoricIfExists = query.newSet ? false : true;
         return this.questionService.findAsakaiSet(maxNumber, findFromHistoricIfExists);
@@ -35,7 +36,7 @@ export class QuestionController {
     }
 
     @Get('/all')
-    findAll(): Promise<QuestionDto[]> {
+    findAll(): Promise<QuestionWithCategoryNameDto[]> {
         return this.questionService.findAll();
     }
 
@@ -49,7 +50,7 @@ export class QuestionController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<QuestionDto> {
+    async findOne(@Param('id') id: string): Promise<Question> {
         const question = await this.questionService.findOne(id);
         if (!question) throw new NotFoundException();
 
@@ -72,7 +73,7 @@ export class QuestionController {
 
     @Put(':id')
     @UseGuards(AuthGuard('jwt'))
-    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<QuestionDto> {
+    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<Question> {
         return this.questionService.update(id, questionBody);
     }
 }

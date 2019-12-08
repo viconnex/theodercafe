@@ -14,7 +14,7 @@ import { ALL_QUESTIONS_OPTION } from 'utils/constants/questionConstants';
 
 const Home = ({ classes }) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false);
-  const [isAsakaiMode, setIsAsakaiMode] = useState(true);
+  const [isAsakaiMode, setIsAsakaiMode] = useState(false);
   const [filterOption, setFilterOption] = useState(ALL_QUESTIONS_OPTION);
 
   const handleModeChange = isAsakaiMode => {

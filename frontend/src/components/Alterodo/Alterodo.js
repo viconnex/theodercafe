@@ -8,7 +8,7 @@ const Alterodo = ({ alterodo, classes, resetQuestioning }) => {
   return (
     <div>
       <div>
-        Ton <span style={{ fontStyle: 'italic' }}>alterodo</span> est
+        Ton <span style={{ fontStyle: 'italic' }}>Alterodo</span> est
       </div>
       <img className={classes.picture} src={alterodo.user.pictureUrl} alt="alterodo_profile" />
       <div className={classes.name}>

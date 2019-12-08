@@ -30,8 +30,11 @@ const style = {
   questioningContent: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '32px',
+    marginTop: '36px',
     width: '100%',
+  },
+  allQuestioningContent: {
+    marginTop: '49px',
   },
   asakaiSubtitle: {
     fontSize: '14px',

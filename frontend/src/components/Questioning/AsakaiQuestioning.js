@@ -57,6 +57,9 @@ const AsakaiQuestioning = ({ classes }) => {
 
   const handleAsakaiFinish = async () => {
     const response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
+    if (response.status !== 201) {
+      return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' });
+    }
     const data = await response.json();
     setAlterodo(data);
   };
@@ -76,7 +79,7 @@ const AsakaiQuestioning = ({ classes }) => {
       <div className={classes.asakaiSubtitle}>
         <div>Le set du jour</div>
         <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
-          Changer
+          Changer le set du jour
         </div>
       </div>
       <div className={classes.questioningContent}>

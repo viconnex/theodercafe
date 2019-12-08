@@ -2,8 +2,8 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QuestionDto } from './interfaces/question.dto';
-import { DeleteResult, UpdateResult, In } from 'typeorm';
+import { QuestionWithCategoryNameDto, QuestionPostDTO } from './interfaces/question.dto';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { QuestioningHistoricService } from 'src/questioningHistoric/questioningHistoric.service';
 import { Question } from './question.entity';
 
@@ -17,7 +17,7 @@ export class QuestionService {
         private readonly questioningHistoricService: QuestioningHistoricService,
     ) {}
 
-    async create(questionBody): Promise<QuestionDto> {
+    async create(questionBody: QuestionPostDTO): Promise<Question> {
         let category = null;
         if (typeof questionBody.category === 'number') {
             category = await this.categoryRepository.findOne(questionBody.category);
@@ -45,16 +45,24 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<QuestionDto[]> {
+    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<QuestionWithCategoryNameDto[]> {
         if (findFromHistoricIfExists) {
             const currentSet = await this.questioningHistoricService.findLastOfTheDay();
             if (currentSet) {
-                const sameQuestions = await this.questionRepository.findByIds(currentSet.questioning);
-
-                return sameQuestions.sort(
+                const sameQuestions = await this.questionRepository.findByIdsWithCategory(currentSet.questioning);
+                const questionWithCategories = sameQuestions.sort(
                     (question1, question2): number =>
                         currentSet.questioning.indexOf(question1.id.toString()) -
                         currentSet.questioning.indexOf(question2.id.toString()),
+                );
+                return questionWithCategories.map(
+                    (questionWithCategory): QuestionWithCategoryNameDto => ({
+                        id: questionWithCategory.id,
+                        option1: questionWithCategory.option1,
+                        option2: questionWithCategory.option2,
+                        isValidated: questionWithCategory.isValidated,
+                        categoryName: questionWithCategory.category.name,
+                    }),
                 );
             }
         }
@@ -71,24 +79,24 @@ export class QuestionService {
         return asakaiSet;
     }
 
-    findInOrder(orderedIds: number[]): Promise<QuestionDto[]> {
+    findInOrder(orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> {
         return this.questionRepository.findInOrder(orderedIds);
     }
 
-    findAll(): Promise<QuestionDto[]> {
+    findAll(): Promise<QuestionWithCategoryNameDto[]> {
         return this.questionRepository.findAll();
     }
 
-    findAdminList(): Promise<QuestionDto[]> {
+    findAdminList(): Promise<Question[]> {
         return this.questionRepository.findAdminList();
     }
 
-    findOne(id: string): Promise<QuestionDto> {
+    findOne(id: string): Promise<Question> {
         return this.questionRepository.findOneQuestion(id);
     }
 
-    update(id: string | number, questionDto: QuestionDto): Promise<QuestionDto> {
-        return this.questionRepository.updateQuestion(id, questionDto);
+    update(id: string | number, question: Question): Promise<Question> {
+        return this.questionRepository.updateQuestion(id, question);
     }
 
     delete(id: string): Promise<DeleteResult> {
