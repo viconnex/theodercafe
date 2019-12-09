@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User, getCompanyFromEmail } from './user.entity';
-import { GoogleProfile } from 'src/auth/google.strategy';
+import { GoogleProfile } from '../auth/google.strategy';
 
 @Injectable()
 export class UserService {

@@ -5,7 +5,7 @@ import { UserToQuestionVoteService } from './userToQuestionVote.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserToQuestionVoteController } from './userToQuestionVote.controller';
 import { QuestionModule } from '../question/question.module';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
     imports: [TypeOrmModule.forFeature([UserToQuestionVote, UserToQuestionVoteRepository]), QuestionModule, UserModule],

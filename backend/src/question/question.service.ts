@@ -4,7 +4,7 @@ import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionWithCategoryNameDto, QuestionPostDTO } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { QuestioningHistoricService } from 'src/questioningHistoric/questioningHistoric.service';
+import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service';
 import { Question } from './question.entity';
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.7;

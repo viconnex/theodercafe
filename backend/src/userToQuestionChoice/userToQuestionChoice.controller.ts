@@ -14,7 +14,7 @@ import {
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { QuestionService } from 'src/question/question.service';
+import { QuestionService } from '../question/question.service';
 import { AlterodoResponse, AsakaiChoices } from './userToQuestionChoice.types';
 
 @Controller('user_to_question_choices')

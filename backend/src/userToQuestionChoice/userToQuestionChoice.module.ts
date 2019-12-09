@@ -5,7 +5,7 @@ import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserToQuestionChoiceController } from './userToQuestionChoice.controller';
 import { QuestionModule } from '../question/question.module';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
     imports: [

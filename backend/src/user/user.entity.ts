@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { UserToQuestionChoice } from 'src/userToQuestionChoice/userToQuestionChoice.entity';
+import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
 import { Exclude } from 'class-transformer';
 import { UserToQuestionVote } from '../userToQuestionVote/userToQuestionVote.entity';
 
