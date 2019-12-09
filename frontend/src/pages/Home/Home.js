@@ -14,7 +14,7 @@ import { VALIDATED_OPTION } from 'utils/constants/questionConstants';
 
 const Home = ({ classes }) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false);
-  const [isAsakaiMode, setIsAsakaiMode] = useState(false);
+  const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1);
   const [filterOption, setFilterOption] = useState(VALIDATED_OPTION);
 
   const handleModeChange = isAsakaiMode => {

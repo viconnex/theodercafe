@@ -36,7 +36,7 @@ const style = {
   questioningContent: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '36px',
+    marginTop: '40px',
     width: '100%',
   },
   allQuestioningContent: {

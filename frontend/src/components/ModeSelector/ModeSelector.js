@@ -15,7 +15,15 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
   return (
     <div className={classes.modeSelectorContainer}>
       <FormControlLabel
-        control={<Switch color="secondary" checked={isAsakaiMode} onChange={handleSwitch} value="asakai" />}
+        control={
+          <Switch
+            color="default"
+            classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
+            checked={isAsakaiMode}
+            onChange={handleSwitch}
+            value="asakai"
+          />
+        }
         label="Asakai"
       />
       {!isAsakaiMode && (

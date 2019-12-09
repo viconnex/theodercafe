@@ -15,7 +15,7 @@ const style = {
   },
   filterOptionSelect: {
     color: 'white',
-    fontSize: '12px',
+    fontSize: '14px',
     fontFamily: 'Open Sans',
     '&:before': {
       borderColor: 'white',
