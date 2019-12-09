@@ -46,6 +46,15 @@ export class UserToQuestionVoteService {
     }
 
     async unVote(questionId: number, userId: number): Promise<DeleteResult> {
+        const initialVote = await this.userToQuestionVoteRepository.findOne({
+            userId,
+            questionId,
+        });
+        this.questionService.updateQuestionVote(
+            questionId,
+            initialVote.isUpVote ? -1 : 0,
+            initialVote.isUpVote ? 0 : -1,
+        );
         return this.userToQuestionVoteRepository.delete({ userId, questionId });
     }
 }
