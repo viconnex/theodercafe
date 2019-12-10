@@ -61,16 +61,26 @@ export class UserToQuestionChoiceService {
             throw new BadRequestException('user must answer to at least one question');
 
         // return findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
-        const alterodo = await findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
-        const user = await this.userService.findOne(alterodo.user.userId);
+        const totems = await findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
+        const userAlterodo = await this.userService.findOne(totems.alterodo.user.userId);
+        const userVarieto = await this.userService.findOne(totems.varieto.user.userId);
 
         const alterodoResponse: AlterodoResponse = {
-            ...alterodo,
-            user: {
-                email: user.email,
-                givenName: user.givenName,
-                familyName: user.familyName,
-                pictureUrl: user.pictureUrl,
+            alterodo: {
+                similarity: totems.alterodo.similarity,
+                user: {
+                    givenName: userAlterodo.givenName,
+                    familyName: userAlterodo.familyName,
+                    pictureUrl: userAlterodo.pictureUrl,
+                },
+            },
+            varieto: {
+                similarity: totems.varieto.similarity,
+                user: {
+                    givenName: userVarieto.givenName,
+                    familyName: userVarieto.familyName,
+                    pictureUrl: userVarieto.pictureUrl,
+                },
             },
         };
 

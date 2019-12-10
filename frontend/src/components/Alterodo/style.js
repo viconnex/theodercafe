@@ -16,7 +16,12 @@ export default {
   similarityValue: {
     color: colors.theodoGreen,
   },
+  actionsContainer: {
+    marginTop: '32px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   newQuestioning: {
-    marginTop: '30px',
+    marginTop: '12px',
   },
 };

@@ -11,7 +11,7 @@ const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [asakaiChoices, setAsakaiChoices] = useState({});
-  const [alterodo, setAlterodo] = useState(null);
+  const [alterodos, setAlterodos] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -39,7 +39,7 @@ const AsakaiQuestioning = ({ classes }) => {
   }, []);
 
   const resetQuestioning = () => {
-    setAlterodo(null);
+    setAlterodos(null);
     setQuestionIndex(0);
   };
 
@@ -67,7 +67,7 @@ const AsakaiQuestioning = ({ classes }) => {
       return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' });
     }
     const data = await response.json();
-    setAlterodo(data);
+    setAlterodos(data);
   };
 
   const chose = async (questionId, choice) => {
@@ -89,7 +89,7 @@ const AsakaiQuestioning = ({ classes }) => {
         </div>
       </div>
       <div className={classes.questioningContent}>
-        {question && !alterodo && (
+        {question && !alterodos && (
           <div>
             <Question question={question} chose={chose} plusOneEnabled />
             <div className={classes.browser}>
@@ -97,7 +97,7 @@ const AsakaiQuestioning = ({ classes }) => {
             </div>
           </div>
         )}
-        {alterodo && <Alterodo alterodo={alterodo} resetQuestioning={resetQuestioning} />}
+        {alterodos && <Alterodo alterodos={alterodos} resetQuestioning={resetQuestioning} />}
       </div>
     </div>
   );

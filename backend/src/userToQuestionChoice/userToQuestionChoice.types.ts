@@ -8,7 +8,25 @@ export interface Alterodo {
     user: { userId: number };
     similarity: AlterodoSimilarity;
 }
+
+interface UserAlterodoResponse {
+    givenName: string;
+    familyName: string;
+    pictureUrl: string;
+}
+
 export interface AlterodoResponse {
-    user: { givenName: string; familyName: string; pictureUrl: string; email: string };
-    similarity: AlterodoSimilarity;
+    alterodo: {
+        user: UserAlterodoResponse;
+        similarity: AlterodoSimilarity;
+    };
+    varieto: {
+        user: UserAlterodoResponse;
+        similarity: AlterodoSimilarity;
+    };
+}
+
+export interface Totems {
+    alterodo: Alterodo;
+    varieto: Alterodo;
 }

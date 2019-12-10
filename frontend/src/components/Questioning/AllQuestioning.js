@@ -125,6 +125,11 @@ const AllQuestioning = ({ classes, filterOption }) => {
     if (!isUser()) {
       return setOpenLoginDialog(true);
     }
+    if (filterOption !== NOT_ANSWERED) {
+      changeQuestion(1);
+    } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
+      changeQuestion(-1);
+    }
     if (choices[questionId] !== choice) {
       const url = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`;
       const body = { choice };
@@ -141,11 +146,6 @@ const AllQuestioning = ({ classes, filterOption }) => {
       const newChoices = { ...choices };
       newChoices[questionId] = choice;
       setChoices(newChoices);
-    }
-    if (filterOption !== NOT_ANSWERED) {
-      changeQuestion(1);
-    } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
-      changeQuestion(-1);
     }
   };
   const vote = async (questionId, isUpVote) => {
