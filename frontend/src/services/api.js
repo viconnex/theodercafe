@@ -9,7 +9,7 @@ export const fetchRequestResponse = async (
   try {
     response = await fetchRequest(uri, method, body);
   } catch {
-    enqueueSnackbar('Une erreur est survenue', { variant: 'error' });
+    enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' });
     return null;
   }
   if (response.status !== expectedStatus) {
