@@ -2,50 +2,46 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 
-import { API_BASE_URL } from 'utils/constants';
-import { fetchRequest } from 'utils/helpers';
-
-import { PlusOne } from '../PlusOne';
 import style from './style';
+import { PlusOne } from 'components/PlusOne';
 
-const Question = ({ classes, question }) => {
-  const [state, setState] = React.useState({
-    option1VoteTrigger: 0,
-    option2VoteTrigger: 0,
-  });
-  const vote = optionIndex => () => {
-    setState({ ...state, [`option${optionIndex}VoteTrigger`]: state[`option${optionIndex}VoteTrigger`] + 1 });
+const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
+  const [choice1Trigger, setChoice1Trigger] = React.useState(0);
+  const [choice2Trigger, setChoice2Trigger] = React.useState(0);
 
-    const url = API_BASE_URL + `/questions/${question.id}/vote`;
-    const body = { optionIndex };
-    fetchRequest(url, 'PUT', body);
+  const handleChoice = (questionId, choice) => {
+    chose(questionId, choice);
+    if (!plusOneEnabled) return;
+    if (choice === 1) setChoice1Trigger(choice1Trigger + 1);
+    else if (choice === 2) setChoice2Trigger(choice2Trigger + 1);
   };
 
   return (
     <div>
       <div className={classes.categoryContainer}>
         <div className={classes.categoryTitle}>Catégorie</div>
-        <Chip
-          variant="outlined"
-          size="small"
-          label={question.categoryName ? question.categoryName : 'hors catégorie'}
-          className={classes.categoryContent}
-        />
+        <Chip size="small" label={question.categoryName ? question.categoryName : 'hors catégorie'} color="secondary" />
       </div>
       <div className={classes.questionContainer}>
         <div className={classes.optionContainer}>
-          <div onClick={vote(1)} className={classes.questionPart}>
-            <span className={classes.option}>{question.option1}</span>
+          <div
+            onClick={() => handleChoice(question.id, 1)}
+            className={`${classes.option} ${choice === 1 ? classes.chosenQuestion : ''}`}
+          >
+            <span className={!choice ? classes.chosable : ''}>{question.option1}</span>
           </div>
-          {state.option1VoteTrigger > 0 && <PlusOne update={state.option1VoteTrigger} />}
+          {plusOneEnabled && choice1Trigger > 0 && <PlusOne update={choice1Trigger} />}
         </div>
-        <div className={classes.questionPart}> ou </div>
+        <div className={classes.separator}> ou </div>
         <div className={classes.optionContainer}>
-          <div onClick={vote(2)}>
-            <span className={classes.option}>{question.option2}</span>
-            <span> ?</span>
+          <div
+            onClick={() => handleChoice(question.id, 2)}
+            className={`${classes.option} ${classes.option2} ${choice === 2 ? classes.chosenQuestion : ''}`}
+          >
+            <span className={!choice ? classes.chosable : ''}>{question.option2}</span>
           </div>
-          {state.option2VoteTrigger > 0 && <PlusOne update={state.option2VoteTrigger} />}
+          {plusOneEnabled && choice2Trigger > 0 && <PlusOne update={choice2Trigger} />}
+          <span style={{ padding: '8px' }}> ?</span>
         </div>
       </div>
     </div>

@@ -12,29 +12,31 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { QuestionDto } from './interfaces/question.dto';
 import { QuestionService } from './question.service';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
+import { Question } from './question.entity';
+import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto';
 
 @Controller('questions')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) {}
 
     @Post()
-    create(@Body() questionDto): Promise<QuestionDto> {
+    create(@Body() questionDto: QuestionPostDTO): Promise<Question> {
         return this.questionService.create(questionDto);
     }
 
     @Get('/asakai')
-    findAsakaiSet(@Query() query: { maxNumber: number }): Promise<QuestionDto[]> {
+    findAsakaiSet(@Query() query: { maxNumber: number; newSet: boolean }): Promise<QuestionWithCategoryNameDto[]> {
         const maxNumber = query.maxNumber || 10;
-        return this.questionService.findAsakaiSet(maxNumber);
+        const findFromHistoricIfExists = query.newSet ? false : true;
+        return this.questionService.findAsakaiSet(maxNumber, findFromHistoricIfExists);
         // return this.questionService.findInOrder([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
     }
 
     @Get('/all')
-    findAll(): Promise<QuestionDto[]> {
+    findAll(): Promise<QuestionWithCategoryNameDto[]> {
         return this.questionService.findAll();
     }
 
@@ -48,21 +50,11 @@ export class QuestionController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<QuestionDto> {
+    async findOne(@Param('id') id: string): Promise<Question> {
         const question = await this.questionService.findOne(id);
         if (!question) throw new NotFoundException();
 
         return question;
-    }
-
-    @Put(':id/vote')
-    updateVote(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
-        return this.questionService.vote(id, voteBody.optionIndex);
-    }
-
-    @Put(':id/upVote')
-    updateUpVote(@Param('id') id: number, @Body() voteBody): Promise<UpdateResult> {
-        return this.questionService.upVote(id, voteBody.isUpVote);
     }
 
     @Delete(':id')
@@ -76,7 +68,7 @@ export class QuestionController {
 
     @Put(':id')
     @UseGuards(AuthGuard('jwt'))
-    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<QuestionDto> {
+    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<Question> {
         return this.questionService.update(id, questionBody);
     }
 }

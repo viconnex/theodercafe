@@ -1,9 +1,13 @@
-import { Category } from 'src/category/category.entity';
-
-export class QuestionDto {
-    readonly category: Category;
+export class QuestionWithCategoryNameDto {
+    readonly id: number;
+    readonly categoryName: string;
     readonly option1: string;
     readonly option2: string;
-    readonly option1Votes: number;
-    readonly option2Votes: number;
+    readonly isValidated: boolean;
+}
+
+export class QuestionPostDTO {
+    readonly category: string | number;
+    readonly option1: string;
+    readonly option2: string;
 }

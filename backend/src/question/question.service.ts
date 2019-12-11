@@ -2,8 +2,10 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QuestionDto } from './interfaces/question.dto';
+import { QuestionWithCategoryNameDto, QuestionPostDTO } from './interfaces/question.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service';
+import { Question } from './question.entity';
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.7;
 
@@ -12,9 +14,10 @@ export class QuestionService {
     constructor(
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
+        private readonly questioningHistoricService: QuestioningHistoricService,
     ) {}
 
-    async create(questionBody): Promise<QuestionDto> {
+    async create(questionBody: QuestionPostDTO): Promise<Question> {
         let category = null;
         if (typeof questionBody.category === 'number') {
             category = await this.categoryRepository.findOne(questionBody.category);
@@ -42,55 +45,77 @@ export class QuestionService {
         return this.questionRepository.save(question);
     }
 
-    async findAsakaiSet(maxNumber: number): Promise<QuestionDto[]> {
+    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<QuestionWithCategoryNameDto[]> {
+        if (findFromHistoricIfExists) {
+            const currentSet = await this.questioningHistoricService.findLastOfTheDay();
+            if (currentSet) {
+                const sameQuestions = await this.questionRepository.findByIdsWithCategory(currentSet.questioning);
+                const questionWithCategories = sameQuestions.sort(
+                    (question1, question2): number =>
+                        currentSet.questioning.indexOf(question1.id.toString()) -
+                        currentSet.questioning.indexOf(question2.id.toString()),
+                );
+                return questionWithCategories.map(
+                    (questionWithCategory): QuestionWithCategoryNameDto => ({
+                        id: questionWithCategory.id,
+                        option1: questionWithCategory.option1,
+                        option2: questionWithCategory.option2,
+                        isValidated: questionWithCategory.isValidated,
+                        categoryName: questionWithCategory.category.name,
+                    }),
+                );
+            }
+        }
+
         const countClassics = await this.questionRepository.countClassics();
         const jokeAboutSomeoneCount =
             Math.random() < JOKE_ON_SOMEONE_PROBABILITY && maxNumber - countClassics[0].count > 0 ? 1 : 0;
         const standardQuestionCount = Math.max(maxNumber - countClassics[0].count - jokeAboutSomeoneCount, 0);
 
-        return this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount);
+        const asakaiSet = await this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount);
+
+        this.questioningHistoricService.saveNew(asakaiSet.map((question): string => question.id.toString()));
+
+        return asakaiSet;
     }
 
-    findInOrder(orderedIds: number[]): Promise<QuestionDto[]> {
+    findInOrder(orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> {
         return this.questionRepository.findInOrder(orderedIds);
     }
 
-    findAll(): Promise<QuestionDto[]> {
+    findAll(): Promise<QuestionWithCategoryNameDto[]> {
         return this.questionRepository.findAll();
     }
 
-    findAdminList(): Promise<QuestionDto[]> {
+    findAdminList(): Promise<Question[]> {
         return this.questionRepository.findAdminList();
     }
 
-    findOne(id: string): Promise<QuestionDto> {
+    findOne(id: string): Promise<Question> {
         return this.questionRepository.findOneQuestion(id);
     }
 
-    update(id: string | number, questionDto: QuestionDto): Promise<QuestionDto> {
-        return this.questionRepository.updateQuestion(id, questionDto);
+    update(id: string | number, question: Question): Promise<Question> {
+        return this.questionRepository.updateQuestion(id, question);
     }
 
     delete(id: string): Promise<DeleteResult> {
         return this.questionRepository.deleteQuestion(id);
     }
 
-    async vote(questionId: number, optionIndex: number): Promise<UpdateResult> {
+    async updateQuestionVote(questionId: number, upVoteIncrement: number, downVoteIncrement): Promise<UpdateResult> {
         const question = await this.questionRepository.findOne(questionId);
-        if (optionIndex === 1) {
-            return this.questionRepository.update(questionId, { option1Votes: question.option1Votes + 1 });
-        }
-        if (optionIndex === 2) {
-            return this.questionRepository.update(questionId, { option2Votes: question.option2Votes + 1 });
-        }
+        return this.questionRepository.update(questionId, {
+            upVotes: question.upVotes + upVoteIncrement,
+            downVotes: question.downVotes + downVoteIncrement,
+        });
     }
 
-    async upVote(questionId: number, isUpvote: boolean): Promise<UpdateResult> {
+    async updateQuestionChoicesCount(questionId: number, choiceIncrement: { 1: number; 2: number }): Promise<void> {
         const question = await this.questionRepository.findOne(questionId);
-        if (isUpvote) {
-            return this.questionRepository.update(questionId, { upVotes: question.upVotes + 1 });
-        }
-
-        return this.questionRepository.update(questionId, { downVotes: question.downVotes + 1 });
+        this.questionRepository.update(questionId, {
+            option1Votes: question.option1Votes + choiceIncrement[1],
+            option2Votes: question.option2Votes + choiceIncrement[2],
+        });
     }
 }

@@ -4,7 +4,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtAdminStrategy extends PassportStrategy(Strategy, 'jwt') {
     constructor(private readonly authService: AuthService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         try {
             const validClaims = await this.authService.verifyAdminRequest(payload.email);
 
-            if (!validClaims) return done(new UnauthorizedException('invalid token claims'), false);
+            if (!validClaims) return done(new UnauthorizedException('You must be an admin'), false);
 
             done(null, payload);
         } catch (err) {

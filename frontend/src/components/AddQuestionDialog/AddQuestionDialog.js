@@ -8,12 +8,11 @@ import Button from '@material-ui/core/Button';
 import Close from '@material-ui/icons/Close';
 import Creatable from 'react-select/creatable';
 import { withSnackbar } from 'notistack';
-import { API_BASE_URL } from 'utils/constants';
 import { fetchRequest } from 'utils/helpers';
 import style from './style';
 
 const postQuestion = async (option1, option2, category) => {
-  const url = API_BASE_URL + '/questions';
+  const url = '/questions';
   const body = { option1, option2, category };
   const response = await fetchRequest(url, 'POST', body);
 
@@ -28,7 +27,7 @@ class AddQuestionDialog extends Component {
   };
 
   fetchCategories = async () => {
-    const response = await fetch(API_BASE_URL + '/categories');
+    const response = await fetchRequest('/categories');
     const data = await response.json();
     this.setState({ categories: data });
   };
@@ -59,8 +58,7 @@ class AddQuestionDialog extends Component {
     if (response.status === 201) {
       const ackResponse = choisis(this.state.option1, this.state.option2);
       this.props.enqueueSnackbar(`${ackResponse} !`, { variant: 'success' });
-      const categoryName = this.state.categoryValue ? this.state.categoryLabel : null;
-      this.props.addQuestion(this.state.option1, this.state.option2, categoryName);
+      this.props.handleQuestionAdded();
     } else {
       this.props.enqueueSnackbar("La question n'a pas pu être créée", { variant: 'error' });
     }

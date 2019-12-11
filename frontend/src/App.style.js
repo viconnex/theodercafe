@@ -6,7 +6,7 @@ const style = {
     color: 'white',
     display: 'flex',
     flexDirection: 'column',
-    fontSize: 'calc(10px + 2vmin)',
+    fontSize: '16px',
     minHeight: '100vh',
     textAlign: 'center',
     padding: '0px 15px',
@@ -20,6 +20,9 @@ const style = {
   toolBar: {
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  profile: {
+    borderRadius: '30px',
   },
 };
 

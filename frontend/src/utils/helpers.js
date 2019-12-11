@@ -1,4 +1,6 @@
-export const fetchRequest = async (url, method, body) => {
+import { API_BASE_URL } from './constants/apiConstants';
+
+export const fetchRequest = async (uri, method, body) => {
   const request = {
     method,
     headers: {
@@ -9,6 +11,6 @@ export const fetchRequest = async (url, method, body) => {
   if (body) request['body'] = JSON.stringify(body);
   if (localStorage.jwt_token) request.headers['Authorization'] = 'Bearer ' + localStorage.jwt_token;
 
-  const response = await fetch(url, request);
+  const response = await fetch(API_BASE_URL + uri, request);
   return response;
 };

@@ -5,16 +5,11 @@ import Switch from '@material-ui/core/Switch';
 import Select from '@material-ui/core/Select';
 import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
-import { ASAKAI_MODE, ALL_QUESTIONS_MODE } from 'utils/constants';
+import { FILTER_OPTIONS } from 'utils/constants/questionConstants';
 
-const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange, questionNumber }) => {
-  const [modeSelected, setMode] = React.useState(ASAKAI_MODE);
-  const [validationStatusSelected, setValidationStatus] = React.useState('all');
-
+const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isAsakaiMode, filterOption }) => {
   const handleSwitch = event => {
-    const mode = event.target.checked ? ASAKAI_MODE : ALL_QUESTIONS_MODE;
-    setMode(mode);
-    handleModeChange(mode);
+    handleModeChange(!!event.target.checked);
   };
 
   return (
@@ -24,33 +19,31 @@ const ModeSelector = ({ classes, handleModeChange, handleValidationStatusChange,
           <Switch
             color="default"
             classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
-            checked={modeSelected === ASAKAI_MODE}
+            checked={isAsakaiMode}
             onChange={handleSwitch}
             value="asakai"
           />
         }
         label="Asakai"
       />
-      {modeSelected === ASAKAI_MODE ? (
-        <div className={classes.modeSelectorInfo}>{`Set de ${questionNumber} questions validées`}</div>
-      ) : (
+      {!isAsakaiMode && (
         <Select
-          className={classes.validationStatusSelect}
+          className={classes.filterOptionSelect}
           inputProps={{
             classes: {
-              icon: classes.validationStatusSelectIcon,
+              icon: classes.filterOptionSelectIcon,
             },
           }}
-          value={validationStatusSelected}
+          value={filterOption}
           onChange={event => {
-            setValidationStatus(event.target.value);
-            handleValidationStatusChange(event.target.value);
+            handleFilterOptionChange(event.target.value);
           }}
         >
-          <MenuItem value="all">Toutes les questions</MenuItem>
-          <MenuItem value="validated">Validées</MenuItem>
-          <MenuItem value="inValidation">En attente de validation</MenuItem>
-          <MenuItem value="notValidated">Invalidée</MenuItem>
+          {FILTER_OPTIONS.map(option => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
         </Select>
       )}
     </div>

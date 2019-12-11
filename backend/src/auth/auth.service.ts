@@ -1,19 +1,11 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { sign } from 'jsonwebtoken';
 import { UserService } from '../user/user.service';
+import { GoogleProfile } from './google.strategy';
 
 export enum Provider {
     GOOGLE = 'google',
 }
-
-const getEmail = (emails: { value: string }[]): string | null => {
-    for (var i = 0; i < emails.length; i++) {
-        if (emails[i].value.split('@')[1] === 'theodo.fr') {
-            return emails[i].value;
-        }
-    }
-    return null;
-};
 
 @Injectable()
 export class AuthService {
@@ -21,28 +13,25 @@ export class AuthService {
 
     constructor(private readonly userService: UserService) {}
 
-    async validateOAuthLogin(thirdPartyId: string, emails: { value: string }[], provider: Provider): Promise<string> {
+    async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
         try {
-            // You can add some registration logic here,
-            // to register the user using their thirdPartyId (in this case their googleId)
-            // let user: IUser = await this.usersService.findOneByThirdPartyId(thirdPartyId, provider);
-
-            // if (!user)
-            // user = await this.usersService.registerOAuthUser(thirdPartyId, provider);
-            const email = getEmail(emails);
+            const email = profile.emails.length > 0 ? profile.emails[0].value : null;
             if (!email) return;
 
-            const user = await this.userService.findByEmail(email);
-            const role = user && user.isAdmin ? 'admin' : 'nonAdmin';
+            let user = await this.userService.findByEmail(email);
+            if (!user) {
+                user = await this.userService.createNewUser(email, profile);
+            }
 
             const payload = {
-                thirdPartyId,
-                provider,
+                id: user.id,
                 email,
-                role,
+                role: user && user.isAdmin ? 'admin' : 'nonAdmin',
+                givenName: user.givenName,
+                familyName: user.familyName,
+                pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             };
-
-            const jwt: string = sign(payload, this.JWT_SECRET_KEY, { expiresIn: '7d' });
+            const jwt: string = sign(payload, this.JWT_SECRET_KEY);
             return jwt;
         } catch (err) {
             throw new InternalServerErrorException('validateOAuthLogin', err.message);
@@ -52,5 +41,12 @@ export class AuthService {
     async verifyAdminRequest(email: string): Promise<boolean> {
         const user = await this.userService.findByEmail(email);
         return user && user.isAdmin;
+    }
+
+    async verifyRegisteredUserRequest(email: string): Promise<boolean> {
+        const user = await this.userService.findByEmail(email);
+        if (user) {
+            return true;
+        }
     }
 }
