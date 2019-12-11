@@ -23,12 +23,12 @@ export class AuthService {
                 user = await this.userService.createNewUser(email, profile);
             }
 
-            const role = user && user.isAdmin ? 'admin' : 'nonAdmin';
-
             const payload = {
                 id: user.id,
                 email,
-                role,
+                role: user && user.isAdmin ? 'admin' : 'nonAdmin',
+                givenName: user.givenName,
+                familyName: user.familyName,
                 pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             };
             const jwt: string = sign(payload, this.JWT_SECRET_KEY);

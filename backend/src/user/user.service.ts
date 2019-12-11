@@ -19,8 +19,8 @@ export class UserService {
     createNewUser(email: string, profile: GoogleProfile, isAdmin?: boolean): Promise<User> {
         return this.userRepository.save({
             email,
-            givenName: profile.name.givenName,
-            familyName: profile.name.familyName,
+            givenName: profile.name ? profile.name.givenName : 'email',
+            familyName: profile.name ? profile.name.familyName : ' ',
             pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             company: getCompanyFromEmail(email),
             isAdmin: isAdmin || false,

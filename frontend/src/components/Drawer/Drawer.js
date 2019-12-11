@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import { decodeJWT } from 'services/jwtDecode';
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
-import { useSnackbar } from 'notistack';
 
 const style = theme => ({
   drawerHeader: {
@@ -40,11 +39,9 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
     }
   }
 
-  const { enqueueSnackbar } = useSnackbar();
   const logout = () => {
     localStorage.removeItem('jwt_token');
     toggleDrawer(false)();
-    enqueueSnackbar('Logout réussi', { variant: 'success' });
     window.location = '';
   };
 

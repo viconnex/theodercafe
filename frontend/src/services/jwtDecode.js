@@ -5,6 +5,8 @@ export const decodeJWT = jwtToken => {
   return {
     hasExpired: decoded.exp < new Date().getTime() / 1000,
     role: decoded.role,
+    givenName: decoded.givenName,
+    familyName: decoded.familyName,
     pictureUrl: decoded.pictureUrl,
   };
 };
