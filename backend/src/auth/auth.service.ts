@@ -18,9 +18,9 @@ export class AuthService {
             const email = profile.emails.length > 0 ? profile.emails[0].value : null;
             if (!email) return;
 
-            const user = await this.userService.findByEmail(email);
+            let user = await this.userService.findByEmail(email);
             if (!user) {
-                this.userService.createNewUser(email, profile);
+                user = await this.userService.createNewUser(email, profile);
             }
 
             const role = user && user.isAdmin ? 'admin' : 'nonAdmin';
@@ -31,7 +31,6 @@ export class AuthService {
                 role,
                 pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             };
-
             const jwt: string = sign(payload, this.JWT_SECRET_KEY);
             return jwt;
         } catch (err) {
