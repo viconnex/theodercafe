@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import style from './style';
 import { Alterodo } from 'components/Alterodo';
+import { fetchRequestResponse } from 'services/api';
 
 const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([]);
@@ -16,17 +17,16 @@ const AsakaiQuestioning = ({ classes }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const fetchAndSetQuestions = async newSet => {
-    let response;
-    try {
-      response = await fetchRequest(
-        `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
-        'GET',
-      );
-    } catch {
-      return enqueueSnackbar('Problème de connexion', { variant: 'error' });
-    }
-    if (response.state === 500) {
-      enqueueSnackbar('Un problème est survenu', { variant: 'error' });
+    const response = await fetchRequestResponse(
+      {
+        uri: `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
+        method: 'GET',
+      },
+      200,
+      { enqueueSnackbar },
+    );
+    if (!response) {
+      return;
     }
     const data = await response.json();
     setQuestions(data);

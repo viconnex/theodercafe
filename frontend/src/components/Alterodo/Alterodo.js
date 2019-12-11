@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/styles';
 import style from './style';
 import MaterialButton from '@material-ui/core/Button';
 
-const getAlterodoName = isAlterodo => (isAlterodo ? 'Alterodo' : 'Varietodo');
+const getAlterodoName = isAlterodo => (isAlterodo ? 'Alterodo' : 'Varieto');
 
 const Alterodo = ({ alterodo, classes, isAlterodo }) => {
   return (
