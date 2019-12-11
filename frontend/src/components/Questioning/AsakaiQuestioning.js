@@ -40,6 +40,7 @@ const AsakaiQuestioning = ({ classes }) => {
 
   const resetQuestioning = () => {
     setAlterodos(null);
+    setAsakaiChoices({});
     setQuestionIndex(0);
   };
 
