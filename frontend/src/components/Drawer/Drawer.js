@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';
 import { decodeJWT } from 'services/jwtDecode';
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
+import { Button } from '@material-ui/core';
 
 const style = theme => ({
   drawerHeader: {
@@ -67,7 +68,9 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
           </ListItem>
         ) : (
           <ListItem button onClick={() => (window.location = API_BASE_URL + GOOGLE_AUTH_URI)}>
-            <ListItemText primary="Google Login" />
+            <Button color="primary" variant="contained">
+              Login
+            </Button>
           </ListItem>
         )}
       </List>

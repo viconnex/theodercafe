@@ -12,7 +12,7 @@ class Login extends Component {
       this.props.setPictureUrl(decoded.pictureUrl);
       return this.props.enqueueSnackbar(`Bienvenue ${decoded.givenName}`, {
         variant: 'success',
-        autoHideDuration: '3000',
+        autoHideDuration: 3000,
       });
     }
     return this.props.enqueueSnackbar('Il y a eu un problème lors du login', { variant: 'error' });

@@ -14,18 +14,21 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
 
   return (
     <div className={classes.modeSelectorContainer}>
-      <FormControlLabel
-        control={
-          <Switch
-            color="default"
-            classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
-            checked={isAsakaiMode}
-            onChange={handleSwitch}
-            value="asakai"
-          />
-        }
-        label="Asakai"
-      />
+      <div className={classes.modeToggle}>
+        <FormControlLabel
+          control={
+            <Switch
+              color="default"
+              classes={{ checked: classes.switchChecked, track: classes.switchTrack }}
+              checked={isAsakaiMode}
+              onChange={handleSwitch}
+              value="asakai"
+            />
+          }
+          label="Mode Asakai"
+          style={{ marginRight: '6px' }}
+        />
+      </div>
       {!isAsakaiMode && (
         <Select
           className={classes.filterOptionSelect}

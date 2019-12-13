@@ -95,6 +95,7 @@ const AllQuestioning = ({ classes, filterOption }) => {
   const isNotAnsweredQuestion = question => {
     return areChoicesFetched ? !choices[question.id] : false;
   };
+
   const isStatus = filterOption => question => {
     const status = FILTER_OPTIONS.find(option => option.value === filterOption);
     return question.isValidated === status.isValidated;

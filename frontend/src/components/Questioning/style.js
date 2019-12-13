@@ -36,17 +36,25 @@ const style = {
   questioningContent: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '40px',
+    marginTop: '35px',
     width: '100%',
   },
   allQuestioningContent: {
-    marginTop: '49px',
+    marginTop: '35px',
   },
   asakaiSubtitle: {
     fontSize: '14px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+  },
+  asakaiModeInfo: {
+    fontSize: '11px',
+    fontStyle: 'italic',
+    textAlign: 'left',
+  },
+  asakaiSetInfo: {
+    marginTop: '16px',
   },
   asakaiNewSetButton: {
     color: colors.theodoGreen,
