@@ -6,6 +6,15 @@ import Select from '@material-ui/core/Select';
 import style from './style';
 import MenuItem from '@material-ui/core/MenuItem';
 import { FILTER_OPTIONS } from 'utils/constants/questionConstants';
+import InfoIcon from '@material-ui/icons/Info';
+import { IconButton, Tooltip } from '@material-ui/core';
+
+const tooltipTitle = (
+  <div style={{ fontSize: '15px', padding: '8px' }}>
+    <div>Réponds à 10 questions pour connaître ton Alterodo.</div>
+    <div style={{ marginTop: '8px' }}> Les réponses ne sont pas enregsitrées.</div>
+  </div>
+);
 
 const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isAsakaiMode, filterOption }) => {
   const handleSwitch = event => {
@@ -14,7 +23,7 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
 
   return (
     <div className={classes.modeSelectorContainer}>
-      <div className={classes.modeToggle}>
+      <div className={classes.selectorWithInfo}>
         <FormControlLabel
           control={
             <Switch
@@ -26,8 +35,13 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
             />
           }
           label="Mode Asakai"
-          style={{ marginRight: '6px' }}
+          classes={{ root: classes.switchControl }}
         />
+        <Tooltip title={tooltipTitle} enterTouchDelay={0} leaveTouchDelay={2500}>
+          <IconButton color="secondary" classes={{ root: classes.infoButton }}>
+            <InfoIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </div>
       {!isAsakaiMode && (
         <Select

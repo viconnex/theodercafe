@@ -51,7 +51,7 @@ const App = ({ classes }) => {
                 <Link to="/">
                   <img src={logo} alt="logo" height="20" />
                 </Link>
-                <IconButton edge="start" className={classes.menuButton} aria-label="Menu" onClick={toggleDrawer(true)}>
+                <IconButton edge="start" aria-label="Menu" onClick={toggleDrawer(true)}>
                   <MenuIcon pictureUrl={pictureUrl} />
                 </IconButton>
               </ToolBar>

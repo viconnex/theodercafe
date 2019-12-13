@@ -6,6 +6,22 @@ const style = {
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
+  selectorWithInfo: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  infoButton: {
+    padding: '8px',
+  },
+  switchControl: {
+    marginRight: '0',
+  },
+  modeInfo: {
+    fontSize: '10px',
+    alignSelf: 'center',
+    fontStyle: 'italic',
+    textAlign: 'left  ',
+  },
   modeSelector: {
     display: 'flex',
     flexDirection: 'row',

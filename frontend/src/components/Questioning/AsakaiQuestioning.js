@@ -84,10 +84,7 @@ const AsakaiQuestioning = ({ classes }) => {
   return (
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
-        <div className={classes.asakaiModeInfo}>
-          Réponds à 10 questions pour connaître ton Alterodo. Les réponses ne sont pas enregistrées dans ce mode.
-        </div>
-        <div className={classes.asakaiSetInfo}>Le set du jour</div>
+        <div>Le set du jour</div>
         <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
           Changer le set du jour
         </div>

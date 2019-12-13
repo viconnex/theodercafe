@@ -53,9 +53,6 @@ const style = {
     fontStyle: 'italic',
     textAlign: 'left',
   },
-  asakaiSetInfo: {
-    marginTop: '16px',
-  },
   asakaiNewSetButton: {
     color: colors.theodoGreen,
     cursor: 'pointer',
