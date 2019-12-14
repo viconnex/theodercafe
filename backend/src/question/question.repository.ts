@@ -45,7 +45,7 @@ export class QuestionRepository extends Repository<Question> {
 
     findAdminList = async (): Promise<Question[]> => {
         return this.query(`
-            SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJokeOnSomeone", "choice1count", "choice2count", "upVotes", "downVotes" FROM questions AS q
+            SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJokeOnSomeone", "choice1count", "choice2count", "up_votes_count" AS "upVotes", "down_votes_count" AS "downVotes" FROM questions AS q
             LEFT JOIN (
             SELECT
                 "questionId",
@@ -58,8 +58,8 @@ export class QuestionRepository extends Repository<Question> {
             LEFT JOIN (
             SELECT
                 "questionId",
-                SUM(CASE when "isUpVote" = true then 1 else 0 end) as upVotes,
-                SUM(CASE when "isUpVote" = false then 1 else 0 end) as downVotes
+                SUM(CASE when "isUpVote" = true then 1 else 0 end) as up_votes_count,
+                SUM(CASE when "isUpVote" = false then 1 else 0 end) as down_votes_count
             FROM user_to_question_votes
             GROUP BY "questionId"
             ) as u_to_q_votes
