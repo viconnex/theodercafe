@@ -4,7 +4,7 @@ const style = {
     flexDirection: 'column',
   },
   addButton: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: '30px',
     right: '30px',
   },
