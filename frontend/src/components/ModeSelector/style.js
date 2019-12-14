@@ -2,9 +2,11 @@ import colors from 'ui/colors';
 
 const style = {
   modeSelectorContainer: {
+    alignItems: 'flex-start',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    position: 'absolute',
+    top: 0,
   },
   selectorWithInfo: {
     display: 'flex',

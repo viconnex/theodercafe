@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
 import { fetchRequest } from 'utils/helpers';
-import {
-  ALL_QUESTIONS_MODE,
-  ALL_QUESTIONS_OPTION,
-  FILTER_OPTIONS,
-  NOT_ANSWERED,
-} from 'utils/constants/questionConstants';
+import { ALL_QUESTIONS_OPTION, FILTER_OPTIONS, NOT_ANSWERED } from 'utils/constants/questionConstants';
 import {
   USER_TO_QUESTIONS_CHOICES_URI,
   API_BASE_URL,
@@ -30,8 +25,7 @@ FILTER_OPTIONS.forEach(option => {
   initialIndexes[option.value] = 0;
 });
 
-const AllQuestioning = ({ classes, filterOption }) => {
-  const [questions, setQuestions] = useState([]);
+const AllQuestioning = ({ classes, filterOption, questions }) => {
   const [questionIndexByStatus, setQuestionIndexByStatus] = useState(initialIndexes);
   const [choices, setChoices] = useState({});
   const [votes, setVotes] = useState({});
@@ -39,16 +33,7 @@ const AllQuestioning = ({ classes, filterOption }) => {
   const [areChoicesFetched, setAreChoicesFetched] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
-  const fetchQuestions = async () => {
-    const response = await fetchRequestResponse({ uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET' }, 200, {
-      enqueueSnackbar,
-    });
-    if (!response) {
-      return;
-    }
-    const data = await response.json();
-    setQuestions(data);
-  };
+
   const fetchChoices = async () => {
     if (!localStorage.jwt_token) return;
     const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET' }, 200, {
@@ -82,7 +67,6 @@ const AllQuestioning = ({ classes, filterOption }) => {
   };
   useEffect(() => {
     fetchChoices();
-    fetchQuestions();
     fetchVotes();
     // eslint-disable-next-line
   }, []);
@@ -173,7 +157,7 @@ const AllQuestioning = ({ classes, filterOption }) => {
     <div>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
         {question && (
-          <div>
+          <React.Fragment>
             <Question question={question} chose={chose} choice={choices[question.id]} />
             <div className={classes.browser}>
               <IconButton
@@ -190,7 +174,7 @@ const AllQuestioning = ({ classes, filterOption }) => {
             </div>
             <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
             <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
-          </div>
+          </React.Fragment>
         )}
         {!question && filterOption === NOT_ANSWERED && areChoicesFetched && (
           <div>Tu as répondu à toutes les questions</div>

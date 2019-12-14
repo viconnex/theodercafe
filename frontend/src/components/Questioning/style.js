@@ -13,7 +13,7 @@ const style = {
     marginTop: '-8px',
     marginBottom: '20px',
   },
-  browser: {
+  asakaibrowser: {
     marginTop: '15px',
   },
   filterOption: {
@@ -36,17 +36,15 @@ const style = {
   questioningContent: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '35px',
     width: '100%',
   },
-  allQuestioningContent: {
-    marginTop: '35px',
-  },
   asakaiSubtitle: {
-    fontSize: '14px',
-    display: 'flex',
-    flexDirection: 'column',
     alignItems: 'flex-start',
+    display: 'flex',
+    fontSize: '14px',
+    flexDirection: 'column',
+    position: 'absolute',
+    top: '40px',
   },
   asakaiModeInfo: {
     fontSize: '11px',

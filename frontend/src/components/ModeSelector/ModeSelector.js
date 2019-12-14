@@ -11,7 +11,7 @@ import { IconButton, Tooltip } from '@material-ui/core';
 
 const tooltipTitle = (
   <div style={{ fontSize: '15px', padding: '8px' }}>
-    <div>Réponds à 10 questions pour connaître ton Alterodo.</div>
+    <div>En mode Asakai, réponds à 10 questions pour connaître ton Alterodo.</div>
     <div style={{ marginTop: '8px' }}> Les réponses ne sont pas enregsitrées.</div>
   </div>
 );
