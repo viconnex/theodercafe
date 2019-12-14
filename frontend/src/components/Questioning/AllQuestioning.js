@@ -154,7 +154,7 @@ const AllQuestioning = ({ classes, filterOption, questions }) => {
     return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar });
   };
   return (
-    <div>
+    <React.Fragment>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
         {question && (
           <React.Fragment>
@@ -190,7 +190,7 @@ const AllQuestioning = ({ classes, filterOption, questions }) => {
         )}
       </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
-    </div>
+    </React.Fragment>
   );
 };
 

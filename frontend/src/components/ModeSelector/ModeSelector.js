@@ -37,7 +37,7 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
           label="Mode Asakai"
           classes={{ root: classes.switchControl }}
         />
-        <Tooltip title={tooltipTitle} enterTouchDelay={0} leaveTouchDelay={2500}>
+        <Tooltip title={tooltipTitle} enterTouchDelay={0} leaveTouchDelay={3000}>
           <IconButton color="secondary" classes={{ root: classes.infoButton }}>
             <InfoIcon fontSize="small" />
           </IconButton>

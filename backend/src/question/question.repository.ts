@@ -44,7 +44,28 @@ export class QuestionRepository extends Repository<Question> {
     };
 
     findAdminList = async (): Promise<Question[]> => {
-        return this.find({ relations: ['category'], order: { id: 'ASC' } });
+        return this.query(`
+            SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJokeOnSomeone", "choice1count", "choice2count", "upVotes", "downVotes" FROM questions AS q
+            LEFT JOIN (
+            SELECT
+                "questionId",
+                SUM(CASE when "choice" = 1 then 1 else 0 end) as choice1count,
+                SUM(CASE when "choice" = 2 then 1 else 0 end) as choice2count
+            FROM user_to_question_choices
+            GROUP BY "questionId"
+            ) AS u_to_q_choices
+            ON q.id = "u_to_q_choices"."questionId"
+            LEFT JOIN (
+            SELECT
+                "questionId",
+                SUM(CASE when "isUpVote" = true then 1 else 0 end) as upVotes,
+                SUM(CASE when "isUpVote" = false then 1 else 0 end) as downVotes
+            FROM user_to_question_votes
+            GROUP BY "questionId"
+            ) as u_to_q_votes
+            ON q.id = "u_to_q_votes"."questionId"
+            ORDER BY "q"."id" ASC;
+        `);
     };
 
     findAsakaiSet = async (
