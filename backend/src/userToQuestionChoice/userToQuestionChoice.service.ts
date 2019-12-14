@@ -3,9 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { findAlterodoFromCommonChoices } from './helpers/alterodoStrategies';
-import { AsakaiChoices, Alterodo, AlterodoResponse } from './userToQuestionChoice.types';
+import { AsakaiChoices, AlterodoResponse } from './userToQuestionChoice.types';
 
-import { QuestionService } from '../question/question.service';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -13,7 +12,6 @@ export class UserToQuestionChoiceService {
     constructor(
         @InjectRepository(UserToQuestionChoiceRepository)
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
-        private readonly questionService: QuestionService,
         private readonly userService: UserService,
     ) {}
 
@@ -24,8 +22,6 @@ export class UserToQuestionChoiceService {
         });
 
         if (!initialChoice) {
-            this.questionService.updateQuestionChoicesCount(questionId, { 1: 0, 2: 0, [choice]: 1 });
-
             const newChoice = this.userToQuestionChoiceRepository.create({
                 userId,
                 questionId,
@@ -38,14 +34,6 @@ export class UserToQuestionChoiceService {
         if (initialChoice && initialChoice.choice === choice) {
             return;
         }
-
-        this.questionService.updateQuestionChoicesCount(questionId, {
-            1: 0,
-            2: 0,
-            [initialChoice.choice]: -1,
-            [choice]: 1,
-        });
-
         initialChoice.choice = choice;
 
         return this.userToQuestionChoiceRepository.save(initialChoice);

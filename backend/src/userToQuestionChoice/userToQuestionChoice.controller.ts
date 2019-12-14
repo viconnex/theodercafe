@@ -14,15 +14,11 @@ import {
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { QuestionService } from '../question/question.service';
 import { AlterodoResponse, AsakaiChoices } from './userToQuestionChoice.types';
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
-    constructor(
-        private readonly userToQuestionChoiceService: UserToQuestionChoiceService,
-        private readonly questionService: QuestionService,
-    ) {}
+    constructor(private readonly userToQuestionChoiceService: UserToQuestionChoiceService) {}
 
     @Post('asakai')
     async findAlterodo(@Body() asakaiChoices: AsakaiChoices): Promise<AlterodoResponse> {

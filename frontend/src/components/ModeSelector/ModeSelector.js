@@ -10,7 +10,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import { IconButton, Tooltip } from '@material-ui/core';
 
 const tooltipTitle = (
-  <div style={{ fontSize: '15px', padding: '8px' }}>
+  <div style={{ fontSize: '15px', padding: '8px', lineHeight: '15px' }}>
     <div>En mode Asakai, réponds à 10 questions pour connaître ton Alterodo.</div>
     <div style={{ marginTop: '8px' }}> Les réponses ne sont pas enregsitrées.</div>
   </div>

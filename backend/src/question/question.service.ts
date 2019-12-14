@@ -3,7 +3,7 @@ import { QuestionRepository } from './question.repository';
 import { CategoryRepository } from '../category/category.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionWithCategoryNameDto, QuestionPostDTO } from './interfaces/question.dto';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service';
 import { Question } from './question.entity';
 
@@ -101,21 +101,5 @@ export class QuestionService {
 
     delete(id: string): Promise<DeleteResult> {
         return this.questionRepository.deleteQuestion(id);
-    }
-
-    async updateQuestionVote(questionId: number, upVoteIncrement: number, downVoteIncrement): Promise<UpdateResult> {
-        const question = await this.questionRepository.findOne(questionId);
-        return this.questionRepository.update(questionId, {
-            upVotes: question.upVotes + upVoteIncrement,
-            downVotes: question.downVotes + downVoteIncrement,
-        });
-    }
-
-    async updateQuestionChoicesCount(questionId: number, choiceIncrement: { 1: number; 2: number }): Promise<void> {
-        const question = await this.questionRepository.findOne(questionId);
-        this.questionRepository.update(questionId, {
-            option1Votes: question.option1Votes + choiceIncrement[1],
-            option2Votes: question.option2Votes + choiceIncrement[2],
-        });
     }
 }

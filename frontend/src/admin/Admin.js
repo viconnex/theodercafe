@@ -2,8 +2,8 @@ import React from 'react';
 import { Admin as ReactAdmin, Resource, ListGuesser, EditGuesser, fetchUtils } from 'react-admin';
 import jsonServerProvider from 'ra-data-json-server';
 import { API_BASE_URL } from 'utils/constants/apiConstants';
-import { QuestionList } from 'components/QuestionList';
-import { QuestionEdit } from 'components/QuestionEdit';
+import { QuestionList } from './QuestionList';
+import { QuestionEdit } from './QuestionEdit';
 import { CategoryCreate } from 'components/CategoryCreate';
 
 const httpClient = (url, options = {}) => {
