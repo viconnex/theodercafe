@@ -53,8 +53,8 @@ const Home = ({ classes }) => {
         handleFilterOptionChange={handleFilterOptionChange}
       />
       {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning filterOption={filterOption} questions={questions} />}
-      <Fab className={classes.addButton} size="small">
-        <AddIcon onClick={toggleModal(true)} />
+      <Fab className={classes.addButton} size="small" onClick={toggleModal(true)}>
+        <AddIcon />
       </Fab>
       <AddQuestionDialog
         className={classes.modal}
