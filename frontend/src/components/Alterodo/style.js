@@ -24,4 +24,7 @@ export default {
   newQuestioning: {
     marginTop: '12px',
   },
+  infoButton: {
+    padding: '6px',
+  },
 };

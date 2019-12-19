@@ -3,10 +3,25 @@ import { withStyles } from '@material-ui/styles';
 
 import style from './style';
 import MaterialButton from '@material-ui/core/Button';
+import { Tooltip, IconButton } from '@material-ui/core';
+import InfoIcon from '@material-ui/icons/Info';
 
 const getAlterodoName = isAlterodo => (isAlterodo ? 'Alterodo' : 'Varieto');
 
 const Alterodo = ({ alterodo, classes, isAlterodo }) => {
+  const similarityInfo = (
+    <div style={{ fontSize: '15px', padding: '8px', lineHeight: '16px' }}>
+      <div>
+        Lors de l'Asakai, tu réponds à 10 questions. {alterodo.user.givenName} a répondu à{' '}
+        {alterodo.similarity.squareNorm} de ces questions, et a choisi la même réponse sur{' '}
+        {alterodo.similarity.sameAnswerCount} d'entres elles.
+      </div>
+      <div style={{ marginTop: '8px' }}>Ta similarité avec Théo {alterodo.user.givenName} est :</div>
+      <div style={{ marginTop: '8px' }}>
+        {alterodo.similarity.sameAnswerCount} / ( sqrt({alterodo.similarity.squareNorm}) * sqrt (10) )
+      </div>
+    </div>
+  );
   return (
     <div>
       <div>
@@ -19,6 +34,11 @@ const Alterodo = ({ alterodo, classes, isAlterodo }) => {
       <div className={classes.similarity}>
         Similarité :{' '}
         <span className={classes.similarityValue}>{Math.round(alterodo.similarity.similarity * 100)} %</span>
+        <Tooltip title={similarityInfo} enterTouchDelay={0} leaveTouchDelay={3000}>
+          <IconButton color="secondary" classes={{ root: classes.infoButton }}>
+            <InfoIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </div>
       <div className={classes.similarity}>
         Sur
