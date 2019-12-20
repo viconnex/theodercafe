@@ -2,82 +2,87 @@ import { factorizeMatrix, buildCompletedMatrix } from 'matrix-factorization';
 
 import { UserToQuestionChoice } from '../userToQuestionChoice.entity';
 import { UserToQuestionChoiceRepository } from '../userToQuestionChoice.repository';
-import { AsakaiChoices, AlterodoSimilarity, Alterodo, Totems } from '../userToQuestionChoice.types';
+import { AsakaiChoices, Alterodo, Totems, SimilarityWithUser } from '../userToQuestionChoice.types';
 import { BadRequestException } from '@nestjs/common';
+
+const computeTotemsFromSimilarityWithUsers = (similarityWithUsers: SimilarityWithUser[], userNorm: number): Totems => {
+    let bestSimilarity = -1;
+    let bestTotemIndexes = [];
+    let worstSimilarity = -1;
+    let worstSimilarityCommonQuestion = 0;
+    let worstTotemIndexes = [];
+
+    similarityWithUsers.forEach((similarityWithUser, similarityWithUserIndex): void => {
+        const similarity =
+            similarityWithUser.sameAnswerCount / (Math.sqrt(similarityWithUser.commonQuestionCount) * userNorm);
+        similarityWithUser.similarity = similarity;
+        if (similarity > bestSimilarity) {
+            bestTotemIndexes = [similarityWithUserIndex];
+            bestSimilarity = similarity;
+        } else if (similarity === bestSimilarity) {
+            bestTotemIndexes.push(similarityWithUserIndex);
+        }
+        if (
+            similarityWithUser.commonQuestionCount > worstSimilarityCommonQuestion ||
+            (similarity < worstSimilarity &&
+                similarityWithUser.commonQuestionCount === worstSimilarityCommonQuestion) ||
+            worstSimilarity === -1
+        ) {
+            worstTotemIndexes = [similarityWithUserIndex];
+            worstSimilarity = similarity;
+            worstSimilarityCommonQuestion = similarityWithUser.commonQuestionCount;
+        } else if (
+            similarityWithUser.commonQuestionCount === worstSimilarityCommonQuestion &&
+            similarity === worstSimilarity
+        ) {
+            worstTotemIndexes.push([similarityWithUserIndex]);
+        }
+    });
+
+    const alterodoIndex = bestTotemIndexes[Math.floor(Math.random() * bestTotemIndexes.length)];
+    const varietoIndex = worstTotemIndexes[Math.floor(Math.random() * worstTotemIndexes.length)];
+
+    return {
+        alterodo: {
+            ...similarityWithUsers[alterodoIndex],
+        },
+        varieto: {
+            ...similarityWithUsers[varietoIndex],
+        },
+    };
+};
 
 export const findAlterodoFromCommonChoices = async (
     userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
     asakaiChoices: AsakaiChoices,
 ): Promise<Totems> => {
     const answeredQuestionsIds = Object.keys(asakaiChoices);
-    const totems: { [id: number]: AlterodoSimilarity } = {};
+    const commonAnswersWithUsers: { [id: number]: SimilarityWithUser } = {};
 
     const userToQuestionChoices = await userToQuestionChoiceRepository.findByQuestionIds(answeredQuestionsIds);
     if (userToQuestionChoices.length === 0) {
         throw new BadRequestException('no choices have been made by other users');
     }
+    console.log('common ', userToQuestionChoices);
 
     userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {
         const isSameChoice = asakaiChoices[userToQuestionChoice.questionId] === userToQuestionChoice.choice;
-        const totemIncrement = {
-            similarity: isSameChoice ? 1 : 0,
-            sameAnswerCount: isSameChoice ? 1 : 0,
-            squareNorm: 1,
-        };
-        if (!totems.hasOwnProperty(userToQuestionChoice.userId)) {
-            totems[userToQuestionChoice.userId] = totemIncrement;
-            return;
+        if (!commonAnswersWithUsers.hasOwnProperty(userToQuestionChoice.userId)) {
+            commonAnswersWithUsers[userToQuestionChoice.userId] = {
+                userId: userToQuestionChoice.userId,
+                sameAnswerCount: isSameChoice ? 1 : 0,
+                commonQuestionCount: 1,
+            };
+        } else {
+            commonAnswersWithUsers[userToQuestionChoice.userId].sameAnswerCount += isSameChoice ? 1 : 0;
+            commonAnswersWithUsers[userToQuestionChoice.userId].commonQuestionCount += 1;
         }
-        const currentAlterodo = totems[userToQuestionChoice.userId];
-        totems[userToQuestionChoice.userId] = {
-            similarity: currentAlterodo.similarity + totemIncrement.similarity,
-            sameAnswerCount: currentAlterodo.sameAnswerCount + totemIncrement.sameAnswerCount,
-            squareNorm: currentAlterodo.squareNorm + totemIncrement.squareNorm,
-        };
     });
-    const asakaiNorm = Math.sqrt(Object.keys(asakaiChoices).length);
 
-    let bestSimilarity = -1;
-    let bestTotemIds = [];
-    let worstSimilarity = -1;
-    let worstSimilarityCommonQuestion = 0;
-    let worstTotemIds = [];
-    for (const userId in totems) {
-        const similarity = totems[userId].similarity / (Math.sqrt(totems[userId].squareNorm) * asakaiNorm);
-        totems[userId].similarity = similarity;
-        if (similarity > bestSimilarity) {
-            bestTotemIds = [userId];
-            bestSimilarity = similarity;
-        } else if (similarity === bestSimilarity) {
-            bestTotemIds.push(userId);
-        }
-        if (
-            totems[userId].squareNorm > worstSimilarityCommonQuestion ||
-            (similarity < worstSimilarity && totems[userId].squareNorm === worstSimilarityCommonQuestion) ||
-            worstSimilarity === -1
-        ) {
-            worstTotemIds = [userId];
-            worstSimilarity = similarity;
-            worstSimilarityCommonQuestion = totems[userId].squareNorm;
-        } else if (totems[userId].squareNorm === worstSimilarityCommonQuestion && similarity === worstSimilarity) {
-            worstTotemIds.push(userId);
-        }
-    }
-    const alterodoIdIndex = Math.floor(Math.random() * bestTotemIds.length);
-    const varietoIdIndex = Math.floor(Math.random() * worstTotemIds.length);
-
-    const totem = {
-        alterodo: {
-            user: { userId: parseInt(bestTotemIds[alterodoIdIndex]) },
-            similarity: totems[parseInt(bestTotemIds[alterodoIdIndex])],
-        },
-        varieto: {
-            user: { userId: parseInt(worstTotemIds[varietoIdIndex]) },
-            similarity: totems[parseInt(worstTotemIds[varietoIdIndex])],
-        },
-    };
-
-    return totem;
+    return computeTotemsFromSimilarityWithUsers(
+        Object.values(commonAnswersWithUsers),
+        Math.sqrt(Object.keys(asakaiChoices).length),
+    );
 };
 
 export const findAlterodoFromMatrixFactorization = async (

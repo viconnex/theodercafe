@@ -50,12 +50,16 @@ export class UserToQuestionChoiceService {
 
         // return findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
         const totems = await findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
-        const userAlterodo = await this.userService.findOne(totems.alterodo.user.userId);
-        const userVarieto = await this.userService.findOne(totems.varieto.user.userId);
+        const userAlterodo = await this.userService.findOne(totems.alterodo.userId);
+        const userVarieto = await this.userService.findOne(totems.varieto.userId);
 
         const alterodoResponse: AlterodoResponse = {
             alterodo: {
-                similarity: totems.alterodo.similarity,
+                similarity: {
+                    similarity: totems.alterodo.similarity || 0,
+                    sameAnswerCount: totems.alterodo.sameAnswerCount,
+                    commonQuestionCount: totems.alterodo.commonQuestionCount,
+                },
                 user: {
                     givenName: userAlterodo.givenName,
                     familyName: userAlterodo.familyName,
@@ -63,7 +67,11 @@ export class UserToQuestionChoiceService {
                 },
             },
             varieto: {
-                similarity: totems.varieto.similarity,
+                similarity: {
+                    similarity: totems.varieto.similarity || 0,
+                    sameAnswerCount: totems.varieto.sameAnswerCount,
+                    commonQuestionCount: totems.varieto.commonQuestionCount,
+                },
                 user: {
                     givenName: userVarieto.givenName,
                     familyName: userVarieto.familyName,

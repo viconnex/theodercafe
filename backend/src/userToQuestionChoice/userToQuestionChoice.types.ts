@@ -2,7 +2,7 @@ export type AsakaiChoices = Record<number, number>;
 export interface AlterodoSimilarity {
     similarity: number;
     sameAnswerCount: number;
-    squareNorm: number;
+    commonQuestionCount: number;
 }
 export interface Alterodo {
     user: { userId: number };
@@ -27,6 +27,13 @@ export interface AlterodoResponse {
 }
 
 export interface Totems {
-    alterodo: Alterodo;
-    varieto: Alterodo;
+    alterodo: SimilarityWithUser;
+    varieto: SimilarityWithUser;
+}
+
+export interface SimilarityWithUser {
+    userId: number;
+    commonQuestionCount: number;
+    sameAnswerCount: number;
+    similarity?: number;
 }
