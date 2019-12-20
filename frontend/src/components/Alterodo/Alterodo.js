@@ -16,9 +16,9 @@ const Alterodo = ({ alterodo, classes, isAlterodo }) => {
         {alterodo.similarity.squareNorm} de ces questions, et a choisi la même réponse sur{' '}
         {alterodo.similarity.sameAnswerCount} d'entres elles.
       </div>
-      <div style={{ marginTop: '8px' }}>Ta similarité avec Théo {alterodo.user.givenName} est :</div>
+      <div style={{ marginTop: '8px' }}>Ta similarité avec {alterodo.user.givenName} est :</div>
       <div style={{ marginTop: '8px' }}>
-        {alterodo.similarity.sameAnswerCount} / ( sqrt({alterodo.similarity.squareNorm}) * sqrt (10) )
+        {alterodo.similarity.sameAnswerCount} / ( √{alterodo.similarity.squareNorm} * √10 )
       </div>
     </div>
   );

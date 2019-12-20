@@ -38,8 +38,9 @@ export const findAlterodoFromCommonChoices = async (
     const asakaiNorm = Math.sqrt(Object.keys(asakaiChoices).length);
 
     let bestSimilarity = -1;
-    let worstSimilarity = -1;
     let bestTotemIds = [];
+    let worstSimilarity = -1;
+    let worstSimilarityCommonQuestion = 0;
     let worstTotemIds = [];
     for (const userId in totems) {
         const similarity = totems[userId].similarity / (Math.sqrt(totems[userId].squareNorm) * asakaiNorm);
@@ -50,10 +51,15 @@ export const findAlterodoFromCommonChoices = async (
         } else if (similarity === bestSimilarity) {
             bestTotemIds.push(userId);
         }
-        if (similarity < worstSimilarity || worstSimilarity === -1) {
+        if (
+            totems[userId].squareNorm > worstSimilarityCommonQuestion ||
+            (similarity < worstSimilarity && totems[userId].squareNorm === worstSimilarityCommonQuestion) ||
+            worstSimilarity === -1
+        ) {
             worstTotemIds = [userId];
             worstSimilarity = similarity;
-        } else if (similarity === worstSimilarity) {
+            worstSimilarityCommonQuestion = totems[userId].squareNorm;
+        } else if (totems[userId].squareNorm === worstSimilarityCommonQuestion && similarity === worstSimilarity) {
             worstTotemIds.push(userId);
         }
     }
