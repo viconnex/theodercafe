@@ -98,7 +98,13 @@ const AsakaiQuestioning = ({ classes }) => {
             </div>
           </div>
         )}
-        {alterodos && <Alterodo alterodos={alterodos} resetQuestioning={resetQuestioning} />}
+        {alterodos && (
+          <Alterodo
+            alterodos={alterodos}
+            resetQuestioning={resetQuestioning}
+            baseQuestionCount={ASAKAI_QUESTION_COUNT}
+          />
+        )}
       </div>
     </div>
   );

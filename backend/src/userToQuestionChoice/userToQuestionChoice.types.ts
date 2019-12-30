@@ -1,13 +1,4 @@
 export type AsakaiChoices = Record<number, number>;
-export interface AlterodoSimilarity {
-    similarity: number;
-    sameAnswerCount: number;
-    commonQuestionCount: number;
-}
-export interface Alterodo {
-    user: { userId: number };
-    similarity: AlterodoSimilarity;
-}
 
 interface UserAlterodoResponse {
     givenName: string;
@@ -16,24 +7,18 @@ interface UserAlterodoResponse {
 }
 
 export interface AlterodoResponse {
-    alterodo: {
-        user: UserAlterodoResponse;
-        similarity: AlterodoSimilarity;
-    };
-    varieto: {
-        user: UserAlterodoResponse;
-        similarity: AlterodoSimilarity;
-    };
+    alterodo: SimilarityWithUserId & UserAlterodoResponse;
+    varieto: SimilarityWithUserId & UserAlterodoResponse;
 }
 
-export interface Totems {
-    alterodo: SimilarityWithUser;
-    varieto: SimilarityWithUser;
+export interface Alterodos {
+    alterodo: SimilarityWithUserId;
+    varieto: SimilarityWithUserId;
 }
 
-export interface SimilarityWithUser {
+export interface SimilarityWithUserId {
     userId: number;
     commonQuestionCount: number;
     sameAnswerCount: number;
-    similarity?: number;
+    similarity: number;
 }

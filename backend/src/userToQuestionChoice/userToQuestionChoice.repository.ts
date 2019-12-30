@@ -1,6 +1,6 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
-import { SimilarityWithUser } from './userToQuestionChoice.types';
+import { SimilarityWithUserId } from './userToQuestionChoice.types';
 
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
@@ -25,7 +25,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .getMany();
     }
 
-    async getUserCommonQuestionsAndSameAnswerCount(userId: number): Promise<SimilarityWithUser[]> {
+    async selectSimilarityWithUserIds(userId: number): Promise<SimilarityWithUserId[]> {
         return this.query(`
             SELECT
                 "userId",

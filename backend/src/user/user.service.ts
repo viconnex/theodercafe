@@ -8,8 +8,8 @@ import { GoogleProfile } from '../auth/google.strategy';
 export class UserService {
     constructor(@InjectRepository(UserRepository) private readonly userRepository: UserRepository) {}
 
-    async findOne(id: number): Promise<User> {
-        return this.userRepository.findOne(id);
+    async findOneAndSelectPublicFields(id: number): Promise<User> {
+        return this.userRepository.findOne(id, { select: ['givenName', 'familyName', 'pictureUrl'] });
     }
 
     async findByEmail(email: string): Promise<User> {

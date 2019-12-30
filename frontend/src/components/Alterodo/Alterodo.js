@@ -8,17 +8,23 @@ import InfoIcon from '@material-ui/icons/Info';
 
 const getAlterodoName = isAlterodo => (isAlterodo ? 'Alterodo' : 'Varieto');
 
-const Alterodo = ({ alterodo, classes, isAlterodo }) => {
+const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
+  const sameOrDifferentAnswerCount = isAlterodo
+    ? alterodo.sameAnswerCount
+    : alterodo.commonQuestionCount - alterodo.sameAnswerCount;
+
   const similarityInfo = (
     <div style={{ fontSize: '15px', padding: '8px', lineHeight: '16px' }}>
       <div>
-        Lors de l'Asakai, tu réponds à 10 questions. {alterodo.user.givenName} a répondu à{' '}
-        {alterodo.similarity.squareNorm} de ces questions, et a choisi la même réponse sur{' '}
-        {alterodo.similarity.sameAnswerCount} d'entres elles.
+        Sur {baseQuestionCount} questions, {alterodo.givenName} a répondu à {alterodo.commonQuestionCount} de ces
+        questions, et a choisi {isAlterodo ? 'la même réponse' : "l'autre réponse"} sur {sameOrDifferentAnswerCount}{' '}
+        d'entres elles.
       </div>
-      <div style={{ marginTop: '8px' }}>Ta similarité avec {alterodo.user.givenName} est :</div>
       <div style={{ marginTop: '8px' }}>
-        {alterodo.similarity.sameAnswerCount} / ( √{alterodo.similarity.squareNorm} * √10 )
+        Ta {isAlterodo ? 'similarité' : 'diversité'} avec {alterodo.givenName} est :
+      </div>
+      <div style={{ marginTop: '8px' }}>
+        {sameOrDifferentAnswerCount} / ( √{alterodo.commonQuestionCount} * √{baseQuestionCount} )
       </div>
     </div>
   );
@@ -27,13 +33,13 @@ const Alterodo = ({ alterodo, classes, isAlterodo }) => {
       <div>
         Ton <span style={{ fontStyle: 'italic' }}>{getAlterodoName(isAlterodo)}</span> est
       </div>
-      <img className={classes.picture} src={alterodo.user.pictureUrl} alt="alterodo_profile" />
+      <img className={classes.picture} src={alterodo.pictureUrl} alt="alterodo_profile" />
       <div className={classes.name}>
-        {alterodo.user.givenName} {alterodo.user.familyName}
+        {alterodo.givenName} {alterodo.familyName}
       </div>
       <div className={classes.similarity}>
-        Similarité :{' '}
-        <span className={classes.similarityValue}>{Math.round(alterodo.similarity.similarity * 100)} %</span>
+        {isAlterodo ? 'Similarité' : 'Diversité'} :{' '}
+        <span className={classes.similarityValue}>{Math.round(alterodo.similarity * 100)} %</span>
         <Tooltip title={similarityInfo} enterTouchDelay={0} leaveTouchDelay={3000}>
           <IconButton color="secondary" classes={{ root: classes.infoButton }}>
             <InfoIcon fontSize="small" />
@@ -42,14 +48,14 @@ const Alterodo = ({ alterodo, classes, isAlterodo }) => {
       </div>
       <div className={classes.similarity}>
         Sur
-        <span className={classes.similarityValue}> {alterodo.similarity.squareNorm}</span> question
-        {alterodo.similarity.squareNorm > 1 && 's'} en commun
+        <span className={classes.similarityValue}> {alterodo.commonQuestionCount}</span> question
+        {alterodo.commonQuestionCount > 1 && 's'} en commun
       </div>
     </div>
   );
 };
 
-const AlterodoWrapper = ({ alterodos, classes, resetQuestioning }) => {
+const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, baseQuestionCount }) => {
   const [alterodo, setAlterodo] = useState(alterodos.alterodo);
   const [isAlterodoDisplayed, setIsAlterodoDisplayed] = useState(true);
 
@@ -65,7 +71,12 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning }) => {
 
   return (
     <div>
-      <Alterodo classes={classes} alterodo={alterodo} isAlterodo={isAlterodoDisplayed} />
+      <Alterodo
+        classes={classes}
+        alterodo={alterodo}
+        isAlterodo={isAlterodoDisplayed}
+        baseQuestionCount={baseQuestionCount}
+      />
       <div className={classes.actionsContainer}>
         <div>
           <MaterialButton variant="contained" size="small" fullWidth={false} color="secondary" onClick={changeAlterodo}>

@@ -21,8 +21,8 @@ export class UserToQuestionChoiceController {
     constructor(private readonly userToQuestionChoiceService: UserToQuestionChoiceService) {}
 
     @Post('asakai')
-    async findAlterodo(@Body() asakaiChoices: AsakaiChoices): Promise<AlterodoResponse> {
-        return this.userToQuestionChoiceService.findAlterodo(asakaiChoices);
+    async findAsakaiAlterodos(@Body() asakaiChoices: AsakaiChoices): Promise<AlterodoResponse> {
+        return this.userToQuestionChoiceService.findAsakaiAlterodos(asakaiChoices);
     }
 
     @Get('user')
