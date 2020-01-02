@@ -22,9 +22,9 @@ const AlterodoPage = () => {
 
   useEffect(() => {
     fetchAlterodos();
+    // eslint-disable-next-line
   }, []);
 
-  console.log('alterodos', alterodos);
   if (!alterodos) return <div>Loading</div>;
 
   return (

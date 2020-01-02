@@ -69,6 +69,12 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning }) => {
     }
   };
 
+  if (alterodos.baseQuestionCount === 0)
+    return <div>Ton alterodo n'est pas défini car tu n'as répondu à aucune question validée</div>;
+
+  if (!alterodos.alterodo.sameAnswerCount)
+    return <div>Ton alterodo n'est pas défini car personne n'a répondu aux questions auxquelles tu as répondu</div>;
+
   return (
     <div>
       <Alterodo
