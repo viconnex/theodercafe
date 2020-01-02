@@ -36,13 +36,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             )
             .addSelect('0', 'similarity')
             .innerJoin(
-                (subquery: SelectQueryBuilder<UserToQuestionChoice>): SelectQueryBuilder<UserToQuestionChoice> => {
-                    return subquery
-                        .select('user_to_question_choices.questionId', 'questionId')
-                        .addSelect('user_to_question_choices.choice', 'targetChoice')
-                        .from(UserToQuestionChoice, 'user_to_question_choices')
-                        .where('user_to_question_choices.userId = :userId', { userId });
-                },
+                this.createBaseQuestionSelectionQuery(userId),
                 'utqc',
                 '"utqc"."questionId" = user_to_question_choices.questionId',
             )
@@ -54,8 +48,20 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
     }
 
     async countUserQuestionChoices(userId: number): Promise<number> {
-        return this.createQueryBuilder('user_to_question_choices')
-            .where('user_to_question_choices.userId = :userId', { userId })
-            .getCount();
+        return this.createBaseQuestionSelectionQuery(userId)(this.createQueryBuilder()).getCount();
+    }
+
+    private createBaseQuestionSelectionQuery(
+        userId: number,
+    ): (query: SelectQueryBuilder<UserToQuestionChoice>) => SelectQueryBuilder<UserToQuestionChoice> {
+        return (query: SelectQueryBuilder<UserToQuestionChoice>): SelectQueryBuilder<UserToQuestionChoice> => {
+            return query
+                .select('user_to_question_choices.questionId', 'questionId')
+                .addSelect('user_to_question_choices.choice', 'targetChoice')
+                .from(UserToQuestionChoice, 'user_to_question_choices')
+                .leftJoin('user_to_question_choices.question', 'question')
+                .where('user_to_question_choices.userId = :userId', { userId })
+                .andWhere('question.isValidated = true');
+        };
     }
 }
