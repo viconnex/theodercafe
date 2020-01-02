@@ -49,4 +49,14 @@ export class UserToQuestionChoiceController {
         }
         return this.userToQuestionChoiceService.saveChoice(questionId, req.user.id, body.choice);
     }
+
+    @Get('alterodos')
+    @UseGuards(AuthGuard('registered_user'))
+    async getUserAlterodos(@Request() req): Promise<AlterodoResponse> {
+        if (!req || !req.user || !req.user.id) {
+            throw new BadRequestException('user not found');
+        }
+
+        return await this.userToQuestionChoiceService.getUserAlterodos(req.user.id);
+    }
 }

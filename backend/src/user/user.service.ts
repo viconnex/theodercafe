@@ -3,13 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
 import { User, getCompanyFromEmail } from './user.entity';
 import { GoogleProfile } from '../auth/google.strategy';
+import { UserWithPublicFields } from './user.types';
 
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(UserRepository) private readonly userRepository: UserRepository) {}
 
-    async findOneAndSelectPublicFields(id: number): Promise<User> {
-        return this.userRepository.findOne(id, { select: ['givenName', 'familyName', 'pictureUrl'] });
+    async findWithPublicFields(ids: number[]): Promise<UserWithPublicFields[]> {
+        return this.userRepository.findByIds(ids, { select: ['id', 'givenName', 'familyName', 'pictureUrl'] });
     }
 
     async findByEmail(email: string): Promise<User> {

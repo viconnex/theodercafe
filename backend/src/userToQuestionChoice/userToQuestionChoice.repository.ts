@@ -1,17 +1,18 @@
-import { Repository, EntityRepository } from 'typeorm';
+import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { SimilarityWithUserId } from './userToQuestionChoice.types';
+
+const COMPANIES = ['theodo'];
+if (process.env.NODE_ENV === 'development') {
+    COMPANIES.push('gmail');
+}
 
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
     async findByQuestionIds(questionIds): Promise<UserToQuestionChoice[]> {
-        const companies = ['theodo'];
-        if (process.env.NODE_ENV === 'development') {
-            companies.push('gmail');
-        }
         return this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies })
+            .where('user.company IN (:...companies)', { companies: COMPANIES })
             .andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds })
             .getMany();
     }
@@ -26,19 +27,35 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
     }
 
     async selectSimilarityWithUserIds(userId: number): Promise<SimilarityWithUserId[]> {
-        return this.query(`
-            SELECT
-                "userId",
-                COUNT(*) as "commonQuestionCount",
-                SUM(CASE WHEN "choice" = "targetChoice" THEN 1 ELSE 0 END) as "sameAnswerCount"
-            FROM user_to_question_choices
-            INNER JOIN (
-                SELECT "userId" AS "targetUserId", "questionId", "choice" AS "targetChoice" FROM user_to_question_choices utqc
-                WHERE "utqc"."userId" = ${userId}
-            ) as utqc
-            ON "utqc"."questionId" = "user_to_question_choices"."questionId"
-            WHERE "user_to_question_choices"."userId" != ${userId}
-            GROUP BY "userId";
-        `);
+        return this.createQueryBuilder('user_to_question_choices')
+            .select('user_to_question_choices.userId', 'userId')
+            .addSelect('COUNT(*)', 'commonQuestionCount')
+            .addSelect(
+                'SUM(CASE WHEN user_to_question_choices.choice = "targetChoice" THEN 1 ELSE 0 END)',
+                'sameAnswerCount',
+            )
+            .addSelect('0', 'similarity')
+            .innerJoin(
+                (subquery: SelectQueryBuilder<UserToQuestionChoice>): SelectQueryBuilder<UserToQuestionChoice> => {
+                    return subquery
+                        .select('user_to_question_choices.questionId', 'questionId')
+                        .addSelect('user_to_question_choices.choice', 'targetChoice')
+                        .from(UserToQuestionChoice, 'user_to_question_choices')
+                        .where('user_to_question_choices.userId = :userId', { userId });
+                },
+                'utqc',
+                '"utqc"."questionId" = user_to_question_choices.questionId',
+            )
+            .leftJoin('user_to_question_choices.user', 'user')
+            .where('user_to_question_choices.userId != :userId', { userId })
+            .andWhere('user.company IN (:...companies)', { companies: COMPANIES })
+            .groupBy('user_to_question_choices.userId')
+            .getRawMany();
+    }
+
+    async countUserQuestionChoices(userId: number): Promise<number> {
+        return this.createQueryBuilder('user_to_question_choices')
+            .where('user_to_question_choices.userId = :userId', { userId })
+            .getCount();
     }
 }

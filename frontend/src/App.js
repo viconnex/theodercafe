@@ -19,6 +19,7 @@ import { Home } from 'pages/Home';
 import { ThemeProvider } from '@material-ui/styles';
 import colors from 'ui/colors';
 import { getPictureUrl } from 'services/jwtDecode';
+import { Alterodo } from 'pages/Alterodo';
 
 const Admin = lazy(() => import('./admin/Admin'));
 
@@ -63,7 +64,8 @@ const App = ({ classes }) => {
                 <Route exact path="/login" component={LoginPage} />
                 <Route path="/login/success" render={() => <Login loginSuccess setPictureUrl={setPictureUrl} />} />
                 <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
-                <PrivateRoute exact path="/admin" component={Admin} />
+                <PrivateRoute exact path="/admin" component={Admin} isAdminRoute />
+                <PrivateRoute exact path="/alterodo" component={Alterodo} isAdminRoute={false} />
                 <Route path="/" component={Home} />
               </Switch>
             </Suspense>

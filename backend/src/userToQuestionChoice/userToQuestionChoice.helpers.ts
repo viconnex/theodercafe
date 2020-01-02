@@ -1,9 +1,6 @@
 import { Alterodos, SimilarityWithUserId } from './userToQuestionChoice.types';
 
-export const selectAlterodosFromSimilarityWithUserIds = (
-    similarityWithUsers: SimilarityWithUserId[],
-    userNorm: number,
-): Alterodos => {
+export const getBestAlterodos = (similarityWithUsers: SimilarityWithUserId[], userNorm: number): Alterodos => {
     let bestSimilarity = -1;
     let bestAlterodoIndexes = [];
     let bestDifference = -1;
@@ -25,7 +22,7 @@ export const selectAlterodosFromSimilarityWithUserIds = (
         if (difference > bestDifference) {
             bestVarietoIndexes = [similarityWithUserIndex];
             bestDifference = difference;
-        } else if (similarity === bestSimilarity) {
+        } else if (difference === bestSimilarity) {
             bestVarietoIndexes.push(similarityWithUserIndex);
         }
     });

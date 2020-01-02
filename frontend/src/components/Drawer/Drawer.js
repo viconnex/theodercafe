@@ -26,7 +26,11 @@ const style = theme => ({
 });
 
 const AppDrawer = ({ classes, toggleDrawer, open }) => {
-  const drawerLinks = [{ label: 'Questions', path: '/' }, { label: 'A propos', path: '/a-propos' }];
+  const drawerLinks = [
+    { label: 'Questions', path: '/' },
+    { label: 'A propos', path: '/a-propos' },
+    { label: 'Mon alterodo', path: '/alterodo' },
+  ];
 
   let isLogin = false;
 

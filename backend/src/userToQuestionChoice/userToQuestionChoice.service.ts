@@ -5,7 +5,7 @@ import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AsakaiChoices, AlterodoResponse, Alterodos, SimilarityWithUserId } from './userToQuestionChoice.types';
 
 import { UserService } from '../user/user.service';
-import { selectAlterodosFromSimilarityWithUserIds } from './userToQuestionChoice.helpers';
+import { getBestAlterodos } from './userToQuestionChoice.helpers';
 
 @Injectable()
 export class UserToQuestionChoiceService {
@@ -48,19 +48,34 @@ export class UserToQuestionChoiceService {
         if (answeredQuestionsIds.length === 0)
             throw new BadRequestException('user must answer to at least one question');
 
-        // return findAlterodoFromCommonChoices(this.userToQuestionChoiceRepository, asakaiChoices);
         const alterodos = await this.findAlterodosFromAsakaiChoices(asakaiChoices);
-        const userAlterodo = await this.userService.findOneAndSelectPublicFields(alterodos.alterodo.userId);
-        const userVarieto = await this.userService.findOneAndSelectPublicFields(alterodos.varieto.userId);
+
+        return this.createAlterodosResponse(answeredQuestionsIds.length, alterodos);
+    }
+
+    async getUserAlterodos(userId: number): Promise<AlterodoResponse> {
+        const baseQuestionCount = await this.userToQuestionChoiceRepository.countUserQuestionChoices(userId);
+        const similarityWithUserIds = await this.userToQuestionChoiceRepository.selectSimilarityWithUserIds(userId);
+        const alterodos = await getBestAlterodos(similarityWithUserIds, Math.sqrt(baseQuestionCount));
+
+        return this.createAlterodosResponse(baseQuestionCount, alterodos);
+    }
+
+    private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos): Promise<AlterodoResponse> {
+        const userAlterodos = await this.userService.findWithPublicFields([
+            alterodos.alterodo.userId,
+            alterodos.varieto.userId,
+        ]);
 
         return {
+            baseQuestionCount,
             alterodo: {
                 ...alterodos.alterodo,
-                ...userAlterodo,
+                ...userAlterodos.find((user): boolean => user.id === alterodos.alterodo.userId),
             },
             varieto: {
                 ...alterodos.varieto,
-                ...userVarieto,
+                ...userAlterodos.find((user): boolean => user.id === alterodos.varieto.userId),
             },
         };
     }
@@ -89,9 +104,6 @@ export class UserToQuestionChoiceService {
             }
         });
 
-        return selectAlterodosFromSimilarityWithUserIds(
-            Object.values(commonAnswersWithUsers),
-            Math.sqrt(Object.keys(asakaiChoices).length),
-        );
+        return getBestAlterodos(Object.values(commonAnswersWithUsers), Math.sqrt(Object.keys(asakaiChoices).length));
     }
 }

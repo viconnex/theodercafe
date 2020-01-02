@@ -7,6 +7,7 @@ interface UserAlterodoResponse {
 }
 
 export interface AlterodoResponse {
+    baseQuestionCount: number;
     alterodo: SimilarityWithUserId & UserAlterodoResponse;
     varieto: SimilarityWithUserId & UserAlterodoResponse;
 }

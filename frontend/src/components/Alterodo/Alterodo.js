@@ -16,9 +16,9 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
   const similarityInfo = (
     <div style={{ fontSize: '15px', padding: '8px', lineHeight: '16px' }}>
       <div>
-        Sur {baseQuestionCount} questions, {alterodo.givenName} a répondu à {alterodo.commonQuestionCount} de ces
-        questions, et a choisi {isAlterodo ? 'la même réponse' : "l'autre réponse"} sur {sameOrDifferentAnswerCount}{' '}
-        d'entres elles.
+        Sur les {baseQuestionCount} questions auxquelles tu as répondu, {alterodo.givenName} a répondu à{' '}
+        {alterodo.commonQuestionCount} de ces questions, et a choisi{' '}
+        {isAlterodo ? 'la même réponse' : "l'autre réponse"} sur {sameOrDifferentAnswerCount} d'entres elles.
       </div>
       <div style={{ marginTop: '8px' }}>
         Ta {isAlterodo ? 'similarité' : 'diversité'} avec {alterodo.givenName} est :
@@ -40,7 +40,7 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
       <div className={classes.similarity}>
         {isAlterodo ? 'Similarité' : 'Diversité'} :{' '}
         <span className={classes.similarityValue}>{Math.round(alterodo.similarity * 100)} %</span>
-        <Tooltip title={similarityInfo} enterTouchDelay={0} leaveTouchDelay={3000}>
+        <Tooltip title={similarityInfo} enterTouchDelay={0} leaveTouchDelay={5000}>
           <IconButton color="secondary" classes={{ root: classes.infoButton }}>
             <InfoIcon fontSize="small" />
           </IconButton>
@@ -55,7 +55,7 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
   );
 };
 
-const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, baseQuestionCount }) => {
+const AlterodoWrapper = ({ alterodos, classes, resetQuestioning }) => {
   const [alterodo, setAlterodo] = useState(alterodos.alterodo);
   const [isAlterodoDisplayed, setIsAlterodoDisplayed] = useState(true);
 
@@ -75,7 +75,7 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, baseQuestionCou
         classes={classes}
         alterodo={alterodo}
         isAlterodo={isAlterodoDisplayed}
-        baseQuestionCount={baseQuestionCount}
+        baseQuestionCount={alterodos.baseQuestionCount}
       />
       <div className={classes.actionsContainer}>
         <div>
@@ -85,7 +85,7 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, baseQuestionCou
         </div>
         <div>
           <MaterialButton className={classes.newQuestioning} size="small" color="secondary" onClick={resetQuestioning}>
-            Recommencer le questionnaire
+            Retourner aux questions
           </MaterialButton>
         </div>
       </div>
