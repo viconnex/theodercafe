@@ -59,4 +59,9 @@ export class UserToQuestionChoiceController {
 
         return await this.userToQuestionChoiceService.getUserAlterodos(req.user.id);
     }
+
+    @Get('map')
+    async createMap(): Promise<any> {
+        return await this.userToQuestionChoiceService.createMap();
+    }
 }

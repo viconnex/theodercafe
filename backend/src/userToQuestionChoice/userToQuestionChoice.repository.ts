@@ -18,12 +18,22 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
     }
 
     async findByValidatedQuestions(): Promise<UserToQuestionChoice[]> {
-        return this.createQueryBuilder('user_to_question_choices')
+        return await this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: ['theodo', 'gmail'] })
+            .where('user.company IN (:...companies)', { companies: COMPANIES })
             .leftJoin('user_to_question_choices.question', 'question')
-            .where('question.isValidated = true OR question.isValidated IS NULL')
+            .where('question.isValidated = true')
             .getMany();
+    }
+
+    async getValidatedQuestionsCount(): Promise<{ count: number }> {
+        return await this.createQueryBuilder('user_to_question_choices')
+            .select('COUNT(DISTINCT "user_to_question_choices"."questionId")')
+            .leftJoin('user_to_question_choices.user', 'user')
+            .where('user.company IN (:...companies)', { companies: COMPANIES })
+            .leftJoin('user_to_question_choices.question', 'question')
+            .where('question.isValidated = true')
+            .getRawOne();
     }
 
     async selectSimilarityWithUserIds(userId: number): Promise<SimilarityWithUserId[]> {

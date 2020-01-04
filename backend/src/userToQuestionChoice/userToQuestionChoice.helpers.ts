@@ -1,4 +1,5 @@
 import { Alterodos, SimilarityWithUserId } from './userToQuestionChoice.types';
+import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 
 export const getBestAlterodos = (similarityWithUsers: SimilarityWithUserId[], userNorm: number): Alterodos => {
     let bestSimilarity = -1;
@@ -41,58 +42,35 @@ export const getBestAlterodos = (similarityWithUsers: SimilarityWithUserId[], us
     };
 };
 
-// export const findAlterodoFromMatrixFactorization = async (
-//     userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
-//     asakaiChoices: AsakaiChoices,
-// ): Promise<Alterodo> => {
-//     const userToQuestionChoices = await userToQuestionChoiceRepository.findByValidatedQuestions();
-//     console.log(userToQuestionChoices);
+export const createUsersChoicesMatrix = (
+    userToQuestionChoices: UserToQuestionChoice[],
+    questionCount: number,
+): { usersChoicesMatrix: number[][]; userIds: number[] } => {
+    const questionIdIndex = {};
+    const userIdIndex = {};
+    const userIds = [];
+    let currentUserIdIndex = 0;
+    let currentQuestionIdIndex = 0;
 
-//     const questionIdIndex = {};
-//     const questionIds = [];
+    const usersChoicesMatrix = [];
 
-//     let currentQuestionIndex = 0;
+    for (const userToQuestionChoice of userToQuestionChoices) {
+        if (!userIdIndex.hasOwnProperty(userToQuestionChoice.userId)) {
+            userIdIndex[userToQuestionChoice.userId] = currentUserIdIndex;
+            userIds.push(userToQuestionChoice.userId);
+            currentUserIdIndex += 1;
+            usersChoicesMatrix.push(Array.from({ length: questionCount }, (): number => 0));
+        }
+        if (!questionIdIndex.hasOwnProperty(userToQuestionChoice.questionId)) {
+            questionIdIndex[userToQuestionChoice.questionId] = currentQuestionIdIndex;
+            currentQuestionIdIndex += 1;
+        }
+        usersChoicesMatrix[userIdIndex[userToQuestionChoice.userId]][questionIdIndex[userToQuestionChoice.questionId]] =
+            userToQuestionChoice.choice === 1 ? 0 : 1;
+    }
 
-//     for (const questionId in asakaiChoices) {
-//         questionIdIndex[questionId] = currentQuestionIndex;
-//         questionIds.push(questionId);
-//         currentQuestionIndex += 1;
-//     }
-
-//     for (const userToQuestionChoice of userToQuestionChoices) {
-//         if (!questionIdIndex.hasOwnProperty(userToQuestionChoice.questionId)) {
-//             questionIdIndex[userToQuestionChoice.questionId] = currentQuestionIndex;
-//             questionIds.push(userToQuestionChoice.questionId);
-//             currentQuestionIndex += 1;
-//         }
-//     }
-
-//     const userIdIndex = { 0: 0 };
-//     let currentUserIndex = 1;
-
-//     const n = questionIds.length;
-
-//     const userChoicesMatrix = [Array.from({ length: n }, (): number => 0)];
-
-//     for (const questionId in asakaiChoices) {
-//         userChoicesMatrix[0][questionIdIndex[questionId]] = asakaiChoices[questionId] === 1 ? -1 : 1;
-//     }
-
-//     for (const userToQuestionChoice of userToQuestionChoices) {
-//         if (!userIdIndex.hasOwnProperty(userToQuestionChoice.userId)) {
-//             userIdIndex[userToQuestionChoice.userId] = currentUserIndex;
-//             currentUserIndex += 1;
-//             userChoicesMatrix.push(Array.from({ length: n }, (): number => 0));
-//         }
-//         userChoicesMatrix[userIdIndex[userToQuestionChoice.userId]][questionIdIndex[userToQuestionChoice.questionId]] =
-//             userToQuestionChoice.choice === 1 ? -1 : 1;
-//     }
-//     console.log('asakai choices', asakaiChoices);
-//     console.log('questionIndex', questionIdIndex);
-//     console.log('userIndex', userIdIndex);
-//     console.log('initial matrix', userChoicesMatrix);
-//     const factors = factorizeMatrix(userChoicesMatrix, 2);
-//     const completeMatrix = buildCompletedMatrix(factors);
-//     console.log('factorized matrix', completeMatrix);
-//     return;
-// };
+    return {
+        usersChoicesMatrix,
+        userIds,
+    };
+};

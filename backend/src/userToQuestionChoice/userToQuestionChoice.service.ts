@@ -62,6 +62,12 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(baseQuestionCount, alterodos);
     }
 
+    async createMap(): Promise<any> {
+        const n = await this.userToQuestionChoiceRepository.getValidatedQuestionsCount();
+        console.log(n);
+        return await this.userToQuestionChoiceRepository.findByValidatedQuestions();
+    }
+
     private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos): Promise<AlterodoResponse> {
         const userAlterodos = await this.userService.findWithPublicFields([
             alterodos.alterodo.userId,
