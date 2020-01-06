@@ -23,3 +23,9 @@ export interface SimilarityWithUserId {
     sameAnswerCount: number;
     similarity: number;
 }
+
+export type UsersMap = [number, number][];
+
+export interface UserMapResponse {
+    map: UsersMap;
+}

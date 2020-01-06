@@ -3,11 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
-import { AsakaiChoices, AlterodoResponse, Alterodos, SimilarityWithUserId } from './userToQuestionChoice.types';
+import {
+    AsakaiChoices,
+    AlterodoResponse,
+    Alterodos,
+    SimilarityWithUserId,
+    UserMapResponse,
+} from './userToQuestionChoice.types';
 
 import { UserService } from '../user/user.service';
 import { getBestAlterodos, createUsersChoicesMatrix } from './userToQuestionChoice.helpers';
 
+// eslint-disable-next-line
 const PCA = require('pca-js');
 
 @Injectable()
@@ -65,7 +72,7 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(baseQuestionCount, alterodos);
     }
 
-    async createMap(): Promise<any> {
+    async createMap(): Promise<UserMapResponse> {
         const { count: questionCount } = await this.userToQuestionChoiceRepository.getValidatedQuestionsCount();
         const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByValidatedQuestions();
         const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount);

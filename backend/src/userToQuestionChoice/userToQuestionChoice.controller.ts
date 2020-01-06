@@ -14,7 +14,7 @@ import {
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { AlterodoResponse, AsakaiChoices } from './userToQuestionChoice.types';
+import { AlterodoResponse, AsakaiChoices, UserMapResponse } from './userToQuestionChoice.types';
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
@@ -61,7 +61,8 @@ export class UserToQuestionChoiceController {
     }
 
     @Get('map')
-    async createMap(): Promise<any> {
+    @UseGuards(AuthGuard('registered_user'))
+    async createMap(): Promise<UserMapResponse> {
         return await this.userToQuestionChoiceService.createMap();
     }
 }

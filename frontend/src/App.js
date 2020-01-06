@@ -20,6 +20,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import colors from 'ui/colors';
 import { getPictureUrl } from 'services/jwtDecode';
 import { Alterodo } from 'pages/Alterodo';
+import { Map } from 'pages/Map';
 
 const Admin = lazy(() => import('./admin/Admin'));
 
@@ -66,6 +67,7 @@ const App = ({ classes }) => {
                 <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
                 <PrivateRoute exact path="/admin" component={Admin} isAdminRoute />
                 <PrivateRoute exact path="/alterodo" component={Alterodo} isAdminRoute={false} />
+                <PrivateRoute exact path="/carte" component={Map} isAdminRoute={false} />
                 <Route path="/" component={Home} />
               </Switch>
             </Suspense>
