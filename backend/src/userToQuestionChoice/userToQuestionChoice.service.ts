@@ -1,11 +1,14 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AsakaiChoices, AlterodoResponse, Alterodos, SimilarityWithUserId } from './userToQuestionChoice.types';
 
 import { UserService } from '../user/user.service';
-import { getBestAlterodos } from './userToQuestionChoice.helpers';
+import { getBestAlterodos, createUsersChoicesMatrix } from './userToQuestionChoice.helpers';
+
+const PCA = require('pca-js');
 
 @Injectable()
 export class UserToQuestionChoiceService {
@@ -63,9 +66,22 @@ export class UserToQuestionChoiceService {
     }
 
     async createMap(): Promise<any> {
-        const n = await this.userToQuestionChoiceRepository.getValidatedQuestionsCount();
-        console.log(n);
-        return await this.userToQuestionChoiceRepository.findByValidatedQuestions();
+        const { count: questionCount } = await this.userToQuestionChoiceRepository.getValidatedQuestionsCount();
+        const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByValidatedQuestions();
+        const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount);
+        const data = userQuestionMatrixWithUserIndex.usersChoicesMatrix;
+
+        const vectors = PCA.getEigenVectors(data);
+        // const topTwo = PCA.computePercentageExplained(vectors, vectors[0], vectors[1]);
+        // console.log('topTwo', topTwo);
+        const adData = PCA.computeAdjustedData(data, vectors[0], vectors[1]);
+
+        const usersMap = adData.formattedAdjustedData[0].map((x: number): [number] => [x]);
+        adData.formattedAdjustedData[1].forEach((y: number, index: number): void => {
+            usersMap[index].push(y);
+        });
+
+        return { map: usersMap };
     }
 
     private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos): Promise<AlterodoResponse> {

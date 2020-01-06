@@ -66,7 +66,7 @@ export const createUsersChoicesMatrix = (
             currentQuestionIdIndex += 1;
         }
         usersChoicesMatrix[userIdIndex[userToQuestionChoice.userId]][questionIdIndex[userToQuestionChoice.questionId]] =
-            userToQuestionChoice.choice === 1 ? 0 : 1;
+            userToQuestionChoice.choice === 1 ? -1 : 1;
     }
 
     return {
