@@ -14,9 +14,11 @@ const Map = () => {
     const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/map`, method: 'GET' }, 200, {
       enqueueSnackbar,
     });
+    if (!response) {
+      return;
+    }
     const data = await response.json();
-    console.log(data);
-    setMap(data.map);
+    setMap(data);
   };
 
   useEffect(() => {
@@ -35,14 +37,14 @@ const Map = () => {
     series: [
       {
         type: 'scatter',
-        data: map.map(dot => ({
-          x: dot[0],
-          y: dot[1],
+        data: map.map(user => ({
+          x: user.x,
+          y: user.y,
           name: 'chico',
           marker: {
             height: 15,
             width: 15,
-            symbol: 'url(https://lh3.googleusercontent.com/a-/AAuE7mCUFpMUIarQSeMITVXIOeLBBU8mnp-SPE2QHgD2)',
+            symbol: `url(${user.pictureUrl})`,
           },
         })),
       },

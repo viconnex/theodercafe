@@ -24,8 +24,11 @@ export interface SimilarityWithUserId {
     similarity: number;
 }
 
-export type UsersMap = [number, number][];
-
-export interface UserMapResponse {
-    map: UsersMap;
+export interface UserMap {
+    x: number;
+    y: number;
+    id: number;
+    givenName: string;
+    familyName: string;
+    pictureUrl: string;
 }

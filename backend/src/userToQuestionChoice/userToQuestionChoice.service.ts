@@ -8,11 +8,12 @@ import {
     AlterodoResponse,
     Alterodos,
     SimilarityWithUserId,
-    UserMapResponse,
+    UserMap,
 } from './userToQuestionChoice.types';
 
 import { UserService } from '../user/user.service';
 import { getBestAlterodos, createUsersChoicesMatrix } from './userToQuestionChoice.helpers';
+import { UserWithPublicFields } from 'src/user/user.types';
 
 // eslint-disable-next-line
 const PCA = require('pca-js');
@@ -72,7 +73,7 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(baseQuestionCount, alterodos);
     }
 
-    async createMap(): Promise<UserMapResponse> {
+    async createMap(): Promise<UserMap[]> {
         const { count: questionCount } = await this.userToQuestionChoiceRepository.getValidatedQuestionsCount();
         const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByValidatedQuestions();
         const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount);
@@ -83,12 +84,22 @@ export class UserToQuestionChoiceService {
         // console.log('topTwo', topTwo);
         const adData = PCA.computeAdjustedData(data, vectors[0], vectors[1]);
 
-        const usersMap = adData.formattedAdjustedData[0].map((x: number): [number] => [x]);
-        adData.formattedAdjustedData[1].forEach((y: number, index: number): void => {
-            usersMap[index].push(y);
-        });
+        const users = await this.userService.findWithPublicFields(userQuestionMatrixWithUserIndex.userIds);
 
-        return { map: usersMap };
+        const usersMap = adData.formattedAdjustedData[0].map(
+            (x: number, index: number): UserMap => {
+                return {
+                    x: x,
+                    y: adData.formattedAdjustedData[1][index],
+                    ...users.find(
+                        (user: UserWithPublicFields): boolean =>
+                            user.id === userQuestionMatrixWithUserIndex.userIds[index],
+                    ),
+                };
+            },
+        );
+
+        return usersMap;
     }
 
     private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos): Promise<AlterodoResponse> {
