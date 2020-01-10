@@ -30,6 +30,7 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
     { label: 'Questions', path: '/' },
     { label: 'A propos', path: '/a-propos' },
     { label: 'Mon alterodo', path: '/alterodo' },
+    { label: 'La carte', path: '/carte' },
   ];
 
   let isLogin = false;

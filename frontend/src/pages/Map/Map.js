@@ -32,7 +32,7 @@ const Map = () => {
 
   const options = {
     title: {
-      text: 'My chart',
+      text: 'La carte des réponses',
     },
     series: [
       {
@@ -40,15 +40,22 @@ const Map = () => {
         data: map.map(user => ({
           x: user.x,
           y: user.y,
-          name: 'chico',
+          name: `${user.givenName} ${user.familyName.charAt(0).toUpperCase()}`,
           marker: {
-            height: 15,
-            width: 15,
+            height: 20,
+            width: 20,
             symbol: `url(${user.pictureUrl})`,
           },
         })),
       },
     ],
+    tooltip: {
+      formatter: function() {
+        const data = this.series.chart.series[0].data;
+        const index = this.point.index;
+        return '<b>' + data[index].name + '</b>';
+      },
+    },
   };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
