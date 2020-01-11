@@ -17,23 +17,19 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .getMany();
     }
 
-    async findByValidatedQuestions(): Promise<UserToQuestionChoice[]> {
-        return await this.createQueryBuilder('user_to_question_choices')
+    async findByValidatedQuestionsWithCount(): Promise<{ choices: UserToQuestionChoice[]; count: number }> {
+        const qb = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: COMPANIES })
             .leftJoin('user_to_question_choices.question', 'question')
             .where('question.isValidated = true')
-            .getMany();
-    }
+            .andWhere('user.company IN (:...companies)', { companies: COMPANIES });
 
-    async getValidatedQuestionsCount(): Promise<{ count: number }> {
-        return await this.createQueryBuilder('user_to_question_choices')
+        const choices = await qb.getMany();
+        const count: { count: number } = await qb
             .select('COUNT(DISTINCT "user_to_question_choices"."questionId")')
-            .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: COMPANIES })
-            .leftJoin('user_to_question_choices.question', 'question')
-            .where('question.isValidated = true')
             .getRawOne();
+
+        return { choices, ...count };
     }
 
     async selectSimilarityWithUserIds(userId: number): Promise<SimilarityWithUserId[]> {

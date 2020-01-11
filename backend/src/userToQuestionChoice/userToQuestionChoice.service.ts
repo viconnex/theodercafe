@@ -74,15 +74,19 @@ export class UserToQuestionChoiceService {
     }
 
     async createMap(): Promise<UserMap[]> {
-        const { count: questionCount } = await this.userToQuestionChoiceRepository.getValidatedQuestionsCount();
-        const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByValidatedQuestions();
+        const {
+            choices: userToQuestionChoices,
+            count: questionCount,
+        } = await this.userToQuestionChoiceRepository.findByValidatedQuestionsWithCount();
+
         const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount);
         const data = userQuestionMatrixWithUserIndex.usersChoicesMatrix;
 
         const vectors = PCA.getEigenVectors(data);
+        const adData = PCA.computeAdjustedData(data, vectors[0], vectors[1]);
+
         // const topTwo = PCA.computePercentageExplained(vectors, vectors[0], vectors[1]);
         // console.log('topTwo', topTwo);
-        const adData = PCA.computeAdjustedData(data, vectors[0], vectors[1]);
 
         const users = await this.userService.findWithPublicFields(userQuestionMatrixWithUserIndex.userIds);
 

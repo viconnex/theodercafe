@@ -38,7 +38,7 @@ const Map = () => {
       margin: 20,
     },
     title: {
-      text: 'La carte des réponses',
+      text: 'Carte des réponses',
     },
     xAxis: {
       tickInterval: 1,
