@@ -6,6 +6,8 @@ import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
+import './style.css';
+
 const Map = () => {
   const [map, setMap] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
@@ -31,11 +33,32 @@ const Map = () => {
   }
 
   const options = {
+    chart: {
+      height: '100%',
+      margin: 20,
+    },
     title: {
       text: 'La carte des réponses',
     },
+    xAxis: {
+      tickInterval: 1,
+      labels: {
+        enabled: false,
+      },
+    },
+    yAxis: {
+      labels: {
+        enabled: false,
+      },
+      lineWidth: 1,
+      gridLineWidth: 0,
+      title: {
+        enabled: false,
+      },
+    },
     series: [
       {
+        showInLegend: false,
         type: 'scatter',
         data: map.map(user => ({
           x: user.x,
@@ -58,7 +81,11 @@ const Map = () => {
     },
   };
 
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  return (
+    <div className="chart">
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+  );
 };
 
 export default Map;
