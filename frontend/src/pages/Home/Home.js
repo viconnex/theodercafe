@@ -10,14 +10,13 @@ import { ModeSelector } from 'components/ModeSelector';
 import style from './style';
 import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning';
 import AllQuestioning from 'components/Questioning/AllQuestioning';
-import { VALIDATED_OPTION, ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants';
+import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants';
 import { fetchRequestResponse } from 'services/api';
 
 const Home = ({ classes }) => {
   const [questions, setQuestions] = useState([]);
   const [addQuestionDialog, setAddQuestionDialog] = useState(false);
   const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1);
-  const [filterOption, setFilterOption] = useState(VALIDATED_OPTION);
 
   const { enqueueSnackbar } = useSnackbar();
   const fetchQuestions = async () => {
@@ -40,19 +39,12 @@ const Home = ({ classes }) => {
     setIsAsakaiMode(isAsakaiMode);
   };
 
-  const handleFilterOptionChange = filterOption => setFilterOption(filterOption);
-
   const toggleModal = open => () => setAddQuestionDialog(open);
 
   return (
     <div className={classes.pageContainer}>
-      <ModeSelector
-        isAsakaiMode={isAsakaiMode}
-        handleModeChange={handleModeChange}
-        filterOption={filterOption}
-        handleFilterOptionChange={handleFilterOptionChange}
-      />
-      {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning filterOption={filterOption} questions={questions} />}
+      <ModeSelector isAsakaiMode={isAsakaiMode} handleModeChange={handleModeChange} />
+      {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} />}
       <Fab className={classes.addButton} size="small" onClick={toggleModal(true)}>
         <AddIcon />
       </Fab>

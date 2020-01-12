@@ -2,10 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Select from '@material-ui/core/Select';
 import style from './style';
-import MenuItem from '@material-ui/core/MenuItem';
-import { FILTER_OPTIONS } from 'utils/constants/questionConstants';
 import InfoIcon from '@material-ui/icons/Info';
 import { IconButton, Tooltip } from '@material-ui/core';
 
@@ -43,26 +40,6 @@ const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isA
           </IconButton>
         </Tooltip>
       </div>
-      {!isAsakaiMode && (
-        <Select
-          className={classes.filterOptionSelect}
-          inputProps={{
-            classes: {
-              icon: classes.filterOptionSelectIcon,
-            },
-          }}
-          value={filterOption}
-          onChange={event => {
-            handleFilterOptionChange(event.target.value);
-          }}
-        >
-          {FILTER_OPTIONS.map(option => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Select>
-      )}
     </div>
   );
 };

@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Question } from 'components/Question';
-import { fetchRequest } from 'utils/helpers';
-import { ALL_QUESTIONS_OPTION, FILTER_OPTIONS, NOT_ANSWERED } from 'utils/constants/questionConstants';
-import {
-  USER_TO_QUESTIONS_CHOICES_URI,
-  API_BASE_URL,
-  GOOGLE_AUTH_URI,
-  USER_TO_QUESTIONS_VOTES_URI,
-} from 'utils/constants/apiConstants';
+import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants';
 import { useSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import TuneIcon from '@material-ui/icons/Tune';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import { isUser } from 'services/jwtDecode';
 
@@ -19,18 +13,30 @@ import style from './style';
 import Voter from './Voter';
 import { LoginDialog } from 'components/Login';
 import { fetchRequestResponse } from 'services/api';
+import { Button } from '@material-ui/core';
+import { FilterDrawer } from 'components/FilterDrawer';
 
-const initialIndexes = {};
-FILTER_OPTIONS.forEach(option => {
-  initialIndexes[option.value] = 0;
-});
+const AllQuestioning = ({ classes, questions }) => {
+  const [filters, setFilters] = useState({
+    isValidated: true,
+    isJoke: false,
+    isNotAnswered: true,
+  });
 
-const AllQuestioning = ({ classes, filterOption, questions }) => {
-  const [questionIndexByStatus, setQuestionIndexByStatus] = useState(initialIndexes);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [choices, setChoices] = useState({});
   const [votes, setVotes] = useState({});
   const [openLoginDialog, setOpenLoginDialog] = useState(false);
   const [areChoicesFetched, setAreChoicesFetched] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    const filteredQuestions = questions.filter(question => {
+      return question.isValidated === filters.isValidated;
+    });
+    setFilteredQuestions(filteredQuestions);
+  }, [filters, questions]);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -80,54 +86,36 @@ const AllQuestioning = ({ classes, filterOption, questions }) => {
     return areChoicesFetched ? !choices[question.id] : false;
   };
 
-  const isStatus = filterOption => question => {
-    const status = FILTER_OPTIONS.find(option => option.value === filterOption);
-    return question.isValidated === status.isValidated;
+  const handeFilterChange = option => event => {
+    setFilters({ ...filters, [option]: event.target.checked });
+    setQuestionIndex(0);
   };
-
-  const getFilteredQuestions = () => {
-    if (filterOption === ALL_QUESTIONS_OPTION) return questions;
-    if (filterOption === NOT_ANSWERED) return questions.filter(isNotAnsweredQuestion);
-
-    return questions.filter(isStatus(filterOption));
-  };
-
-  const filteredQuestions = getFilteredQuestions();
-  let questionIndex = questionIndexByStatus[filterOption];
-
-  const question = filteredQuestions[questionIndex];
 
   const changeQuestion = increment => {
-    const questionIndex = questionIndexByStatus[filterOption];
     let index = questionIndex + increment;
-    if (index < 0 || index === filteredQuestions.length) index = 0;
-    const newQuestionIndex = { ...questionIndexByStatus };
-    newQuestionIndex[filterOption] = index;
-    setQuestionIndexByStatus(newQuestionIndex);
+    if (index < 0 || index === filteredQuestions.length) {
+      index = 0;
+    }
+    setQuestionIndex(index);
   };
+
+  const question = filteredQuestions[questionIndex];
 
   const chose = async (questionId, choice) => {
     if (!isUser()) {
       return setOpenLoginDialog(true);
     }
-    if (filterOption !== NOT_ANSWERED) {
-      changeQuestion(1);
-    } else if (questionIndexByStatus[filterOption] === filteredQuestions.length - 1) {
-      changeQuestion(-1);
-    }
+    changeQuestion(1);
+
     if (choices[questionId] !== choice) {
       const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`;
       const body = { choice };
-      let response;
-      try {
-        response = await fetchRequest({ uri, method: 'PUT', body });
-      } catch {
-        return enqueueSnackbar("Ton choix n'a pas pu être enregistré", { variant: 'error' });
-      }
-      if (response.status !== 200) {
-        return enqueueSnackbar("Ton choix n'a pas pu être enregistré", { variant: 'error' });
-      }
-      enqueueSnackbar('Choix enregistré', { variant: 'success' });
+
+      fetchRequestResponse({ uri, method: 'PUT', body }, 200, {
+        enqueueSnackbar,
+        successMessage: 'Choix enregistré',
+      });
+
       const newChoices = { ...choices };
       newChoices[questionId] = choice;
       setChoices(newChoices);
@@ -153,8 +141,14 @@ const AllQuestioning = ({ classes, filterOption, questions }) => {
 
     return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar });
   };
+
   return (
     <React.Fragment>
+      <div className={classes.asakaiSubtitle}>
+        <Button startIcon={<TuneIcon />} color="secondary" variant="text" onClick={() => setIsDrawerOpen(true)}>
+          Filtres
+        </Button>
+      </div>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
         {question && (
           <React.Fragment>
@@ -176,20 +170,15 @@ const AllQuestioning = ({ classes, filterOption, questions }) => {
             <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
           </React.Fragment>
         )}
-        {!question && filterOption === NOT_ANSWERED && areChoicesFetched && (
-          <div>Tu as répondu à toutes les questions</div>
-        )}
-        {!question && filterOption === NOT_ANSWERED && !areChoicesFetched && !localStorage.jwt_token && (
-          <div>
-            Tu dois{' '}
-            <span className={classes.connect} onClick={() => (window.location = API_BASE_URL + GOOGLE_AUTH_URI)}>
-              te connecter
-            </span>{' '}
-            pour voir les questions auxquelles tu n'as pas répondu
-          </div>
-        )}
+        {!question && areChoicesFetched && <div>Aucune question pour les filtres sélectionnés</div>}
       </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
+      <FilterDrawer
+        open={isDrawerOpen}
+        close={() => setIsDrawerOpen(false)}
+        filters={filters}
+        handeFilterChange={handeFilterChange}
+      />
     </React.Fragment>
   );
 };
