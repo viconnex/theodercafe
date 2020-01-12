@@ -50,8 +50,8 @@ const Map = () => {
 
   const options = {
     chart: {
+      width: Math.min(0.9 * window.innerWidth, 0.8 * window.innerHeight),
       height: '100%',
-      margin: 20,
     },
     title: {
       text: 'Carte des réponses',
