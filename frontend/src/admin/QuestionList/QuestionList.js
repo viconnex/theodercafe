@@ -12,7 +12,8 @@ export const QuestionList = props => {
           <TextField source="name" />
         </ReferenceField>
         <BooleanField source="isValidated" label="Validée" />
-        <BooleanField source="isJokeOnSomeone" label="Jeu de nom" />
+        <BooleanField source="isJoke" label="Blague" />
+        <BooleanField source="isJokeOnSomeone" label="Private joke" />
         <BooleanField source="isClassic" label="Classique" />
         <NumberField source="choice1count" label="Choix 1" />
         <NumberField source="choice2count" label="Choix 2" />

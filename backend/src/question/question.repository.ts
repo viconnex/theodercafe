@@ -4,7 +4,7 @@ import { QuestionWithCategoryNameDto } from './interfaces/question.dto';
 
 const FIND_QUESTION_QUERY = `
     SELECT
-        "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName", "questions"."isValidated"
+        "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName", "questions"."isValidated", "questions"."isJoke"
     FROM questions
     LEFT JOIN categories on "questions"."categoryId"="categories"."id"
 `;
@@ -45,7 +45,7 @@ export class QuestionRepository extends Repository<Question> {
 
     findAdminList = async (): Promise<Question[]> => {
         return this.query(`
-            SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJokeOnSomeone", "choice1count", "choice2count", "up_votes_count" AS "upVotes", "down_votes_count" AS "downVotes" FROM questions AS q
+            SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJoke", "isJokeOnSomeone", "choice1count", "choice2count", "up_votes_count" AS "upVotes", "down_votes_count" AS "downVotes" FROM questions AS q
             LEFT JOIN (
             SELECT
                 "questionId",

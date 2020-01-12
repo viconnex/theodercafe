@@ -34,6 +34,9 @@ export class Question {
     @Column({ nullable: true })
     isValidated: boolean;
 
+    @Column({ default: false })
+    isJoke: boolean;
+
     @OneToMany(type => UserToQuestionChoice, userToQuestionChoice => userToQuestionChoice.question, { cascade: true })
     userToQuestionChoices: UserToQuestionChoice[];
 
