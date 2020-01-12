@@ -4,7 +4,7 @@ import ToolBar from '@material-ui/core/Toolbar';
 import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { SnackbarProvider } from 'notistack';
-import { Drawer } from 'components/Drawer';
+import { MenuDrawer } from 'components/MenuDrawer';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { About } from 'components/About';
 import { PrivateRoute } from 'modules/PrivateRoute';
@@ -71,7 +71,7 @@ const App = ({ classes }) => {
                 <Route path="/" component={Home} />
               </Switch>
             </Suspense>
-            <Drawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
+            <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
           </div>
         </SnackbarProvider>
       </Router>

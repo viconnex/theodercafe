@@ -1,6 +1,6 @@
 import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
-import { SimilarityWithUserId } from './userToQuestionChoice.types';
+import { SimilarityWithUserId, QuestionFilters } from './userToQuestionChoice.types';
 
 const COMPANIES = ['theodo'];
 if (process.env.NODE_ENV === 'development') {
@@ -17,11 +17,13 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .getMany();
     }
 
-    async findByValidatedQuestionsWithCount(): Promise<{ choices: UserToQuestionChoice[]; count: number }> {
+    async findByFiltersWithCount(
+        questionFilters: QuestionFilters,
+    ): Promise<{ choices: UserToQuestionChoice[]; count: number }> {
         const qb = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .leftJoin('user_to_question_choices.question', 'question')
-            .where('question.isValidated = true')
+            .where('question.isValidated = :isValidated', { isValidated: questionFilters.isValidated || true })
             .andWhere('user.company IN (:...companies)', { companies: COMPANIES });
 
         const choices = await qb.getMany();

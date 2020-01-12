@@ -9,6 +9,7 @@ import {
     Alterodos,
     SimilarityWithUserId,
     UserMap,
+    QuestionFilters,
 } from './userToQuestionChoice.types';
 
 import { UserService } from '../user/user.service';
@@ -73,11 +74,11 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(baseQuestionCount, alterodos);
     }
 
-    async createMap(): Promise<UserMap[]> {
+    async createMap(questionFilters: QuestionFilters): Promise<UserMap[]> {
         const {
             choices: userToQuestionChoices,
             count: questionCount,
-        } = await this.userToQuestionChoiceRepository.findByValidatedQuestionsWithCount();
+        } = await this.userToQuestionChoiceRepository.findByFiltersWithCount(questionFilters);
 
         const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount);
         const data = userQuestionMatrixWithUserIndex.usersChoicesMatrix;

@@ -32,3 +32,7 @@ export interface UserMap {
     familyName: string;
     pictureUrl: string;
 }
+
+export interface QuestionFilters {
+    isValidated?: boolean;
+}

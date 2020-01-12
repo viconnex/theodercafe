@@ -116,11 +116,11 @@ const AllQuestioning = ({ classes, filterOption, questions }) => {
       changeQuestion(-1);
     }
     if (choices[questionId] !== choice) {
-      const url = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`;
+      const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`;
       const body = { choice };
       let response;
       try {
-        response = await fetchRequest(url, 'PUT', body);
+        response = await fetchRequest({ uri, method: 'PUT', body });
       } catch {
         return enqueueSnackbar("Ton choix n'a pas pu être enregistré", { variant: 'error' });
       }

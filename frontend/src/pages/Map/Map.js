@@ -1,21 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { fetchRequestResponse } from 'services/api';
 import { useSnackbar } from 'notistack';
-import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants';
-
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import { Button } from '@material-ui/core';
+import TuneIcon from '@material-ui/icons/Tune';
+
+import { fetchRequestResponse } from 'services/api';
+import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants';
+import { FilterDrawer } from 'components/FilterDrawer';
 
 import './style.css';
 
 const Map = () => {
   const [map, setMap] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    isValidated: true,
+  });
+
+  const handeFilterChange = option => event => {
+    setFilters({ ...filters, [option]: event.target.checked });
+  };
 
   const fetchMap = async () => {
-    const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/map`, method: 'GET' }, 200, {
-      enqueueSnackbar,
-    });
+    const response = await fetchRequestResponse(
+      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/map`, method: 'GET', params: filters },
+      200,
+      {
+        enqueueSnackbar,
+      },
+    );
     if (!response) {
       return;
     }
@@ -26,7 +41,7 @@ const Map = () => {
   useEffect(() => {
     fetchMap();
     // eslint-disable-next-line
-  }, []);
+  }, [filters]);
 
   if (!map) {
     return <div>loading</div>;
@@ -82,8 +97,19 @@ const Map = () => {
   };
 
   return (
-    <div className="chart">
-      <HighchartsReact highcharts={Highcharts} options={options} />
+    <div className="map">
+      <div>
+        <Button startIcon={<TuneIcon />} color="secondary" variant="text" onClick={() => setIsDrawerOpen(true)}>
+          Filtres
+        </Button>
+      </div>
+      <FilterDrawer
+        open={isDrawerOpen}
+        close={() => setIsDrawerOpen(false)}
+        filters={filters}
+        handeFilterChange={handeFilterChange}
+      />
+      <HighchartsReact containerProps={{ className: 'chart-container' }} highcharts={Highcharts} options={options} />
     </div>
   );
 };

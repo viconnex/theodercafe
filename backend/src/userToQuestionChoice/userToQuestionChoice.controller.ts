@@ -10,11 +10,12 @@ import {
     BadRequestException,
     Put,
     Param,
+    Query,
 } from '@nestjs/common';
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service';
 import { UserToQuestionChoice } from './userToQuestionChoice.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { AlterodoResponse, AsakaiChoices, UserMap } from './userToQuestionChoice.types';
+import { AlterodoResponse, AsakaiChoices, UserMap, QuestionFilters } from './userToQuestionChoice.types';
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
@@ -62,7 +63,7 @@ export class UserToQuestionChoiceController {
 
     @Get('map')
     @UseGuards(AuthGuard('registered_user'))
-    async createMap(): Promise<UserMap[]> {
-        return await this.userToQuestionChoiceService.createMap();
+    async createMap(@Query() questionFilters: QuestionFilters): Promise<UserMap[]> {
+        return await this.userToQuestionChoiceService.createMap(questionFilters);
     }
 }

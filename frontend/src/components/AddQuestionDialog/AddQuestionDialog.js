@@ -12,9 +12,9 @@ import { fetchRequest } from 'utils/helpers';
 import style from './style';
 
 const postQuestion = async (option1, option2, category) => {
-  const url = '/questions';
+  const uri = '/questions';
   const body = { option1, option2, category };
-  const response = await fetchRequest(url, 'POST', body);
+  const response = await fetchRequest({ uri, method: 'POST', body });
 
   return response;
 };
@@ -27,7 +27,7 @@ class AddQuestionDialog extends Component {
   };
 
   fetchCategories = async () => {
-    const response = await fetchRequest('/categories');
+    const response = await fetchRequest({ uri: '/categories' });
     const data = await response.json();
     this.setState({ categories: data });
   };

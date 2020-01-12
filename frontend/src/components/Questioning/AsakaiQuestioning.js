@@ -60,7 +60,7 @@ const AsakaiQuestioning = ({ classes }) => {
   const handleAsakaiFinish = async () => {
     let response;
     try {
-      response = await fetchRequest('/user_to_question_choices/asakai', 'POST', asakaiChoices);
+      response = await fetchRequest({ uri: '/user_to_question_choices/asakai', method: 'POST', body: asakaiChoices });
     } catch {
       return enqueueSnackbar('Problème de connexion', { variant: 'error' });
     }

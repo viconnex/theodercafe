@@ -15,6 +15,7 @@ import { Button } from '@material-ui/core';
 const style = theme => ({
   drawerHeader: {
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'flex-start',
     padding: '0 8px',
     ...theme.mixins.toolbar,
