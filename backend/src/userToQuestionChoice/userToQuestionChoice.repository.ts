@@ -24,6 +24,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .leftJoin('user_to_question_choices.user', 'user')
             .leftJoin('user_to_question_choices.question', 'question')
             .where('question.isValidated = :isValidated', { isValidated: questionFilters.isValidated || true })
+            .andWhere('question.isJoke = :isJoke', { isJoke: questionFilters.isJoke || false })
             .andWhere('user.company IN (:...companies)', { companies: COMPANIES });
 
         const choices = await qb.getMany();

@@ -18,12 +18,16 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
         </IconButton>
       </div>
       <Divider />
-      <FormGroup row className={classes.drawerContent}>
+      <FormGroup className={classes.drawerContent}>
         <FormControlLabel
           control={
             <Checkbox checked={filters.isValidated} onChange={handeFilterChange('isValidated')} color="primary" />
           }
           label="Validées"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={filters.isJoke} onChange={handeFilterChange('isJoke')} color="primary" />}
+          label="Blagues"
         />
       </FormGroup>
     </Drawer>

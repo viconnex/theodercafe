@@ -35,4 +35,5 @@ export interface UserMap {
 
 export interface QuestionFilters {
     isValidated?: boolean;
+    isJoke?: boolean;
 }

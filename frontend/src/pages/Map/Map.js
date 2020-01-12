@@ -17,6 +17,7 @@ const Map = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [filters, setFilters] = useState({
     isValidated: true,
+    isJoke: false,
   });
 
   const handeFilterChange = option => event => {
