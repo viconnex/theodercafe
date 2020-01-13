@@ -19,8 +19,12 @@ import { FilterDrawer } from 'components/FilterDrawer';
 const AllQuestioning = ({ classes, questions }) => {
   const [filters, setFilters] = useState({
     isValidated: true,
+    isNotValidated: false,
+    isInValidation: false,
     isJoke: false,
-    isNotAnswered: true,
+    isJokeOnSomeone: false,
+    isNotAnswered: false,
+    isAnswered: false,
   });
 
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -33,9 +37,41 @@ const AllQuestioning = ({ classes, questions }) => {
 
   useEffect(() => {
     const filteredQuestions = questions.filter(question => {
-      return question.isValidated === filters.isValidated;
+      if (
+        !(
+          (!filters.isValidated && !filters.isNotValidated && !filters.isInValidation) ||
+          (filters.isValidated && question.isValidated === true) ||
+          (filters.isNotValidated && question.isValidated === false) ||
+          (filters.isInValidation && question.isValidated === null)
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !(
+          (!filters.isNotAnswered && !filters.isAnswered) ||
+          (filters.isNotAnswered && isNotAnsweredQuestion(question)) ||
+          (filters.isAnswered && !isNotAnsweredQuestion(question))
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !(
+          (!filters.isJoke && !filters.isJokeOnSomeone) ||
+          (filters.isJoke && question.isJoke) ||
+          (filters.isJokeOnSomeone && question.isJokeOnSomeone)
+        )
+      ) {
+        return false;
+      }
+
+      return true;
     });
     setFilteredQuestions(filteredQuestions);
+    // eslint-disable-next-line
   }, [filters, questions]);
 
   const { enqueueSnackbar } = useSnackbar();

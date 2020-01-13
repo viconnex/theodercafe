@@ -19,17 +19,91 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
       </div>
       <Divider />
       <FormGroup className={classes.drawerContent}>
-        <FormControlLabel
-          control={
-            <Checkbox checked={filters.isValidated} onChange={handeFilterChange('isValidated')} color="primary" />
-          }
-          label="Validées"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={filters.isJoke} onChange={handeFilterChange('isJoke')} color="primary" />}
-          label="Blagues"
-        />
+        {filters.isValidated !== undefined && (
+          <FormControlLabel
+            control={
+              <Checkbox checked={filters.isValidated} onChange={handeFilterChange('isValidated')} color="primary" />
+            }
+            label="Validées"
+          />
+        )}
+        {filters.isNotValidated !== undefined && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={filters.isNotValidated}
+                onChange={handeFilterChange('isNotValidated')}
+                color="primary"
+              />
+            }
+            label="Invalidées"
+          />
+        )}
+        {filters.isInValidation !== undefined && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={filters.isInValidation}
+                onChange={handeFilterChange('isInValidation')}
+                color="primary"
+              />
+            }
+            label="En attente de validation"
+          />
+        )}
       </FormGroup>
+      <Divider />
+      {(filters.isNotAnswered !== undefined || filters.isAnswered !== undefined) && (
+        <React.Fragment>
+          <FormGroup className={classes.drawerContent}>
+            {filters.isNotAnswered !== undefined && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.isNotAnswered}
+                    onChange={handeFilterChange('isNotAnswered')}
+                    color="primary"
+                  />
+                }
+                label="Pas encore répondu"
+              />
+            )}
+            {filters.isAnswered !== undefined && (
+              <FormControlLabel
+                control={
+                  <Checkbox checked={filters.isAnswered} onChange={handeFilterChange('isAnswered')} color="primary" />
+                }
+                label="Déjà répondu"
+              />
+            )}
+          </FormGroup>
+          <Divider />
+        </React.Fragment>
+      )}
+      {(filters.isJoke !== undefined || filters.isJokeOnSomeone !== undefined) && (
+        <React.Fragment>
+          <FormGroup className={classes.drawerContent}>
+            {filters.isJoke !== undefined && (
+              <FormControlLabel
+                control={<Checkbox checked={filters.isJoke} onChange={handeFilterChange('isJoke')} color="primary" />}
+                label="Blagues"
+              />
+            )}
+            {filters.isJokeOnSomeone !== undefined && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={filters.isJokeOnSomeone}
+                    onChange={handeFilterChange('isJokeOnSomeone')}
+                    color="primary"
+                  />
+                }
+                label="Blagues sur les theodoers"
+              />
+            )}
+          </FormGroup>
+        </React.Fragment>
+      )}
     </Drawer>
   );
 };
