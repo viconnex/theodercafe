@@ -21,8 +21,10 @@ const AllQuestioning = ({ classes, questions }) => {
     isValidated: true,
     isNotValidated: false,
     isInValidation: false,
+    isNotJoke: false,
     isJoke: false,
     isJokeOnSomeone: false,
+    isNotJokeOnSomeone: false,
     isNotAnswered: false,
     isAnswered: false,
   });
@@ -60,9 +62,19 @@ const AllQuestioning = ({ classes, questions }) => {
 
       if (
         !(
-          (!filters.isJoke && !filters.isJokeOnSomeone) ||
+          (!filters.isJoke && !filters.isNotJoke) ||
           (filters.isJoke && question.isJoke) ||
-          (filters.isJokeOnSomeone && question.isJokeOnSomeone)
+          (filters.isNotJoke && question.isJoke === false)
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        !(
+          (!filters.isJokeOnSomeone && !filters.isNotJokeOnSomeone) ||
+          (filters.isJokeOnSomeone && question.isJokeOnSomeone) ||
+          (filters.isNotJokeOnSomeone && question.isJokeOnSomeone === false)
         )
       ) {
         return false;
