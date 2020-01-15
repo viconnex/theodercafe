@@ -20,12 +20,46 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
     async findByFiltersWithCount(
         questionFilters: QuestionFilters,
     ): Promise<{ choices: UserToQuestionChoice[]; count: number }> {
-        const qb = this.createQueryBuilder('user_to_question_choices')
+        let qb = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .leftJoin('user_to_question_choices.question', 'question')
-            .where('question.isValidated = :isValidated', { isValidated: questionFilters.isValidated || true })
-            .andWhere('question.isJoke = :isJoke', { isJoke: questionFilters.isJoke || false })
-            .andWhere('user.company IN (:...companies)', { companies: COMPANIES });
+            .where('user.company IN (:...companies)', { companies: COMPANIES });
+
+        if (questionFilters.isValidated || questionFilters.isNotValidated || questionFilters.isInValidation) {
+            const validationFilters = [];
+            if (questionFilters.isValidated) {
+                validationFilters.push(true);
+            }
+            if (questionFilters.isNotValidated) {
+                validationFilters.push(false);
+            }
+            if (questionFilters.isInValidation) {
+                validationFilters.push(null);
+            }
+            qb = qb.andWhere('question.isValidated IN (:...validationFilters)', { validationFilters });
+        }
+
+        if (questionFilters.isJoke || questionFilters.isNotJoke) {
+            const jokeFilters = [];
+            if (questionFilters.isJoke) {
+                jokeFilters.push(true);
+            }
+            if (questionFilters.isNotJoke) {
+                jokeFilters.push(false);
+            }
+            qb = qb.andWhere('question.isJoke IN (:...jokeFilters)', { jokeFilters });
+        }
+
+        if (questionFilters.isJokeOnSomeone || questionFilters.isNotJokeOnSomeone) {
+            const jokeFilters = [];
+            if (questionFilters.isJokeOnSomeone) {
+                jokeFilters.push(true);
+            }
+            if (questionFilters.isNotJokeOnSomeone) {
+                jokeFilters.push(false);
+            }
+            qb = qb.andWhere('question.isJokeOnSomeone IN (:...jokeFilters)', { jokeFilters });
+        }
 
         const choices = await qb.getMany();
         const count: { count: number } = await qb

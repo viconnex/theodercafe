@@ -17,7 +17,7 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
       }
     });
     if (undefinedAttributesCount === filterAttributes.length) {
-      return;
+      return null;
     }
 
     return (
@@ -73,6 +73,12 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
         filterAttributes={[
           { name: 'isJoke', label: 'Blague' },
           { name: 'isNotJoke', label: 'Non Blagues' },
+        ]}
+      />
+      <FilterGroup
+        filterAttributes={[
+          { name: 'isJokeOnSomeone', label: 'Blague sur les theodoers' },
+          { name: 'isNotJokeOnSomeone', label: 'Pas une blague sur les theodoers' },
         ]}
       />
     </Drawer>

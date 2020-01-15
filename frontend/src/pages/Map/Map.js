@@ -11,13 +11,29 @@ import { FilterDrawer } from 'components/FilterDrawer';
 
 import './style.css';
 
+const getQueryParamsFromFilters = filters => {
+  const params = {};
+  for (const filter in filters) {
+    if (filters[filter]) {
+      params[filter] = true;
+    }
+  }
+
+  return params;
+};
+
 const Map = () => {
   const [map, setMap] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [filters, setFilters] = useState({
     isValidated: true,
+    isNotValidated: false,
+    isInValidation: false,
     isJoke: false,
+    isNotJoke: true,
+    isJokeOnSomeone: false,
+    isNotJokeOnSomeone: true,
   });
 
   const handeFilterChange = option => event => {
@@ -26,7 +42,7 @@ const Map = () => {
 
   const fetchMap = async () => {
     const response = await fetchRequestResponse(
-      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/map`, method: 'GET', params: filters },
+      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/map`, method: 'GET', params: getQueryParamsFromFilters(filters) },
       200,
       {
         enqueueSnackbar,
