@@ -25,7 +25,7 @@ const AllQuestioning = ({ classes, questions }) => {
     isJoke: false,
     isJokeOnSomeone: false,
     isNotJokeOnSomeone: false,
-    isNotAnswered: false,
+    isNotAnswered: true,
     isAnswered: false,
   });
 
@@ -49,7 +49,6 @@ const AllQuestioning = ({ classes, questions }) => {
       ) {
         return false;
       }
-
       if (
         !(
           (!filters.isNotAnswered && !filters.isAnswered) ||
@@ -89,7 +88,9 @@ const AllQuestioning = ({ classes, questions }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const fetchChoices = async () => {
-    if (!localStorage.jwt_token) return;
+    if (!localStorage.jwt_token) {
+      return setAreChoicesFetched(true);
+    }
     const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET' }, 200, {
       enqueueSnackbar,
     });
