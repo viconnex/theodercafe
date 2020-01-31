@@ -83,7 +83,7 @@ const AllQuestioning = ({ classes, questions }) => {
     });
     setFilteredQuestions(filteredQuestions);
     // eslint-disable-next-line
-  }, [filters, questions]);
+  }, [filters, questions, areChoicesFetched]);
 
   const { enqueueSnackbar } = useSnackbar();
 
