@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/styles';
 import style from './style';
 import { Alterodo } from 'components/Alterodo';
 import { fetchRequestResponse } from 'services/api';
+import { getUserId } from 'services/jwtDecode';
 
 const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([]);
@@ -59,8 +60,13 @@ const AsakaiQuestioning = ({ classes }) => {
 
   const handleAsakaiFinish = async () => {
     let response;
+    const excludedUserId = getUserId();
     try {
-      response = await fetchRequest({ uri: '/user_to_question_choices/asakai', method: 'POST', body: asakaiChoices });
+      response = await fetchRequest({
+        uri: '/user_to_question_choices/asakai',
+        method: 'POST',
+        body: { asakaiChoices, excludedUserId },
+      });
     } catch {
       return enqueueSnackbar('Problème de connexion', { variant: 'error' });
     }

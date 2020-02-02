@@ -16,7 +16,9 @@ export class JwtRegisteredUserStrategy extends PassportStrategy(Strategy, 'regis
         try {
             const validClaims = await this.authService.verifyRegisteredUserRequest(payload.email);
 
-            if (!validClaims) return done(new UnauthorizedException('invalid token claims'), false);
+            if (!validClaims) {
+                return done(new UnauthorizedException('invalid token claims'), false);
+            }
 
             done(null, payload);
         } catch (err) {

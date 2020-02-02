@@ -55,12 +55,12 @@ export class UserToQuestionChoiceService {
         return await this.userToQuestionChoiceRepository.find({ userId });
     }
 
-    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices): Promise<AlterodoResponse> {
+    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId: null | string): Promise<AlterodoResponse> {
         const answeredQuestionsIds = Object.keys(asakaiChoices);
         if (answeredQuestionsIds.length === 0)
             throw new BadRequestException('user must answer to at least one question');
 
-        const alterodos = await this.findAlterodosFromAsakaiChoices(asakaiChoices);
+        const alterodos = await this.findAlterodosFromAsakaiChoices(asakaiChoices, excludedUserId);
 
         return this.createAlterodosResponse(answeredQuestionsIds.length, alterodos);
     }
@@ -126,11 +126,17 @@ export class UserToQuestionChoiceService {
         };
     }
 
-    private async findAlterodosFromAsakaiChoices(asakaiChoices: AsakaiChoices): Promise<Alterodos> {
+    private async findAlterodosFromAsakaiChoices(
+        asakaiChoices: AsakaiChoices,
+        excludedUserId: string | null,
+    ): Promise<Alterodos> {
         const answeredQuestionsIds = Object.keys(asakaiChoices);
         const commonAnswersWithUsers: { [id: number]: SimilarityWithUserId } = {};
 
-        const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByQuestionIds(answeredQuestionsIds);
+        const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByQuestionIdsWhereUsersInCompanyAndNotCurrentUser(
+            answeredQuestionsIds,
+            excludedUserId,
+        );
         if (userToQuestionChoices.length === 0) {
             throw new BadRequestException('no choices have been made by other users');
         }

@@ -9,12 +9,19 @@ if (process.env.NODE_ENV === 'development') {
 
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
-    async findByQuestionIds(questionIds): Promise<UserToQuestionChoice[]> {
-        return this.createQueryBuilder('user_to_question_choices')
+    async findByQuestionIdsWhereUsersInCompanyAndNotCurrentUser(
+        questionIds: string[],
+        excludedUserId: string | null,
+    ): Promise<UserToQuestionChoice[]> {
+        let query = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: COMPANIES })
-            .andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds })
-            .getMany();
+            .where('user.company IN (:...companies)', { companies: COMPANIES });
+
+        if (excludedUserId) {
+            query = query.andWhere('user.id != :userId', { userId: excludedUserId });
+        }
+
+        return query.andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds }).getMany();
     }
 
     async findByFiltersWithCount(

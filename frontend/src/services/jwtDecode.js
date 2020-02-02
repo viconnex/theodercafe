@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 export const decodeJWT = jwtToken => {
   const decoded = jwtDecode(jwtToken);
   return {
+    id: decoded.id,
     hasExpired: decoded.exp < new Date().getTime() / 1000,
     role: decoded.role,
     givenName: decoded.givenName,
@@ -21,4 +22,12 @@ export const getPictureUrl = () => {
   if (!localStorage.jwt_token) return null;
   const decoded = decodeJWT(localStorage.jwt_token);
   return decoded.pictureUrl;
+};
+
+export const getUserId = () => {
+  if (!localStorage.jwt_token) {
+    return null;
+  }
+  const decoded = decodeJWT(localStorage.jwt_token);
+  return decoded.id;
 };
