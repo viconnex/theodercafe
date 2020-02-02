@@ -8,7 +8,7 @@ import InfoIcon from '@material-ui/icons/Info';
 
 const getAlterodoName = isAlterodo => (isAlterodo ? 'Alterodo' : 'Varieto');
 
-const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
+const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount, isAsakai }) => {
   const sameOrDifferentAnswerCount = isAlterodo
     ? alterodo.sameAnswerCount
     : alterodo.commonQuestionCount - alterodo.sameAnswerCount;
@@ -31,7 +31,8 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
   return (
     <div>
       <div>
-        Ton <span style={{ fontStyle: 'italic' }}>{getAlterodoName(isAlterodo)}</span> est
+        Ton <span style={{ fontStyle: 'italic' }}>{getAlterodoName(isAlterodo)}</span>
+        {isAsakai && ' du jour'} est
       </div>
       <img className={classes.picture} src={alterodo.pictureUrl} alt="alterodo_profile" />
       <div className={classes.name}>
@@ -55,7 +56,7 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount }) => {
   );
 };
 
-const AlterodoWrapper = ({ alterodos, classes, resetQuestioning }) => {
+const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, isAsakai }) => {
   const [alterodo, setAlterodo] = useState(alterodos.alterodo);
   const [isAlterodoDisplayed, setIsAlterodoDisplayed] = useState(true);
 
@@ -82,6 +83,7 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning }) => {
         alterodo={alterodo}
         isAlterodo={isAlterodoDisplayed}
         baseQuestionCount={alterodos.baseQuestionCount}
+        isAsakai={isAsakai}
       />
       <div className={classes.actionsContainer}>
         <div>
