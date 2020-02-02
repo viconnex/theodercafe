@@ -111,7 +111,8 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
                 .from(UserToQuestionChoice, 'user_to_question_choices')
                 .leftJoin('user_to_question_choices.question', 'question')
                 .where('user_to_question_choices.userId = :userId', { userId })
-                .andWhere('question.isValidated = true');
+                .andWhere('question.isValidated = true')
+                .andWhere('question.isJoke = false');
         };
     }
 }
