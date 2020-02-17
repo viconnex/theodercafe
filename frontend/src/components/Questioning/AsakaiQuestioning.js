@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Question } from 'components/Question';
-import { fetchRequest } from 'utils/helpers';
-import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants';
-import { useSnackbar } from 'notistack';
-import { withStyles } from '@material-ui/styles';
-import style from './style';
-import { Alterodo } from 'components/Alterodo';
-import { fetchRequestResponse } from 'services/api';
-import { getUserId } from 'services/jwtDecode';
+import React, { useEffect, useState } from 'react'
+import { Question } from 'components/Question'
+import { fetchRequest } from 'utils/helpers'
+import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
+import { useSnackbar } from 'notistack'
+import { withStyles } from '@material-ui/styles'
+import style from './style'
+import { Alterodo } from 'components/Alterodo'
+import { fetchRequestResponse } from 'services/api'
+import { getUserId } from 'services/jwtDecode'
 
 const AsakaiQuestioning = ({ classes }) => {
-  const [questions, setQuestions] = useState([]);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [asakaiChoices, setAsakaiChoices] = useState({});
-  const [alterodos, setAlterodos] = useState(null);
+  const [questions, setQuestions] = useState([])
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const [asakaiChoices, setAsakaiChoices] = useState({})
+  const [alterodos, setAlterodos] = useState(null)
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   const fetchAndSetQuestions = async newSet => {
     const response = await fetchRequestResponse(
@@ -25,68 +25,68 @@ const AsakaiQuestioning = ({ classes }) => {
       },
       200,
       { enqueueSnackbar },
-    );
+    )
     if (!response) {
-      return;
+      return
     }
-    const data = await response.json();
-    setQuestions(data);
-    setQuestionIndex(0);
-  };
+    const data = await response.json()
+    setQuestions(data)
+    setQuestionIndex(0)
+  }
 
   useEffect(() => {
-    fetchAndSetQuestions(false);
+    fetchAndSetQuestions(false)
     // eslint-disable-next-line
   }, []);
 
   const resetQuestioning = () => {
-    setAlterodos(null);
-    setAsakaiChoices({});
-    setQuestionIndex(0);
-  };
+    setAlterodos(null)
+    setAsakaiChoices({})
+    setQuestionIndex(0)
+  }
 
   const changeAsakaiSet = () => {
-    resetQuestioning();
-    fetchAndSetQuestions(true);
-  };
+    resetQuestioning()
+    fetchAndSetQuestions(true)
+  }
 
   const changeQuestion = increment => {
-    let index = questionIndex + increment;
-    if (index < 0) index = 0;
+    let index = questionIndex + increment
+    if (index < 0) index = 0
     if (index < questions.length && index >= 0) {
-      setQuestionIndex(index);
+      setQuestionIndex(index)
     }
-  };
+  }
 
   const handleAsakaiFinish = async () => {
-    let response;
-    const excludedUserId = getUserId();
+    let response
+    const excludedUserId = getUserId()
     try {
       response = await fetchRequest({
         uri: '/user_to_question_choices/asakai',
         method: 'POST',
         body: { asakaiChoices, excludedUserId },
-      });
+      })
     } catch {
-      return enqueueSnackbar('Problème de connexion', { variant: 'error' });
+      return enqueueSnackbar('Problème de connexion', { variant: 'error' })
     }
     if (response.status !== 201) {
-      return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' });
+      return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' })
     }
-    const data = await response.json();
-    setAlterodos(data);
-  };
+    const data = await response.json()
+    setAlterodos(data)
+  }
 
   const chose = async (questionId, choice) => {
-    const choices = asakaiChoices;
-    choices[questionId] = choice;
-    setAsakaiChoices(choices);
+    const choices = asakaiChoices
+    choices[questionId] = choice
+    setAsakaiChoices(choices)
     if (questionIndex === questions.length - 1) {
-      handleAsakaiFinish();
+      handleAsakaiFinish()
     }
-    changeQuestion(1);
-  };
-  const question = questions[questionIndex];
+    changeQuestion(1)
+  }
+  const question = questions[questionIndex]
   return (
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
@@ -107,7 +107,7 @@ const AsakaiQuestioning = ({ classes }) => {
         {alterodos && <Alterodo alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(style)(AsakaiQuestioning);
+export default withStyles(style)(AsakaiQuestioning)

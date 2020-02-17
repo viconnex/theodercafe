@@ -2,26 +2,26 @@ module.exports = {
   env: {
     browser: true,
     node: true,
-    es6: true,
+    es6: true
   },
-  extends: ['eslint:recommended', 'react', 'prettier', 'prettier/react'],
+  extends: ["plugin:prettier/recommended", "plugin:react/recommended"],
   parserOptions: {
-		ecmaVersion: 2019,
+    ecmaVersion: 2019,
     es6: true,
-    sourceType: 'module',
+    sourceType: "module",
     node: true
   },
-  plugins: ['react', 'prettier'],
+  plugins: ["prettier", "react"],
   rules: {
-    'prettier/prettier': 'error',
-    'no-console': [1],
-    'no-case-declarations': [1],
-    'react/jsx-uses-react': [2],
-    'react/jsx-uses-vars': [2],
-    'react/no-array-index-key': 2,
-    'react/prefer-stateless-function': 0,
-    'react/prop-types': 0,
-    'react/require-default-props': 0,
-    'react/no-array-index-key': 1,
-  },
+    "prettier/prettier": "error",
+    "no-console": [1],
+    "no-case-declarations": [1],
+    "react/jsx-uses-react": [2],
+    "react/jsx-uses-vars": [2],
+    "react/no-array-index-key": 2,
+    "react/prefer-stateless-function": 0,
+    "react/prop-types": 0,
+    "react/require-default-props": 0,
+    "react/no-array-index-key": 1
+  }
 };
