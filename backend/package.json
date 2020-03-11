@@ -5,6 +5,7 @@
     "author": "",
     "license": "MIT",
     "scripts": {
+        "prebuild": "rimraf dist",
         "build": "nest build",
         "fixtures": "fixtures ./fixtures -c ./ormconfig.json --sync --require=ts-node/register --require tsconfig-paths/register",
         "format": "prettier --write \"src/**/*.ts\"",
@@ -16,7 +17,7 @@
         "start": "ts-node -r tsconfig-paths/register src/main.ts",
         "start:debug": "nodemon --config nodemon-debug.json",
         "start:dev": "nodemon",
-        "start:prod": "node dist/main",
+        "start:prod": "node dist/src/main",
         "test": "jest",
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
