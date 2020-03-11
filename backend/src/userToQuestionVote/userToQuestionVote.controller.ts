@@ -10,11 +10,11 @@ import {
     Put,
     Param,
     Delete,
-} from '@nestjs/common';
-import { UserToQuestionVoteService } from './userToQuestionVote.service';
-import { UserToQuestionVote } from './userToQuestionVote.entity';
-import { AuthGuard } from '@nestjs/passport';
-import { DeleteResult } from 'typeorm';
+} from '@nestjs/common'
+import { UserToQuestionVoteService } from './userToQuestionVote.service'
+import { UserToQuestionVote } from './userToQuestionVote.entity'
+import { AuthGuard } from '@nestjs/passport'
+import { DeleteResult } from 'typeorm'
 
 @Controller('user_to_question_votes')
 export class UserToQuestionVoteController {
@@ -25,10 +25,10 @@ export class UserToQuestionVoteController {
     @UseInterceptors(ClassSerializerInterceptor)
     async getChoices(@Request() req): Promise<UserToQuestionVote[]> {
         if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found');
+            throw new BadRequestException('user not found')
         }
 
-        return await this.userToQuestionVoteService.getAllUserVotes(req.user.id);
+        return await this.userToQuestionVoteService.getAllUserVotes(req.user.id)
     }
 
     @Put(':id/vote')
@@ -40,9 +40,9 @@ export class UserToQuestionVoteController {
         @Request() req,
     ): Promise<UserToQuestionVote> {
         if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found');
+            throw new BadRequestException('user not found')
         }
-        return this.userToQuestionVoteService.saveVote(questionId, req.user.id, isUpVote);
+        return this.userToQuestionVoteService.saveVote(questionId, req.user.id, isUpVote)
     }
 
     @Delete(':id/vote')
@@ -50,8 +50,8 @@ export class UserToQuestionVoteController {
     @UseInterceptors(ClassSerializerInterceptor)
     async unVote(@Param('id') questionId: number, @Request() req): Promise<DeleteResult> {
         if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found');
+            throw new BadRequestException('user not found')
         }
-        return this.userToQuestionVoteService.unVote(questionId, req.user.id);
+        return this.userToQuestionVoteService.unVote(questionId, req.user.id)
     }
 }

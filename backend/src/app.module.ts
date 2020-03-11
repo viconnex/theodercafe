@@ -24,12 +24,17 @@ const ormConfig = {
     entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     // entities: ['src/**/*.entity.ts', 'src/*.entity.ts', 'dist/src/**/*.entity.js'],
     migrations: [join(__dirname, '../migration/*.{ts,js}')],
+    cli: {
+        entitiesDir: 'src',
+        migrationsDir: 'migration',
+        subscribersDir: 'subscriber',
+    },
 }
 
 @Module({
     imports: [
         // @ts-ignore
-        TypeOrmModule.forRoot(ormConfig),
+        TypeOrmModule.forRoot(),
         QuestionModule,
         CategoryModule,
         AccumulusModule,
