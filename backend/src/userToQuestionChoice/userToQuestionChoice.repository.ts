@@ -1,10 +1,10 @@
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm';
-import { UserToQuestionChoice } from './userToQuestionChoice.entity';
-import { SimilarityWithUserId, QuestionFilters } from './userToQuestionChoice.types';
+import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm'
+import { UserToQuestionChoice } from './userToQuestionChoice.entity'
+import { SimilarityWithUserId, QuestionFilters } from './userToQuestionChoice.types'
 
-const COMPANIES = ['theodo'];
+const COMPANIES = ['theodo']
 if (process.env.NODE_ENV === 'development') {
-    COMPANIES.push('gmail');
+    COMPANIES.push('gmail')
 }
 
 @EntityRepository(UserToQuestionChoice)
@@ -15,13 +15,13 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
     ): Promise<UserToQuestionChoice[]> {
         let query = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: COMPANIES });
+            .where('user.company IN (:...companies)', { companies: COMPANIES })
 
         if (excludedUserId) {
-            query = query.andWhere('user.id != :userId', { userId: excludedUserId });
+            query = query.andWhere('user.id != :userId', { userId: excludedUserId })
         }
 
-        return query.andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds }).getMany();
+        return query.andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds }).getMany()
     }
 
     async findByFiltersWithCount(
@@ -30,50 +30,50 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
         let qb = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .leftJoin('user_to_question_choices.question', 'question')
-            .where('user.company IN (:...companies)', { companies: COMPANIES });
+            .where('user.company IN (:...companies)', { companies: COMPANIES })
 
         if (questionFilters.isValidated || questionFilters.isNotValidated || questionFilters.isInValidation) {
-            const validationFilters = [];
+            const validationFilters = []
             if (questionFilters.isValidated) {
-                validationFilters.push(true);
+                validationFilters.push(true)
             }
             if (questionFilters.isNotValidated) {
-                validationFilters.push(false);
+                validationFilters.push(false)
             }
             if (questionFilters.isInValidation) {
-                validationFilters.push(null);
+                validationFilters.push(null)
             }
-            qb = qb.andWhere('question.isValidated IN (:...validationFilters)', { validationFilters });
+            qb = qb.andWhere('question.isValidated IN (:...validationFilters)', { validationFilters })
         }
 
         if (questionFilters.isJoke || questionFilters.isNotJoke) {
-            const jokeFilters = [];
+            const jokeFilters = []
             if (questionFilters.isJoke) {
-                jokeFilters.push(true);
+                jokeFilters.push(true)
             }
             if (questionFilters.isNotJoke) {
-                jokeFilters.push(false);
+                jokeFilters.push(false)
             }
-            qb = qb.andWhere('question.isJoke IN (:...jokeFilters)', { jokeFilters });
+            qb = qb.andWhere('question.isJoke IN (:...jokeFilters)', { jokeFilters })
         }
 
         if (questionFilters.isJokeOnSomeone || questionFilters.isNotJokeOnSomeone) {
-            const jokeFilters = [];
+            const jokeFilters = []
             if (questionFilters.isJokeOnSomeone) {
-                jokeFilters.push(true);
+                jokeFilters.push(true)
             }
             if (questionFilters.isNotJokeOnSomeone) {
-                jokeFilters.push(false);
+                jokeFilters.push(false)
             }
-            qb = qb.andWhere('question.isJokeOnSomeone IN (:...jokeFilters)', { jokeFilters });
+            qb = qb.andWhere('question.isJokeOnSomeone IN (:...jokeFilters)', { jokeFilters })
         }
 
-        const choices = await qb.getMany();
+        const choices = await qb.getMany()
         const count: { count: number } = await qb
             .select('COUNT(DISTINCT "user_to_question_choices"."questionId")')
-            .getRawOne();
+            .getRawOne()
 
-        return { choices, ...count };
+        return { choices, ...count }
     }
 
     async selectSimilarityWithUserIds(userId: number): Promise<SimilarityWithUserId[]> {
@@ -94,11 +94,11 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .where('user_to_question_choices.userId != :userId', { userId })
             .andWhere('user.company IN (:...companies)', { companies: COMPANIES })
             .groupBy('user_to_question_choices.userId')
-            .getRawMany();
+            .getRawMany()
     }
 
     async countUserQuestionChoices(userId: number): Promise<number> {
-        return this.createBaseQuestionSelectionQuery(userId)(this.createQueryBuilder()).getCount();
+        return this.createBaseQuestionSelectionQuery(userId)(this.createQueryBuilder()).getCount()
     }
 
     private createBaseQuestionSelectionQuery(
@@ -112,7 +112,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
                 .leftJoin('user_to_question_choices.question', 'question')
                 .where('user_to_question_choices.userId = :userId', { userId })
                 .andWhere('question.isValidated = true')
-                .andWhere('question.isJoke = false');
-        };
+                .andWhere('question.isJoke = false')
+        }
     }
 }

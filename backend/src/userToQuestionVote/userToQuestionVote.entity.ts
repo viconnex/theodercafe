@@ -1,28 +1,36 @@
-import { Exclude } from 'class-transformer';
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm';
-import { Question } from '../question/question.entity';
-import { User } from '../user/user.entity';
+import { Exclude } from 'class-transformer'
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm'
+import { Question } from '../question/question.entity'
+import { User } from '../user/user.entity'
 
 @Entity('user_to_question_votes')
 export class UserToQuestionVote {
     @PrimaryGeneratedColumn()
-    public id: number;
+    public id: number
 
     @Column({ nullable: false })
-    questionId: number;
+    questionId: number
 
     @Column({ nullable: false })
     @Exclude()
-    userId: number;
+    userId: number
 
-    @ManyToOne(type => Question, question => question.userToQuestionVotes, { onDelete: 'CASCADE' })
+    @ManyToOne(
+        type => Question,
+        question => question.userToQuestionVotes,
+        { onDelete: 'CASCADE' },
+    )
     @Exclude()
-    question: Question;
+    question: Question
 
-    @ManyToOne(type => User, user => user.userToQuestionVotes, { onDelete: 'CASCADE' })
+    @ManyToOne(
+        type => User,
+        user => user.userToQuestionVotes,
+        { onDelete: 'CASCADE' },
+    )
     @Exclude()
-    user: User;
+    user: User
 
     @Column({ nullable: false })
-    isUpVote: boolean;
+    isUpVote: boolean
 }

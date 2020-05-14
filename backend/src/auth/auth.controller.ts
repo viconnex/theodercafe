@@ -1,5 +1,5 @@
-import { Controller, Get, UseGuards, Res, Req } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Get, UseGuards, Res, Req } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('auth')
 export class AuthController {
@@ -13,14 +13,14 @@ export class AuthController {
     @UseGuards(AuthGuard('google'))
     googleLoginCallback(@Req() req, @Res() res): void {
         // handles the Google OAuth2 callback
-        const jwt: string = req.user.jwt;
-        if (jwt) res.redirect(`${process.env.FRONT_BASE_URL}/login/success?jwt=` + jwt);
-        else res.redirect(`${process.env.FRONT_BASE_URL}/login/failure`);
+        const jwt: string = req.user.jwt
+        if (jwt) res.redirect(`${process.env.FRONT_BASE_URL}/login/success?jwt=` + jwt)
+        else res.redirect(`${process.env.FRONT_BASE_URL}/login/failure`)
     }
 
     @Get('protected')
     @UseGuards(AuthGuard('jwt'))
     protectedResource(): string {
-        return 'JWT is working!';
+        return 'JWT is working!'
     }
 }

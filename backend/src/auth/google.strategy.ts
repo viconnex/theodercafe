@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-google-oauth20';
-import { AuthService } from './auth.service';
+import { Injectable } from '@nestjs/common'
+import { PassportStrategy } from '@nestjs/passport'
+import { Strategy } from 'passport-google-oauth20'
+import { AuthService } from './auth.service'
 
 export interface GoogleProfile {
-    id: string;
-    displayName: string;
-    name: null | { familyName?: string; givenName?: string };
-    emails: { value: string; verified: boolean }[];
-    photos: { value: string }[];
+    id: string
+    displayName: string
+    name: null | { familyName?: string; givenName?: string }
+    emails: { value: string; verified: boolean }[]
+    photos: { value: string }[]
 }
 
 @Injectable()
@@ -20,7 +20,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
             callbackURL: `${process.env.BACKEND_URL}/auth/google/callback`,
             passReqToCallback: true,
             scope: ['profile', 'email'],
-        });
+        })
     }
 
     async validate(
@@ -31,14 +31,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         done: Function,
     ): Promise<void> {
         try {
-            const jwt = await this.authService.validateOAuthLogin(profile);
+            const jwt = await this.authService.validateOAuthLogin(profile)
             const user = {
                 jwt,
-            };
+            }
 
-            done(null, user);
+            done(null, user)
         } catch (err) {
-            done(err, false);
+            done(err, false)
         }
     }
 }

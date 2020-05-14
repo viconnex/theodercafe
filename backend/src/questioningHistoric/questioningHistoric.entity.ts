@@ -1,14 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm'
 
 @Entity('questioning_historic')
 export class QuestioningHistoric {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number
 
     @Index()
     @Column({ type: 'timestamp' })
-    date: Date;
+    date: Date
 
     @Column({ type: 'simple-array' })
-    questioning: string[];
+    questioning: string[]
 }

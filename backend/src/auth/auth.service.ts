@@ -1,7 +1,7 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { sign } from 'jsonwebtoken';
-import { UserService } from '../user/user.service';
-import { GoogleProfile } from './google.strategy';
+import { Injectable, InternalServerErrorException } from '@nestjs/common'
+import { sign } from 'jsonwebtoken'
+import { UserService } from '../user/user.service'
+import { GoogleProfile } from './google.strategy'
 
 export enum Provider {
     GOOGLE = 'google',
@@ -9,18 +9,18 @@ export enum Provider {
 
 @Injectable()
 export class AuthService {
-    private readonly JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+    private readonly JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
     constructor(private readonly userService: UserService) {}
 
     async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
         try {
-            const email = profile.emails.length > 0 ? profile.emails[0].value : null;
-            if (!email) return;
+            const email = profile.emails.length > 0 ? profile.emails[0].value : null
+            if (!email) return
 
-            let user = await this.userService.findByEmail(email);
+            let user = await this.userService.findByEmail(email)
             if (!user) {
-                user = await this.userService.createNewUser(email, profile);
+                user = await this.userService.createNewUser(email, profile)
             }
 
             const payload = {
@@ -30,23 +30,23 @@ export class AuthService {
                 givenName: user.givenName,
                 familyName: user.familyName,
                 pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
-            };
-            const jwt: string = sign(payload, this.JWT_SECRET_KEY);
-            return jwt;
+            }
+            const jwt: string = sign(payload, this.JWT_SECRET_KEY)
+            return jwt
         } catch (err) {
-            throw new InternalServerErrorException('validateOAuthLogin', err.message);
+            throw new InternalServerErrorException('validateOAuthLogin', err.message)
         }
     }
 
     async verifyAdminRequest(email: string): Promise<boolean> {
-        const user = await this.userService.findByEmail(email);
-        return user && user.isAdmin;
+        const user = await this.userService.findByEmail(email)
+        return user && user.isAdmin
     }
 
     async verifyRegisteredUserRequest(email: string): Promise<boolean> {
-        const user = await this.userService.findByEmail(email);
+        const user = await this.userService.findByEmail(email)
         if (user) {
-            return true;
+            return true
         }
     }
 }

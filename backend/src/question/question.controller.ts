@@ -10,13 +10,13 @@ import {
     NotFoundException,
     Res,
     UseGuards,
-} from '@nestjs/common';
-import { Response } from 'express';
-import { QuestionService } from './question.service';
-import { DeleteResult } from 'typeorm';
-import { AuthGuard } from '@nestjs/passport';
-import { Question } from './question.entity';
-import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto';
+} from '@nestjs/common'
+import { Response } from 'express'
+import { QuestionService } from './question.service'
+import { DeleteResult } from 'typeorm'
+import { AuthGuard } from '@nestjs/passport'
+import { Question } from './question.entity'
+import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 
 @Controller('questions')
 export class QuestionController {
@@ -24,51 +24,51 @@ export class QuestionController {
 
     @Post()
     create(@Body() questionDto: QuestionPostDTO): Promise<Question> {
-        return this.questionService.create(questionDto);
+        return this.questionService.create(questionDto)
     }
 
     @Get('/asakai')
     findAsakaiSet(@Query() query: { maxNumber: number; newSet: boolean }): Promise<QuestionWithCategoryNameDto[]> {
-        const maxNumber = query.maxNumber || 10;
-        const findFromHistoricIfExists = query.newSet ? false : true;
-        return this.questionService.findAsakaiSet(maxNumber, findFromHistoricIfExists);
+        const maxNumber = query.maxNumber || 10
+        const findFromHistoricIfExists = query.newSet ? false : true
+        return this.questionService.findAsakaiSet(maxNumber, findFromHistoricIfExists)
         // return this.questionService.findInOrder([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
     }
 
     @Get('/all')
     findAll(): Promise<QuestionWithCategoryNameDto[]> {
-        return this.questionService.findAll();
+        return this.questionService.findAll()
     }
 
     @Get('')
     @UseGuards(AuthGuard('jwt'))
     async getAdminList(@Res() res: Response): Promise<void> {
-        const result = await this.questionService.findAdminList();
-        res.set('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.set('X-Total-Count', result.length.toString());
-        res.send(result);
+        const result = await this.questionService.findAdminList()
+        res.set('Access-Control-Expose-Headers', 'X-Total-Count')
+        res.set('X-Total-Count', result.length.toString())
+        res.send(result)
     }
 
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Question> {
-        const question = await this.questionService.findOne(id);
-        if (!question) throw new NotFoundException();
+        const question = await this.questionService.findOne(id)
+        if (!question) throw new NotFoundException()
 
-        return question;
+        return question
     }
 
     @Delete(':id')
     @UseGuards(AuthGuard('jwt'))
     async remove(@Param('id') id: string): Promise<DeleteResult> {
-        const deleteResult = await this.questionService.delete(id);
-        if (deleteResult.affected === 0) throw new NotFoundException();
+        const deleteResult = await this.questionService.delete(id)
+        if (deleteResult.affected === 0) throw new NotFoundException()
 
-        return deleteResult;
+        return deleteResult
     }
 
     @Put(':id')
     @UseGuards(AuthGuard('jwt'))
     updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<Question> {
-        return this.questionService.update(id, questionBody);
+        return this.questionService.update(id, questionBody)
     }
 }

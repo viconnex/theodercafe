@@ -1,7 +1,7 @@
-import { Controller, Get, Body, Post, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { AccumulusRepository } from './accumulus.repository';
-import { Accumulus } from './accumulus.entity';
+import { Controller, Get, Body, Post, BadRequestException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { AccumulusRepository } from './accumulus.repository'
+import { Accumulus } from './accumulus.entity'
 
 @Controller('accumulus')
 export class AccumulusController {
@@ -9,14 +9,14 @@ export class AccumulusController {
 
     @Get('')
     async find(): Promise<Accumulus[]> {
-        return this.accumulusRepository.find();
+        return this.accumulusRepository.find()
     }
 
     @Post()
     async create(@Body() accumulusBody): Promise<Accumulus | BadRequestException> {
         if (!accumulusBody['name'] || !accumulusBody['nuages']) {
-            return new BadRequestException();
+            return new BadRequestException()
         }
-        return this.accumulusRepository.save(accumulusBody);
+        return this.accumulusRepository.save(accumulusBody)
     }
 }

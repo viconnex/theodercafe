@@ -1,20 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
-import { Question } from '../question/question.entity';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
+import { Question } from '../question/question.entity'
 
 @Entity('categories')
 export class Category {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number
 
     @Column({ unique: true })
-    name: string;
+    name: string
 
-    @OneToMany(type => Question, question => question.category)
-    question: Question[];
+    @OneToMany(
+        type => Question,
+        question => question.category,
+    )
+    question: Question[]
 
     @CreateDateColumn()
-    createdAt: string;
+    createdAt: string
 
     @UpdateDateColumn()
-    updatedAt: string;
+    updatedAt: string
 }

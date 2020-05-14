@@ -1,16 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm'
 
 @Entity('accumulus')
 export class Accumulus {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number
 
     @Column()
-    name: string;
+    name: string
 
     @Column()
-    nuages: string;
+    nuages: string
 
     @CreateDateColumn()
-    createdAt: string;
+    createdAt: string
 }

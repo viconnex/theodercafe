@@ -6,46 +6,57 @@ import {
     UpdateDateColumn,
     ManyToOne,
     OneToMany,
-} from 'typeorm';
-import { Category } from '../category/category.entity';
-import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity';
-import { UserToQuestionVote } from '../userToQuestionVote/userToQuestionVote.entity';
+} from 'typeorm'
+import { Category } from '../category/category.entity'
+import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity'
+import { UserToQuestionVote } from '../userToQuestionVote/userToQuestionVote.entity'
 
 @Entity('questions')
 export class Question {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: number
 
-    @ManyToOne(type => Category, category => category.question)
-    category: Category;
+    @ManyToOne(
+        type => Category,
+        category => category.question,
+    )
+    category: Category
 
     @Column()
-    option1: string;
+    option1: string
 
     @Column()
-    option2: string;
+    option2: string
 
     @Column({ default: false })
-    isClassic: boolean;
+    isClassic: boolean
 
     @Column({ default: false })
-    isJokeOnSomeone: boolean;
+    isJokeOnSomeone: boolean
 
     @Column({ nullable: true })
-    isValidated: boolean;
+    isValidated: boolean
 
     @Column({ default: false })
-    isJoke: boolean;
+    isJoke: boolean
 
-    @OneToMany(type => UserToQuestionChoice, userToQuestionChoice => userToQuestionChoice.question, { cascade: true })
-    userToQuestionChoices: UserToQuestionChoice[];
+    @OneToMany(
+        type => UserToQuestionChoice,
+        userToQuestionChoice => userToQuestionChoice.question,
+        { cascade: true },
+    )
+    userToQuestionChoices: UserToQuestionChoice[]
 
-    @OneToMany(type => UserToQuestionVote, userToQuestionVote => userToQuestionVote.question, { cascade: true })
-    userToQuestionVotes: UserToQuestionChoice[];
+    @OneToMany(
+        type => UserToQuestionVote,
+        userToQuestionVote => userToQuestionVote.question,
+        { cascade: true },
+    )
+    userToQuestionVotes: UserToQuestionChoice[]
 
     @CreateDateColumn()
-    createdAt: string;
+    createdAt: string
 
     @UpdateDateColumn()
-    updatedAt: string;
+    updatedAt: string
 }

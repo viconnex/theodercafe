@@ -1,13 +1,13 @@
-import { Question } from './question.entity';
-import { EntityRepository, Repository, DeleteResult } from 'typeorm';
-import { QuestionWithCategoryNameDto } from './interfaces/question.dto';
+import { Question } from './question.entity'
+import { EntityRepository, Repository, DeleteResult } from 'typeorm'
+import { QuestionWithCategoryNameDto } from './interfaces/question.dto'
 
 const FIND_QUESTION_QUERY = `
     SELECT
         "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName", "questions"."isValidated", "questions"."isJoke",  "questions"."isJokeOnSomeone"
     FROM questions
     LEFT JOIN categories on "questions"."categoryId"="categories"."id"
-`;
+`
 
 const findAsakaiSubSet = (
     isClassic: boolean,
@@ -18,30 +18,30 @@ const findAsakaiSubSet = (
     return `${FIND_QUESTION_QUERY}
             WHERE "questions"."isClassic" = ${isClassic} AND "questions"."isJokeOnSomeone" = ${isJokeOnSomeone} AND "questions"."isValidated" = true
             ${isRandom ? 'ORDER BY random()' : ''}
-            ${null === limit ? '' : `LIMIT ${limit}`}`;
-};
+            ${null === limit ? '' : `LIMIT ${limit}`}`
+}
 
 @EntityRepository(Question)
 export class QuestionRepository extends Repository<Question> {
     createQuestion = async (question: Question): Promise<Question> => {
-        return this.save(question);
-    };
+        return this.save(question)
+    }
 
     findOneQuestion = async (id: string): Promise<Question> => {
-        return this.findOne(id, { relations: ['category'] });
-    };
+        return this.findOne(id, { relations: ['category'] })
+    }
 
     updateQuestion = async (id: string | number, question: Question): Promise<Question> => {
-        return this.save({ ...question, id: Number(id) });
-    };
+        return this.save({ ...question, id: Number(id) })
+    }
 
     deleteQuestion = async (id: string): Promise<DeleteResult> => {
-        return this.delete(Number(id));
-    };
+        return this.delete(Number(id))
+    }
 
     findAll = async (): Promise<QuestionWithCategoryNameDto[]> => {
-        return this.query(`${FIND_QUESTION_QUERY} ORDER BY random()`);
-    };
+        return this.query(`${FIND_QUESTION_QUERY} ORDER BY random()`)
+    }
 
     findAdminList = async (): Promise<Question[]> => {
         return this.query(`
@@ -65,8 +65,8 @@ export class QuestionRepository extends Repository<Question> {
             ) as u_to_q_votes
             ON q.id = "u_to_q_votes"."questionId"
             ORDER BY "q"."id" ASC;
-        `);
-    };
+        `)
+    }
 
     findAsakaiSet = async (
         standardQuestionCount: number,
@@ -82,17 +82,17 @@ export class QuestionRepository extends Repository<Question> {
                 ${findAsakaiSubSet(false, false, standardQuestionCount, true)})
             ) t
             ORDER BY random()
-        `);
-    };
+        `)
+    }
 
     findInOrder = async (orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> => {
-        var sqlIdsWithOrder = '';
-        var sqlIds = '';
+        var sqlIdsWithOrder = ''
+        var sqlIds = ''
         orderedIds.forEach((id, index): void => {
-            const additionalKomma = index !== orderedIds.length - 1 ? ', ' : '';
-            sqlIds = sqlIds + id + additionalKomma;
-            sqlIdsWithOrder = sqlIdsWithOrder + `(${id},${index + 1})` + additionalKomma;
-        });
+            const additionalKomma = index !== orderedIds.length - 1 ? ', ' : ''
+            sqlIds = sqlIds + id + additionalKomma
+            sqlIdsWithOrder = sqlIdsWithOrder + `(${id},${index + 1})` + additionalKomma
+        })
         return this.query(
             `SELECT * FROM(
                 ${FIND_QUESTION_QUERY}
@@ -102,17 +102,17 @@ export class QuestionRepository extends Repository<Question> {
                 VALUES ${sqlIdsWithOrder}
             ) as x (id, ordering) on q.id = x.id
             ORDER BY x.ordering`,
-        );
-    };
+        )
+    }
 
     countClassics = async (): Promise<number> => {
-        return this.query(`SELECT count(*) from "questions" WHERE "isClassic" = true`);
-    };
+        return this.query(`SELECT count(*) from "questions" WHERE "isClassic" = true`)
+    }
 
     findByIdsWithCategory = async (questionIds: string[]): Promise<Question[]> => {
         return this.createQueryBuilder('questions')
             .leftJoinAndSelect('questions.category', 'category')
             .where('questions.id IN (:...questionIds)', { questionIds })
-            .getMany();
-    };
+            .getMany()
+    }
 }
