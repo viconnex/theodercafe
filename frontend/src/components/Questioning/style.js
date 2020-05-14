@@ -1,4 +1,4 @@
-import colors from 'ui/colors';
+import colors from 'ui/colors'
 
 const style = {
   nextButton: {
@@ -61,6 +61,6 @@ const style = {
     color: colors.theodoGreen,
     cursor: 'pointer',
   },
-};
+}
 
-export default style;
+export default style

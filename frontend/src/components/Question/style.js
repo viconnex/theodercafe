@@ -1,4 +1,4 @@
-import colors from 'ui/colors';
+import colors from 'ui/colors'
 
 const style = {
   categoryContainer: {
@@ -43,6 +43,6 @@ const style = {
   pageContainer: {
     marginTop: '30px',
   },
-};
+}
 
-export default style;
+export default style

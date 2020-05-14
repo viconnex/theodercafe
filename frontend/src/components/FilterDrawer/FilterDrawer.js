@@ -1,23 +1,23 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Divider from '@material-ui/core/Divider';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import IconButton from '@material-ui/core/IconButton';
-import Drawer from '@material-ui/core/Drawer';
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Divider from '@material-ui/core/Divider'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import IconButton from '@material-ui/core/IconButton'
+import Drawer from '@material-ui/core/Drawer'
 
-import style from './style';
-import { FormGroup, FormControlLabel, Checkbox } from '@material-ui/core';
+import style from './style'
+import { FormGroup, FormControlLabel, Checkbox } from '@material-ui/core'
 
 const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
   const FilterGroup = ({ filterAttributes }) => {
-    let undefinedAttributesCount = 0;
+    let undefinedAttributesCount = 0
     filterAttributes.forEach(({ name: attributeName }) => {
       if (filters[attributeName] === undefined) {
-        undefinedAttributesCount += 1;
+        undefinedAttributesCount += 1
       }
-    });
+    })
     if (undefinedAttributesCount === filterAttributes.length) {
-      return null;
+      return null
     }
 
     return (
@@ -25,7 +25,7 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
         <FormGroup className={classes.drawerContent}>
           {filterAttributes.map(attribute => {
             if (filters[attribute.name] === undefined) {
-              return null;
+              return null
             }
             return (
               <FormControlLabel
@@ -39,13 +39,13 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
                 }
                 label={attribute.label}
               />
-            );
+            )
           })}
         </FormGroup>
         <Divider />
       </React.Fragment>
-    );
-  };
+    )
+  }
 
   return (
     <Drawer anchor="left" open={open} onClose={close}>
@@ -82,7 +82,7 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
         ]}
       />
     </Drawer>
-  );
-};
+  )
+}
 
-export default withStyles(style)(FilterDrawer);
+export default withStyles(style)(FilterDrawer)

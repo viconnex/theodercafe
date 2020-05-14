@@ -1,1 +1,1 @@
-export { QuestionEdit } from './QuestionEdit';
+export { QuestionEdit } from './QuestionEdit'

@@ -1,6 +1,6 @@
-import React from 'react';
-import img from 'ui/img/chien_abime.jpg';
-import './style.css';
+import React from 'react'
+import img from 'ui/img/chien_abime.jpg'
+import './style.css'
 
 const About = () => {
   return (
@@ -10,7 +10,7 @@ const About = () => {
         <img alt="abime_le_chien" className="img-about" id="img-small" src={img} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default About;
+export default About

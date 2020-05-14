@@ -1,18 +1,18 @@
-import React from 'react';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
-import ThumbUp from '@material-ui/icons/ThumbUp';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import { withStyles } from '@material-ui/styles';
-import style from './style';
+import React from 'react'
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
+import ThumbUp from '@material-ui/icons/ThumbUp'
+import ThumbDown from '@material-ui/icons/ThumbDown'
+import { withStyles } from '@material-ui/styles'
+import style from './style'
 
 const Voter = ({ classes, questionId, isUpVote, vote }) => {
-  let downVoteClass = classes.neutralVote;
-  let upVoteClass = classes.neutralVote;
+  let downVoteClass = classes.neutralVote
+  let upVoteClass = classes.neutralVote
   if (isUpVote === true) {
-    upVoteClass = classes.upVote;
+    upVoteClass = classes.upVote
   } else if (isUpVote === false) {
-    downVoteClass = classes.downVote;
+    downVoteClass = classes.downVote
   }
 
   return (
@@ -28,7 +28,7 @@ const Voter = ({ classes, questionId, isUpVote, vote }) => {
         </IconButton>
       </Tooltip>
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(style)(Voter);
+export default withStyles(style)(Voter)

@@ -1,16 +1,16 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import IconButton from '@material-ui/core/IconButton';
-import { Link } from 'react-router-dom';
-import Drawer from '@material-ui/core/Drawer';
-import { decodeJWT } from 'services/jwtDecode';
-import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
-import { Button } from '@material-ui/core';
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Divider from '@material-ui/core/Divider'
+import ChevronRightIcon from '@material-ui/icons/ChevronRight'
+import IconButton from '@material-ui/core/IconButton'
+import { Link } from 'react-router-dom'
+import Drawer from '@material-ui/core/Drawer'
+import { decodeJWT } from 'services/jwtDecode'
+import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
+import { Button } from '@material-ui/core'
 
 const style = theme => ({
   drawerHeader: {
@@ -24,7 +24,7 @@ const style = theme => ({
     textDecoration: 'none',
     color: theme.palette.text.primary,
   },
-});
+})
 
 const AppDrawer = ({ classes, toggleDrawer, open }) => {
   const drawerLinks = [
@@ -32,25 +32,25 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
     { label: 'A propos', path: '/a-propos' },
     { label: 'Mon alterodo', path: '/alterodo' },
     { label: 'La carte', path: '/carte' },
-  ];
+  ]
 
-  let isLogin = false;
+  let isLogin = false
 
   if (localStorage.jwt_token) {
-    const decoded = decodeJWT(localStorage.jwt_token);
+    const decoded = decodeJWT(localStorage.jwt_token)
     if (!decoded.hasExpired) {
-      isLogin = true;
+      isLogin = true
     }
     if (decoded.role === 'admin') {
-      drawerLinks.push({ label: 'Admin', path: '/admin' });
+      drawerLinks.push({ label: 'Admin', path: '/admin' })
     }
   }
 
   const logout = () => {
-    localStorage.removeItem('jwt_token');
-    toggleDrawer(false)();
-    window.location = '';
-  };
+    localStorage.removeItem('jwt_token')
+    toggleDrawer(false)()
+    window.location = ''
+  }
 
   return (
     <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
@@ -81,7 +81,7 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
         )}
       </List>
     </Drawer>
-  );
-};
+  )
+}
 
-export default withStyles(style)(AppDrawer);
+export default withStyles(style)(AppDrawer)

@@ -1,1 +1,1 @@
-export { default as Questioning } from './Questioning';
+export { default as Questioning } from './Questioning'

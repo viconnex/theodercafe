@@ -1,1 +1,1 @@
-export { default as Alterodo } from './Alterodo';
+export { default as Alterodo } from './Alterodo'

@@ -46,6 +46,6 @@ const style = {
   interroBang: {
     marginLeft: '10px',
   },
-};
+}
 
-export default style;
+export default style

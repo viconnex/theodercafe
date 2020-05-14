@@ -1,4 +1,4 @@
-import colors from 'ui/colors';
+import colors from 'ui/colors'
 
 const style = {
   app: {
@@ -24,6 +24,6 @@ const style = {
   profile: {
     borderRadius: '30px',
   },
-};
+}
 
-export default style;
+export default style

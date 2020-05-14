@@ -1,4 +1,4 @@
-import colors from 'ui/colors';
+import colors from 'ui/colors'
 
 const style = {
   modeSelectorContainer: {
@@ -51,6 +51,6 @@ const style = {
   switchTrack: {
     backgroundColor: 'grey',
   },
-};
+}
 
-export default style;
+export default style

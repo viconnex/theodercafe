@@ -19,6 +19,6 @@ const style = {
   modal: {
     padding: '30px',
   },
-};
+}
 
-export default style;
+export default style

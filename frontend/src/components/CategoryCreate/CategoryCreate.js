@@ -1,5 +1,5 @@
-import React from 'react';
-import { Create, SimpleForm, TextInput } from 'react-admin';
+import React from 'react'
+import { Create, SimpleForm, TextInput } from 'react-admin'
 
 export const CategoryCreate = props => (
   <Create {...props}>
@@ -7,4 +7,4 @@ export const CategoryCreate = props => (
       <TextInput source="name" />
     </SimpleForm>
   </Create>
-);
+)

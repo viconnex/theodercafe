@@ -1,5 +1,5 @@
-import React from 'react';
-import { Edit, SimpleForm, BooleanInput, TextInput, ReferenceInput, SelectInput } from 'react-admin';
+import React from 'react'
+import { Edit, SimpleForm, BooleanInput, TextInput, ReferenceInput, SelectInput } from 'react-admin'
 
 export const QuestionEdit = props => (
   <Edit {...props}>
@@ -16,4 +16,4 @@ export const QuestionEdit = props => (
       </ReferenceInput>
     </SimpleForm>
   </Edit>
-);
+)

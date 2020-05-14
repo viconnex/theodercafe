@@ -1,23 +1,23 @@
-import { fetchRequest } from 'utils/helpers';
+import { fetchRequest } from 'utils/helpers'
 
 export const fetchRequestResponse = async (
   { uri, method, body, params },
   expectedStatus,
   { enqueueSnackbar, successMessage },
 ) => {
-  let response;
+  let response
   try {
-    response = await fetchRequest({ uri, method, body, params });
+    response = await fetchRequest({ uri, method, body, params })
   } catch {
-    enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' });
-    return null;
+    enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' })
+    return null
   }
   if (response.status !== expectedStatus) {
-    enqueueSnackbar('Une erreur est survenue', { variant: 'error' });
-    return null;
+    enqueueSnackbar('Une erreur est survenue', { variant: 'error' })
+    return null
   }
   if (successMessage) {
-    enqueueSnackbar(successMessage, { variant: 'success' });
+    enqueueSnackbar(successMessage, { variant: 'success' })
   }
-  return response;
-};
+  return response
+}

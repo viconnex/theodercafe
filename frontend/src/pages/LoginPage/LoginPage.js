@@ -1,6 +1,6 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants';
+import React from 'react'
+import Button from '@material-ui/core/Button'
+import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 
 const LoginPage = () => {
   return (
@@ -9,7 +9,7 @@ const LoginPage = () => {
         Login with Google
       </Button>
     </div>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

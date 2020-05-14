@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Question } from 'components/Question';
-import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants';
-import { useSnackbar } from 'notistack';
-import { withStyles } from '@material-ui/styles';
-import IconButton from '@material-ui/core/IconButton';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import TuneIcon from '@material-ui/icons/Tune';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import { isUser } from 'services/jwtDecode';
+import React, { useEffect, useState } from 'react'
+import { Question } from 'components/Question'
+import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
+import { useSnackbar } from 'notistack'
+import { withStyles } from '@material-ui/styles'
+import IconButton from '@material-ui/core/IconButton'
+import ArrowBack from '@material-ui/icons/ArrowBack'
+import TuneIcon from '@material-ui/icons/Tune'
+import ArrowForward from '@material-ui/icons/ArrowForward'
+import { isUser } from 'services/jwtDecode'
 
-import style from './style';
-import Voter from './Voter';
-import { LoginDialog } from 'components/Login';
-import { fetchRequestResponse } from 'services/api';
-import { Button } from '@material-ui/core';
-import { FilterDrawer } from 'components/FilterDrawer';
+import style from './style'
+import Voter from './Voter'
+import { LoginDialog } from 'components/Login'
+import { fetchRequestResponse } from 'services/api'
+import { Button } from '@material-ui/core'
+import { FilterDrawer } from 'components/FilterDrawer'
 
 const AllQuestioning = ({ classes, questions }) => {
   const [filters, setFilters] = useState({
@@ -27,15 +27,15 @@ const AllQuestioning = ({ classes, questions }) => {
     isNotJokeOnSomeone: false,
     isNotAnswered: true,
     isAnswered: false,
-  });
+  })
 
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [filteredQuestions, setFilteredQuestions] = useState([]);
-  const [choices, setChoices] = useState({});
-  const [votes, setVotes] = useState({});
-  const [openLoginDialog, setOpenLoginDialog] = useState(false);
-  const [areChoicesFetched, setAreChoicesFetched] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const [filteredQuestions, setFilteredQuestions] = useState([])
+  const [choices, setChoices] = useState({})
+  const [votes, setVotes] = useState({})
+  const [openLoginDialog, setOpenLoginDialog] = useState(false)
+  const [areChoicesFetched, setAreChoicesFetched] = useState(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
     const filteredQuestions = questions.filter(question => {
@@ -47,7 +47,7 @@ const AllQuestioning = ({ classes, questions }) => {
           (filters.isInValidation && question.isValidated === null)
         )
       ) {
-        return false;
+        return false
       }
       if (
         !(
@@ -56,7 +56,7 @@ const AllQuestioning = ({ classes, questions }) => {
           (filters.isAnswered && !isNotAnsweredQuestion(question))
         )
       ) {
-        return false;
+        return false
       }
 
       if (
@@ -66,7 +66,7 @@ const AllQuestioning = ({ classes, questions }) => {
           (filters.isNotJoke && question.isJoke === false)
         )
       ) {
-        return false;
+        return false
       }
 
       if (
@@ -76,120 +76,120 @@ const AllQuestioning = ({ classes, questions }) => {
           (filters.isNotJokeOnSomeone && question.isJokeOnSomeone === false)
         )
       ) {
-        return false;
+        return false
       }
 
-      return true;
-    });
-    setFilteredQuestions(filteredQuestions);
+      return true
+    })
+    setFilteredQuestions(filteredQuestions)
     // eslint-disable-next-line
   }, [filters, questions, areChoicesFetched]);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
 
   const fetchChoices = async () => {
     if (!localStorage.jwt_token) {
-      return setAreChoicesFetched(true);
+      return setAreChoicesFetched(true)
     }
     const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET' }, 200, {
       enqueueSnackbar,
-    });
+    })
     if (!response) {
-      return;
+      return
     }
-    const userChoices = await response.json();
-    const choicesDic = {};
+    const userChoices = await response.json()
+    const choicesDic = {}
     userChoices.forEach(choice => {
-      choicesDic[choice.questionId] = choice.choice;
-    });
-    setChoices(choicesDic);
-    setAreChoicesFetched(true);
-  };
+      choicesDic[choice.questionId] = choice.choice
+    })
+    setChoices(choicesDic)
+    setAreChoicesFetched(true)
+  }
   const fetchVotes = async () => {
-    if (!localStorage.jwt_token) return;
+    if (!localStorage.jwt_token) return
     const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_VOTES_URI}/user`, method: 'GET' }, 200, {
       enqueueSnackbar,
-    });
+    })
     if (!response) {
-      return;
+      return
     }
-    const userVotes = await response.json();
-    const votesDic = {};
+    const userVotes = await response.json()
+    const votesDic = {}
     userVotes.forEach(vote => {
-      votesDic[vote.questionId] = vote.isUpVote;
-    });
-    setVotes(votesDic);
-  };
+      votesDic[vote.questionId] = vote.isUpVote
+    })
+    setVotes(votesDic)
+  }
   useEffect(() => {
-    fetchChoices();
-    fetchVotes();
+    fetchChoices()
+    fetchVotes()
     // eslint-disable-next-line
   }, []);
 
   const getValidationInformation = questionValidation => {
-    if (questionValidation === null) return 'Question en attente de validation';
-    return questionValidation ? 'Question validée' : 'Question invalidée';
-  };
+    if (questionValidation === null) return 'Question en attente de validation'
+    return questionValidation ? 'Question validée' : 'Question invalidée'
+  }
 
   const isNotAnsweredQuestion = question => {
-    return areChoicesFetched ? !choices[question.id] : false;
-  };
+    return areChoicesFetched ? !choices[question.id] : false
+  }
 
   const handeFilterChange = option => event => {
-    setFilters({ ...filters, [option]: event.target.checked });
-    setQuestionIndex(0);
-  };
+    setFilters({ ...filters, [option]: event.target.checked })
+    setQuestionIndex(0)
+  }
 
   const changeQuestion = increment => {
-    let index = questionIndex + increment;
+    let index = questionIndex + increment
     if (index < 0 || index === filteredQuestions.length) {
-      index = 0;
+      index = 0
     }
-    setQuestionIndex(index);
-  };
+    setQuestionIndex(index)
+  }
 
-  const question = filteredQuestions[questionIndex];
+  const question = filteredQuestions[questionIndex]
 
   const chose = async (questionId, choice) => {
     if (!isUser()) {
-      return setOpenLoginDialog(true);
+      return setOpenLoginDialog(true)
     }
-    changeQuestion(1);
+    changeQuestion(1)
 
     if (choices[questionId] !== choice) {
-      const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`;
-      const body = { choice };
+      const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`
+      const body = { choice }
 
       fetchRequestResponse({ uri, method: 'PUT', body }, 200, {
         enqueueSnackbar,
         successMessage: 'Choix enregistré',
-      });
+      })
 
-      const newChoices = { ...choices };
-      newChoices[questionId] = choice;
-      setChoices(newChoices);
+      const newChoices = { ...choices }
+      newChoices[questionId] = choice
+      setChoices(newChoices)
     }
-  };
+  }
   const vote = async (questionId, isUpVote) => {
     if (!isUser()) {
-      return setOpenLoginDialog(true);
+      return setOpenLoginDialog(true)
     }
-    const newVote = { ...votes };
-    const uri = `/${USER_TO_QUESTIONS_VOTES_URI}/${questionId}/vote`;
-    let method = 'PUT';
-    let body;
+    const newVote = { ...votes }
+    const uri = `/${USER_TO_QUESTIONS_VOTES_URI}/${questionId}/vote`
+    let method = 'PUT'
+    let body
 
     if (votes.hasOwnProperty(questionId) && votes[questionId] === isUpVote) {
-      Reflect.deleteProperty(newVote, questionId);
-      method = 'DELETE';
+      Reflect.deleteProperty(newVote, questionId)
+      method = 'DELETE'
     } else {
-      newVote[questionId] = isUpVote;
-      body = { isUpVote };
+      newVote[questionId] = isUpVote
+      body = { isUpVote }
     }
-    setVotes(newVote);
+    setVotes(newVote)
 
-    return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar });
-  };
+    return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar })
+  }
 
   return (
     <React.Fragment>
@@ -229,7 +229,7 @@ const AllQuestioning = ({ classes, questions }) => {
         handeFilterChange={handeFilterChange}
       />
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default withStyles(style)(AllQuestioning);
+export default withStyles(style)(AllQuestioning)

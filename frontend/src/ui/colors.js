@@ -4,6 +4,6 @@ const colors = {
   bordeaux: '#9f1724',
   white: '#FFFFFF',
   red: '#b51010',
-};
+}
 
-export default colors;
+export default colors

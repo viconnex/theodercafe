@@ -1,1 +1,1 @@
-export { default as PlusOne } from './PlusOne';
+export { default as PlusOne } from './PlusOne'

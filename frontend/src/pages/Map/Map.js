@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useSnackbar } from 'notistack';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import { Button } from '@material-ui/core';
-import TuneIcon from '@material-ui/icons/Tune';
+import React, { useState, useEffect } from 'react'
+import { useSnackbar } from 'notistack'
+import Highcharts from 'highcharts'
+import HighchartsReact from 'highcharts-react-official'
+import { Button } from '@material-ui/core'
+import TuneIcon from '@material-ui/icons/Tune'
 
-import { fetchRequestResponse } from 'services/api';
-import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants';
-import { FilterDrawer } from 'components/FilterDrawer';
+import { fetchRequestResponse } from 'services/api'
+import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
+import { FilterDrawer } from 'components/FilterDrawer'
 
-import './style.css';
+import './style.css'
 
 const getQueryParamsFromFilters = filters => {
-  const params = {};
+  const params = {}
   for (const filter in filters) {
     if (filters[filter]) {
-      params[filter] = true;
+      params[filter] = true
     }
   }
 
-  return params;
-};
+  return params
+}
 
 const Map = () => {
-  const [map, setMap] = useState(null);
-  const { enqueueSnackbar } = useSnackbar();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [map, setMap] = useState(null)
+  const { enqueueSnackbar } = useSnackbar()
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [filters, setFilters] = useState({
     isValidated: true,
     isNotValidated: false,
@@ -34,11 +34,11 @@ const Map = () => {
     isNotJoke: true,
     isJokeOnSomeone: false,
     isNotJokeOnSomeone: true,
-  });
+  })
 
   const handeFilterChange = option => event => {
-    setFilters({ ...filters, [option]: event.target.checked });
-  };
+    setFilters({ ...filters, [option]: event.target.checked })
+  }
 
   const fetchMap = async () => {
     const response = await fetchRequestResponse(
@@ -47,21 +47,21 @@ const Map = () => {
       {
         enqueueSnackbar,
       },
-    );
+    )
     if (!response) {
-      return;
+      return
     }
-    const data = await response.json();
-    setMap(data);
-  };
+    const data = await response.json()
+    setMap(data)
+  }
 
   useEffect(() => {
-    fetchMap();
+    fetchMap()
     // eslint-disable-next-line
   }, [filters]);
 
   if (!map) {
-    return <div>loading</div>;
+    return <div>loading</div>
   }
 
   const options = {
@@ -106,12 +106,12 @@ const Map = () => {
     ],
     tooltip: {
       formatter: function() {
-        const data = this.series.chart.series[0].data;
-        const index = this.point.index;
-        return '<b>' + data[index].name + '</b>';
+        const data = this.series.chart.series[0].data
+        const index = this.point.index
+        return '<b>' + data[index].name + '</b>'
       },
     },
-  };
+  }
 
   return (
     <div className="map">
@@ -128,7 +128,7 @@ const Map = () => {
       />
       <HighchartsReact containerProps={{ className: 'chart-container' }} highcharts={Highcharts} options={options} />
     </div>
-  );
-};
+  )
+}
 
-export default Map;
+export default Map

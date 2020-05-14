@@ -9,6 +9,6 @@ const style = theme => ({
   drawerContent: {
     padding: '20px',
   },
-});
+})
 
-export default style;
+export default style

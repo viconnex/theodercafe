@@ -1,5 +1,5 @@
-import React from 'react';
-import { List, Datagrid, TextField, BooleanField, NumberField, ReferenceField } from 'react-admin';
+import React from 'react'
+import { List, Datagrid, TextField, BooleanField, NumberField, ReferenceField } from 'react-admin'
 
 export const QuestionList = props => {
   return (
@@ -21,5 +21,5 @@ export const QuestionList = props => {
         <NumberField source="downVotes" label="Down Votes" />
       </Datagrid>
     </List>
-  );
-};
+  )
+}

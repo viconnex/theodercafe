@@ -1,20 +1,20 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Chip from '@material-ui/core/Chip'
 
-import style from './style';
-import { PlusOne } from 'components/PlusOne';
+import style from './style'
+import { PlusOne } from 'components/PlusOne'
 
 const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
-  const [choice1Trigger, setChoice1Trigger] = React.useState(0);
-  const [choice2Trigger, setChoice2Trigger] = React.useState(0);
+  const [choice1Trigger, setChoice1Trigger] = React.useState(0)
+  const [choice2Trigger, setChoice2Trigger] = React.useState(0)
 
   const handleChoice = (questionId, choice) => {
-    chose(questionId, choice);
-    if (!plusOneEnabled) return;
-    if (choice === 1) setChoice1Trigger(choice1Trigger + 1);
-    else if (choice === 2) setChoice2Trigger(choice2Trigger + 1);
-  };
+    chose(questionId, choice)
+    if (!plusOneEnabled) return
+    if (choice === 1) setChoice1Trigger(choice1Trigger + 1)
+    else if (choice === 2) setChoice2Trigger(choice2Trigger + 1)
+  }
 
   return (
     <div>
@@ -45,7 +45,7 @@ const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default withStyles(style)(Question);
+export default withStyles(style)(Question)

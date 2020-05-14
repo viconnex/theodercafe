@@ -1,4 +1,4 @@
-import colors from 'ui/colors';
+import colors from 'ui/colors'
 
 export default {
   picture: {
@@ -27,4 +27,4 @@ export default {
   infoButton: {
     padding: '6px',
   },
-};
+}
