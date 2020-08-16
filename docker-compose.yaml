@@ -14,7 +14,21 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - "./frontend:/theodercafe/frontend"
+      - "./frontend:/frontend"
       - "./frontend/node_modules"
     ports:
       - 3000:3000
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      target: development
+    volumes:
+      - .:/backend
+      - /backend/node_modules
+    ports:
+      - 3001:3001
+      - 9229:9229
+    command: npm run start:dev
+    depends_on:
+      - postgresql
