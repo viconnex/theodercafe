@@ -7,6 +7,6 @@ async function bootstrap(): Promise<void> {
     console.log('node_env', process.env.NODE_ENV)
     const app = await NestFactory.create(AppModule)
     app.enableCors()
-    await app.listen(4000)
+    await app.listen(8000)
 }
 bootstrap()

@@ -1,28 +1,28 @@
-import React, { lazy, Suspense } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import ToolBar from '@material-ui/core/Toolbar';
-import { withStyles, createMuiTheme } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import { SnackbarProvider } from 'notistack';
-import { MenuDrawer } from 'components/MenuDrawer';
-import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { About } from 'components/About';
-import { PrivateRoute } from 'modules/PrivateRoute';
-import { Login } from 'modules/Login';
-import { LoginPage } from 'pages/LoginPage';
-import MenuIcon from 'components/MenuIcon/MenuIcon';
+import React, { lazy, Suspense } from 'react'
+import AppBar from '@material-ui/core/AppBar'
+import ToolBar from '@material-ui/core/Toolbar'
+import { withStyles, createMuiTheme } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
+import { SnackbarProvider } from 'notistack'
+import { MenuDrawer } from 'components/MenuDrawer'
+import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { About } from 'components/About'
+import { PrivateRoute } from 'modules/PrivateRoute'
+import { Login } from 'modules/Login'
+import { LoginPage } from 'pages/LoginPage'
+import MenuIcon from 'components/MenuIcon/MenuIcon'
 
-import logo from './ui/logo/theodercafe.png';
+import logo from './ui/logo/theodercafe.png'
 
-import style from './App.style';
-import { Home } from 'pages/Home';
-import { ThemeProvider } from '@material-ui/styles';
-import colors from 'ui/colors';
-import { getPictureUrl } from 'services/jwtDecode';
-import { Alterodo } from 'pages/Alterodo';
-import { Map } from 'pages/Map';
+import style from './App.style'
+import { Home } from 'pages/Home'
+import { ThemeProvider } from '@material-ui/styles'
+import colors from 'ui/colors'
+import { getPictureUrl } from 'services/jwtDecode'
+import { Alterodo } from 'pages/Alterodo'
+import { Map } from 'pages/Map'
 
-const Admin = lazy(() => import('./admin/Admin'));
+const Admin = lazy(() => import('./admin/Admin'))
 
 const theme = createMuiTheme({
   palette: {
@@ -32,16 +32,16 @@ const theme = createMuiTheme({
   status: {
     danger: 'orange',
   },
-});
+})
 
 const App = ({ classes }) => {
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
 
   const toggleDrawer = open => () => {
-    setIsDrawerOpen(open);
-  };
+    setIsDrawerOpen(open)
+  }
 
-  const [pictureUrl, setPictureUrl] = React.useState(getPictureUrl());
+  const [pictureUrl, setPictureUrl] = React.useState(getPictureUrl())
 
   return (
     <ThemeProvider theme={theme}>
@@ -76,7 +76,7 @@ const App = ({ classes }) => {
         </SnackbarProvider>
       </Router>
     </ThemeProvider>
-  );
-};
+  )
+}
 
-export default withStyles(style)(App);
+export default withStyles(style)(App)

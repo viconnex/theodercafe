@@ -2,33 +2,32 @@ version: "3.4"
 
 services:
   postgresql:
+    container_name: database
     image: "postgres:11.3"
     environment:
-      - POSTGRES_USER=the
-      - POSTGRES_PASSWORD=cafe
-      - POSTGRES_DB=theodercafe
-    ports:
-      - "5432:5432"
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      POSTGRES_USER: the
+      POSTGRES_PASSWORD: cafe
+      POSTGRES_DB: theodercafe
+      PG_DATA: /var/lib/postgresql/data
     volumes:
-      - "./frontend:/frontend"
-      - "./frontend/node_modules"
+      - pgdata:/var/lib/postgresql/data
     ports:
-      - 3000:3000
+      - 5432:5432
   backend:
     container_name: backend
     build:
       context: ./backend
+      dockerfile: Dockerfile
       target: development
     volumes:
-      - .:/backend
-      - /backend/node_modules
+      - ./backend:/var/www
+      - /var/www/node_modules
     ports:
-      - 3001:3001
+      - 8000:8000
       - 9229:9229
     command: npm run start:dev
     depends_on:
       - postgresql
+
+volumes:
+  pgdata:

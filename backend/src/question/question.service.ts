@@ -48,7 +48,7 @@ export class QuestionService {
     async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<QuestionWithCategoryNameDto[]> {
         if (findFromHistoricIfExists) {
             const currentSet = await this.questioningHistoricService.findLastOfTheDay()
-            if (currentSet) {
+            if (currentSet && currentSet.questioning.length) {
                 const sameQuestions = await this.questionRepository.findByIdsWithCategory(currentSet.questioning)
                 const questionWithCategories = sameQuestions.sort(
                     (question1, question2): number =>

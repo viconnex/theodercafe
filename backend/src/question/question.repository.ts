@@ -110,9 +110,10 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     findByIdsWithCategory = async (questionIds: string[]): Promise<Question[]> => {
-        return this.createQueryBuilder('questions')
-            .leftJoinAndSelect('questions.category', 'category')
-            .where('questions.id IN (:...questionIds)', { questionIds })
-            .getMany()
+        const qb = this.createQueryBuilder('questions').leftJoinAndSelect('questions.category', 'category')
+        if (questionIds.length) {
+            qb.where('questions.id IN (:...questionIds)', { questionIds })
+        }
+        return qb.getMany()
     }
 }
