@@ -25,6 +25,14 @@ services:
     ports:
       - 8000:8000
       - 9229:9229
+    environment:
+      TYPEORM_CONNECTION: postgres
+      TYPEORM_HOST: postgresql
+      TYPEORM_USERNAME: the
+      TYPEORM_PASSWORD: cafe
+      TYPEORM_DATABASE: theodercafe
+      TYPEORM_PORT: "5432"
+      TYPEORM_LOGGING: "true"
     command: npm run start:dev
     depends_on:
       - postgresql
