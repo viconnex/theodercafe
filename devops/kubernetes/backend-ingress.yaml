@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: backend-ingress
+  annotations:
+	kubernetes.io/ingress.allow-http: "false"
+    kubernetes.io/ingress.global-static-ip-name: theodercafe-backend-static-ip
+    networking.gke.io/managed-certificates: certificate-theodercafe-api
+spec:
+  backend:
+    serviceName: nestjs-service
+    servicePort: 80
