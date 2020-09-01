@@ -25,17 +25,16 @@ spec:
             - name: FRONT_BASE_URL
               value: http://localhost:3000
             - name: BACKEND_URL
-              value: http://localhost:8000
+              value: https://kavok.fr
             - name: AUTH2_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: nestjs-secrets
-                  key: OAUTH_CLIENT_ID
+              value: 509723639859-9scpfcsuc1rrft64dvc2phmpif0gudo6.apps.googleusercontent.com
             - name: CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: nestjs-secrets
-                  key: OAUTH_CLIENT_SECRET
+              value: vFRcCiX90W3yNLvMkxKjN76I
+            # - name: CLIENT_SECRET
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: nestjs-secrets
+            #       key: OAUTH_CLIENT_SECRET
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:

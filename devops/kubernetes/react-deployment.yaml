@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react
+  labels:
+    app: react
+spec:
+  selector:
+    matchLabels:
+      app: react
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: react
+    spec:
+      containers:
+        - name: react
+          image: gcr.io/theodercafe/frontend:v3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

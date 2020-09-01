@@ -1,6 +1,6 @@
 {
   "development": {
-    "BACKEND_URL": "http://localhost:8000"
+    "BACKEND_URL": "https://kavok.fr"
   },
   "production": {
     "BACKEND_URL": "https://theodercafe.com/api"

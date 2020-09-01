@@ -36,6 +36,5 @@ services:
     command: npm run start:dev
     depends_on:
       - postgresql
-
 volumes:
   pgdata:
