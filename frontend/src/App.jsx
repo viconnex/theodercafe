@@ -36,7 +36,7 @@ const theme = createMuiTheme({
 const App = ({ classes }) => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
 
-  const toggleDrawer = open => () => {
+  const toggleDrawer = (open) => () => {
     setIsDrawerOpen(open)
   }
 
@@ -47,7 +47,7 @@ const App = ({ classes }) => {
       <Router>
         <SnackbarProvider maxSnack={2} autoHideDuration={1300}>
           <div className={classes.app}>
-            <AppBare classes={{ root: classes.appBar }} position="fixed">
+            <AppBar classes={{ root: classes.appBar }} position="fixed">
               <ToolBar className={classes.toolBar}>
                 <Link to="/">
                   <img src={logo} alt="logo" height="20" />
@@ -56,7 +56,7 @@ const App = ({ classes }) => {
                   <MenuIcon pictureUrl={pictureUrl} />
                 </IconButton>
               </ToolBar>
-            </AppBare>
+            </AppBar>
             <ToolBar className={classes.shim} />
             <Suspense fallback={<div>Loading</div>}>
               <Switch>

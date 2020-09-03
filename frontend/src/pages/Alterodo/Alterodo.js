@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { fetchRequestResponse } from 'services/api'
 import { useSnackbar } from 'notistack'
 import { Alterodo } from 'components/Alterodo'
@@ -25,7 +25,9 @@ const AlterodoPage = () => {
     // eslint-disable-next-line
   }, []);
 
-  if (!alterodos) return <div>Loading</div>
+  if (!alterodos) {
+    return <div>Loading</div>
+  }
 
   return (
     <div className="alterodo-page">

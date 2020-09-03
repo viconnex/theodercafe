@@ -5,8 +5,8 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
 
+import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core'
 import style from './style'
-import { FormGroup, FormControlLabel, Checkbox } from '@material-ui/core'
 
 const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
   const FilterGroup = ({ filterAttributes }) => {
@@ -23,7 +23,7 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
     return (
       <React.Fragment>
         <FormGroup className={classes.drawerContent}>
-          {filterAttributes.map(attribute => {
+          {filterAttributes.map((attribute) => {
             if (filters[attribute.name] === undefined) {
               return null
             }

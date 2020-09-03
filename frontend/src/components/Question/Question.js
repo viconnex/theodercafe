@@ -2,8 +2,8 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Chip from '@material-ui/core/Chip'
 
-import style from './style'
 import { PlusOne } from 'components/PlusOne'
+import style from './style'
 
 const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
   const [choice1Trigger, setChoice1Trigger] = React.useState(0)
@@ -11,9 +11,14 @@ const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
 
   const handleChoice = (questionId, choice) => {
     chose(questionId, choice)
-    if (!plusOneEnabled) return
-    if (choice === 1) setChoice1Trigger(choice1Trigger + 1)
-    else if (choice === 2) setChoice2Trigger(choice2Trigger + 1)
+    if (!plusOneEnabled) {
+      return
+    }
+    if (choice === 1) {
+      setChoice1Trigger(choice1Trigger + 1)
+    } else if (choice === 2) {
+      setChoice2Trigger(choice2Trigger + 1)
+    }
   }
 
   return (

@@ -9,8 +9,8 @@ import Close from '@material-ui/icons/Close'
 import Creatable from 'react-select/creatable'
 import { withSnackbar } from 'notistack'
 import { fetchRequest } from 'utils/helpers'
-import style from './style'
 import { fetchRequestResponse } from 'services/api'
+import style from './style'
 
 const postQuestion = async (option1, option2, category) => {
   const uri = '/questions'
@@ -45,19 +45,19 @@ class AddQuestionDialog extends Component {
     categories: [],
   }
 
-  handleOption1Change = event => {
+  handleOption1Change = (event) => {
     this.setState({ option1: event.target.value })
   }
 
-  handleOption2Change = event => {
+  handleOption2Change = (event) => {
     this.setState({ option2: event.target.value })
   }
 
-  handleCategoryChange = newValue => {
+  handleCategoryChange = (newValue) => {
     this.setState({ categoryValue: newValue.value, categoryLabel: newValue.label })
   }
 
-  handleSubmit = async event => {
+  handleSubmit = async (event) => {
     event.preventDefault()
     const response = await postQuestion(this.state.option1, this.state.option2, this.state.categoryValue)
     if (response.status === 201) {
@@ -73,7 +73,7 @@ class AddQuestionDialog extends Component {
 
   render() {
     const { classes, onClose, open } = this.props
-    const categoryOptions = this.state.categories.map(category => ({
+    const categoryOptions = this.state.categories.map((category) => ({
       label: category.name,
       value: category.id,
     }))
