@@ -1,26 +1,25 @@
 import React, { lazy, Suspense } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/Toolbar'
-import { withStyles, createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme, withStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import { SnackbarProvider } from 'notistack'
 import { MenuDrawer } from 'components/MenuDrawer'
-import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { About } from 'components/About'
 import { PrivateRoute } from 'modules/PrivateRoute'
 import { Login } from 'modules/Login'
 import { LoginPage } from 'pages/LoginPage'
 import MenuIcon from 'components/MenuIcon/MenuIcon'
 
-import logo from './ui/logo/theodercafe.png'
-
-import style from './App.style'
 import { Home } from 'pages/Home'
 import { ThemeProvider } from '@material-ui/styles'
 import colors from 'ui/colors'
 import { getPictureUrl } from 'services/jwtDecode'
 import { Alterodo } from 'pages/Alterodo'
 import { Map } from 'pages/Map'
+import style from './App.style'
+import logo from './ui/logo/theodercafe.png'
 
 const Admin = lazy(() => import('./admin/Admin'))
 
@@ -48,7 +47,7 @@ const App = ({ classes }) => {
       <Router>
         <SnackbarProvider maxSnack={2} autoHideDuration={1300}>
           <div className={classes.app}>
-            <AppBar classes={{ root: classes.appBar }} position="fixed">
+            <AppBare classes={{ root: classes.appBar }} position="fixed">
               <ToolBar className={classes.toolBar}>
                 <Link to="/">
                   <img src={logo} alt="logo" height="20" />
@@ -57,7 +56,7 @@ const App = ({ classes }) => {
                   <MenuIcon pictureUrl={pictureUrl} />
                 </IconButton>
               </ToolBar>
-            </AppBar>
+            </AppBare>
             <ToolBar className={classes.shim} />
             <Suspense fallback={<div>Loading</div>}>
               <Switch>
