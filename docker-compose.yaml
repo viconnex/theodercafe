@@ -33,6 +33,7 @@ services:
       TYPEORM_DATABASE: theodercafe
       TYPEORM_PORT: "5432"
       TYPEORM_LOGGING: "true"
+      NODE_ENV: development
     command: npm run start:dev
     depends_on:
       - postgresql

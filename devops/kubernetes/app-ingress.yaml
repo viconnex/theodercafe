@@ -6,16 +6,6 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: theodercafe-backend-static-ip
     networking.gke.io/managed-certificates: certificate-theodercafe-api
 spec:
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: react-service
-              servicePort: 80
-          - path: /api
-            pathType: Prefix
-            backend:
-              serviceName: nestjs-service
-              servicePort: 80
+  backend:
+    serviceName: nestjs-service
+    servicePort: 80
