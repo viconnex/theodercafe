@@ -9,14 +9,14 @@ const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
   const [choice1Trigger, setChoice1Trigger] = React.useState(0)
   const [choice2Trigger, setChoice2Trigger] = React.useState(0)
 
-  const handleChoice = (questionId, choice) => {
-    chose(questionId, choice)
+  const handleChoice = (questionId, choiceToHandle) => {
+    chose(questionId, choiceToHandle)
     if (!plusOneEnabled) {
       return
     }
-    if (choice === 1) {
+    if (choiceToHandle === 1) {
       setChoice1Trigger(choice1Trigger + 1)
-    } else if (choice === 2) {
+    } else if (choiceToHandle === 2) {
       setChoice2Trigger(choice2Trigger + 1)
     }
   }
