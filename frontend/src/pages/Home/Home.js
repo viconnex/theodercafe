@@ -16,7 +16,8 @@ import style from './style'
 const Home = ({ classes }) => {
   const [questions, setQuestions] = useState([])
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
-  const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
+  // const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
+  const [isAsakaiMode, setIsAsakaiMode] = useState(true)
 
   const { enqueueSnackbar } = useSnackbar()
   const fetchQuestions = async () => {
@@ -33,10 +34,10 @@ const Home = ({ classes }) => {
   useEffect(() => {
     fetchQuestions()
     // eslint-disable-next-line
-  }, []);
+  }, [])
 
-  const handleModeChange = (isAsakaiMode) => {
-    setIsAsakaiMode(isAsakaiMode)
+  const handleModeChange = (isAsakai) => {
+    setIsAsakaiMode(isAsakai)
   }
 
   const toggleModal = (open) => () => setAddQuestionDialog(open)
