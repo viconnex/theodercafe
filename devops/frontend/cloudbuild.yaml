@@ -1,3 +1,10 @@
 steps:
-  - name: "gcr.io/cloud-builders/npm"
-    args: ["build"]
+  - name: gcr.io/cloud-builders/npm
+    args: [install]
+    dir: "frontend"
+  - name: gcr.io/cloud-builders/npm
+    args: [run, build]
+    dir: "frontend"
+  - name: gcr.io/cloud-builders/gcloud
+    args: [app, deploy]
+    dir: "frontend"
