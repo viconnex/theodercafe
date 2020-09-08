@@ -8,8 +8,8 @@ export const fetchRequestResponse = async (
   let response
   try {
     response = await fetchRequest({ uri, method, body, params })
-  } catch (e) {
-    enqueueSnackbar(`'Problème de connexion au serveur'${JSON.stringify(e)}`, { variant: 'error' })
+  } catch {
+    enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' })
     return null
   }
   if (!response || response.status !== expectedStatus) {

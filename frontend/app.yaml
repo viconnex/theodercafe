@@ -2,7 +2,7 @@ runtime: nodejs10
 service: default
 
 env_variables:
-  REACT_APP_BACKEND_URL: https://api.kavok.fr
+  REACT_APP_BACKEND_URL: 'https://api.kavok.fr'
 
 handlers:
   - url: /static
