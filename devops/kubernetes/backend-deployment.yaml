@@ -23,9 +23,9 @@ spec:
             - name: NODE_ENV
               value: production
             - name: FRONT_BASE_URL
-              value: http://localhost:3000
-            - name: BACKEND_URL
               value: https://kavok.fr
+            - name: BACKEND_URL
+              value: https://api.kavok.fr
             - name: AUTH2_CLIENT_ID
               value: 509723639859-9scpfcsuc1rrft64dvc2phmpif0gudo6.apps.googleusercontent.com
             - name: CLIENT_SECRET
