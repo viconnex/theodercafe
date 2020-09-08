@@ -1,8 +1,0 @@
-{
-  "development": {
-    "BACKEND_URL": "https://kavok.fr"
-  },
-  "production": {
-    "BACKEND_URL": "https://theodercafe.com/api"
-  }
-}
