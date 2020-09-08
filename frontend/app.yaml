@@ -6,8 +6,7 @@ env_variables:
 
 handlers:
   - url: /static
-    static_files: build/static/\1
-    upload: build/static/.*\.(css|json|ico|js|jpg|png)$
+    static_dir: build/static
 
   - url: /(.*\.(json|ico|js))$
     static_files: build/\1
