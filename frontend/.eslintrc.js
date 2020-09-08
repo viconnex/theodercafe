@@ -30,7 +30,6 @@ module.exports = {
     'react/require-default-props': 0,
     curly: ['error', 'all'],
     eqeqeq: ['error', 'smart'],
-    complexity: ['error', 8],
     'import/no-extraneous-dependencies': [
       'error',
       {
