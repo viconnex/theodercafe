@@ -27,14 +27,15 @@ spec:
             - name: BACKEND_URL
               value: https://api.kavok.fr
             - name: AUTH2_CLIENT_ID
-              value: 509723639859-9scpfcsuc1rrft64dvc2phmpif0gudo6.apps.googleusercontent.com
+              valueFrom:
+                secretKeyRef:
+                  name: nestjs-secrets
+                  key: OAUTH_CLIENT_ID
             - name: CLIENT_SECRET
-              value: vFRcCiX90W3yNLvMkxKjN76I
-            # - name: CLIENT_SECRET
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: nestjs-secrets
-            #       key: OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nestjs-secrets
+                  key: OAUTH_CLIENT_SECRET
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -43,7 +44,7 @@ spec:
             - name: TYPEORM_URL
               value: postgres://the:cafe@localhost:5432/theodercafe
             - name: TYPEORM_LOGGING
-              value: "true"
+              value: "false"
         - name: cloud-sql-proxy
           # It is recommended to use the latest version of the Cloud SQL proxy
           # Make sure to update on a regular schedule!
