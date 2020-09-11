@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nestjs
-          image: gcr.io/theodercafe/backend:v2
+          image: gcr.io/theodercafe/backend:latest
           env:
             - name: PORT
               value: "8000"
