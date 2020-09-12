@@ -24,7 +24,7 @@ import { QuestioningHistoricModule } from './questioningHistoric/questioningHist
         UserToQuestionChoiceModule,
         UserToQuestionVoteModule,
         QuestioningHistoricModule,
-        ConfigModule.forRoot({ isGlobal: true }),
+        ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env.local', '.env'] }),
     ],
     controllers: [AppController],
     providers: [AppService],

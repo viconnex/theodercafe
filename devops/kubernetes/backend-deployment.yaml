@@ -45,6 +45,12 @@ spec:
               value: postgres://the:cafe@localhost:5432/theodercafe
             - name: TYPEORM_LOGGING
               value: "false"
+            - name: TYPEORM_ENTITIES
+              value: dist/**/*.entity.js,dist/src/**/*.entity.js
+            - name: TYPEORM_MIGRATIONS
+              value: dist/migration/*.js
+            - name: TYPEORM_MIGRATIONS_DIR
+              value: migration
         - name: cloud-sql-proxy
           # It is recommended to use the latest version of the Cloud SQL proxy
           # Make sure to update on a regular schedule!
