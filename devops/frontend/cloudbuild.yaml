@@ -40,23 +40,23 @@ steps:
   #   env:
   #   - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
   #   - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
+  - name: gcr.io/cloud-builders/npm
+    args: [install]
+    dir: "frontend"
+  - name: gcr.io/cloud-builders/npm
+    dir: "frontend"
+    args: ["run", "create-env"]
+    env:
+      - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
+  - name: gcr.io/cloud-builders/npm
+    args: [run, build]
+    dir: "frontend"
+  - name: gcr.io/cloud-builders/gcloud
+    args: [app, deploy]
+    dir: "frontend"
 
 images: [
   'gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA',
   'gcr.io/theodercafe/backend:latest'
   ]
 
-  # - name: gcr.io/cloud-builders/npm
-  #   args: [install]
-  #   dir: "frontend"
-  # - name: gcr.io/cloud-builders/npm
-  #   dir: "frontend"
-  #   args: ["run", "create-env"]
-  #   env:
-  #     - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
-  # - name: gcr.io/cloud-builders/npm
-  #   args: [run, build]
-  #   dir: "frontend"
-  # - name: gcr.io/cloud-builders/gcloud
-  #   args: [app, deploy]
-  #   dir: "frontend"
