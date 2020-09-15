@@ -23,9 +23,9 @@ spec:
             - name: NODE_ENV
               value: production
             - name: FRONT_BASE_URL
-              value: https://kavok.fr
+              value: https://theodercafe.com
             - name: BACKEND_URL
-              value: https://api.kavok.fr
+              value: https://api.theodercafe.com
             - name: AUTH2_CLIENT_ID
               valueFrom:
                 secretKeyRef:
