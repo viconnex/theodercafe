@@ -16,6 +16,7 @@ steps:
     'gcr.io/theodercafe/backend:latest',
     '.'
     ]
+  # delete deploymnent instead of adding new replicaSet because the number of nodes is limited to 1
   - name: 'gcr.io/cloud-builders/kubectl'
     dir: "devops/kubernetes"
     args: ['delete', '-f', 'backend-deployment.yaml']

@@ -4,5 +4,4 @@ metadata:
   name: certificate-theodercafe-api
 spec:
   domains:
-    - kavok.fr
-    - api.kavok.fr
+    - api.theodercafe.com
