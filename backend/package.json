@@ -53,6 +53,7 @@
         "passport-jwt": "^4.0.0",
         "pca-js": "^1.0.2",
         "pg": "^7.11.0",
+        "pug": "^3.0.0",
         "reflect-metadata": "^0.1.12",
         "rimraf": "^2.6.2",
         "rxjs": "^6.3.3",
