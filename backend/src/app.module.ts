@@ -12,10 +12,13 @@ import { UserModule } from './user/user.module'
 import { UserToQuestionChoiceModule } from './userToQuestionChoice/userToQuestionChoice.module'
 import { UserToQuestionVoteModule } from './userToQuestionVote/userToQuestionVote.module'
 import { QuestioningHistoricModule } from './questioningHistoric/questioningHistoric.module'
+import { MailerModule } from '@nestjs-modules/mailer'
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 
 @Module({
     imports: [
         TypeOrmModule.forRoot(),
+
         QuestionModule,
         CategoryModule,
         AccumulusModule,
@@ -25,6 +28,12 @@ import { QuestioningHistoricModule } from './questioningHistoric/questioningHist
         UserToQuestionVoteModule,
         QuestioningHistoricModule,
         ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env.local', '.env'] }),
+        MailerModule.forRoot({
+            transport: `smtps://theodercafe@gmail.com:${process.env.GMAIL_SECRET}@smtp.gmail.com`,
+            defaults: {
+                from: '"nest-modules" <modules@nestjs.com>',
+            },
+        }),
     ],
     controllers: [AppController],
     providers: [AppService],

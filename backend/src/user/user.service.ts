@@ -4,10 +4,14 @@ import { UserRepository } from './user.repository'
 import { User, getCompanyFromEmail } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
 import { UserWithPublicFields } from './user.types'
+import { MailerService } from '@nestjs-modules/mailer'
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(UserRepository) private readonly userRepository: UserRepository) {}
+    constructor(
+        @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
+        private readonly mailerService: MailerService,
+    ) {}
 
     async findWithPublicFields(ids: number[]): Promise<UserWithPublicFields[]> {
         return this.userRepository.findByIds(ids, { select: ['id', 'givenName', 'familyName', 'pictureUrl'] })
@@ -38,10 +42,24 @@ export class UserService {
         if (userSavedWithEmail) {
             throw new BadRequestException('an user with the same email already exists')
         }
-        return this.userRepository.save({
+
+        const user = await this.userRepository.save({
             email,
             company: getCompanyFromEmail(email),
             isAdmin: false,
         })
+
+        this.mailerService
+            .sendMail({
+                to: 'victorl@theodo.fr', // list of receivers
+                from: 'theodercafe@gmail.com', // sender address
+                subject: 'Testing Nest MailerModule ✔', // Subject line
+                text: 'welcome', // plaintext body
+                html: '<b>welcome</b>', // HTML body content
+            })
+            .then(() => {})
+            .catch(() => {})
+
+        return user
     }
 }
