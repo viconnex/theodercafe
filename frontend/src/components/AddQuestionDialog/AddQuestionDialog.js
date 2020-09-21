@@ -1,36 +1,41 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Close from '@material-ui/icons/Close';
-import Creatable from 'react-select/creatable';
-import { withSnackbar } from 'notistack';
-import { fetchRequest } from 'utils/helpers';
-import style from './style';
+import React, { Component } from 'react'
+import { withStyles } from '@material-ui/styles'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import TextField from '@material-ui/core/TextField'
+import IconButton from '@material-ui/core/IconButton'
+import Button from '@material-ui/core/Button'
+import Close from '@material-ui/icons/Close'
+import Creatable from 'react-select/creatable'
+import { withSnackbar } from 'notistack'
+import { fetchRequest } from 'utils/helpers'
+import { fetchRequestResponse } from 'services/api'
+import style from './style'
 
 const postQuestion = async (option1, option2, category) => {
-  const uri = '/questions';
-  const body = { option1, option2, category };
-  const response = await fetchRequest({ uri, method: 'POST', body });
+  const uri = '/questions'
+  const body = { option1, option2, category }
+  const response = await fetchRequest({ uri, method: 'POST', body })
 
-  return response;
-};
+  return response
+}
 
-const choisis = (option1, option2) => (Math.floor(Math.random() * 2) === 0 ? option1 : option2);
+const choisis = (option1, option2) => (Math.floor(Math.random() * 2) === 0 ? option1 : option2)
 
 class AddQuestionDialog extends Component {
   componentDidMount = async () => {
-    this.fetchCategories(this.setState);
-  };
+    this.fetchCategories(this.setState)
+  }
 
   fetchCategories = async () => {
-    const response = await fetchRequest({ uri: '/categories' });
-    const data = await response.json();
-    this.setState({ categories: data });
-  };
+    const response = await fetchRequestResponse({ uri: '/categories', method: 'GET' }, 200, {
+      enqueueSnackbar: this.props.enqueueSnackbar,
+    })
+    if (response) {
+      const data = await response.json()
+      this.setState({ categories: data })
+    }
+  }
 
   state = {
     option1: '',
@@ -38,43 +43,43 @@ class AddQuestionDialog extends Component {
     categoryValue: null,
     categoryLabel: null,
     categories: [],
-  };
+  }
 
-  handleOption1Change = event => {
-    this.setState({ option1: event.target.value });
-  };
+  handleOption1Change = (event) => {
+    this.setState({ option1: event.target.value })
+  }
 
-  handleOption2Change = event => {
-    this.setState({ option2: event.target.value });
-  };
+  handleOption2Change = (event) => {
+    this.setState({ option2: event.target.value })
+  }
 
-  handleCategoryChange = newValue => {
-    this.setState({ categoryValue: newValue.value, categoryLabel: newValue.label });
-  };
+  handleCategoryChange = (newValue) => {
+    this.setState({ categoryValue: newValue.value, categoryLabel: newValue.label })
+  }
 
-  handleSubmit = async event => {
-    event.preventDefault();
-    const response = await postQuestion(this.state.option1, this.state.option2, this.state.categoryValue);
+  handleSubmit = async (event) => {
+    event.preventDefault()
+    const response = await postQuestion(this.state.option1, this.state.option2, this.state.categoryValue)
     if (response.status === 201) {
-      const ackResponse = choisis(this.state.option1, this.state.option2);
-      this.props.enqueueSnackbar(`${ackResponse} !`, { variant: 'success' });
-      this.props.handleQuestionAdded();
+      const ackResponse = choisis(this.state.option1, this.state.option2)
+      this.props.enqueueSnackbar(`${ackResponse} !`, { variant: 'success' })
+      this.props.handleQuestionAdded()
     } else {
-      this.props.enqueueSnackbar("La question n'a pas pu être créée", { variant: 'error' });
+      this.props.enqueueSnackbar("La question n'a pas pu être créée", { variant: 'error' })
     }
-    this.setState({ option1: '', option2: '', categoryValue: null, categoryLabel: null });
-    this.fetchCategories();
-  };
+    this.setState({ option1: '', option2: '', categoryValue: null, categoryLabel: null })
+    this.fetchCategories()
+  }
 
   render() {
-    const { classes, onClose, open } = this.props;
-    const categoryOptions = this.state.categories.map(category => ({
+    const { classes, onClose, open } = this.props
+    const categoryOptions = this.state.categories.map((category) => ({
       label: category.name,
       value: category.id,
-    }));
+    }))
     const categorySelectValue = this.state.categoryValue
       ? { label: this.state.categoryLabel, value: this.state.categoryValue }
-      : null;
+      : null
 
     return (
       <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} PaperProps={{ className: classes.dialog }}>
@@ -119,8 +124,8 @@ class AddQuestionDialog extends Component {
           </Button>
         </form>
       </Dialog>
-    );
+    )
   }
 }
 
-export default withSnackbar(withStyles(style)(AddQuestionDialog));
+export default withSnackbar(withStyles(style)(AddQuestionDialog))

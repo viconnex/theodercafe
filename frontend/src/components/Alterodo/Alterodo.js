@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { withStyles } from '@material-ui/styles'
 
-import style from './style'
 import MaterialButton from '@material-ui/core/Button'
-import { Tooltip, IconButton } from '@material-ui/core'
+import { IconButton, Tooltip } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
+import style from './style'
 
-const getAlterodoName = isAlterodo => (isAlterodo ? 'Alterodo' : 'Varieto')
+const getAlterodoName = (isAlterodo) => (isAlterodo ? 'Alterodo' : 'Varieto')
 
 const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount, isAsakai }) => {
   const sameOrDifferentAnswerCount = isAlterodo
@@ -70,11 +70,13 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, isAsakai }) => 
     }
   }
 
-  if (alterodos.baseQuestionCount === 0)
+  if (alterodos.baseQuestionCount === 0) {
     return <div>Ton alterodo n'est pas défini car tu n'as répondu à aucune question validée</div>
+  }
 
-  if (!alterodos.alterodo.sameAnswerCount)
+  if (!alterodos.alterodo.sameAnswerCount) {
     return <div>Ton alterodo n'est pas défini car personne n'a répondu aux questions auxquelles tu as répondu</div>
+  }
 
   return (
     <div>

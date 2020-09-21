@@ -1,13 +1,19 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import { Redirect, Route } from 'react-router-dom'
 import { decodeJWT } from 'services/jwtDecode'
 
 const RedirectComponent = ({ component: Component, isAdminRoute, ...props }) => {
-  if (!localStorage.jwt_token) return <Redirect to={{ pathname: '/login' }} />
+  if (!localStorage.jwt_token) {
+    return <Redirect to={{ pathname: '/login' }} />
+  }
   try {
     const decoded = decodeJWT(localStorage.jwt_token)
-    if (decoded.hasExpired) return <Redirect to={{ pathname: '/login' }} />
-    if (isAdminRoute && decoded.role !== 'admin') return <div>Tu dois être admin pour accéder à cette page</div>
+    if (decoded.hasExpired) {
+      return <Redirect to={{ pathname: '/login' }} />
+    }
+    if (isAdminRoute && decoded.role !== 'admin') {
+      return <div>Tu dois être admin pour accéder à cette page</div>
+    }
 
     return <Component {...props} />
   } catch (error) {
@@ -19,7 +25,7 @@ const PrivateRoute = ({ component, isAdminRoute, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props => <RedirectComponent component={component} {...props} isAdminRoute={isAdminRoute} />}
+      render={(props) => <RedirectComponent component={component} {...props} isAdminRoute={isAdminRoute} />}
     />
   )
 }

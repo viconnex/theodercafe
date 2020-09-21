@@ -1,4 +1,4 @@
-const style = theme => ({
+const style = (theme) => ({
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',

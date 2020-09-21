@@ -9,12 +9,12 @@ import TuneIcon from '@material-ui/icons/Tune'
 import ArrowForward from '@material-ui/icons/ArrowForward'
 import { isUser } from 'services/jwtDecode'
 
-import style from './style'
-import Voter from './Voter'
 import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse } from 'services/api'
 import { Button } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
+import Voter from './Voter'
+import style from './style'
 
 const AllQuestioning = ({ classes, questions }) => {
   const [filters, setFilters] = useState({
@@ -38,7 +38,7 @@ const AllQuestioning = ({ classes, questions }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
-    const filteredQuestions = questions.filter(question => {
+    const filteredQuestions = questions.filter((question) => {
       if (
         !(
           (!filters.isValidated && !filters.isNotValidated && !filters.isInValidation) ||
@@ -99,14 +99,16 @@ const AllQuestioning = ({ classes, questions }) => {
     }
     const userChoices = await response.json()
     const choicesDic = {}
-    userChoices.forEach(choice => {
+    userChoices.forEach((choice) => {
       choicesDic[choice.questionId] = choice.choice
     })
     setChoices(choicesDic)
     setAreChoicesFetched(true)
   }
   const fetchVotes = async () => {
-    if (!localStorage.jwt_token) return
+    if (!localStorage.jwt_token) {
+      return
+    }
     const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_VOTES_URI}/user`, method: 'GET' }, 200, {
       enqueueSnackbar,
     })
@@ -115,7 +117,7 @@ const AllQuestioning = ({ classes, questions }) => {
     }
     const userVotes = await response.json()
     const votesDic = {}
-    userVotes.forEach(vote => {
+    userVotes.forEach((vote) => {
       votesDic[vote.questionId] = vote.isUpVote
     })
     setVotes(votesDic)
@@ -126,21 +128,23 @@ const AllQuestioning = ({ classes, questions }) => {
     // eslint-disable-next-line
   }, []);
 
-  const getValidationInformation = questionValidation => {
-    if (questionValidation === null) return 'Question en attente de validation'
+  const getValidationInformation = (questionValidation) => {
+    if (questionValidation === null) {
+      return 'Question en attente de validation'
+    }
     return questionValidation ? 'Question validée' : 'Question invalidée'
   }
 
-  const isNotAnsweredQuestion = question => {
+  const isNotAnsweredQuestion = (question) => {
     return areChoicesFetched ? !choices[question.id] : false
   }
 
-  const handeFilterChange = option => event => {
+  const handeFilterChange = (option) => (event) => {
     setFilters({ ...filters, [option]: event.target.checked })
     setQuestionIndex(0)
   }
 
-  const changeQuestion = increment => {
+  const changeQuestion = (increment) => {
     let index = questionIndex + increment
     if (index < 0 || index === filteredQuestions.length) {
       index = 0

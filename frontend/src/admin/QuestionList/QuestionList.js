@@ -1,7 +1,7 @@
 import React from 'react'
-import { List, Datagrid, TextField, BooleanField, NumberField, ReferenceField } from 'react-admin'
+import { BooleanField, Datagrid, List, NumberField, ReferenceField, TextField } from 'react-admin'
 
-export const QuestionList = props => {
+export const QuestionList = (props) => {
   return (
     <List {...props}>
       <Datagrid rowClick="edit">

@@ -2,9 +2,9 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
-import style from './style'
 import InfoIcon from '@material-ui/icons/Info'
 import { IconButton, Tooltip } from '@material-ui/core'
+import style from './style'
 
 const tooltipTitle = (
   <div style={{ fontSize: '15px', padding: '8px', lineHeight: '15px' }}>
@@ -14,7 +14,7 @@ const tooltipTitle = (
 )
 
 const ModeSelector = ({ classes, handleModeChange, handleFilterOptionChange, isAsakaiMode, filterOption }) => {
-  const handleSwitch = event => {
+  const handleSwitch = (event) => {
     handleModeChange(!!event.target.checked)
   }
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { withSnackbar, useSnackbar } from 'notistack'
+import React, { useEffect, useState } from 'react'
+import { useSnackbar, withSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/core/styles'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
@@ -7,11 +7,11 @@ import AddIcon from '@material-ui/icons/Add'
 import { AddQuestionDialog } from 'components/AddQuestionDialog'
 import { ModeSelector } from 'components/ModeSelector'
 
-import style from './style'
 import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning'
 import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import { fetchRequestResponse } from 'services/api'
+import style from './style'
 
 const Home = ({ classes }) => {
   const [questions, setQuestions] = useState([])
@@ -33,13 +33,13 @@ const Home = ({ classes }) => {
   useEffect(() => {
     fetchQuestions()
     // eslint-disable-next-line
-  }, []);
+  }, [])
 
-  const handleModeChange = isAsakaiMode => {
-    setIsAsakaiMode(isAsakaiMode)
+  const handleModeChange = (isAsakai) => {
+    setIsAsakaiMode(isAsakai)
   }
 
-  const toggleModal = open => () => setAddQuestionDialog(open)
+  const toggleModal = (open) => () => setAddQuestionDialog(open)
 
   return (
     <div className={classes.pageContainer}>

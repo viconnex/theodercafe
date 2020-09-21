@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
@@ -11,7 +11,7 @@ import { FilterDrawer } from 'components/FilterDrawer'
 
 import './style.css'
 
-const getQueryParamsFromFilters = filters => {
+const getQueryParamsFromFilters = (filters) => {
   const params = {}
   for (const filter in filters) {
     if (filters[filter]) {
@@ -36,7 +36,7 @@ const Map = () => {
     isNotJokeOnSomeone: true,
   })
 
-  const handeFilterChange = option => event => {
+  const handeFilterChange = (option) => (event) => {
     setFilters({ ...filters, [option]: event.target.checked })
   }
 
@@ -92,7 +92,7 @@ const Map = () => {
       {
         showInLegend: false,
         type: 'scatter',
-        data: map.map(user => ({
+        data: map.map((user) => ({
           x: user.x,
           y: user.y,
           name: `${user.givenName} ${user.familyName.charAt(0).toUpperCase()}`,
@@ -105,7 +105,7 @@ const Map = () => {
       },
     ],
     tooltip: {
-      formatter: function() {
+      formatter: function () {
         const data = this.series.chart.series[0].data
         const index = this.point.index
         return '<b>' + data[index].name + '</b>'

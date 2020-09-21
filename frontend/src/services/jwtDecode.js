@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode'
 
-export const decodeJWT = jwtToken => {
+export const decodeJWT = (jwtToken) => {
   const decoded = jwtDecode(jwtToken)
   return {
     id: decoded.id,
@@ -13,13 +13,17 @@ export const decodeJWT = jwtToken => {
 }
 
 export const isUser = () => {
-  if (!localStorage.jwt_token) return false
+  if (!localStorage.jwt_token) {
+    return false
+  }
   const decoded = decodeJWT(localStorage.jwt_token)
   return !decoded.hasExpired
 }
 
 export const getPictureUrl = () => {
-  if (!localStorage.jwt_token) return null
+  if (!localStorage.jwt_token) {
+    return null
+  }
   const decoded = decodeJWT(localStorage.jwt_token)
   return decoded.pictureUrl
 }

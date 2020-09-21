@@ -1,7 +1,7 @@
 import React from 'react'
-import { Edit, SimpleForm, BooleanInput, TextInput, ReferenceInput, SelectInput } from 'react-admin'
+import { BooleanInput, Edit, ReferenceInput, SelectInput, SimpleForm, TextInput } from 'react-admin'
 
-export const QuestionEdit = props => (
+export const QuestionEdit = (props) => (
   <Edit {...props}>
     <SimpleForm>
       <TextInput source="id" />

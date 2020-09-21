@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nestjs
+  labels:
+    name: nestjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nestjs
+  template:
+    metadata:
+      labels:
+        app: nestjs
+    spec:
+      containers:
+        - name: nestjs
+          image: gcr.io/theodercafe/backend:latest
+          env:
+            - name: PORT
+              value: "8000"
+            - name: NODE_ENV
+              value: production
+            - name: FRONT_BASE_URL
+              value: https://theodercafe.com
+            - name: BACKEND_URL
+              value: https://api.theodercafe.com
+            - name: AUTH2_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: nestjs-secrets
+                  key: OAUTH_CLIENT_ID
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: nestjs-secrets
+                  key: OAUTH_CLIENT_SECRET
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: nestjs-secrets
+                  key: JWT_SCRET_KEY
+            - name: TYPEORM_URL
+              value: postgres://the:cafe@localhost:5432/theodercafe
+            - name: TYPEORM_LOGGING
+              value: "false"
+            - name: TYPEORM_ENTITIES
+              value: dist/**/*.entity.js,dist/src/**/*.entity.js
+            - name: TYPEORM_MIGRATIONS
+              value: dist/migration/*.js
+            - name: TYPEORM_MIGRATIONS_DIR
+              value: migration
+        - name: cloud-sql-proxy
+          # It is recommended to use the latest version of the Cloud SQL proxy
+          # Make sure to update on a regular schedule!
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command:
+            - "/cloud_sql_proxy"
+            # If connecting from a VPC-native GKE cluster, you can use the
+            # following flag to have the proxy connect over private IP
+            # - "-ip_address_types=PRIVATE"
+
+            # Replace DB_PORT with the port the proxy should listen on
+            # Defaults: MySQL: 3306, Postgres: 5432, SQLServer: 1433
+            - "-instances=theodercafe:europe-west2:theodercafe=tcp:5432"
+            - "-credential_file=/secrets/service_account.json"
+          securityContext:
+            # The default Cloud SQL proxy image runs as the
+            # "nonroot" user and group (uid: 65532) by default.
+            runAsNonRoot: true
+          volumeMounts:
+            - name: theodercafe-sa-secret-volume
+              mountPath: /secrets/
+              readOnly: true
+      volumes:
+        - name: theodercafe-sa-secret-volume
+          secret:
+            secretName: theodercafe-postgresq-sa-secret
+
+      restartPolicy: Always

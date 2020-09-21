@@ -12,7 +12,7 @@ import { decodeJWT } from 'services/jwtDecode'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
 
-const style = theme => ({
+const style = (theme) => ({
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
@@ -61,7 +61,7 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
       </div>
       <Divider />
       <List>
-        {drawerLinks.map(link => (
+        {drawerLinks.map((link) => (
           <Link to={link.path} className={classes.link} key={link.path}>
             <ListItem button onClick={toggleDrawer(false)}>
               <ListItemText primary={link.label} />

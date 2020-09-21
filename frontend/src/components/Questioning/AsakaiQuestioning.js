@@ -4,10 +4,10 @@ import { fetchRequest } from 'utils/helpers'
 import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
 import { useSnackbar } from 'notistack'
 import { withStyles } from '@material-ui/styles'
-import style from './style'
 import { Alterodo } from 'components/Alterodo'
 import { fetchRequestResponse } from 'services/api'
 import { getUserId } from 'services/jwtDecode'
+import style from './style'
 
 const AsakaiQuestioning = ({ classes }) => {
   const [questions, setQuestions] = useState([])
@@ -17,7 +17,7 @@ const AsakaiQuestioning = ({ classes }) => {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const fetchAndSetQuestions = async newSet => {
+  const fetchAndSetQuestions = async (newSet) => {
     const response = await fetchRequestResponse(
       {
         uri: `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
@@ -50,9 +50,11 @@ const AsakaiQuestioning = ({ classes }) => {
     fetchAndSetQuestions(true)
   }
 
-  const changeQuestion = increment => {
+  const changeQuestion = (increment) => {
     let index = questionIndex + increment
-    if (index < 0) index = 0
+    if (index < 0) {
+      index = 0
+    }
     if (index < questions.length && index >= 0) {
       setQuestionIndex(index)
     }

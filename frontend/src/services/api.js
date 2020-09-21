@@ -12,7 +12,7 @@ export const fetchRequestResponse = async (
     enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' })
     return null
   }
-  if (response.status !== expectedStatus) {
+  if (!response || response.status !== expectedStatus) {
     enqueueSnackbar('Une erreur est survenue', { variant: 'error' })
     return null
   }
