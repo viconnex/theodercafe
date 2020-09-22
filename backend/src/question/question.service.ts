@@ -3,7 +3,7 @@ import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
 import { InjectRepository } from '@nestjs/typeorm'
 import { QuestionWithCategoryNameDto, QuestionPostDTO } from './interfaces/question.dto'
-import { DeleteResult } from 'typeorm'
+import { DeleteResult, FindManyOptions } from 'typeorm'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { Question } from './question.entity'
 
@@ -101,5 +101,8 @@ export class QuestionService {
 
     delete(id: string): Promise<DeleteResult> {
         return this.questionRepository.deleteQuestion(id)
+    }
+    find(options: FindManyOptions<Question>): Promise<Question[]> {
+        return this.questionRepository.find(options)
     }
 }
