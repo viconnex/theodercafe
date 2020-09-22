@@ -40,13 +40,13 @@ export class UserService {
             throw new BadRequestException('you must provide a valid email address')
         }
 
-        let user = await this.userRepository.findOne({ email })
-        if (user && !user.isAdmin) {
+        const existingUser = await this.userRepository.findOne({ email })
+        if (existingUser && !existingUser.isAdmin) {
             throw new BadRequestException('there is already an user with the specified email')
         }
-
-        if (!user) {
-            user = await this.userRepository.save({
+        let newUser = null
+        if (!existingUser) {
+            newUser = await this.userRepository.save({
                 email,
                 company: getCompanyFromEmail(email),
                 isAdmin: false,
@@ -73,6 +73,6 @@ export class UserService {
             return
         }
 
-        return 'user created'
+        return newUser ? 'user created' : 'email sent'
     }
 }
