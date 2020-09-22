@@ -25,7 +25,14 @@ steps:
     - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
   - name: 'gcr.io/cloud-builders/kubectl'
     dir: "devops/kubernetes"
-    args: ['apply', '-f', 'backend-deployment.yaml']
+    args: [
+      'apply', '-f', 'backend-deployment.yaml',
+      'set',
+      'image',
+      'deployment',
+      'nestjs',
+      'nestjs=gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA'
+    ]
     env:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
