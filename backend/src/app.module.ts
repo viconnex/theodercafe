@@ -33,6 +33,13 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
             defaults: {
                 from: '"nest-modules" <modules@nestjs.com>',
             },
+            template: {
+                dir: __dirname + '/../templates',
+                adapter: new PugAdapter(),
+                options: {
+                    strict: true,
+                },
+            },
         }),
     ],
     controllers: [AppController],
