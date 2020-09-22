@@ -16,6 +16,9 @@ steps:
     'gcr.io/theodercafe/backend:latest',
     '.'
     ]
+  - name: gcr.io/cloud-builders/docker
+    dir: "backend"
+    args: ['push', 'gcr.io/theodercafe/backend:latest']
   # delete deploymnent instead of adding new replicaSet because the number of nodes is limited to 1
   - name: 'gcr.io/cloud-builders/kubectl'
     dir: "devops/kubernetes"
@@ -25,9 +28,7 @@ steps:
     - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
   - name: 'gcr.io/cloud-builders/kubectl'
     dir: "devops/kubernetes"
-    args: [
-      'apply', '-f', 'backend-deployment.yaml',
-    ]
+    args: ['apply', '-f', 'backend-deployment.yaml']
     env:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'

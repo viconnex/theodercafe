@@ -73,6 +73,6 @@ export class UserService {
             return
         }
 
-        return newUser ? 'user created' : 'email sent'
+        return newUser ? 'user created' : 'email sent adminou'
     }
 }
