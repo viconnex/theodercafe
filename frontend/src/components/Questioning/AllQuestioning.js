@@ -38,7 +38,7 @@ const AllQuestioning = ({ classes, questions }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
-    const filteredQuestions = questions.filter((question) => {
+    const newFilteredQuestions = questions.filter((question) => {
       if (
         !(
           (!filters.isValidated && !filters.isNotValidated && !filters.isInValidation) ||
@@ -81,9 +81,9 @@ const AllQuestioning = ({ classes, questions }) => {
 
       return true
     })
-    setFilteredQuestions(filteredQuestions)
+    setFilteredQuestions(newFilteredQuestions)
     // eslint-disable-next-line
-  }, [filters, questions, areChoicesFetched]);
+  }, [filters, questions, areChoicesFetched])
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -126,7 +126,7 @@ const AllQuestioning = ({ classes, questions }) => {
     fetchChoices()
     fetchVotes()
     // eslint-disable-next-line
-  }, []);
+  }, [])
 
   const getValidationInformation = (questionValidation) => {
     if (questionValidation === null) {
@@ -183,7 +183,7 @@ const AllQuestioning = ({ classes, questions }) => {
     let method = 'PUT'
     let body
 
-    if (votes.hasOwnProperty(questionId) && votes[questionId] === isUpVote) {
+    if (questionId in votes && votes[questionId] === isUpVote) {
       Reflect.deleteProperty(newVote, questionId)
       method = 'DELETE'
     } else {

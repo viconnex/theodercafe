@@ -37,12 +37,15 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+    paddingTop: '8px',
   },
   asakaiSubtitle: {
     alignItems: 'flex-start',
     display: 'flex',
     fontSize: '14px',
     flexDirection: 'column',
+    position: 'absolute',
+    top: 0,
   },
   asakaiModeInfo: {
     fontSize: '11px',

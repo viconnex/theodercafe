@@ -15,6 +15,7 @@ const useStyle = makeStyles((theme) => {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      position: 'relative',
     },
     addButton: {
       position: 'fixed',
