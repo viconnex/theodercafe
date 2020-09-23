@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/styles'
 import MaterialButton from '@material-ui/core/Button'
 import { IconButton, Tooltip } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
+import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import style from './style'
 
 const getAlterodoName = (isAlterodo) => (isAlterodo ? 'Alterodo' : 'Varieto')

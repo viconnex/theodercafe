@@ -1,12 +1,12 @@
+import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-const style = {
+const useStyle = makeStyles((theme) => ({
   modeSelectorContainer: {
     alignItems: 'flex-start',
     display: 'flex',
     flexDirection: 'column',
-    position: 'absolute',
-    top: 0,
+    marginTop: '8px',
   },
   selectorWithInfo: {
     display: 'flex',
@@ -51,6 +51,5 @@ const style = {
   switchTrack: {
     backgroundColor: 'grey',
   },
-}
-
-export default style
+}))
+export default useStyle

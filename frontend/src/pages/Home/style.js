@@ -1,24 +1,30 @@
-const style = {
-  pageContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    justifyContent: 'center',
-    position: 'relative',
-    padding: '90px 0',
-  },
-  modeSelector: {
-    position: 'absolute',
-    top: 0,
-  },
-  addButton: {
-    position: 'fixed',
-    bottom: '30px',
-    right: '30px',
-  },
-  modal: {
-    padding: '30px',
-  },
-}
+import { makeStyles } from '@material-ui/core'
 
-export default style
+const useStyle = makeStyles((theme) => {
+  return {
+    pageContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+    },
+    toolbarSpace: {
+      ...theme.mixins.toolbar,
+    },
+    questioningContainer: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    addButton: {
+      position: 'fixed',
+      bottom: '30px',
+      right: '30px',
+    },
+    modal: {
+      padding: '30px',
+    },
+  }
+})
+
+export default useStyle

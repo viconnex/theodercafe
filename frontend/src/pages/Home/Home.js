@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useSnackbar, withSnackbar } from 'notistack'
-import { withStyles } from '@material-ui/core/styles'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 
@@ -11,9 +10,10 @@ import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning'
 import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import { fetchRequestResponse } from 'services/api'
-import style from './style'
+import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
+import useStyles from './style'
 
-const Home = ({ classes }) => {
+const Home = () => {
   const [questions, setQuestions] = useState([])
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
   const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
@@ -40,11 +40,14 @@ const Home = ({ classes }) => {
   }
 
   const toggleModal = (open) => () => setAddQuestionDialog(open)
-
+  const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
+      <div className={classes.toolbarSpace} />
       <ModeSelector isAsakaiMode={isAsakaiMode} handleModeChange={handleModeChange} />
-      {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} />}
+      <div className={classes.questioningContainer}>
+        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} />}
+      </div>
       <Fab className={classes.addButton} size="small" onClick={toggleModal(true)}>
         <AddIcon />
       </Fab>
@@ -54,8 +57,9 @@ const Home = ({ classes }) => {
         onClose={toggleModal(false)}
         handleQuestionAdded={() => setAddQuestionDialog(false)}
       />
+      {/* <EmailSnackbar></EmailSnackbar> */}
     </div>
   )
 }
 
-export default withSnackbar(withStyles(style)(Home))
+export default withSnackbar(Home)

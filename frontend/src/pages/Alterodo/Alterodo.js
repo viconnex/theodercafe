@@ -16,14 +16,14 @@ const AlterodoPage = () => {
     if (!response) {
       return
     }
-    const alterodos = await response.json()
-    setAlterodos(alterodos)
+    const alterodosResponse = await response.json()
+    setAlterodos(alterodosResponse)
   }
 
   useEffect(() => {
     fetchAlterodos()
     // eslint-disable-next-line
-  }, []);
+  }, [])
 
   if (!alterodos) {
     return <div>Loading</div>

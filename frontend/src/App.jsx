@@ -57,7 +57,6 @@ const App = ({ classes }) => {
                 </IconButton>
               </ToolBar>
             </AppBar>
-            <ToolBar className={classes.shim} />
             <Suspense fallback={<div>Loading</div>}>
               <Switch>
                 <Route exact path="/a-propos" component={About} />

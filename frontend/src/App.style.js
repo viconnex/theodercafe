@@ -7,7 +7,7 @@ const style = {
     display: 'flex',
     flexDirection: 'column',
     fontSize: '16px',
-    minHeight: '100vh',
+    height: '100vh',
     textAlign: 'center',
     padding: '0px 15px',
   },

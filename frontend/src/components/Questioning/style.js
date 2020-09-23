@@ -43,8 +43,6 @@ const style = {
     display: 'flex',
     fontSize: '14px',
     flexDirection: 'column',
-    position: 'absolute',
-    top: '40px',
   },
   asakaiModeInfo: {
     fontSize: '11px',
