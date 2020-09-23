@@ -10,7 +10,6 @@ import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning'
 import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import { fetchRequestResponse } from 'services/api'
-import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import useStyles from './style'
 
 const Home = () => {
@@ -57,7 +56,6 @@ const Home = () => {
         onClose={toggleModal(false)}
         handleQuestionAdded={() => setAddQuestionDialog(false)}
       />
-      {/* <EmailSnackbar></EmailSnackbar> */}
     </div>
   )
 }

@@ -2,7 +2,7 @@ import colors from 'ui/colors'
 
 export default {
   picture: {
-    marginTop: '30px',
+    marginTop: '16px',
     borderRadius: '100%',
     width: '100px',
   },

@@ -7,6 +7,7 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     marginTop: '8px',
+    width: '100%',
   },
   selectorWithInfo: {
     display: 'flex',

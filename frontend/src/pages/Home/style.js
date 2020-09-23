@@ -6,6 +6,8 @@ const useStyle = makeStyles((theme) => {
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
+      alignItems: 'center',
+      position: 'relative',
     },
     toolbarSpace: {
       ...theme.mixins.toolbar,
@@ -16,11 +18,12 @@ const useStyle = makeStyles((theme) => {
       flexDirection: 'column',
       justifyContent: 'center',
       position: 'relative',
+      width: '100%',
     },
     addButton: {
-      position: 'fixed',
-      bottom: '30px',
-      right: '30px',
+      position: 'absolute',
+      bottom: '15px',
+      right: '0px',
     },
     modal: {
       padding: '30px',

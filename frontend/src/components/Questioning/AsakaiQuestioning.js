@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/styles'
 import { Alterodo } from 'components/Alterodo'
 import { fetchRequestResponse } from 'services/api'
 import { getUserId } from 'services/jwtDecode'
+import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import style from './style'
 
 const AsakaiQuestioning = ({ classes }) => {
@@ -37,7 +38,7 @@ const AsakaiQuestioning = ({ classes }) => {
   useEffect(() => {
     fetchAndSetQuestions(false)
     // eslint-disable-next-line
-  }, []);
+  }, [])
 
   const resetQuestioning = () => {
     setAlterodos(null)
@@ -107,6 +108,7 @@ const AsakaiQuestioning = ({ classes }) => {
           </div>
         )}
         {alterodos && <Alterodo alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />}
+        {alterodos && <EmailSnackbar />}
       </div>
     </div>
   )
