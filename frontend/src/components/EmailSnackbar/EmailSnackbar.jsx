@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 
 import { CircularProgress, IconButton, InputBase, Paper, Slide } from '@material-ui/core'
 import { Send } from '@material-ui/icons'
-import { USERS_URI } from 'utils/constants/apiConstants'
+import { ASAKAI_EMAIL_PATH, USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 import { fetchRequest } from 'utils/helpers'
 import { useSnackbar } from 'notistack'
 import useStyles from './style'
 
-const EmailSnackbar = () => {
+const EmailSnackbar = ({ asakaiChoices }) => {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [isSendingEmail, setIsSendingEmail] = useState(false)
@@ -20,12 +20,12 @@ const EmailSnackbar = () => {
 
   const onSendClick = async (event) => {
     event.preventDefault()
-    const uri = `/${USERS_URI}`
-    const body = { email }
+    const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${ASAKAI_EMAIL_PATH}`
+    const body = { email, asakaiChoices }
     setIsSendingEmail(true)
     try {
       const response = await fetchRequest({ uri, method: 'POST', body })
-      if (!response || response.status === 400) {
+      if (!response || response.status !== 201) {
         enqueueSnackbar('Email invalide ou déjà existant', { variant: 'error' })
       } else {
         setShowInput(false)

@@ -4,7 +4,3 @@ export interface UserWithPublicFields {
     familyName: string
     pictureUrl: string
 }
-
-export interface UserEmailPostBody {
-    email?: string
-}

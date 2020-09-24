@@ -18,10 +18,7 @@ export class AuthService {
             const email = profile.emails.length > 0 ? profile.emails[0].value : null
             if (!email) return
 
-            let user = await this.userService.findByEmail(email)
-            if (!user) {
-                user = await this.userService.createNewUser(email, profile)
-            }
+            const user = await this.userService.createOrUpdate(email, profile)
 
             const payload = {
                 id: user.id,

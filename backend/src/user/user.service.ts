@@ -6,6 +6,7 @@ import { GoogleProfile } from '../auth/google.strategy'
 import { UserWithPublicFields } from './user.types'
 import { MailerService } from '@nestjs-modules/mailer'
 import { QuestionService } from 'src/question/question.service'
+import { Question } from 'src/question/question.entity'
 
 @Injectable()
 export class UserService {
@@ -23,18 +24,34 @@ export class UserService {
         return this.userRepository.findOne({ email })
     }
 
-    createNewUser(email: string, profile: GoogleProfile, isAdmin?: boolean): Promise<User> {
+    createNewUser(email: string, profile: GoogleProfile): Promise<User> {
         return this.userRepository.save({
             email,
-            givenName: profile.name ? profile.name.givenName : 'email',
-            familyName: profile.name ? profile.name.familyName : ' ',
-            pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             company: getCompanyFromEmail(email),
-            isAdmin: isAdmin || false,
+            isAdmin: false,
+            ...this.getUserInfoFromProfile(profile),
         })
     }
 
-    async createUserWithEmail(email: string): Promise<string> {
+    getUserInfoFromProfile(profile) {
+        return {
+            givenName: profile.name ? profile.name.givenName : 'email',
+            familyName: profile.name ? profile.name.familyName : ' ',
+            pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
+        }
+    }
+
+    async createOrUpdate(email: string, profile: GoogleProfile): Promise<User> {
+        const user = await this.findByEmail(email)
+
+        if (user) {
+            return this.userRepository.save({ ...user, ...this.getUserInfoFromProfile(profile) })
+        }
+
+        return user ?? this.createNewUser(email, profile)
+    }
+
+    async createUserWithEmail(email: string): Promise<User | null> {
         const emailParts = email.split('@')
         if (emailParts.length < 2 || !emailParts[0].length || !emailParts[1].length) {
             throw new BadRequestException('you must provide a valid email address')
@@ -74,6 +91,6 @@ export class UserService {
             return
         }
 
-        return newUser ? 'user created' : 'email sent adminou'
+        return newUser
     }
 }

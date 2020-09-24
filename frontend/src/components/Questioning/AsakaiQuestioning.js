@@ -119,7 +119,7 @@ const AsakaiQuestioning = () => {
       return (
         <React.Fragment>
           <div className={classes.email}>
-            <EmailSnackbar />
+            <EmailSnackbar asakaiChoices={asakaiChoices} />
           </div>
           <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
         </React.Fragment>

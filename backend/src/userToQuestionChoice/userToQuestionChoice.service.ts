@@ -17,7 +17,7 @@ import { getBestAlterodos, createUsersChoicesMatrix } from './userToQuestionChoi
 import { UserWithPublicFields } from 'src/user/user.types'
 
 // eslint-disable-next-line
-const PCA = require('pca-js');
+const PCA = require('pca-js')
 
 @Injectable()
 export class UserToQuestionChoiceService {
@@ -105,6 +105,24 @@ export class UserToQuestionChoiceService {
         )
 
         return usersMap
+    }
+
+    async handleAsakaiEmailSending(userEmail: string, asakaiChoices?: AsakaiChoices): Promise<string> {
+        const newUser = await this.userService.createUserWithEmail(userEmail)
+
+        if (!newUser) {
+            return 'no user created'
+        }
+
+        const choices = []
+        for (let questionId in asakaiChoices) {
+            choices.push({ questionId, choice: asakaiChoices[questionId], userId: newUser.id })
+        }
+        if (asakaiChoices) {
+            await this.userToQuestionChoiceRepository.save(choices)
+        }
+
+        return 'user created'
     }
 
     private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos): Promise<AlterodoResponse> {
