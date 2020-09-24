@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { withStyles } from '@material-ui/styles'
 
 import MaterialButton from '@material-ui/core/Button'
 import { IconButton, Tooltip } from '@material-ui/core'
