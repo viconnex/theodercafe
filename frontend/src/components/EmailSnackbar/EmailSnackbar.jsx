@@ -39,7 +39,15 @@ const EmailSnackbar = () => {
   return (
     <Slide direction="right" in={showInput}>
       <Paper component="form" className={classes.root}>
-        <InputBase onChange={onEmailChange} value={email} className={classes.input} placeholder="email du coaché" />
+        <InputBase
+          type="email"
+          autocorrect="off"
+          autocapitalize="none"
+          onChange={onEmailChange}
+          value={email}
+          className={classes.input}
+          placeholder="email du coaché"
+        />
         <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={onSendClick}>
           {!isSendingEmail ? <Send /> : <CircularProgress size={24} />}
         </IconButton>
