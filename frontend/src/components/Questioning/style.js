@@ -1,6 +1,7 @@
+import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-const style = {
+const useStyle = makeStyles((theme) => ({
   nextButton: {
     color: 'white',
   },
@@ -62,6 +63,15 @@ const style = {
     color: colors.theodoGreen,
     cursor: 'pointer',
   },
-}
+  email: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    zIndex: 1,
+  },
+  alterodo: {
+    marginTop: '8px',
+  },
+}))
 
-export default style
+export default useStyle

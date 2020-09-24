@@ -3,14 +3,13 @@ import { Question } from 'components/Question'
 import { fetchRequest } from 'utils/helpers'
 import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
 import { useSnackbar } from 'notistack'
-import { withStyles } from '@material-ui/styles'
 import { Alterodo } from 'components/Alterodo'
 import { fetchRequestResponse } from 'services/api'
 import { getUserId } from 'services/jwtDecode'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
-import style from './style'
+import useStyle from './style'
 
-const AsakaiQuestioning = ({ classes }) => {
+const AsakaiQuestioning = () => {
   const [questions, setQuestions] = useState([])
   const [questionIndex, setQuestionIndex] = useState(0)
   const [asakaiChoices, setAsakaiChoices] = useState({})
@@ -90,6 +89,8 @@ const AsakaiQuestioning = ({ classes }) => {
     changeQuestion(1)
   }
   const question = questions[questionIndex]
+
+  const classes = useStyle()
   return (
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
@@ -107,11 +108,17 @@ const AsakaiQuestioning = ({ classes }) => {
             </div>
           </div>
         )}
-        {alterodos && <Alterodo alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />}
-        {alterodos && <EmailSnackbar />}
+        {alterodos && (
+          <React.Fragment>
+            <div className={classes.email}>
+              <EmailSnackbar />
+            </div>
+            <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
+          </React.Fragment>
+        )}
       </div>
     </div>
   )
 }
 
-export default withStyles(style)(AsakaiQuestioning)
+export default AsakaiQuestioning

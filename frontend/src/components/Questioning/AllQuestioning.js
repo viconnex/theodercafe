@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Question } from 'components/Question'
 import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 import { useSnackbar } from 'notistack'
-import { withStyles } from '@material-ui/styles'
 import IconButton from '@material-ui/core/IconButton'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import TuneIcon from '@material-ui/icons/Tune'
@@ -14,9 +13,9 @@ import { fetchRequestResponse } from 'services/api'
 import { Button } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Voter from './Voter'
-import style from './style'
+import useStyle from './style'
 
-const AllQuestioning = ({ classes, questions }) => {
+const AllQuestioning = ({ questions }) => {
   const [filters, setFilters] = useState({
     isValidated: true,
     isNotValidated: false,
@@ -195,6 +194,7 @@ const AllQuestioning = ({ classes, questions }) => {
     return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar })
   }
 
+  const classes = useStyle()
   return (
     <React.Fragment>
       <div className={classes.asakaiSubtitle}>
@@ -236,4 +236,4 @@ const AllQuestioning = ({ classes, questions }) => {
   )
 }
 
-export default withStyles(style)(AllQuestioning)
+export default AllQuestioning

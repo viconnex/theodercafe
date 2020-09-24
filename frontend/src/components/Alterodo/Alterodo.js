@@ -4,11 +4,11 @@ import { withStyles } from '@material-ui/styles'
 import MaterialButton from '@material-ui/core/Button'
 import { IconButton, Tooltip } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
-import style from './style'
+import useStyle from './style'
 
 const getAlterodoName = (isAlterodo) => (isAlterodo ? 'Alterodo' : 'Varieto')
 
-const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount, isAsakai }) => {
+const Alterodo = ({ alterodo, isAlterodo, baseQuestionCount, isAsakai }) => {
   const sameOrDifferentAnswerCount = isAlterodo
     ? alterodo.sameAnswerCount
     : alterodo.commonQuestionCount - alterodo.sameAnswerCount
@@ -28,6 +28,7 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount, isAsakai }
       </div>
     </div>
   )
+  const classes = useStyle()
   return (
     <div>
       <div>
@@ -56,7 +57,7 @@ const Alterodo = ({ alterodo, classes, isAlterodo, baseQuestionCount, isAsakai }
   )
 }
 
-const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, isAsakai }) => {
+const AlterodoWrapper = ({ alterodos, resetQuestioning, isAsakai, className }) => {
   const [alterodo, setAlterodo] = useState(alterodos.alterodo)
   const [isAlterodoDisplayed, setIsAlterodoDisplayed] = useState(true)
 
@@ -69,6 +70,7 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, isAsakai }) => 
       setIsAlterodoDisplayed(true)
     }
   }
+  const classes = useStyle()
 
   if (alterodos.baseQuestionCount === 0) {
     return <div>Ton alterodo n'est pas défini car tu n'as répondu à aucune question validée</div>
@@ -79,7 +81,7 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, isAsakai }) => 
   }
 
   return (
-    <div>
+    <div className={className}>
       <Alterodo
         classes={classes}
         alterodo={alterodo}
@@ -103,4 +105,4 @@ const AlterodoWrapper = ({ alterodos, classes, resetQuestioning, isAsakai }) => 
   )
 }
 
-export default withStyles(style)(AlterodoWrapper)
+export default AlterodoWrapper

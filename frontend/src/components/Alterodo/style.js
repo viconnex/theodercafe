@@ -1,6 +1,7 @@
+import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-export default {
+const useStyle = makeStyles((theme) => ({
   picture: {
     marginTop: '16px',
     borderRadius: '100%',
@@ -27,4 +28,6 @@ export default {
   infoButton: {
     padding: '6px',
   },
-}
+}))
+
+export default useStyle

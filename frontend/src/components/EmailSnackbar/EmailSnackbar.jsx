@@ -37,7 +37,7 @@ const EmailSnackbar = () => {
     setIsSendingEmail(false)
   }
   return (
-    <Slide direction="left" in={showInput}>
+    <Slide direction="right" in={showInput}>
       <Paper component="form" className={classes.root}>
         <InputBase onChange={onEmailChange} value={email} className={classes.input} placeholder="email du coaché" />
         <IconButton type="submit" className={classes.iconButton} aria-label="search" onClick={onSendClick}>

@@ -3,10 +3,10 @@ import Tooltip from '@material-ui/core/Tooltip'
 import IconButton from '@material-ui/core/IconButton'
 import ThumbUp from '@material-ui/icons/ThumbUp'
 import ThumbDown from '@material-ui/icons/ThumbDown'
-import { withStyles } from '@material-ui/styles'
-import style from './style'
+import useStyle from './style'
 
-const Voter = ({ classes, questionId, isUpVote, vote }) => {
+const Voter = ({ questionId, isUpVote, vote }) => {
+  const classes = useStyle()
   let downVoteClass = classes.neutralVote
   let upVoteClass = classes.neutralVote
   if (isUpVote === true) {
@@ -14,7 +14,6 @@ const Voter = ({ classes, questionId, isUpVote, vote }) => {
   } else if (isUpVote === false) {
     downVoteClass = classes.downVote
   }
-
   return (
     <div className={classes.upVote}>
       <Tooltip title="Je n'aime pas cette question">
@@ -31,4 +30,4 @@ const Voter = ({ classes, questionId, isUpVote, vote }) => {
   )
 }
 
-export default withStyles(style)(Voter)
+export default Voter
