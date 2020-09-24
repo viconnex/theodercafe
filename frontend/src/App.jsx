@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/Toolbar'
-import { createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { createMuiTheme } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 import { SnackbarProvider } from 'notistack'
 import { MenuDrawer } from 'components/MenuDrawer'
