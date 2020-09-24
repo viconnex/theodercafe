@@ -18,7 +18,7 @@ import colors from 'ui/colors'
 import { getPictureUrl } from 'services/jwtDecode'
 import { Alterodo } from 'pages/Alterodo'
 import { Map } from 'pages/Map'
-import style from './App.style'
+import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
 
 const Admin = lazy(() => import('./admin/Admin'))
@@ -33,7 +33,7 @@ const theme = createMuiTheme({
   },
 })
 
-const App = ({ classes }) => {
+const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
 
   const toggleDrawer = (open) => () => {
@@ -41,6 +41,7 @@ const App = ({ classes }) => {
   }
 
   const [pictureUrl, setPictureUrl] = React.useState(getPictureUrl())
+  const classes = useStyle()
 
   return (
     <ThemeProvider theme={theme}>
@@ -57,6 +58,7 @@ const App = ({ classes }) => {
                 </IconButton>
               </ToolBar>
             </AppBar>
+            <div className={classes.toolbarSpace} />
             <Suspense fallback={<div>Loading</div>}>
               <Switch>
                 <Route exact path="/a-propos" component={About} />
@@ -77,4 +79,4 @@ const App = ({ classes }) => {
   )
 }
 
-export default withStyles(style)(App)
+export default App

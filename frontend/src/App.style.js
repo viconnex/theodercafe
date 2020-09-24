@@ -1,6 +1,7 @@
+import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-const style = {
+const useStyle = makeStyles((theme) => ({
   app: {
     backgroundColor: colors.theodoBlue,
     color: 'white',
@@ -24,6 +25,8 @@ const style = {
   profile: {
     borderRadius: '30px',
   },
-}
-
-export default style
+  toolbarSpace: {
+    ...theme.mixins.toolbar,
+  },
+}))
+export default useStyle

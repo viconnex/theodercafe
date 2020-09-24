@@ -46,7 +46,6 @@ const Home = () => {
   const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
-      <div className={classes.toolbarSpace} />
       <ModeSelector isAsakaiMode={isAsakaiMode} handleModeChange={handleModeChange} />
       <div className={classes.questioningContainer}>
         {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} isLoading={isLoading} />}

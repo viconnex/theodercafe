@@ -9,9 +9,6 @@ const useStyle = makeStyles((theme) => {
       alignItems: 'center',
       position: 'relative',
     },
-    toolbarSpace: {
-      ...theme.mixins.toolbar,
-    },
     questioningContainer: {
       height: '100%',
       display: 'flex',
