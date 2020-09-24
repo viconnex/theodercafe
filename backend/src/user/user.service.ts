@@ -60,6 +60,7 @@ export class UserService {
         try {
             await this.mailerService.sendMail({
                 to: email,
+                cc: 'victorl@theodo.fr',
                 from: 'theodercafe@gmail.com',
                 subject,
                 template: 'welcome',
