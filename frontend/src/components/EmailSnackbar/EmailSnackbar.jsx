@@ -41,8 +41,9 @@ const EmailSnackbar = () => {
       <Paper component="form" className={classes.root}>
         <InputBase
           type="email"
-          autocorrect="off"
-          autocapitalize="none"
+          label="email"
+          autoCorrect="off"
+          autoCapitalize="none"
           onChange={onEmailChange}
           value={email}
           className={classes.input}

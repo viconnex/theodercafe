@@ -10,12 +10,12 @@ import { isUser } from 'services/jwtDecode'
 
 import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse } from 'services/api'
-import { Button } from '@material-ui/core'
+import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Voter from './Voter'
 import useStyle from './style'
 
-const AllQuestioning = ({ questions }) => {
+const AllQuestioning = ({ questions, isLoading }) => {
   const [filters, setFilters] = useState({
     isValidated: true,
     isNotValidated: false,
@@ -195,6 +195,39 @@ const AllQuestioning = ({ questions }) => {
   }
 
   const classes = useStyle()
+
+  const QuestioningContent = () => {
+    if (isLoading) {
+      return <CircularProgress color="secondary" />
+    }
+    if (question) {
+      return (
+        <React.Fragment>
+          <Question question={question} chose={chose} choice={choices[question.id]} />
+          <div className={classes.browser}>
+            <IconButton
+              disabled={questionIndex === 0}
+              classes={{ root: classes.nextButton }}
+              onClick={() => changeQuestion(-1)}
+            >
+              <ArrowBack />
+            </IconButton>
+            <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
+              <ArrowForward />
+            </IconButton>
+            <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
+          </div>
+          <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
+          <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
+        </React.Fragment>
+      )
+    }
+    if (areChoicesFetched) {
+      return <div>Aucune question pour les filtres sélectionnés</div>
+    }
+    return <CircularProgress color="secondary" />
+  }
+
   return (
     <React.Fragment>
       <div className={classes.asakaiSubtitle}>
@@ -203,27 +236,7 @@ const AllQuestioning = ({ questions }) => {
         </Button>
       </div>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
-        {question && (
-          <React.Fragment>
-            <Question question={question} chose={chose} choice={choices[question.id]} />
-            <div className={classes.browser}>
-              <IconButton
-                disabled={questionIndex === 0}
-                classes={{ root: classes.nextButton }}
-                onClick={() => changeQuestion(-1)}
-              >
-                <ArrowBack />
-              </IconButton>
-              <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
-                <ArrowForward />
-              </IconButton>
-              <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
-            </div>
-            <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
-            <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
-          </React.Fragment>
-        )}
-        {!question && areChoicesFetched && <div>Aucune question pour les filtres sélectionnés</div>}
+        <QuestioningContent />
       </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
       <FilterDrawer

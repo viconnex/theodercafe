@@ -7,6 +7,7 @@ import { Alterodo } from 'components/Alterodo'
 import { fetchRequestResponse } from 'services/api'
 import { getUserId } from 'services/jwtDecode'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
+import { CircularProgress } from '@material-ui/core'
 import useStyle from './style'
 
 const AsakaiQuestioning = () => {
@@ -14,10 +15,12 @@ const AsakaiQuestioning = () => {
   const [questionIndex, setQuestionIndex] = useState(0)
   const [asakaiChoices, setAsakaiChoices] = useState({})
   const [alterodos, setAlterodos] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar()
 
   const fetchAndSetQuestions = async (newSet) => {
+    setIsLoading(true)
     const response = await fetchRequestResponse(
       {
         uri: `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
@@ -27,9 +30,11 @@ const AsakaiQuestioning = () => {
       { enqueueSnackbar },
     )
     if (!response) {
+      setIsLoading(false)
       return
     }
     const data = await response.json()
+    setIsLoading(false)
     setQuestions(data)
     setQuestionIndex(0)
   }
@@ -63,6 +68,7 @@ const AsakaiQuestioning = () => {
   const handleAsakaiFinish = async () => {
     let response
     const excludedUserId = getUserId()
+    setIsLoading(true)
     try {
       response = await fetchRequest({
         uri: '/user_to_question_choices/asakai',
@@ -70,12 +76,15 @@ const AsakaiQuestioning = () => {
         body: { asakaiChoices, excludedUserId },
       })
     } catch {
+      setIsLoading(false)
       return enqueueSnackbar('Problème de connexion', { variant: 'error' })
     }
     if (response.status !== 201) {
+      setIsLoading(false)
       return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' })
     }
     const data = await response.json()
+    setIsLoading(false)
     setAlterodos(data)
   }
 
@@ -91,6 +100,34 @@ const AsakaiQuestioning = () => {
   const question = questions[questionIndex]
 
   const classes = useStyle()
+
+  const QuestionContent = () => {
+    if (isLoading) {
+      return <CircularProgress color="secondary" />
+    }
+    if (question && !alterodos) {
+      return (
+        <div>
+          <Question question={question} chose={chose} plusOneEnabled />
+          <div className={classes.asakaibrowser}>
+            <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
+          </div>
+        </div>
+      )
+    }
+    if (alterodos) {
+      return (
+        <React.Fragment>
+          <div className={classes.email}>
+            <EmailSnackbar />
+          </div>
+          <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
+        </React.Fragment>
+      )
+    }
+    return <CircularProgress color="secondary" />
+  }
+
   return (
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
@@ -100,22 +137,7 @@ const AsakaiQuestioning = () => {
         </div>
       </div>
       <div className={classes.questioningContent}>
-        {question && !alterodos && (
-          <div>
-            <Question question={question} chose={chose} plusOneEnabled />
-            <div className={classes.asakaibrowser}>
-              <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
-            </div>
-          </div>
-        )}
-        {alterodos && (
-          <React.Fragment>
-            <div className={classes.email}>
-              <EmailSnackbar />
-            </div>
-            <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
-          </React.Fragment>
-        )}
+        <QuestionContent />
       </div>
     </div>
   )

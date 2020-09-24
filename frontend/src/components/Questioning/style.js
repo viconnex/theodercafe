@@ -39,6 +39,7 @@ const useStyle = makeStyles((theme) => ({
     flexDirection: 'column',
     width: '100%',
     paddingTop: '8px',
+    alignItems: 'center',
   },
   asakaiSubtitle: {
     alignItems: 'flex-start',

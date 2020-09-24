@@ -6,6 +6,7 @@ const useStyle = makeStyles((theme) => ({
     marginTop: '16px',
     borderRadius: '100%',
     width: '100px',
+    height: '100px',
   },
   name: {
     marginTop: '20px',

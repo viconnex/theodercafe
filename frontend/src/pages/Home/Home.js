@@ -16,17 +16,21 @@ const Home = () => {
   const [questions, setQuestions] = useState([])
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
   const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar()
   const fetchQuestions = async () => {
+    setIsLoading(true)
     const response = await fetchRequestResponse({ uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET' }, 200, {
       enqueueSnackbar,
     })
     if (!response) {
+      setIsLoading(false)
       return
     }
     const data = await response.json()
     setQuestions(data)
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const Home = () => {
       <div className={classes.toolbarSpace} />
       <ModeSelector isAsakaiMode={isAsakaiMode} handleModeChange={handleModeChange} />
       <div className={classes.questioningContainer}>
-        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} />}
+        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} isLoading={isLoading} />}
       </div>
       <Fab className={classes.addButton} size="small" onClick={toggleModal(true)}>
         <AddIcon />
