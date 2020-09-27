@@ -8,7 +8,7 @@ const useStyle = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     fontSize: '16px',
-    height: '100%',
+    height: '100vh',
     textAlign: 'center',
     padding: '0px 15px',
   },

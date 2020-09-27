@@ -19,7 +19,8 @@ const useStyle = makeStyles((theme) => {
     },
     addButton: {
       position: 'absolute',
-      bottom: '15px',
+      // --vh for innerHeight in mobile, 64px for appBar, 40px for button height, 12px for margin
+      top: 'calc(var(--vh, 1vh) * 100 - 64px - 40px - 12px)',
       right: '0px',
     },
     modal: {
