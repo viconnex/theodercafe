@@ -2,7 +2,7 @@ import colors from 'ui/colors'
 
 const style = {
   categoryContainer: {
-    marginBottom: '35px',
+    marginBottom: '24px',
   },
   categoryTitle: {
     fontSize: '16px',
