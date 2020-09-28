@@ -107,12 +107,12 @@ const AsakaiQuestioning = () => {
     }
     if (question && !alterodos) {
       return (
-        <div>
+        <React.Fragment>
           <Question question={question} chose={chose} plusOneEnabled />
           <div className={classes.asakaibrowser}>
             <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
           </div>
-        </div>
+        </React.Fragment>
       )
     }
     if (alterodos) {
