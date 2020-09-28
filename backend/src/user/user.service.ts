@@ -60,8 +60,9 @@ export class UserService {
         if (emailParts.length < 2 || !emailParts[0].length || !emailParts[1].length) {
             throw new BadRequestException('you must provide a valid email address')
         }
+        const emailLowerCase = email.toLocaleLowerCase()
 
-        const existingUser = await this.userRepository.findOne({ email })
+        const existingUser = await this.userRepository.findOne({ email: emailLowerCase })
         if (existingUser && !existingUser.isAdmin) {
             throw new BadRequestException('there is already an user with the specified email')
         }
@@ -71,8 +72,8 @@ export class UserService {
         let newUser = null
         if (!existingUser) {
             newUser = await this.userRepository.save({
-                email,
-                company: getCompanyFromEmail(email),
+                email: emailLowerCase,
+                company: getCompanyFromEmail(emailLowerCase),
                 isAdmin: false,
                 addedByUser,
                 asakaiAlterodoUser,
@@ -85,16 +86,16 @@ export class UserService {
 
         try {
             await this.mailerService.sendMail({
-                to: email,
+                to: emailLowerCase,
                 cc: 'victorl@theodo.fr',
                 from: 'theodercafe@gmail.com',
                 subject,
                 template: 'welcome',
                 context: {
-                    email,
+                    emailLowerCase,
                 },
             })
-            console.log(`email sent to ${email}`)
+            console.log(`email sent to ${emailLowerCase}`)
         } catch (e) {
             console.log('error while sending email', e)
             return
