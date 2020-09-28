@@ -43,7 +43,9 @@ export interface QuestionFilters {
     isNotJokeOnSomeone?: 'true'
 }
 
-export interface AsakaiEmailPostBody {
-    email?: string
+export interface AsakaiEmailDTO {
+    email: string
     asakaiChoices?: AsakaiChoices
+    alterodoUserId?: number
+    addedByUserId?: number | null
 }

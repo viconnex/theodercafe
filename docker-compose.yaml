@@ -34,6 +34,9 @@ services:
       TYPEORM_DATABASE: theodercafe
       TYPEORM_PORT: "5432"
       TYPEORM_LOGGING: "true"
+      TYPEORM_ENTITIES: dist/**/*.entity.js,dist/src/**/*.entity.js
+      TYPEORM_MIGRATIONS: dist/migration/*.js
+      TYPEORM_MIGRATIONS_DIR: migration
       NODE_ENV: development
     command: npm run start:dev
     depends_on:

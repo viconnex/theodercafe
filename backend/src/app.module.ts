@@ -18,7 +18,6 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 @Module({
     imports: [
         TypeOrmModule.forRoot(),
-
         QuestionModule,
         CategoryModule,
         AccumulusModule,

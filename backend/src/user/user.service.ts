@@ -51,7 +51,11 @@ export class UserService {
         return user ?? this.createNewUser(email, profile)
     }
 
-    async createUserWithEmail(email: string): Promise<User | null> {
+    async createUserWithEmail(
+        email: string,
+        addedByUserId: number | null,
+        alterodoUserId: number | null,
+    ): Promise<User | null> {
         const emailParts = email.split('@')
         if (emailParts.length < 2 || !emailParts[0].length || !emailParts[1].length) {
             throw new BadRequestException('you must provide a valid email address')
@@ -61,12 +65,17 @@ export class UserService {
         if (existingUser && !existingUser.isAdmin) {
             throw new BadRequestException('there is already an user with the specified email')
         }
+        const addedByUser = addedByUserId ? await this.userRepository.findOne({ id: addedByUserId }) : null
+        const asakaiAlterodoUser = alterodoUserId ? await this.userRepository.findOne({ id: alterodoUserId }) : null
+
         let newUser = null
         if (!existingUser) {
             newUser = await this.userRepository.save({
                 email,
                 company: getCompanyFromEmail(email),
                 isAdmin: false,
+                addedByUser,
+                asakaiAlterodoUser,
             })
         }
 

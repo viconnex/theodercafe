@@ -16,7 +16,7 @@ export class UserToQuestionChoice {
     userId: number
 
     @ManyToOne(
-        type => Question,
+        () => Question,
         question => question.userToQuestionChoices,
         { onDelete: 'CASCADE' },
     )
@@ -24,7 +24,7 @@ export class UserToQuestionChoice {
     question: Question
 
     @ManyToOne(
-        type => User,
+        () => User,
         user => user.userToQuestionChoices,
         { onDelete: 'CASCADE' },
     )

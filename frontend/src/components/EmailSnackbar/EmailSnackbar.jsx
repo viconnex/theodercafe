@@ -5,9 +5,10 @@ import { Send } from '@material-ui/icons'
 import { ASAKAI_EMAIL_PATH, USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 import { fetchRequest } from 'utils/helpers'
 import { useSnackbar } from 'notistack'
+import { getUserId } from 'services/jwtDecode'
 import useStyles from './style'
 
-const EmailSnackbar = ({ asakaiChoices }) => {
+const EmailSnackbar = ({ asakaiChoices, alterodoUserId }) => {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [isSendingEmail, setIsSendingEmail] = useState(false)
@@ -21,7 +22,7 @@ const EmailSnackbar = ({ asakaiChoices }) => {
   const onSendClick = async (event) => {
     event.preventDefault()
     const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${ASAKAI_EMAIL_PATH}`
-    const body = { email, asakaiChoices }
+    const body = { email, asakaiChoices, alterodoUserId, addedByUserId: getUserId() }
     setIsSendingEmail(true)
     try {
       const response = await fetchRequest({ uri, method: 'POST', body })

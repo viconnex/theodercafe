@@ -15,13 +15,7 @@ import {
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { AuthGuard } from '@nestjs/passport'
-import {
-    AlterodoResponse,
-    AsakaiChoices,
-    UserMap,
-    QuestionFilters,
-    AsakaiEmailPostBody,
-} from './userToQuestionChoice.types'
+import { AlterodoResponse, AsakaiChoices, UserMap, QuestionFilters, AsakaiEmailDTO } from './userToQuestionChoice.types'
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
@@ -77,13 +71,10 @@ export class UserToQuestionChoiceController {
     }
 
     @Post('asakai/email')
-    create(@Body() asakaiEmailBody: AsakaiEmailPostBody): Promise<string> {
-        if (!asakaiEmailBody.email) {
+    create(@Body() asakaiEmailDTO: AsakaiEmailDTO): Promise<string> {
+        if (!asakaiEmailDTO.email) {
             throw new BadRequestException('you must provide an email address')
         }
-        return this.userToQuestionChoiceService.handleAsakaiEmailSending(
-            asakaiEmailBody.email,
-            asakaiEmailBody.asakaiChoices,
-        )
+        return this.userToQuestionChoiceService.handleAsakaiEmailSending(asakaiEmailDTO)
     }
 }

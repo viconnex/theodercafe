@@ -10,6 +10,7 @@ import {
     SimilarityWithUserId,
     UserMap,
     QuestionFilters,
+    AsakaiEmailDTO,
 } from './userToQuestionChoice.types'
 
 import { UserService } from '../user/user.service'
@@ -107,8 +108,13 @@ export class UserToQuestionChoiceService {
         return usersMap
     }
 
-    async handleAsakaiEmailSending(userEmail: string, asakaiChoices?: AsakaiChoices): Promise<string> {
-        const newUser = await this.userService.createUserWithEmail(userEmail)
+    async handleAsakaiEmailSending({
+        email,
+        addedByUserId,
+        asakaiChoices,
+        alterodoUserId,
+    }: AsakaiEmailDTO): Promise<string> {
+        const newUser = await this.userService.createUserWithEmail(email, addedByUserId, alterodoUserId)
 
         if (!newUser) {
             return 'no user created'
