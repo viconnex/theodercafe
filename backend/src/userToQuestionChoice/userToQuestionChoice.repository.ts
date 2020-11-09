@@ -16,6 +16,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
         let query = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .where('user.company IN (:...companies)', { companies: COMPANIES })
+            .where('user.isActive IS true')
 
         if (excludedUserId) {
             query = query.andWhere('user.id != :userId', { userId: excludedUserId })
