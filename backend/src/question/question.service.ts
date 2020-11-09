@@ -7,7 +7,7 @@ import { DeleteResult, FindManyOptions } from 'typeorm'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { Question } from './question.entity'
 
-const JOKE_ON_SOMEONE_PROBABILITY = 0.7
+const JOKE_ON_SOMEONE_PROBABILITY = 0.3
 
 @Injectable()
 export class QuestionService {
