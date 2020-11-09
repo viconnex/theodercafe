@@ -3,6 +3,7 @@ import { EditGuesser, fetchUtils, ListGuesser, Admin as ReactAdmin, Resource } f
 import jsonServerProvider from 'ra-data-json-server'
 import { API_BASE_URL } from 'utils/constants/apiConstants'
 import { CategoryCreate } from 'components/CategoryCreate'
+import { UserEdit, UserList } from 'admin/Users'
 import { QuestionList } from './QuestionList'
 import { QuestionEdit } from './QuestionEdit'
 
@@ -21,6 +22,7 @@ const Admin = () => (
   <ReactAdmin dataProvider={dataProvider}>
     <Resource name="questions" list={QuestionList} edit={QuestionEdit} />
     <Resource name="categories" list={ListGuesser} edit={EditGuesser} create={CategoryCreate} />
+    <Resource name="users" list={UserList} edit={UserEdit} />
   </ReactAdmin>
 )
 

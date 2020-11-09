@@ -7,6 +7,7 @@ import { UserWithPublicFields } from './user.types'
 import { MailerService } from '@nestjs-modules/mailer'
 import { QuestionService } from 'src/question/question.service'
 import { Question } from 'src/question/question.entity'
+import { DeleteResult } from 'typeorm'
 
 @Injectable()
 export class UserService {
@@ -15,6 +16,22 @@ export class UserService {
         private readonly questionService: QuestionService,
         private readonly mailerService: MailerService,
     ) {}
+
+    async findAdminList(): Promise<User[]> {
+        return this.userRepository.find({ order: { email: 'ASC' } })
+    }
+
+    findOne(id: string): Promise<User> {
+        return this.userRepository.findOne(id)
+    }
+
+    update(id: string | number, user: User): Promise<User> {
+        return this.userRepository.save({ ...user, id: Number(id) })
+    }
+
+    delete(id: string): Promise<DeleteResult> {
+        return this.userRepository.delete(Number(id))
+    }
 
     async findWithPublicFields(ids: number[]): Promise<UserWithPublicFields[]> {
         return this.userRepository.findByIds(ids, { select: ['id', 'givenName', 'familyName', 'pictureUrl'] })
