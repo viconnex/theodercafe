@@ -58,7 +58,7 @@ const Map = () => {
   useEffect(() => {
     fetchMap()
     // eslint-disable-next-line
-  }, [filters]);
+  }, [filters])
 
   if (!map) {
     return <div>loading</div>
@@ -95,7 +95,7 @@ const Map = () => {
         data: map.map((user) => ({
           x: user.x,
           y: user.y,
-          name: `${user.givenName} ${user.familyName.charAt(0).toUpperCase()}`,
+          name: `${user?.givenName} ${user.familyName?.charAt(0)?.toUpperCase()}`,
           marker: {
             height: 20,
             width: 20,
