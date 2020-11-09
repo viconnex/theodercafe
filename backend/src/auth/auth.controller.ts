@@ -1,5 +1,6 @@
 import { Controller, Get, UseGuards, Res, Req } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 
 @Controller('auth')
 export class AuthController {
@@ -19,7 +20,7 @@ export class AuthController {
     }
 
     @Get('protected')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
     protectedResource(): string {
         return 'JWT is working!'
     }

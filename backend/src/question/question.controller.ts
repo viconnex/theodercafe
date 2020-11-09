@@ -17,6 +17,7 @@ import { DeleteResult } from 'typeorm'
 import { AuthGuard } from '@nestjs/passport'
 import { Question } from './question.entity'
 import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 
 @Controller('questions')
 export class QuestionController {
@@ -41,7 +42,7 @@ export class QuestionController {
     }
 
     @Get('')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
     async getAdminList(@Res() res: Response): Promise<void> {
         const result = await this.questionService.findAdminList()
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
@@ -58,7 +59,7 @@ export class QuestionController {
     }
 
     @Delete(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
     async remove(@Param('id') id: string): Promise<DeleteResult> {
         const deleteResult = await this.questionService.delete(id)
         if (deleteResult.affected === 0) throw new NotFoundException()
@@ -67,7 +68,7 @@ export class QuestionController {
     }
 
     @Put(':id')
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
     updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<Question> {
         return this.questionService.update(id, questionBody)
     }

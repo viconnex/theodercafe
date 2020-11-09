@@ -3,8 +3,10 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { AuthService } from './auth.service'
 
+export const ADMIN_STRATEGY = 'admin'
+
 @Injectable()
-export class JwtAdminStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class JwtAdminStrategy extends PassportStrategy(Strategy, ADMIN_STRATEGY) {
     constructor(private readonly authService: AuthService) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
