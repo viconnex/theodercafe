@@ -45,6 +45,10 @@ export class User {
     @Exclude()
     isAdmin: boolean
 
+    @Column({ default: true })
+    @Exclude()
+    isActive: boolean
+
     @OneToMany(
         () => UserToQuestionChoice,
         userToQuestionChoice => userToQuestionChoice.user,

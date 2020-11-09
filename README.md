@@ -11,6 +11,7 @@ Fais tes choix sur [theodercafe.com](theodercafe.com)
   `psql -h localhost -d theodercafe -U the`
 
 ## Deploy
+
 - ssh ubuntu@theodercafe.com
 - pm2 start ecosystem.config.js --env production
 - npm run deploy
