@@ -14,6 +14,8 @@ export class AuthService {
     constructor(private readonly userService: UserService) {}
 
     async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
+        const issuingTime = Date.now() / 1000
+        const expirationTime = issuingTime + 3600
         try {
             const email = profile.emails.length > 0 ? profile.emails[0].value : null
             if (!email) return
@@ -27,6 +29,15 @@ export class AuthService {
                 givenName: user.givenName,
                 familyName: user.familyName,
                 pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
+                iss: 'firebase-adminsdk-iglrm@maposaic-99785.iam.gserviceaccount.com',
+                sub: 'firebase-adminsdk-iglrm@maposaic-99785.iam.gserviceaccount.com',
+                aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
+                iat: issuingTime,
+                exp: expirationTime, // Maximum expiration time is one hour
+                uid: email,
+                claims: {
+                    premiumAccount: 'coucou',
+                },
             }
             const jwt: string = sign(payload, this.JWT_SECRET_KEY)
             return jwt
