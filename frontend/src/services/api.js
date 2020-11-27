@@ -12,6 +12,12 @@ export const fetchRequestResponse = async (
     enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' })
     return null
   }
+  if (response.status === 401) {
+    localStorage.removeItem('jwt_token')
+    enqueueSnackbar('Une erreur est survenue', { variant: 'error' })
+    return null
+  }
+
   if (!response || response.status !== expectedStatus) {
     enqueueSnackbar('Une erreur est survenue', { variant: 'error' })
     return null

@@ -94,6 +94,7 @@ const AllQuestioning = ({ questions, isLoading }) => {
       enqueueSnackbar,
     })
     if (!response) {
+      setAreChoicesFetched(true)
       return
     }
     const userChoices = await response.json()
