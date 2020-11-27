@@ -1,7 +1,11 @@
+import { WithSnackbarProps } from 'notistack'
 import { useEffect } from 'react'
 import { decodeJWT } from 'services/jwtDecode'
 
-export const useSetAuth = (setPictureUrl, enqueueSnackbar) => {
+export const useSetAuth = (
+  setPictureUrl: (pictureUrl: number) => void,
+  enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'],
+) => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
 
