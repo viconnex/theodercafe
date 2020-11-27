@@ -28,9 +28,6 @@ const theme = createMuiTheme({
     primary: { main: colors.theodoBlue },
     secondary: { main: colors.theodoGreen },
   },
-  status: {
-    danger: 'orange',
-  },
 })
 
 const App = () => {
