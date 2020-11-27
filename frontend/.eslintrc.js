@@ -7,8 +7,11 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'react-app',
     'plugin:prettier/recommended',
+    'prettier/@typescript-eslint',
     'prettier/react',
   ],
   parserOptions: {
@@ -16,6 +19,7 @@ module.exports = {
     es6: true,
     sourceType: 'module',
     node: true,
+    project: 'tsconfig.json',
   },
   plugins: ['prettier', 'react', 'import'],
   rules: {
@@ -31,7 +35,7 @@ module.exports = {
     curly: ['error', 'all'],
     eqeqeq: ['error', 'smart'],
     'import/no-extraneous-dependencies': [
-      'error',
+      'warn',
       {
         devDependencies: true,
         optionalDependencies: false,
@@ -39,7 +43,7 @@ module.exports = {
       },
     ],
     'no-shadow': [
-      'error',
+      'warn',
       {
         hoist: 'all',
       },
@@ -61,8 +65,13 @@ module.exports = {
       },
     ],
     'react/no-string-refs': 'warn',
-    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/rules-of-hooks': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
+    complexity: ['warn', 8],
+    '@typescript-eslint/prefer-optional-chain': 'warn',
+    '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+    '@typescript-eslint/strict-boolean-expressions': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
   },
   root: true,
   settings: {
@@ -70,4 +79,5 @@ module.exports = {
       version: 'detect',
     },
   },
+  parser: '@typescript-eslint/parser',
 }

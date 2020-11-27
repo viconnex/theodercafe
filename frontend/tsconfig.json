@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,7 +21,9 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": true,
-    "target": "es5"
+    "target": "es5",
+    "noFallthroughCasesInSwitch": true,
+    "checkJs": false
   },
   "include": [
     "src"
