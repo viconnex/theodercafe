@@ -3,12 +3,11 @@ import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/Toolbar'
 import { createMuiTheme } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
-import { SnackbarProvider } from 'notistack'
+import { useSnackbar } from 'notistack'
 import { MenuDrawer } from 'components/MenuDrawer'
 import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { About } from 'components/About'
 import { PrivateRoute } from 'modules/PrivateRoute'
-import { Login } from 'modules/Login'
 import { LoginPage } from 'pages/LoginPage'
 import MenuIcon from 'components/MenuIcon/MenuIcon'
 
@@ -20,6 +19,7 @@ import { Alterodo } from 'pages/Alterodo'
 import { Map } from 'pages/Map'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
+import { useSetAuth } from './services/auth/setAuth'
 
 const Admin = lazy(() => import('./admin/Admin'))
 
@@ -43,37 +43,36 @@ const App = () => {
   const [pictureUrl, setPictureUrl] = React.useState(getPictureUrl())
   const classes = useStyle()
 
+  const { enqueueSnackbar } = useSnackbar()
+  useSetAuth(setPictureUrl, enqueueSnackbar)
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
-        <SnackbarProvider maxSnack={2} autoHideDuration={1300}>
-          <div className={classes.app}>
-            <AppBar classes={{ root: classes.appBar }} position="fixed">
-              <ToolBar className={classes.toolBar}>
-                <Link to="/">
-                  <img src={logo} alt="logo" height="20" />
-                </Link>
-                <IconButton edge="start" aria-label="Menu" onClick={toggleDrawer(true)}>
-                  <MenuIcon pictureUrl={pictureUrl} />
-                </IconButton>
-              </ToolBar>
-            </AppBar>
-            <div className={classes.toolbarSpace} />
-            <Suspense fallback={<div>Loading</div>}>
-              <Switch>
-                <Route exact path="/a-propos" component={About} />
-                <Route exact path="/login" component={LoginPage} />
-                <Route path="/login/success" render={() => <Login loginSuccess setPictureUrl={setPictureUrl} />} />
-                <Route path="/login/failure" render={() => <Login loginSuccess={false} />} />
-                <PrivateRoute exact path="/admin" component={Admin} isAdminRoute />
-                <PrivateRoute exact path="/alterodo" component={Alterodo} isAdminRoute={false} />
-                <PrivateRoute exact path="/carte" component={Map} isAdminRoute={false} />
-                <Route path="/" component={Home} />
-              </Switch>
-            </Suspense>
-            <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
-          </div>
-        </SnackbarProvider>
+        <div className={classes.app}>
+          <AppBar classes={{ root: classes.appBar }} position="fixed">
+            <ToolBar className={classes.toolBar}>
+              <Link to="/">
+                <img src={logo} alt="logo" height="20" />
+              </Link>
+              <IconButton edge="start" aria-label="Menu" onClick={toggleDrawer(true)}>
+                <MenuIcon pictureUrl={pictureUrl} />
+              </IconButton>
+            </ToolBar>
+          </AppBar>
+          <div className={classes.toolbarSpace} />
+          <Suspense fallback={<div>Loading</div>}>
+            <Switch>
+              <Route exact path="/a-propos" component={About} />
+              <Route exact path="/login" component={LoginPage} />
+              <PrivateRoute exact path="/admin" component={Admin} isAdminRoute />
+              <PrivateRoute exact path="/alterodo" component={Alterodo} isAdminRoute={false} />
+              <PrivateRoute exact path="/carte" component={Map} isAdminRoute={false} />
+              <Route path="/" component={Home} />
+            </Switch>
+          </Suspense>
+          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
+        </div>
       </Router>
     </ThemeProvider>
   )
