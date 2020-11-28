@@ -15,7 +15,7 @@ export class AuthService {
 
     async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
         const issuingTime = Date.now() / 1000
-        const expirationTime = issuingTime + 3600
+        const expirationTime = issuingTime + 3600 // Maximum expiration time is one hour
         try {
             const email = profile.emails.length > 0 ? profile.emails[0].value : null
             if (!email) return
@@ -33,7 +33,7 @@ export class AuthService {
                 sub: 'firebase-adminsdk-iglrm@maposaic-99785.iam.gserviceaccount.com',
                 aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
                 iat: issuingTime,
-                exp: expirationTime, // Maximum expiration time is one hour
+                exp: expirationTime,
                 uid: email,
                 claims: {
                     premiumAccount: 'coucou',

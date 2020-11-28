@@ -164,7 +164,7 @@ const AllQuestioning = ({ questions, isLoading }) => {
       const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`
       const body = { choice }
 
-      fetchRequestResponse({ uri, method: 'PUT', body }, 200, {
+      await fetchRequestResponse({ uri, method: 'PUT', body }, 200, {
         enqueueSnackbar,
         successMessage: 'Choix enregistré',
       })

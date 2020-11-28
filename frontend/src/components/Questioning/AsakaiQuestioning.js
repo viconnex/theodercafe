@@ -93,7 +93,8 @@ const AsakaiQuestioning = () => {
     choices[questionId] = choice
     setAsakaiChoices(choices)
     if (questionIndex === questions.length - 1) {
-      handleAsakaiFinish()
+      await handleAsakaiFinish()
+      return
     }
     changeQuestion(1)
   }

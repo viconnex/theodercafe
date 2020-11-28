@@ -24,7 +24,7 @@ const choisis = (option1, option2) => (Math.floor(Math.random() * 2) === 0 ? opt
 
 class AddQuestionDialog extends Component {
   componentDidMount = async () => {
-    this.fetchCategories(this.setState)
+    await this.fetchCategories()
   }
 
   fetchCategories = async () => {
