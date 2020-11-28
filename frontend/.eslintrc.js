@@ -72,6 +72,12 @@ module.exports = {
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     '@typescript-eslint/strict-boolean-expressions': 'warn',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'warn',
+    '@typescript-eslint/no-unsafe-member-access': 'warn',
+    '@typescript-eslint/no-unsafe-return': 'warn',
+    '@typescript-eslint/no-unsafe-call': 'warn',
+    '@typescript-eslint/restrict-template-expressions': 'warn',
+    '@typescript-eslint/no-floating-promises': 'warn',
   },
   root: true,
   settings: {
