@@ -1,6 +1,8 @@
 import { Controller, Get, UseGuards, Res, Req } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
+import { ValidatedUser } from './google.strategy'
+import { createFirebaseJWT } from './firebase'
+import { ADMIN_STRATEGY } from './jwt.admin.strategy'
 
 @Controller('auth')
 export class AuthController {
@@ -14,9 +16,17 @@ export class AuthController {
     @UseGuards(AuthGuard('google'))
     googleLoginCallback(@Req() req, @Res() res): void {
         // handles the Google OAuth2 callback
-        const jwt: string = req.user.jwt
-        if (jwt) res.redirect(`${process.env.FRONT_BASE_URL}?login=success&jwt=` + jwt)
-        else res.redirect(`${process.env.FRONT_BASE_URL}?login=failure`)
+        const validatedUser: ValidatedUser | undefined = req.user
+
+        if (validatedUser) {
+            res.redirect(
+                `${process.env.FRONT_BASE_URL}?login=success&jwt=${validatedUser.jwt}&firebase_jwt=${createFirebaseJWT(
+                    validatedUser.email,
+                )}`,
+            )
+        } else {
+            res.redirect(`${process.env.FRONT_BASE_URL}?login=failure`)
+        }
     }
 
     @Get('protected')

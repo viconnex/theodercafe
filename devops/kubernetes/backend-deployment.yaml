@@ -42,6 +42,11 @@ spec:
                 secretKeyRef:
                   name: nestjs-secrets
                   key: JWT_SCRET_KEY
+            - name: FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: nestjs-secrets
+                  key: FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY
             - name: TYPEORM_URL
               value: postgres://the:cafe@localhost:5432/theodercafe
             - name: TYPEORM_LOGGING

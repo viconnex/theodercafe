@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
 import { sign } from 'jsonwebtoken'
+import { getEmailFromGoogleProfile } from './utils'
 import { UserService } from '../user/user.service'
 import { GoogleProfile } from './google.strategy'
 
@@ -14,11 +15,12 @@ export class AuthService {
     constructor(private readonly userService: UserService) {}
 
     async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
-        const issuingTime = Date.now() / 1000
-        const expirationTime = issuingTime + 3600 // Maximum expiration time is one hour
         try {
-            const email = profile.emails.length > 0 ? profile.emails[0].value : null
-            if (!email) return
+            const email = getEmailFromGoogleProfile(profile)
+
+            if (!email) {
+                return
+            }
 
             const user = await this.userService.createOrUpdate(email, profile)
 
@@ -29,18 +31,9 @@ export class AuthService {
                 givenName: user.givenName,
                 familyName: user.familyName,
                 pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
-                iss: 'firebase-adminsdk-iglrm@maposaic-99785.iam.gserviceaccount.com',
-                sub: 'firebase-adminsdk-iglrm@maposaic-99785.iam.gserviceaccount.com',
-                aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
-                iat: issuingTime,
-                exp: expirationTime,
-                uid: email,
-                claims: {
-                    premiumAccount: 'coucou',
-                },
             }
-            const jwt: string = sign(payload, this.JWT_SECRET_KEY)
-            return jwt
+
+            return sign(payload, this.JWT_SECRET_KEY)
         } catch (err) {
             throw new InternalServerErrorException('validateOAuthLogin', err.message)
         }
