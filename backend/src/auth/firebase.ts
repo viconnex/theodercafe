@@ -12,5 +12,10 @@ export const createFirebaseJWT = (userEmail: string) => {
         exp: expirationTime,
         uid: userEmail,
     }
-    return sign(payload, process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY)
+    const secret = process.env.FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY
+    if (secret === undefined) {
+        throw Error('no firebase service account secret in env')
+    }
+
+    return sign(payload, secret)
 }

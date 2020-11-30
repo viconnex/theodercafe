@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Res, Req } from '@nestjs/common'
+import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { ValidatedUser } from './google.strategy'
 import { createFirebaseJWT } from './firebase'
@@ -14,9 +14,9 @@ export class AuthController {
 
     @Get('google/callback')
     @UseGuards(AuthGuard('google'))
-    googleLoginCallback(@Req() req, @Res() res): void {
+    googleLoginCallback(@Req() req: { user?: ValidatedUser }, @Res() res): void {
         // handles the Google OAuth2 callback
-        const validatedUser: ValidatedUser | undefined = req.user
+        const validatedUser = req.user
 
         if (validatedUser) {
             res.redirect(
