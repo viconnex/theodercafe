@@ -19,6 +19,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     dir: "backend"
     args: ['push', 'gcr.io/theodercafe/backend:latest']
+
   # delete deploymnent instead of adding new replicaSet because the number of nodes is limited to 1
   - name: 'gcr.io/cloud-builders/kubectl'
     dir: "devops/kubernetes"
@@ -32,18 +33,8 @@ steps:
     env:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
     - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
-  # - name: 'gcr.io/cloud-builders/kubectl'
-  #   dir: "backend"
-  #   args: [
-  #   'set',
-  #   'image',
-  #   'deployment',
-  #   'nestjs',
-  #   'nestjs=gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA'
-  #   ]
-  #   env:
-  #   - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
-  #   - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
+
+  ## frontend
   - name: gcr.io/cloud-builders/npm
     args: [install]
     dir: "frontend"
@@ -55,12 +46,19 @@ steps:
   - name: gcr.io/cloud-builders/npm
     args: [run, build]
     dir: "frontend"
-  - name: gcr.io/cloud-builders/gcloud
-    args: [app, deploy]
+  # Deploy
+  - name: "gcr.io/cloud-builders/gcloud"
     dir: "frontend"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        cp app.yaml ./build
+        cd build
+        gcloud app deploy
 
-images: [
-  'gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA',
-  'gcr.io/theodercafe/backend:latest'
+images:
+  [
+    "gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA",
+    "gcr.io/theodercafe/backend:latest",
   ]
-
