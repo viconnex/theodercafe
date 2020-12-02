@@ -74,7 +74,7 @@ export class QuestionService {
 
         const asakaiSet = await this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount)
 
-        this.questioningHistoricService.saveNew(asakaiSet.map((question): string => question.id.toString()))
+        await this.questioningHistoricService.saveNew(asakaiSet.map((question): string => question.id.toString()))
 
         return asakaiSet
     }

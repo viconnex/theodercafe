@@ -71,7 +71,7 @@ export class UserToQuestionChoiceService {
         const baseQuestionCount = await this.userToQuestionChoiceRepository.countUserQuestionChoices(userId)
         const similarityWithUserIds = await this.userToQuestionChoiceRepository.selectSimilarityWithUserIds(userId)
 
-        const alterodos = await getBestAlterodos(similarityWithUserIds, Math.sqrt(baseQuestionCount))
+        const alterodos = getBestAlterodos(similarityWithUserIds, Math.sqrt(baseQuestionCount))
 
         return this.createAlterodosResponse(baseQuestionCount, alterodos)
     }

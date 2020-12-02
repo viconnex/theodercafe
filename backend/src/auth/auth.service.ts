@@ -4,10 +4,6 @@ import { getEmailFromGoogleProfile } from './utils'
 import { UserService } from '../user/user.service'
 import { GoogleProfile } from './google.strategy'
 
-export enum Provider {
-    GOOGLE = 'google',
-}
-
 @Injectable()
 export class AuthService {
     private readonly JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
