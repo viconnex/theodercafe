@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Post, BadRequestException } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { AccumulusRepository } from './accumulus.repository'
 import { Accumulus } from './accumulus.entity'

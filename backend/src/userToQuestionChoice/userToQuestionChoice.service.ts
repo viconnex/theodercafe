@@ -1,21 +1,21 @@
-import { Injectable, BadRequestException } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
+import { UserWithPublicFields } from 'src/user/user.types'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {
-    AsakaiChoices,
     AlterodoResponse,
     Alterodos,
+    AsakaiChoices,
+    AsakaiEmailDTO,
+    QuestionFilters,
     SimilarityWithUserId,
     UserMap,
-    QuestionFilters,
-    AsakaiEmailDTO,
 } from './userToQuestionChoice.types'
 
 import { UserService } from '../user/user.service'
-import { getBestAlterodos, createUsersChoicesMatrix } from './userToQuestionChoice.helpers'
-import { UserWithPublicFields } from 'src/user/user.types'
+import { createUsersChoicesMatrix, getBestAlterodos } from './userToQuestionChoice.helpers'
 
 // eslint-disable-next-line
 const PCA = require('pca-js')
@@ -58,8 +58,9 @@ export class UserToQuestionChoiceService {
 
     async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId: null | string): Promise<AlterodoResponse> {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
-        if (answeredQuestionsIds.length === 0)
+        if (answeredQuestionsIds.length === 0) {
             throw new BadRequestException('user must answer to at least one question')
+        }
 
         const alterodos = await this.findAlterodosFromAsakaiChoices(asakaiChoices, excludedUserId)
 
@@ -121,7 +122,7 @@ export class UserToQuestionChoiceService {
         }
 
         const choices = []
-        for (let questionId in asakaiChoices) {
+        for (const questionId in asakaiChoices) {
             choices.push({ questionId, choice: asakaiChoices[questionId], userId: newUser.id })
         }
         if (asakaiChoices) {

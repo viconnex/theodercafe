@@ -1,20 +1,20 @@
 import {
-    Controller,
+    BadRequestException,
     Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Delete,
     Get,
+    Param,
+    Put,
+    Request,
     UseGuards,
     UseInterceptors,
-    ClassSerializerInterceptor,
-    Request,
-    BadRequestException,
-    Put,
-    Param,
-    Delete,
 } from '@nestjs/common'
-import { UserToQuestionVoteService } from './userToQuestionVote.service'
-import { UserToQuestionVote } from './userToQuestionVote.entity'
 import { AuthGuard } from '@nestjs/passport'
 import { DeleteResult } from 'typeorm'
+import { UserToQuestionVoteService } from './userToQuestionVote.service'
+import { UserToQuestionVote } from './userToQuestionVote.entity'
 
 @Controller('user_to_question_votes')
 export class UserToQuestionVoteController {

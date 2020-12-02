@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Question } from '../question/question.entity'
 
 @Entity('categories')
@@ -9,10 +9,7 @@ export class Category {
     @Column({ unique: true })
     name: string
 
-    @OneToMany(
-        type => Question,
-        question => question.category,
-    )
+    @OneToMany((type) => Question, (question) => question.category)
     question: Question[]
 
     @CreateDateColumn()

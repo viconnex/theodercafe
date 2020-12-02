@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { DeleteResult } from 'typeorm'
 import { UserToQuestionVoteRepository } from './userToQuestionVote.repository'
 import { UserToQuestionVote } from './userToQuestionVote.entity'
-
-import { DeleteResult } from 'typeorm'
 
 @Injectable()
 export class UserToQuestionVoteService {

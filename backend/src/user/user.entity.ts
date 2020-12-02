@@ -1,14 +1,14 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    UpdateDateColumn,
-    OneToMany,
+    Entity,
     ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm'
-import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity'
 import { Exclude } from 'class-transformer'
+import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity'
 import { UserToQuestionVote } from '../userToQuestionVote/userToQuestionVote.entity'
 
 export const getCompanyFromEmail = (email: string): string => {
@@ -49,18 +49,10 @@ export class User {
     @Exclude()
     isActive: boolean
 
-    @OneToMany(
-        () => UserToQuestionChoice,
-        userToQuestionChoice => userToQuestionChoice.user,
-        { cascade: true },
-    )
+    @OneToMany(() => UserToQuestionChoice, (userToQuestionChoice) => userToQuestionChoice.user, { cascade: true })
     userToQuestionChoices: UserToQuestionChoice[]
 
-    @OneToMany(
-        () => UserToQuestionVote,
-        userToQuestionVote => userToQuestionVote.user,
-        { cascade: true },
-    )
+    @OneToMany(() => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.user, { cascade: true })
     userToQuestionVotes: UserToQuestionVote[]
 
     @CreateDateColumn()

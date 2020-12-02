@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule } from '@nestjs/config'
 
+import { MailerModule } from '@nestjs-modules/mailer'
+import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { QuestionModule } from './question/question.module'
@@ -12,8 +14,6 @@ import { UserModule } from './user/user.module'
 import { UserToQuestionChoiceModule } from './userToQuestionChoice/userToQuestionChoice.module'
 import { UserToQuestionVoteModule } from './userToQuestionVote/userToQuestionVote.module'
 import { QuestioningHistoricModule } from './questioningHistoric/questioningHistoric.module'
-import { MailerModule } from '@nestjs-modules/mailer'
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 
 @Module({
     imports: [

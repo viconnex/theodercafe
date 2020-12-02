@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm'
+import { Between } from 'typeorm'
 import { QuestioningHistoricRepository } from './questioningHistoric.repository'
 import { QuestioningHistoric } from './questioningHistoric.entity'
-import { Between } from 'typeorm'
 
 export class QuestioningHistoricService {
     constructor(

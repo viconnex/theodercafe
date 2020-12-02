@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer'
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column } from 'typeorm'
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Question } from '../question/question.entity'
 import { User } from '../user/user.entity'
 
@@ -15,19 +15,11 @@ export class UserToQuestionVote {
     @Exclude()
     userId: number
 
-    @ManyToOne(
-        type => Question,
-        question => question.userToQuestionVotes,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne((type) => Question, (question) => question.userToQuestionVotes, { onDelete: 'CASCADE' })
     @Exclude()
     question: Question
 
-    @ManyToOne(
-        type => User,
-        user => user.userToQuestionVotes,
-        { onDelete: 'CASCADE' },
-    )
+    @ManyToOne((type) => User, (user) => user.userToQuestionVotes, { onDelete: 'CASCADE' })
     @Exclude()
     user: User
 

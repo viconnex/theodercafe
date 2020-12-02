@@ -1,21 +1,21 @@
 import {
-    Controller,
-    Post,
+    BadRequestException,
     Body,
+    ClassSerializerInterceptor,
+    Controller,
     Get,
+    Param,
+    Post,
+    Put,
+    Query,
+    Request,
     UseGuards,
     UseInterceptors,
-    ClassSerializerInterceptor,
-    Request,
-    BadRequestException,
-    Put,
-    Param,
-    Query,
 } from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
-import { AuthGuard } from '@nestjs/passport'
-import { AlterodoResponse, AsakaiChoices, UserMap, QuestionFilters, AsakaiEmailDTO } from './userToQuestionChoice.types'
+import { AlterodoResponse, AsakaiChoices, AsakaiEmailDTO, QuestionFilters, UserMap } from './userToQuestionChoice.types'
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {

@@ -1,5 +1,5 @@
+import { DeleteResult, EntityRepository, Repository } from 'typeorm'
 import { Question } from './question.entity'
-import { EntityRepository, Repository, DeleteResult } from 'typeorm'
 import { QuestionWithCategoryNameDto } from './interfaces/question.dto'
 
 const FIND_QUESTION_QUERY = `
@@ -9,12 +9,7 @@ const FIND_QUESTION_QUERY = `
     LEFT JOIN categories on "questions"."categoryId"="categories"."id"
 `
 
-const findAsakaiSubSet = (
-    isClassic: boolean,
-    isJokeOnSomeone: boolean,
-    limit = null,
-    isRandom: boolean = false,
-): string => {
+const findAsakaiSubSet = (isClassic: boolean, isJokeOnSomeone: boolean, limit = null, isRandom = false): string => {
     return `${FIND_QUESTION_QUERY}
             WHERE "questions"."isClassic" = ${isClassic} AND "questions"."isJokeOnSomeone" = ${isJokeOnSomeone} AND "questions"."isValidated" = true
             ${isRandom ? 'ORDER BY random()' : ''}
@@ -86,8 +81,8 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     findInOrder = async (orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> => {
-        var sqlIdsWithOrder = ''
-        var sqlIds = ''
+        let sqlIdsWithOrder = ''
+        let sqlIds = ''
         orderedIds.forEach((id, index): void => {
             const additionalKomma = index !== orderedIds.length - 1 ? ', ' : ''
             sqlIds = sqlIds + id + additionalKomma

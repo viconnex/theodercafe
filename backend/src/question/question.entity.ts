@@ -1,11 +1,11 @@
 import {
-    Entity,
-    PrimaryGeneratedColumn,
     Column,
     CreateDateColumn,
-    UpdateDateColumn,
+    Entity,
     ManyToOne,
     OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm'
 import { Category } from '../category/category.entity'
 import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity'
@@ -16,10 +16,7 @@ export class Question {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne(
-        type => Category,
-        category => category.question,
-    )
+    @ManyToOne((type) => Category, (category) => category.question)
     category: Category
 
     @Column()
@@ -40,18 +37,12 @@ export class Question {
     @Column({ default: false })
     isJoke: boolean
 
-    @OneToMany(
-        type => UserToQuestionChoice,
-        userToQuestionChoice => userToQuestionChoice.question,
-        { cascade: true },
-    )
+    @OneToMany((type) => UserToQuestionChoice, (userToQuestionChoice) => userToQuestionChoice.question, {
+        cascade: true,
+    })
     userToQuestionChoices: UserToQuestionChoice[]
 
-    @OneToMany(
-        type => UserToQuestionVote,
-        userToQuestionVote => userToQuestionVote.question,
-        { cascade: true },
-    )
+    @OneToMany((type) => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.question, { cascade: true })
     userToQuestionVotes: UserToQuestionChoice[]
 
     @CreateDateColumn()

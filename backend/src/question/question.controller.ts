@@ -3,21 +3,21 @@ import {
     Controller,
     Delete,
     Get,
-    Query,
+    NotFoundException,
     Param,
     Post,
     Put,
-    NotFoundException,
+    Query,
     Res,
     UseGuards,
 } from '@nestjs/common'
 import { Response } from 'express'
-import { QuestionService } from './question.service'
 import { DeleteResult } from 'typeorm'
 import { AuthGuard } from '@nestjs/passport'
+import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
+import { QuestionService } from './question.service'
 import { Question } from './question.entity'
 import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
-import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 
 @Controller('questions')
 export class QuestionController {
@@ -53,7 +53,9 @@ export class QuestionController {
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Question> {
         const question = await this.questionService.findOne(id)
-        if (!question) throw new NotFoundException()
+        if (!question) {
+            throw new NotFoundException()
+        }
 
         return question
     }
@@ -62,7 +64,9 @@ export class QuestionController {
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
     async remove(@Param('id') id: string): Promise<DeleteResult> {
         const deleteResult = await this.questionService.delete(id)
-        if (deleteResult.affected === 0) throw new NotFoundException()
+        if (deleteResult.affected === 0) {
+            throw new NotFoundException()
+        }
 
         return deleteResult
     }

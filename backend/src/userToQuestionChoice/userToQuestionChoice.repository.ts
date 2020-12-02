@@ -1,6 +1,6 @@
-import { Repository, EntityRepository, SelectQueryBuilder } from 'typeorm'
+import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
-import { SimilarityWithUserId, QuestionFilters } from './userToQuestionChoice.types'
+import { QuestionFilters, SimilarityWithUserId } from './userToQuestionChoice.types'
 
 const COMPANIES = ['theodo']
 if (process.env.NODE_ENV === 'development') {

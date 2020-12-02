@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UserRepository } from './user.repository'
-import { User, getCompanyFromEmail } from './user.entity'
-import { GoogleProfile } from '../auth/google.strategy'
-import { UserWithPublicFields } from './user.types'
 import { MailerService } from '@nestjs-modules/mailer'
 import { QuestionService } from 'src/question/question.service'
 import { Question } from 'src/question/question.entity'
 import { DeleteResult } from 'typeorm'
+import { UserRepository } from './user.repository'
+import { getCompanyFromEmail, User } from './user.entity'
+import { GoogleProfile } from '../auth/google.strategy'
+import { UserWithPublicFields } from './user.types'
 
 @Injectable()
 export class UserService {

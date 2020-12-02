@@ -1,9 +1,9 @@
-import { Injectable, HttpException } from '@nestjs/common'
+import { HttpException, Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { DeleteResult, FindManyOptions } from 'typeorm'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
-import { InjectRepository } from '@nestjs/typeorm'
-import { QuestionWithCategoryNameDto, QuestionPostDTO } from './interfaces/question.dto'
-import { DeleteResult, FindManyOptions } from 'typeorm'
+import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { Question } from './question.entity'
 

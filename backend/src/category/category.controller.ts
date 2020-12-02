@@ -1,9 +1,9 @@
-import { Controller, Get, NotFoundException, Res, Param, Body, Put, Delete, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Res } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CategoryRepository } from './category.repository'
 import { Response } from 'express'
-import { Category } from './category.entity'
 import { DeleteResult } from 'typeorm'
+import { CategoryRepository } from './category.repository'
+import { Category } from './category.entity'
 
 @Controller('categories')
 export class CategoryController {
@@ -20,7 +20,9 @@ export class CategoryController {
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<Category> {
         const category = await this.categoryRepository.findOne(id)
-        if (!category) throw new NotFoundException()
+        if (!category) {
+            throw new NotFoundException()
+        }
 
         return category
     }
@@ -28,7 +30,9 @@ export class CategoryController {
     @Put(':id')
     async edit(@Param('id') id: string, @Body() categoryBody): Promise<Category> {
         const category = await this.categoryRepository.save({ ...categoryBody, id: Number(id) })
-        if (!category) throw new NotFoundException()
+        if (!category) {
+            throw new NotFoundException()
+        }
 
         return category
     }
@@ -36,7 +40,9 @@ export class CategoryController {
     @Delete(':id')
     async remove(@Param('id') id: string): Promise<DeleteResult> {
         const deleteResult = await this.categoryRepository.delete(id)
-        if (deleteResult.affected === 0) throw new NotFoundException()
+        if (deleteResult.affected === 0) {
+            throw new NotFoundException()
+        }
 
         return deleteResult
     }

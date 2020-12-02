@@ -18,7 +18,9 @@ export class JwtAdminStrategy extends PassportStrategy(Strategy, ADMIN_STRATEGY)
         try {
             const validClaims = await this.authService.verifyAdminRequest(payload.email)
 
-            if (!validClaims) return done(new UnauthorizedException('You must be an admin'), false)
+            if (!validClaims) {
+                return done(new UnauthorizedException('You must be an admin'), false)
+            }
 
             done(null, payload)
         } catch (err) {

@@ -23,7 +23,9 @@ export class UserController {
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
     async findOne(@Param('id') id: string): Promise<User> {
         const question = await this.userService.findOne(id)
-        if (!question) throw new NotFoundException()
+        if (!question) {
+            throw new NotFoundException()
+        }
 
         return question
     }
@@ -32,7 +34,9 @@ export class UserController {
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
     async remove(@Param('id') id: string): Promise<DeleteResult> {
         const deleteResult = await this.userService.delete(id)
-        if (deleteResult.affected === 0) throw new NotFoundException()
+        if (deleteResult.affected === 0) {
+            throw new NotFoundException()
+        }
 
         return deleteResult
     }
