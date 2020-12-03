@@ -2,23 +2,23 @@ runtime: custom
 env: flex
 service: backend
 
+beta_settings:
+    cloud_sql_instances: theodercafe:europe-west2:theodercafe=tcp:5432
+
 env_variables:
     NODE_ENV: production
-
-handlers:
-    - url: /static
-      static_dir: static
-      secure: always
-      redirect_http_response_code: 301
-
-    - url: /(.*\.(json|ico|js))$
-      static_files: \1
-      upload: .*\.(json|ico|js)$
-      secure: always
-      redirect_http_response_code: 301
-
-    - url: /.*
-      static_files: index.html
-      upload: index.html
-      secure: always
-      redirect_http_response_code: 301
+    TYPEORM_URL: postgres://the:cafe@172.17.0.1:5432/theodercafe
+    TYPEORM_LOGGING: 'false'
+    TYPEORM_ENTITIES: dist/**/*.entity.js,dist/src/**/*.entity.js
+    TYPEORM_MIGRATIONS: dist/migration/*.js
+    TYPEORM_MIGRATIONS_DIR: migration
+    TYPEORM_USERNAME: the
+    TYPEORM_PASSWORD: cafe
+    TYPEORM_DATABASE: theodercafe
+    TYPEORM_PORT: 5432
+    FRONT_BASE_URL: https://theodercafe.com
+    BACKEND_URL: https://api.theodercafe.com
+    AUTH2_CLIENT_ID: google_auth2_id
+    CLIENT_SECRET: google_client_secret
+    JWT_SECRET_KEY: secret_key
+    FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY: firebase_private_key
