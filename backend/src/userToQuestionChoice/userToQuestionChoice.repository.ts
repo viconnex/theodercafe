@@ -34,7 +34,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .where('user.company IN (:...companies)', { companies: COMPANIES })
 
         if (questionFilters.isValidated || questionFilters.isNotValidated || questionFilters.isInValidation) {
-            const validationFilters = []
+            const validationFilters: (boolean | null)[] = []
             if (questionFilters.isValidated) {
                 validationFilters.push(true)
             }
@@ -48,7 +48,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
         }
 
         if (questionFilters.isJoke || questionFilters.isNotJoke) {
-            const jokeFilters = []
+            const jokeFilters: (boolean | null)[] = []
             if (questionFilters.isJoke) {
                 jokeFilters.push(true)
             }
@@ -59,7 +59,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
         }
 
         if (questionFilters.isJokeOnSomeone || questionFilters.isNotJokeOnSomeone) {
-            const jokeFilters = []
+            const jokeFilters: (boolean | null)[] = []
             if (questionFilters.isJokeOnSomeone) {
                 jokeFilters.push(true)
             }

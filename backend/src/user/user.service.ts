@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { MailerService } from '@nestjs-modules/mailer'
 import { QuestionService } from 'src/question/question.service'
 import { Question } from 'src/question/question.entity'
-import { DeleteResult } from 'typeorm'
+import { DeepPartial, DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
@@ -21,7 +21,7 @@ export class UserService {
         return this.userRepository.find({ order: { email: 'ASC' } })
     }
 
-    findOne(id: string): Promise<User> {
+    findOne(id: string) {
         return this.userRepository.findOne(id)
     }
 
@@ -37,7 +37,11 @@ export class UserService {
         return this.userRepository.findByIds(ids, { select: ['id', 'givenName', 'familyName', 'pictureUrl'] })
     }
 
-    async findByEmail(email: string): Promise<User> {
+    async findOneWithPublicFields(id: number) {
+        return this.userRepository.findOne({ select: ['id', 'givenName', 'familyName', 'pictureUrl'], where: { id } })
+    }
+
+    async findByEmail(email: string) {
         return this.userRepository.findOne({ email })
     }
 
@@ -70,9 +74,9 @@ export class UserService {
 
     async createUserWithEmail(
         email: string,
-        addedByUserId: number | null,
-        alterodoUserId: number | null,
-    ): Promise<User | null> {
+        addedByUserId: number | null | undefined,
+        alterodoUserId: number | null | undefined,
+    ) {
         const emailParts = email.split('@')
         if (emailParts.length < 2 || !emailParts[0].length || !emailParts[1].length) {
             throw new BadRequestException('you must provide a valid email address')
@@ -83,12 +87,16 @@ export class UserService {
         if (existingUser && !existingUser.isAdmin) {
             throw new BadRequestException('there is already an user with the specified email')
         }
-        const addedByUser = addedByUserId ? await this.userRepository.findOne({ id: addedByUserId }) : null
-        const asakaiAlterodoUser = alterodoUserId ? await this.userRepository.findOne({ id: alterodoUserId }) : null
+        const addedByUser = addedByUserId ? (await this.userRepository.findOne({ id: addedByUserId })) ?? null : null
+        const asakaiAlterodoUser = alterodoUserId
+            ? (await this.userRepository.findOne({ id: alterodoUserId })) ?? null
+            : null
 
-        let newUser = null
+        let newUser: null | DeepPartial<User> = null
         if (!existingUser) {
+            // @ts-ignore
             newUser = await this.userRepository.save({
+                // @ts-ignore
                 email: emailLowerCase,
                 company: getCompanyFromEmail(emailLowerCase),
                 isAdmin: false,

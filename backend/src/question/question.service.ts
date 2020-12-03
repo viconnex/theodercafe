@@ -1,11 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { DeleteResult, FindManyOptions } from 'typeorm'
+import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
 import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { Question } from './question.entity'
+import { Category } from 'src/category/category.entity'
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.3
 
@@ -18,9 +19,9 @@ export class QuestionService {
     ) {}
 
     async create(questionBody: QuestionPostDTO): Promise<Question> {
-        let category = null
+        let category: Category | null = null
         if (typeof questionBody.category === 'number') {
-            category = await this.categoryRepository.findOne(questionBody.category)
+            category = (await this.categoryRepository.findOne(questionBody.category)) ?? null
         } else if (typeof questionBody.category === 'string') {
             category = this.categoryRepository.create({ name: questionBody.category })
             try {
@@ -35,12 +36,17 @@ export class QuestionService {
                 )
             }
         }
-        const question = this.questionRepository.create({
-            category,
+
+        const questionPayload: DeepPartial<Question> = {
             option1: questionBody.option1,
             option2: questionBody.option2,
             isClassic: false,
-        })
+        }
+        if (category) {
+            questionPayload.category = category
+        }
+
+        const question: Question = this.questionRepository.create(questionPayload)
 
         return this.questionRepository.save(question)
     }
@@ -91,7 +97,7 @@ export class QuestionService {
         return this.questionRepository.findAdminList()
     }
 
-    findOne(id: string): Promise<Question> {
+    findOne(id: string) {
         return this.questionRepository.findOneQuestion(id)
     }
 

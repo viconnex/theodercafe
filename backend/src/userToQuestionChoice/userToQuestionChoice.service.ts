@@ -16,6 +16,7 @@ import {
 
 import { UserService } from '../user/user.service'
 import { createUsersChoicesMatrix, getBestAlterodos } from './userToQuestionChoice.helpers'
+import { DeepPartial } from 'typeorm'
 
 // eslint-disable-next-line
 const PCA = require('pca-js')
@@ -45,7 +46,7 @@ export class UserToQuestionChoiceService {
         }
 
         if (initialChoice && initialChoice.choice === choice) {
-            return
+            return initialChoice
         }
         initialChoice.choice = choice
 
@@ -56,7 +57,7 @@ export class UserToQuestionChoiceService {
         return await this.userToQuestionChoiceRepository.find({ userId })
     }
 
-    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId: null | string): Promise<AlterodoResponse> {
+    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId: null | string) {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         if (answeredQuestionsIds.length === 0) {
             throw new BadRequestException('user must answer to at least one question')
@@ -67,7 +68,7 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(answeredQuestionsIds.length, alterodos)
     }
 
-    async getUserAlterodos(userId: number): Promise<AlterodoResponse> {
+    async getUserAlterodos(userId: number) {
         const baseQuestionCount = await this.userToQuestionChoiceRepository.countUserQuestionChoices(userId)
         const similarityWithUserIds = await this.userToQuestionChoiceRepository.selectSimilarityWithUserIds(userId)
 
@@ -93,18 +94,21 @@ export class UserToQuestionChoiceService {
 
         const users = await this.userService.findWithPublicFields(userQuestionMatrixWithUserIndex.userIds)
 
-        const usersMap = adData.formattedAdjustedData[0].map(
-            (x: number, index: number): UserMap => {
-                return {
-                    x: x,
-                    y: adData.formattedAdjustedData[1][index],
-                    ...users.find(
-                        (user: UserWithPublicFields): boolean =>
-                            user.id === userQuestionMatrixWithUserIndex.userIds[index],
-                    ),
-                }
-            },
-        )
+        const usersMap: UserMap[] = []
+
+        adData.formattedAdjustedData[0].forEach((x: number, index: number) => {
+            const user = users.find(
+                (user: UserWithPublicFields): boolean => user.id === userQuestionMatrixWithUserIndex.userIds[index],
+            )
+            if (!user) {
+                return
+            }
+            usersMap.push({
+                x: x,
+                y: adData.formattedAdjustedData[1][index],
+                ...user,
+            })
+        })
 
         return usersMap
     }
@@ -121,9 +125,9 @@ export class UserToQuestionChoiceService {
             return 'no user created'
         }
 
-        const choices = []
+        const choices: DeepPartial<UserToQuestionChoice>[] = []
         for (const questionId in asakaiChoices) {
-            choices.push({ questionId, choice: asakaiChoices[questionId], userId: newUser.id })
+            choices.push({ questionId: parseInt(questionId), choice: asakaiChoices[questionId], userId: newUser.id })
         }
         if (asakaiChoices) {
             await this.userToQuestionChoiceRepository.save(choices)
@@ -132,21 +136,23 @@ export class UserToQuestionChoiceService {
         return 'user created'
     }
 
-    private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos): Promise<AlterodoResponse> {
-        const userAlterodos = await this.userService.findWithPublicFields([
-            alterodos.alterodo.userId,
-            alterodos.varieto.userId,
-        ])
+    private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos) {
+        const alterodo = await this.userService.findOneWithPublicFields(alterodos.alterodo.userId)
+        const varieto = await this.userService.findOneWithPublicFields(alterodos.alterodo.userId)
+
+        if (!alterodo || !varieto) {
+            throw new Error('alterodo or varieto not found')
+        }
 
         return {
             baseQuestionCount,
             alterodo: {
                 ...alterodos.alterodo,
-                ...userAlterodos.find((user): boolean => user.id === alterodos.alterodo.userId),
+                ...alterodo,
             },
             varieto: {
                 ...alterodos.varieto,
-                ...userAlterodos.find((user): boolean => user.id === alterodos.varieto.userId),
+                ...varieto,
             },
         }
     }

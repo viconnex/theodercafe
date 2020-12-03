@@ -3,9 +3,9 @@ import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 
 export const getBestAlterodos = (similarityWithUsers: SimilarityWithUserId[], userNorm: number): Alterodos => {
     let bestSimilarity = -1
-    let bestAlterodoIndexes = []
+    let bestAlterodoIndexes: number[] = []
     let bestDifference = -1
-    let bestVarietoIndexes = []
+    let bestVarietoIndexes: number[] = []
 
     similarityWithUsers.forEach((similarityWithUser, similarityWithUserIndex): void => {
         const currentUserNorm = Math.sqrt(similarityWithUser.commonQuestionCount)
@@ -48,11 +48,11 @@ export const createUsersChoicesMatrix = (
 ): { usersChoicesMatrix: number[][]; userIds: number[] } => {
     const questionIdIndex = {}
     const userIdIndex = {}
-    const userIds = []
+    const userIds: number[] = []
     let currentUserIdIndex = 0
     let currentQuestionIdIndex = 0
 
-    const usersChoicesMatrix = []
+    const usersChoicesMatrix: number[][] = []
 
     for (const userToQuestionChoice of userToQuestionChoices) {
         if (!userIdIndex.hasOwnProperty(userToQuestionChoice.userId)) {

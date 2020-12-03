@@ -16,7 +16,7 @@ export class QuestioningHistoricService {
         })
     }
 
-    async findLastOfTheDay(): Promise<QuestioningHistoric> {
+    async findLastOfTheDay() {
         const todayAtMidnight = new Date()
         const tomorrowAtMidnight = new Date()
         todayAtMidnight.setHours(0, 0, 0, 0)

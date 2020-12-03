@@ -26,7 +26,7 @@ export class UserToQuestionVoteService {
         }
 
         if (initialVote && initialVote.isUpVote === isUpVote) {
-            return
+            return initialVote
         }
 
         initialVote.isUpVote = isUpVote

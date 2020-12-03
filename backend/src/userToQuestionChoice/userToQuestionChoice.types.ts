@@ -1,15 +1,9 @@
 export type AsakaiChoices = Record<number, number>
 
-interface UserAlterodoResponse {
+type UserAlterodoResponse = {
     givenName: string
     familyName: string
     pictureUrl: string
-}
-
-export interface AlterodoResponse {
-    baseQuestionCount: number
-    alterodo: SimilarityWithUserId & UserAlterodoResponse
-    varieto: SimilarityWithUserId & UserAlterodoResponse
 }
 
 export interface Alterodos {
@@ -22,6 +16,12 @@ export interface SimilarityWithUserId {
     commonQuestionCount: number
     sameAnswerCount: number
     similarity: number
+}
+// @ts-ignore
+export type AlterodoResponse = {
+    baseQuestionCount: number
+    alterodo: SimilarityWithUserId & UserAlterodoResponse
+    varieto: SimilarityWithUserId & UserAlterodoResponse
 }
 
 export interface UserMap {

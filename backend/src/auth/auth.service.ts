@@ -10,12 +10,12 @@ export class AuthService {
 
     constructor(private readonly userService: UserService) {}
 
-    async validateOAuthLogin(profile: GoogleProfile): Promise<string> {
+    async validateOAuthLogin(profile: GoogleProfile) {
         try {
             const email = getEmailFromGoogleProfile(profile)
 
             if (!email) {
-                return
+                return null
             }
 
             const user = await this.userService.createOrUpdate(email, profile)
@@ -29,7 +29,11 @@ export class AuthService {
                 pictureUrl: profile.photos.length > 0 ? profile.photos[0].value : null,
             }
 
-            return sign(payload, this.JWT_SECRET_KEY)
+            if (this.JWT_SECRET_KEY) {
+                return sign(payload, this.JWT_SECRET_KEY)
+            } else {
+                throw new Error('no JWT_SECRET_KEY found')
+            }
         } catch (err) {
             throw new InternalServerErrorException('validateOAuthLogin', err.message)
         }
@@ -37,7 +41,7 @@ export class AuthService {
 
     async verifyAdminRequest(email: string): Promise<boolean> {
         const user = await this.userService.findByEmail(email)
-        return user && user.isAdmin
+        return !!user && user.isAdmin
     }
 
     async verifyRegisteredUserRequest(email: string): Promise<boolean> {
@@ -45,5 +49,6 @@ export class AuthService {
         if (user) {
             return true
         }
+        return false
     }
 }
