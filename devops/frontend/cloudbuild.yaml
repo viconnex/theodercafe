@@ -1,5 +1,12 @@
 steps:
   # app engine
+  - name: gcr.io/cloud-builders/gcloud
+    dir: "backend"
+    entrypoint: "bash"
+    args:
+      - -c
+      - echo "JWT_SECRET_KEY=$(gcloud secrets versions access latest --secret=jwt-secret-key --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
+
   - name: "gcr.io/cloud-builders/gcloud"
     dir: "backend"
     args: ["app", "deploy"]
@@ -61,9 +68,8 @@ steps:
   #       cp app.yaml ./build
   #       cd build
   #       gcloud app deploy
-
-images:
-  [
-    "gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA",
-    "gcr.io/theodercafe/backend:latest",
-  ]
+# images:
+#   [
+#     "gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA",
+#     "gcr.io/theodercafe/backend:latest",
+#   ]

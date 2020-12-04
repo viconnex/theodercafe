@@ -5,6 +5,9 @@ service: backend
 beta_settings:
     cloud_sql_instances: theodercafe:europe-west2:theodercafe=tcp:5432
 
+manual_scaling:
+    instances: 1
+
 env_variables:
     NODE_ENV: production
     TYPEORM_URL: postgres://the:cafe@172.17.0.1:5432/theodercafe
