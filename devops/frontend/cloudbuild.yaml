@@ -1,69 +1,42 @@
 steps:
   # app engine
+  - name: gcr.io/cloud-builders/gcloud
+    dir: "backend"
+    entrypoint: "bash"
+    args:
+      - -c
+      - |
+        echo "JWT_SECRET_KEY=$(gcloud secrets versions access latest --secret=jwt-secret-key --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" >> .env.local
+        echo "GOOGLE_OAUTH2_CLIENT_ID=$(gcloud secrets versions access latest --secret=google-oauth2-client-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" >> .env.local
+        echo "GOOGLE_OAUTH2_CLIENT_SECRET=$(gcloud secrets versions access latest --secret=google-oauth2-client-secret --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" >> .env.local
+        echo "GMAIL_PASSWORD=$(gcloud secrets versions access latest --secret=gmail-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" >> .env.local
+        echo "FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY=$(gcloud secrets versions access latest --secret=firebase-service-account-private-key --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" >> .env.local
+
   - name: "gcr.io/cloud-builders/gcloud"
     dir: "backend"
     args: ["app", "deploy"]
-  # # gke
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   dir: "backend"
-  #   entrypoint: 'bash'
-  #   args: [
-  #   '-c',
-  #   'docker pull gcr.io/theodercafe/backend:latest || exit 0'
-  #   ]
-  # - name: gcr.io/cloud-builders/docker
-  #   dir: "backend"
-  #   args: [
-  #   'build',
-  #   '-t',
-  #   'gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA',
-  #   '-t',
-  #   'gcr.io/theodercafe/backend:latest',
-  #   '.'
-  #   ]
-  # - name: gcr.io/cloud-builders/docker
-  #   dir: "backend"
-  #   args: ['push', 'gcr.io/theodercafe/backend:latest']
 
-  # # delete deploymnent instead of adding new replicaSet because the number of nodes is limited to 1
-  # - name: 'gcr.io/cloud-builders/kubectl'
-  #   dir: "devops/kubernetes"
-  #   args: ['delete', '-f', 'backend-deployment.yaml']
-  #   env:
-  #   - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
-  #   - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
-  # - name: 'gcr.io/cloud-builders/kubectl'
-  #   dir: "devops/kubernetes"
-  #   args: ['apply', '-f', 'backend-deployment.yaml']
-  #   env:
-  #   - 'CLOUDSDK_COMPUTE_ZONE=europe-west2-a'
-  #   - 'CLOUDSDK_CONTAINER_CLUSTER=backend-cleusteur'
+  # # frontend
+  - name: gcr.io/cloud-builders/npm
+    args: [install]
+    dir: "frontend"
+  - name: gcr.io/cloud-builders/npm
+    dir: "frontend"
+    args: ["run", "create-env"]
+    env:
+      - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
+  - name: gcr.io/cloud-builders/npm
+    args: [run, build]
+    dir: "frontend"
+  # Deploy
+  - name: "gcr.io/cloud-builders/gcloud"
+    dir: "frontend"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        cp app.yaml ./build
+        cd build
+        gcloud app deploy
 
-  ## frontend
-  # - name: gcr.io/cloud-builders/npm
-  #   args: [install]
-  #   dir: "frontend"
-  # - name: gcr.io/cloud-builders/npm
-  #   dir: "frontend"
-  #   args: ["run", "create-env"]
-  #   env:
-  #     - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
-  # - name: gcr.io/cloud-builders/npm
-  #   args: [run, build]
-  #   dir: "frontend"
-  # # Deploy
-  # - name: "gcr.io/cloud-builders/gcloud"
-  #   dir: "frontend"
-  #   entrypoint: bash
-  #   args:
-  #     - "-c"
-  #     - |
-  #       cp app.yaml ./build
-  #       cd build
-  #       gcloud app deploy
-
-images:
-  [
-    "gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA",
-    "gcr.io/theodercafe/backend:latest",
-  ]
+timeout: "1200s"
