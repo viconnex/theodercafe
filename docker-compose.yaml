@@ -23,7 +23,7 @@ services:
       - ./backend:/var/www
       - /var/www/node_modules
     ports:
-      - 8000:8000
+      - 8080:8080
       - 4002:4002
       - 9229:9229
     environment:

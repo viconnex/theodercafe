@@ -8,6 +8,12 @@ beta_settings:
 manual_scaling:
     instances: 1
 
+liveness_check:
+    path: '/health'
+
+readiness_check:
+    path: '/health'
+
 env_variables:
     NODE_ENV: production
     TYPEORM_URL: postgres://the:cafe@172.17.0.1:5432/theodercafe
@@ -23,5 +29,4 @@ env_variables:
     BACKEND_URL: https://api.theodercafe.com
     AUTH2_CLIENT_ID: google_auth2_id
     CLIENT_SECRET: google_client_secret
-    JWT_SECRET_KEY: secret_key
     FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY: firebase_private_key
