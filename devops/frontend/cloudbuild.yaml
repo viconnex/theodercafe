@@ -8,7 +8,7 @@ steps:
       - echo "JWT_SECRET_KEY=$(gcloud secrets versions access latest --secret=jwt-secret-key --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
       - echo "AUTH2_CLIENT_ID=$(gcloud secrets versions access latest --secret=google-oauth2-client-id --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
       - echo "CLIENT_SECRET=$(gcloud secrets versions access latest --secret=google-oauth2-client-secret --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
-      - echo "GMAIL_SECRET=$(gcloud secrets versions access latest --secret=gmail-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
+      - echo "GMAIL_PASSWORD=$(gcloud secrets versions access latest --secret=gmail-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
       - echo "FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY=$(gcloud secrets versions access latest --secret=firebase-service-account-private-key --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
 
   - name: "gcr.io/cloud-builders/gcloud"

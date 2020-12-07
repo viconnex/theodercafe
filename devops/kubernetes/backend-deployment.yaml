@@ -57,11 +57,11 @@ spec:
               value: dist/migration/*.js
             - name: TYPEORM_MIGRATIONS_DIR
               value: migration
-            - name: GMAIL_SECRET
+            - name: GMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: nestjs-secrets
-                  key: GMAIL_SECRET
+                  key: GMAIL_PASSWORD
         - name: cloud-sql-proxy
           # It is recommended to use the latest version of the Cloud SQL proxy
           # Make sure to update on a regular schedule!
