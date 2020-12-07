@@ -26,4 +26,4 @@ env_variables:
     TYPEORM_DATABASE: theodercafe
     TYPEORM_PORT: 5432
     FRONT_BASE_URL: https://theodercafe.com
-    BACKEND_URL: https://api.theodercafe.com
+    BACKEND_URL: https://backend-dot-theodercafe.nw.r.appspot.com
