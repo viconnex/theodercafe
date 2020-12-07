@@ -27,7 +27,7 @@ spec:
               value: https://theodercafe.com
             - name: BACKEND_URL
               value: https://api.theodercafe.com
-            - name: AUTH2_CLIENT_ID
+            - name: GOOGLE_OAUTH2_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: nestjs-secrets
