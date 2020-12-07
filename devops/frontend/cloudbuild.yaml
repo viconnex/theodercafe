@@ -73,3 +73,5 @@ steps:
 #     "gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA",
 #     "gcr.io/theodercafe/backend:latest",
 #   ]
+
+timeout: "1200s"
