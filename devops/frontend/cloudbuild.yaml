@@ -31,8 +31,6 @@ steps:
       - "-c"
       - |
         cp app.yaml ./build
-        cd build
-        gcloud app deploy
 
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy", "backend/app.yaml", "frontend/build/app.yaml"]
