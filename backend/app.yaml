@@ -17,7 +17,7 @@ readiness_check:
 env_variables:
     NODE_ENV: production
     TYPEORM_URL: postgres://the:cafe@172.17.0.1:5432/theodercafe
-    TYPEORM_LOGGING: 'false'
+    TYPEORM_LOGGING: false
     TYPEORM_ENTITIES: dist/**/*.entity.js,dist/src/**/*.entity.js
     TYPEORM_MIGRATIONS: dist/migration/*.js
     TYPEORM_MIGRATIONS_DIR: migration
@@ -27,6 +27,3 @@ env_variables:
     TYPEORM_PORT: 5432
     FRONT_BASE_URL: https://theodercafe.com
     BACKEND_URL: https://api.theodercafe.com
-    AUTH2_CLIENT_ID: google_auth2_id
-    CLIENT_SECRET: google_client_secret
-    FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY: firebase_private_key
