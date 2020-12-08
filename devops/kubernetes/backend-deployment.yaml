@@ -27,16 +27,16 @@ spec:
               value: https://theodercafe.com
             - name: BACKEND_URL
               value: https://api.theodercafe.com
-            - name: AUTH2_CLIENT_ID
+            - name: GOOGLE_OAUTH2_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: nestjs-secrets
                   key: OAUTH_CLIENT_ID
-            - name: CLIENT_SECRET
+            - name: GOOGLE_OAUTH2_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: nestjs-secrets
-                  key: OAUTH_CLIENT_SECRET
+                  key: OAUTH_GOOGLE_OAUTH2_CLIENT_SECRET
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -57,11 +57,11 @@ spec:
               value: dist/migration/*.js
             - name: TYPEORM_MIGRATIONS_DIR
               value: migration
-            - name: GMAIL_SECRET
+            - name: GMAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: nestjs-secrets
-                  key: GMAIL_SECRET
+                  key: GMAIL_PASSWORD
         - name: cloud-sql-proxy
           # It is recommended to use the latest version of the Cloud SQL proxy
           # Make sure to update on a regular schedule!

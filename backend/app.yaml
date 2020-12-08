@@ -1,0 +1,30 @@
+runtime: custom
+env: flex
+service: backend
+
+beta_settings:
+    cloud_sql_instances: theodercafe:europe-west2:theodercafe=tcp:5432
+
+manual_scaling:
+    instances: 1
+
+liveness_check:
+    path: '/health'
+
+readiness_check:
+    path: '/health'
+    app_start_timeout_sec: 1200
+
+env_variables:
+    NODE_ENV: production
+    TYPEORM_URL: postgres://the:cafe@172.17.0.1:5432/theodercafe
+    TYPEORM_LOGGING: false
+    TYPEORM_ENTITIES: dist/**/*.entity.js,dist/src/**/*.entity.js
+    TYPEORM_MIGRATIONS: dist/migration/*.js
+    TYPEORM_MIGRATIONS_DIR: migration
+    TYPEORM_USERNAME: the
+    TYPEORM_PASSWORD: cafe
+    TYPEORM_DATABASE: theodercafe
+    TYPEORM_PORT: 5432
+    FRONT_BASE_URL: https://theodercafe.com
+    BACKEND_URL: https://backend-dot-theodercafe.nw.r.appspot.com

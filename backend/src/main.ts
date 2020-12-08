@@ -5,7 +5,7 @@ async function bootstrap(): Promise<void> {
     console.log('node_env', process.env.NODE_ENV)
     const app = await NestFactory.create(AppModule)
     app.enableCors()
-    await app.listen(8000)
+    await app.listen(8080)
 }
 // eslint-disable-next-line
 bootstrap()

@@ -2,7 +2,6 @@ FROM node:12.16-alpine as development
 
 WORKDIR /var/www
 
-
 COPY package*.json ./
 RUN npm install
 
