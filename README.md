@@ -1,4 +1,4 @@
-Fais tes choix sur [theodercafe.com](theodercafe.com)
+Fais tes choix sur [theodercafe.com](https://theodercafe.com)
 
 ![preview](app-preview.png)
 
