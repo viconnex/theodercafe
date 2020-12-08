@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "The oder Cafe ?",
   "scripts": {
-    "deploy": "ansible-playbook -i devops/provisioning/hosts/prod devops/provisioning/deploy.yml",
-    "provision": "ansible-playbook -i devops/provisioning/hosts/prod devops/provisioning/playbook.yml",
+    "deploy": "ansible-playbook -i devops/ansible/hosts/prod devops/ansible/deploy.yml",
+    "provision": "ansible-playbook -i devops/ansible/hosts/prod devops/ansible/playbook.yml",
     "start": "docker-compose up",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,8 +17,5 @@
   "bugs": {
     "url": "https://github.com/victorbrun/theodercafe/issues"
   },
-  "homepage": "https://theodercafe.com",
-  "dependencies": {
-    "@material-ui/icons": "^4.2.1"
-  }
+  "homepage": "https://theodercafe.com"
 }

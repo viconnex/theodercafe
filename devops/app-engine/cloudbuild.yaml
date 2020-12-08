@@ -28,7 +28,6 @@ steps:
   - name: gcr.io/cloud-builders/npm
     args: [run, build]
     dir: "frontend"
-  # Deploy
   - name: "gcr.io/cloud-builders/gcloud"
     dir: "frontend"
     entrypoint: bash
