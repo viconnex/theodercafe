@@ -11,6 +11,10 @@ steps:
       - echo "GMAIL_PASSWORD=$(gcloud secrets versions access latest --secret=gmail-password --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
       - echo "FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY=$(gcloud secrets versions access latest --secret=firebase-service-account-private-key --format='get(payload.data)' | tr '_-' '/+' | base64 -d)" > .env.local
 
+  - name: "gcr.io/cloud-builders/gcloud"
+    dir: "backend"
+    args: ["app", "deploy"]
+
   # frontend
   - name: gcr.io/cloud-builders/npm
     args: [install]
@@ -31,14 +35,7 @@ steps:
       - "-c"
       - |
         cp app.yaml ./build
-
-  - name: "gcr.io/cloud-builders/gcloud"
-    args: ["app", "deploy", "backend/app.yaml", "frontend/build/app.yaml"]
-
-# images:
-#   [
-#     "gcr.io/theodercafe/backend:$BRANCH_NAME-$COMMIT_SHA",
-#     "gcr.io/theodercafe/backend:latest",
-#   ]
+        cd build
+        gcloud app deploy
 
 timeout: "1200s"
