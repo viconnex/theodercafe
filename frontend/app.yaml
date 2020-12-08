@@ -1,9 +1,6 @@
 runtime: nodejs12
 service: default
 
-# env_variables:
-#   REACT_APP_BACKEND_URL: 'https://api.theodercafe.com'
-
 handlers:
   - url: /static
     static_dir: static
