@@ -24,4 +24,4 @@ COPY . .
 
 COPY --from=development /var/www/dist ./dist
 
-CMD sh -c "npm run start:prod"
+ENTRYPOINT [ "npm", "run", "start:prod" ]
