@@ -138,7 +138,7 @@ export class UserToQuestionChoiceService {
 
     private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos) {
         const alterodo = await this.userService.findOneWithPublicFields(alterodos.alterodo.userId)
-        const varieto = await this.userService.findOneWithPublicFields(alterodos.alterodo.userId)
+        const varieto = await this.userService.findOneWithPublicFields(alterodos.varieto.userId)
 
         if (!alterodo || !varieto) {
             throw new Error('alterodo or varieto not found')
