@@ -32,11 +32,11 @@ spec:
                 secretKeyRef:
                   name: nestjs-secrets
                   key: OAUTH_CLIENT_ID
-            - name: CLIENT_SECRET
+            - name: GOOGLE_OAUTH2_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: nestjs-secrets
-                  key: OAUTH_CLIENT_SECRET
+                  key: OAUTH_GOOGLE_OAUTH2_CLIENT_SECRET
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
