@@ -1,4 +1,4 @@
-FROM gcr.io/google-appengine/nodejs as development
+FROM node:12.16-alpine as development
 
 WORKDIR /var/www
 
@@ -9,7 +9,7 @@ COPY . .
 
 RUN npm run build
 
-FROM gcr.io/google-appengine/nodejs as production
+FROM node:12.16-alpine as production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
@@ -24,4 +24,4 @@ COPY . .
 
 COPY --from=development /var/www/dist ./dist
 
-ENTRYPOINT [ "npm", "run", "start:prod" ]
+CMD sh -c "npm run start:prod"
