@@ -16,12 +16,12 @@ import { ThemeProvider } from '@material-ui/styles'
 import colors from 'ui/colors'
 import { getPictureUrl } from 'services/jwtDecode'
 import { Alterodo } from 'pages/Alterodo'
-import { Map } from 'pages/Map'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
 import { useSetAuth } from './services/auth/setAuth'
 
 const Admin = lazy(() => import('./admin/Admin'))
+const Map = lazy(() => import('./pages/Map/Map'))
 
 const theme = createMuiTheme({
   palette: {
