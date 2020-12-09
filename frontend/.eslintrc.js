@@ -80,6 +80,7 @@ module.exports = {
     '@typescript-eslint/no-floating-promises': 'warn',
     'react/no-unescaped-entities': 'off',
     '@typescript-eslint/restrict-plus-operands': 'warn',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   root: true,
   settings: {
