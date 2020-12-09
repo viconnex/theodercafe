@@ -9,14 +9,12 @@ if (process.env.NODE_ENV === 'development') {
 
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
-    async findByQuestionIdsWhereUsersInCompanyAndNotCurrentUser(
-        questionIds: string[],
-        excludedUserId: string | null,
-    ): Promise<UserToQuestionChoice[]> {
+    async getAsakaiSet(questionIds: string[], excludedUserId: string | null): Promise<UserToQuestionChoice[]> {
         let query = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .where('user.company IN (:...companies)', { companies: COMPANIES })
             .where('user.isActive IS true')
+            .where('user.isLoginPending IS false')
 
         if (excludedUserId) {
             query = query.andWhere('user.id != :userId', { userId: excludedUserId })

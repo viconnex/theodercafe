@@ -18,7 +18,7 @@ export class AuthService {
                 return null
             }
 
-            const user = await this.userService.createOrUpdate(email, profile)
+            const user = await this.userService.createOrUpdateAfterLogin(email, profile)
 
             const payload = {
                 id: user.id,

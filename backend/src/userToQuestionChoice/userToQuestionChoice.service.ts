@@ -164,7 +164,7 @@ export class UserToQuestionChoiceService {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         const commonAnswersWithUsers: { [id: number]: SimilarityWithUserId } = {}
 
-        const userToQuestionChoices = await this.userToQuestionChoiceRepository.findByQuestionIdsWhereUsersInCompanyAndNotCurrentUser(
+        const userToQuestionChoices = await this.userToQuestionChoiceRepository.getAsakaiSet(
             answeredQuestionsIds,
             excludedUserId,
         )

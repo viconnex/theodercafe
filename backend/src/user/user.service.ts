@@ -62,11 +62,11 @@ export class UserService {
         }
     }
 
-    async createOrUpdate(email: string, profile: GoogleProfile): Promise<User> {
+    async createOrUpdateAfterLogin(email: string, profile: GoogleProfile): Promise<User> {
         const user = await this.findByEmail(email)
 
         if (user) {
-            return this.userRepository.save({ ...user, ...this.getUserInfoFromProfile(profile) })
+            return this.userRepository.save({ ...user, ...this.getUserInfoFromProfile(profile), isLoginPending: false })
         }
 
         return user ?? this.createNewUser(email, profile)
@@ -94,14 +94,13 @@ export class UserService {
 
         let newUser: null | DeepPartial<User> = null
         if (!existingUser) {
-            // @ts-ignore
             newUser = await this.userRepository.save({
-                // @ts-ignore
                 email: emailLowerCase,
                 company: getCompanyFromEmail(emailLowerCase),
                 isAdmin: false,
                 addedByUser,
                 asakaiAlterodoUser,
+                isLoginPending: true,
             })
         }
 

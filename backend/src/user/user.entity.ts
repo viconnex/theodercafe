@@ -36,10 +36,10 @@ export class User {
     pictureUrl: string
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    addedByUser: User
+    addedByUser: User | null
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-    asakaiAlterodoUser: User
+    asakaiAlterodoUser: User | null
 
     @Column({ default: false })
     @Exclude()
@@ -49,10 +49,22 @@ export class User {
     @Exclude()
     isActive: boolean
 
-    @OneToMany(() => UserToQuestionChoice, (userToQuestionChoice) => userToQuestionChoice.user, { cascade: true })
+    @Column({ default: false })
+    @Exclude()
+    isLoginPending: boolean
+
+    @OneToMany(
+        () => UserToQuestionChoice,
+        userToQuestionChoice => userToQuestionChoice.user,
+        { cascade: true },
+    )
     userToQuestionChoices: UserToQuestionChoice[]
 
-    @OneToMany(() => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.user, { cascade: true })
+    @OneToMany(
+        () => UserToQuestionVote,
+        userToQuestionVote => userToQuestionVote.user,
+        { cascade: true },
+    )
     userToQuestionVotes: UserToQuestionVote[]
 
     @CreateDateColumn()
