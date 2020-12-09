@@ -14,7 +14,7 @@ export const fetchRequestResponse = async (
   }
   if (response.status === 401) {
     localStorage.removeItem('jwt_token')
-    enqueueSnackbar('Une erreur est survenue', { variant: 'error' })
+    enqueueSnackbar("Vous n'êtes plus connecté", { variant: 'error' })
     return null
   }
 
