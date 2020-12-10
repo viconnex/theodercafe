@@ -27,7 +27,10 @@ import { HealthController } from './health/health.controller'
         UserToQuestionChoiceModule,
         UserToQuestionVoteModule,
         QuestioningHistoricModule,
-        ConfigModule.forRoot({ isGlobal: true, envFilePath: ['.env', '.env.local'] }),
+        ConfigModule.forRoot({
+            isGlobal: true,
+            envFilePath: process.env.NODE_ENV === 'development' ? ['.env', '.env.dev'] : ['.env', '.env.prod'],
+        }),
         MailerModule.forRoot({
             transport: `smtps://theodercafe@gmail.com:${process.env.GMAIL_PASSWORD}@smtp.gmail.com`,
             defaults: {
