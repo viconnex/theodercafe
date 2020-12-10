@@ -10,10 +10,12 @@ manual_scaling:
 
 liveness_check:
     path: '/health'
+    check_interval_sec: 60
 
 readiness_check:
     path: '/health'
-    app_start_timeout_sec: 1200
+    app_start_timeout_sec: 1800
+    check_interval_sec: 60
 
 env_variables:
     NODE_ENV: production
