@@ -9,8 +9,10 @@ const UserList = (props) => {
         <TextField source="email" label="Email" />
         <TextField source="givenName" label="Prénom" />
         <TextField source="familyName" label="Name" />
+        <TextField source="answerCount" label="Réponses" />
         <BooleanField source="isActive" label="Actif ?" />
         <BooleanField source="isAdmin" label="Admin ?" />
+        <BooleanField source="isLoginPending" label="Compte en attente ?" />
       </Datagrid>
     </List>
   )

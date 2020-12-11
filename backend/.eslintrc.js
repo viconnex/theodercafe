@@ -70,6 +70,7 @@ module.exports = {
         '@typescript-eslint/no-var-requires': 'warn',
         '@typescript-eslint/ban-types': 'warn',
         '@typescript-eslint/prefer-optional-chain': 'warn',
+        '@typescript-eslint/no-unused-vars': 'error',
     },
     overrides: [
         {

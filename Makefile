@@ -1,3 +1,6 @@
+local-db:
+	docker-compose exec postgresql psql -d theodercafe -U the
+
 gcloud-sql:
 	PGDATABASE=theodercafe gcloud sql connect theodercafe --user=the
 

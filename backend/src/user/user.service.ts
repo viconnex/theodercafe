@@ -2,12 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MailerService } from '@nestjs-modules/mailer'
 import { QuestionService } from 'src/question/question.service'
-import { Question } from 'src/question/question.entity'
 import { DeepPartial, DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
-import { UserWithPublicFields } from './user.types'
+import { AdminUserList, UserWithPublicFields } from './user.types'
 
 @Injectable()
 export class UserService {
@@ -17,8 +16,14 @@ export class UserService {
         private readonly mailerService: MailerService,
     ) {}
 
-    async findAdminList(): Promise<User[]> {
-        return this.userRepository.find({ order: { email: 'ASC' } })
+    async findAdminList(): Promise<AdminUserList> {
+        return this.userRepository.query(`
+                    SELECT * FROM users LEFT JOIN (
+                        SELECT "userId", count(*) as "answerCount" from user_to_question_choices GROUP BY "userId"
+                    ) AS  user_answer_count
+                    ON "user_answer_count"."userId" = users.id
+                    ORDER BY "email";
+                `)
     }
 
     findOne(id: string) {
