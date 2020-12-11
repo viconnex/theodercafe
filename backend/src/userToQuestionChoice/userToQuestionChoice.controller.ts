@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { AlterodoResponse, AsakaiChoices, AsakaiEmailDTO, QuestionFilters, UserMap } from './userToQuestionChoice.types'
+import { USER_STRATEGY } from '../auth/jwt.user.strategy'
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
@@ -30,7 +31,7 @@ export class UserToQuestionChoiceController {
     }
 
     @Get('user')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
     async getChoices(@Request() req): Promise<UserToQuestionChoice[]> {
         if (!req || !req.user || !req.user.id) {
@@ -41,7 +42,7 @@ export class UserToQuestionChoiceController {
     }
 
     @Put(':id/choice')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
     async chose(
         @Param('id') questionId: number,
@@ -55,7 +56,7 @@ export class UserToQuestionChoiceController {
     }
 
     @Get('alterodos')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     async getUserAlterodos(@Request() req): Promise<AlterodoResponse> {
         if (!req || !req.user || !req.user.id) {
             throw new BadRequestException('user not found')
@@ -65,7 +66,7 @@ export class UserToQuestionChoiceController {
     }
 
     @Get('map')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     async createMap(@Query() questionFilters: QuestionFilters): Promise<UserMap[]> {
         return await this.userToQuestionChoiceService.createMap(questionFilters)
     }

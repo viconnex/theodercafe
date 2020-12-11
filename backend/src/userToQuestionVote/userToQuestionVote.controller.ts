@@ -15,13 +15,14 @@ import { AuthGuard } from '@nestjs/passport'
 import { DeleteResult } from 'typeorm'
 import { UserToQuestionVoteService } from './userToQuestionVote.service'
 import { UserToQuestionVote } from './userToQuestionVote.entity'
+import { USER_STRATEGY } from '../auth/jwt.user.strategy'
 
 @Controller('user_to_question_votes')
 export class UserToQuestionVoteController {
     constructor(private readonly userToQuestionVoteService: UserToQuestionVoteService) {}
 
     @Get('user')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
     async getChoices(@Request() req): Promise<UserToQuestionVote[]> {
         if (!req || !req.user || !req.user.id) {
@@ -32,7 +33,7 @@ export class UserToQuestionVoteController {
     }
 
     @Put(':id/vote')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
     async vote(
         @Param('id') questionId: number,
@@ -46,7 +47,7 @@ export class UserToQuestionVoteController {
     }
 
     @Delete(':id/vote')
-    @UseGuards(AuthGuard('registered_user'))
+    @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
     async unVote(@Param('id') questionId: number, @Request() req): Promise<DeleteResult> {
         if (!req || !req.user || !req.user.id) {
