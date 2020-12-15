@@ -16,7 +16,6 @@ export class JwtRegisteredUserStrategy extends PassportStrategy(Strategy, USER_S
     }
 
     async validate(payload: JwtPayload, done: Function): Promise<void> {
-        console.log('payload', payload)
         try {
             const validClaims = await this.authService.verifyRegisteredUserRequest(payload.email)
 
