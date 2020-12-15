@@ -14,6 +14,7 @@ export interface GoogleProfile {
 export interface ValidatedUser {
     jwt: string
     email: string
+    id: number
 }
 
 @Injectable()
@@ -36,14 +37,15 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         done: Function,
     ): Promise<void> {
         try {
-            const jwt = await this.authService.validateOAuthLogin(profile)
+            const loginValidation = await this.authService.validateOAuthLogin(profile)
             const email = getEmailFromGoogleProfile(profile)
-            if (!jwt || !email) {
+            if (!loginValidation || !email) {
                 done(null, false)
                 return
             }
             const user: ValidatedUser = {
-                jwt,
+                jwt: loginValidation.jwt,
+                id: loginValidation.userId,
                 email,
             }
 

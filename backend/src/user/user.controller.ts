@@ -1,10 +1,13 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Put, Res, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, NotFoundException, Param, Put, Request, Res, UseGuards } from '@nestjs/common'
 import { Response } from 'express'
 import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 import { UserService } from 'src/user/user.service'
 import { User } from 'src/user/user.entity'
 import { DeleteResult } from 'typeorm'
+import { USER_STRATEGY } from 'src/auth/jwt.user.strategy'
+import { createFirebaseJWT } from 'src/auth/firebase'
+import { JwtPayload } from 'src/auth/auth.types'
 
 @Controller('users')
 export class UserController {
@@ -43,7 +46,13 @@ export class UserController {
 
     @Put(':id')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
-    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<User> {
+    async updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<User> {
         return this.userService.update(id, questionBody)
+    }
+
+    @Get('firebase_token')
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    createUserFirebaseToken(@Request() req: { user: JwtPayload }) {
+        return createFirebaseJWT(req.user.id)
     }
 }

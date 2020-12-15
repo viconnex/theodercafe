@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { JwtPayload } from './auth.types'
 import { AuthService } from './auth.service'
 
 export const USER_STRATEGY = 'user'
@@ -14,7 +15,8 @@ export class JwtRegisteredUserStrategy extends PassportStrategy(Strategy, USER_S
         })
     }
 
-    async validate(payload, done: Function): Promise<void> {
+    async validate(payload: JwtPayload, done: Function): Promise<void> {
+        console.log('payload', payload)
         try {
             const validClaims = await this.authService.verifyRegisteredUserRequest(payload.email)
 
