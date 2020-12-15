@@ -8,26 +8,29 @@ import { fetchRequestResponse } from 'services/api'
 import { getUserId } from 'services/jwtDecode'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
+import { Alterodos } from 'components/Questioning/types'
 import useStyle from './style'
 
 const AsakaiQuestioning = () => {
   const [questions, setQuestions] = useState([])
   const [questionIndex, setQuestionIndex] = useState(0)
-  const [asakaiChoices, setAsakaiChoices] = useState({})
-  const [alterodos, setAlterodos] = useState(null)
+  const [asakaiChoices, setAsakaiChoices] = useState<{ [choice: number]: number }>({})
+  const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const fetchAndSetQuestions = async (newSet) => {
+  const fetchAndSetQuestions = async (newSet: boolean) => {
     setIsLoading(true)
     const response = await fetchRequestResponse(
       {
         uri: `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
         method: 'GET',
+        params: null,
+        body: null,
       },
       200,
-      { enqueueSnackbar },
+      { enqueueSnackbar, successMessage: null },
     )
     if (!response) {
       setIsLoading(false)
@@ -55,7 +58,7 @@ const AsakaiQuestioning = () => {
     fetchAndSetQuestions(true)
   }
 
-  const changeQuestion = (increment) => {
+  const changeQuestion = (increment: number) => {
     let index = questionIndex + increment
     if (index < 0) {
       index = 0
@@ -67,13 +70,14 @@ const AsakaiQuestioning = () => {
 
   const handleAsakaiFinish = async () => {
     let response
-    const excludedUserId = getUserId()
+    const excludedUserId = getUserId() as null | number
     setIsLoading(true)
     try {
       response = await fetchRequest({
         uri: '/user_to_question_choices/asakai',
         method: 'POST',
         body: { asakaiChoices, excludedUserId },
+        params: null,
       })
     } catch {
       setIsLoading(false)
@@ -88,7 +92,7 @@ const AsakaiQuestioning = () => {
     setAlterodos(data)
   }
 
-  const chose = async (questionId, choice) => {
+  const chose = async (questionId: number, choice: number) => {
     const choices = asakaiChoices
     choices[questionId] = choice
     setAsakaiChoices(choices)
@@ -109,7 +113,7 @@ const AsakaiQuestioning = () => {
     if (question && !alterodos) {
       return (
         <React.Fragment>
-          <Question question={question} chose={chose} plusOneEnabled />
+          <Question question={question} choice={null} chose={chose} plusOneEnabled />
           <div className={classes.asakaibrowser}>
             <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
           </div>
