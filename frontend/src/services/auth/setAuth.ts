@@ -2,8 +2,8 @@ import { WithSnackbarProps } from 'notistack'
 import { useEffect } from 'react'
 import { decodeJWT } from 'services/jwtDecode'
 
-export const FIREBASE_JWT_STORAGE_KEY = 'firebase_jwt'
-export const JWT_STORAGE_KEY = 'jwt'
+export const FIREBASE_JWT_STORAGE_KEY = 'firebase_token'
+export const JWT_STORAGE_KEY = 'jwt_token'
 
 export const useSetAuth = (
   setPictureUrl: (pictureUrl: number) => void,
@@ -23,9 +23,9 @@ export const useSetAuth = (
     if (loginStatus !== 'success' || !token) {
       enqueueSnackbar('Il y a eu un problème lors du login', { variant: 'error' })
     } else {
-      localStorage.setItem('jwt_token', token)
+      localStorage.setItem(JWT_STORAGE_KEY, token)
       if (firebaseToken !== null) {
-        localStorage.setItem('firebase_token', firebaseToken)
+        localStorage.setItem(FIREBASE_JWT_STORAGE_KEY, firebaseToken)
       }
 
       const decoded = decodeJWT(token)

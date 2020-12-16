@@ -81,6 +81,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     '@typescript-eslint/restrict-plus-operands': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    // 'no-unreachable': 'off',
   },
   root: true,
   settings: {

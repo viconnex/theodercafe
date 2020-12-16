@@ -9,6 +9,7 @@ import { getUserId } from 'services/jwtDecode'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
 import { Alterodos } from 'components/Questioning/types'
+import { getFirebaseToken } from 'services/auth/firebaseToken'
 import useStyle from './style'
 
 const AsakaiQuestioning = () => {
@@ -17,6 +18,7 @@ const AsakaiQuestioning = () => {
   const [asakaiChoices, setAsakaiChoices] = useState<{ [choice: number]: number }>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [firebaseToken, setFirebaseToken] = useState<null | string>(null)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -42,8 +44,13 @@ const AsakaiQuestioning = () => {
     setQuestionIndex(0)
   }
 
+  const getAndSetFirebaseToken = async () => {
+    setFirebaseToken(await getFirebaseToken())
+  }
+
   useEffect(() => {
-    fetchAndSetQuestions(false)
+    void fetchAndSetQuestions(false)
+    void getAndSetFirebaseToken()
     // eslint-disable-next-line
   }, [])
 
@@ -96,6 +103,7 @@ const AsakaiQuestioning = () => {
     const choices = asakaiChoices
     choices[questionId] = choice
     setAsakaiChoices(choices)
+
     if (questionIndex === questions.length - 1) {
       await handleAsakaiFinish()
       return

@@ -22,9 +22,9 @@ export class AuthController {
 
         if (validatedUser) {
             res.redirect(
-                `${process.env.FRONT_BASE_URL}?login=success&jwt=${validatedUser.jwt}&firebase_jwt=${createFirebaseJWT(
-                    validatedUser.id,
-                )}`,
+                `${process.env.FRONT_BASE_URL}?login=success&jwt_token=${
+                    validatedUser.jwt
+                }&firebase_token=${createFirebaseJWT(validatedUser.id)}`,
             )
         } else {
             res.redirect(`${process.env.FRONT_BASE_URL}?login=failure`)
