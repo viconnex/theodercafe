@@ -10,6 +10,7 @@ import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
 import { Alterodos } from 'components/Questioning/types'
 import { getFirebaseToken } from 'services/auth/firebaseToken'
+import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import useStyle from './style'
 
 const AsakaiQuestioning = () => {
@@ -45,6 +46,10 @@ const AsakaiQuestioning = () => {
 
   const getAndSetFirebaseToken = async () => {
     const token = await getFirebaseToken()
+    if (!token) {
+      return
+    }
+    await firebaseAuth.signInWithCustomToken(token)
   }
 
   useEffect(() => {

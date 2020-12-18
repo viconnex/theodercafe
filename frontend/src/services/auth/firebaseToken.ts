@@ -22,8 +22,12 @@ export const getFirebaseToken = async () => {
       params: null,
     })
     const { token } = (await response.json()) as { token: string }
-    localStorage.setItem(FIREBASE_JWT_STORAGE_KEY, token)
 
+    if (!token) {
+      return null
+    }
+
+    localStorage.setItem(FIREBASE_JWT_STORAGE_KEY, token)
     return token
   } catch {
     return null
@@ -31,6 +35,10 @@ export const getFirebaseToken = async () => {
 }
 
 export const isTokenValid = (token: string) => {
-  const decoded: { exp?: number } = jwtDecode(token)
-  return !decoded.exp || decoded.exp > Date.now() / 1000 + 300
+  try {
+    const decoded: { exp?: number } = jwtDecode(token)
+    return !decoded.exp || decoded.exp > Date.now() / 1000 + 300
+  } catch (e) {
+    return false
+  }
 }
