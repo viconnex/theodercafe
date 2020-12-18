@@ -18,7 +18,6 @@ const AsakaiQuestioning = () => {
   const [asakaiChoices, setAsakaiChoices] = useState<{ [choice: number]: number }>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [firebaseToken, setFirebaseToken] = useState<null | string>(null)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -45,7 +44,7 @@ const AsakaiQuestioning = () => {
   }
 
   const getAndSetFirebaseToken = async () => {
-    setFirebaseToken(await getFirebaseToken())
+    const token = await getFirebaseToken()
   }
 
   useEffect(() => {

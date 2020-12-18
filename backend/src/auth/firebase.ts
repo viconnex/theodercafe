@@ -1,6 +1,6 @@
 import { sign } from 'jsonwebtoken'
 
-const issuingTime = Date.now() / 1000
+const issuingTime = Math.round(Date.now() / 1000)
 const expirationTime = issuingTime + 3600 // Maximum expiration time is one hour
 
 export const createFirebaseJWT = (id: number) => {
