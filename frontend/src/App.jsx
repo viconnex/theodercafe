@@ -18,7 +18,7 @@ import { getPictureUrl } from 'services/jwtDecode'
 import { Alterodo } from 'pages/Alterodo'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
-import { useSetAuth } from './services/auth/setAuth'
+import { useSetAuth } from './services/authentication'
 
 const Admin = lazy(() => import('./admin/Admin'))
 const Map = lazy(() => import('./pages/Map/Map'))

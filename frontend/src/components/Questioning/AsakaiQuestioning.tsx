@@ -10,7 +10,7 @@ import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
 import { Alterodos, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning } from 'services/firebase/requests'
-import { useFirebaseAuth } from 'services/auth/setAuth'
+import { useFirebaseAuth } from 'services/firebase/authentication'
 import useStyle from './style'
 
 const AsakaiQuestioning = () => {
@@ -109,12 +109,14 @@ const AsakaiQuestioning = () => {
     choices[questionId] = choice
     setAsakaiChoices(choices)
 
-    try {
-      const res = await answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
-      console.log('res', res)
-    } catch (e) {
-      console.log('error', e)
-      return
+    if (firebaseUid) {
+      try {
+        const res = await answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
+        console.log('res', res)
+      } catch (e) {
+        console.log('error', e)
+        return
+      }
     }
 
     if (questionIndex === questions.length - 1) {

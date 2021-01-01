@@ -11,7 +11,7 @@ import Drawer from '@material-ui/core/Drawer'
 import { decodeJWT } from 'services/jwtDecode'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
-import { logout } from 'services/auth/setAuth'
+import { logout } from 'services/authentication'
 
 const style = (theme) => ({
   drawerHeader: {

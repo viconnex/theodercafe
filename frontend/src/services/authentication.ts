@@ -1,7 +1,5 @@
 import { WithSnackbarProps } from 'notistack'
 import { useEffect } from 'react'
-import { getFirebaseToken } from 'services/auth/firebaseToken'
-import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import { decodeJWT } from 'services/jwtDecode'
 
 export const FIREBASE_JWT_STORAGE_KEY = 'firebase_token'
@@ -56,32 +54,4 @@ export const useSetAuth = (
 export const logout = () => {
   localStorage.removeItem('jwt_token')
   window.location.host = ''
-}
-
-export const useFirebaseAuth = (setUid: (uid: string) => void) => {
-  useEffect(() => {
-    const signin = async () => {
-      const token = await getFirebaseToken()
-      if (!token) {
-        console.log('no token')
-        return
-      }
-      try {
-        // const res = await firebaseAuth.signInWithCustomToken(token)
-        // console.log('res', res)
-      } catch {
-        console.log('authentication to firebase failed')
-      }
-    }
-    void signin()
-  }, [])
-
-  firebaseAuth.onAuthStateChanged((user) => {
-    if (user) {
-      setUid(user.uid)
-    } else {
-      // User is signed out
-      // ...
-    }
-  })
 }

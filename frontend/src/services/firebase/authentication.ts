@@ -1,5 +1,7 @@
 import jwtDecode from 'jwt-decode'
-import { FIREBASE_JWT_STORAGE_KEY, JWT_STORAGE_KEY } from 'services/auth/setAuth'
+import { useEffect } from 'react'
+import { FIREBASE_JWT_STORAGE_KEY, JWT_STORAGE_KEY } from 'services/authentication'
+import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import { fetchRequest } from 'utils/helpers'
 
 export const getFirebaseToken = async () => {
@@ -41,4 +43,29 @@ export const isTokenValid = (token: string) => {
   } catch (e) {
     return false
   }
+}
+
+export const useFirebaseAuth = (setUid: (uid: string) => void) => {
+  useEffect(() => {
+    const signin = async () => {
+      const token = await getFirebaseToken()
+      if (!token) {
+        return
+      }
+      try {
+        await firebaseAuth.signInWithCustomToken(token)
+      } catch {
+        console.log('authentication to firebase failed')
+      }
+    }
+    void signin()
+  }, [])
+
+  firebaseAuth.onAuthStateChanged((user) => {
+    if (user) {
+      setUid(user.uid)
+    } else {
+      // User is signed out
+    }
+  })
 }
