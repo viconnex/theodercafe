@@ -8,17 +8,21 @@ import { fetchRequestResponse } from 'services/api'
 import { getUserId } from 'services/jwtDecode'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
-import { Alterodos } from 'components/Questioning/types'
-import { getFirebaseToken } from 'services/auth/firebaseToken'
-import { firebaseAuth } from 'services/firebase/initialiseFirebase'
+import { Alterodos, QuestionResponse } from 'components/Questioning/types'
+import { answerQuestioning } from 'services/firebase/requests'
+import { useFirebaseAuth } from 'services/auth/setAuth'
 import useStyle from './style'
 
 const AsakaiQuestioning = () => {
-  const [questions, setQuestions] = useState([])
+  const [questions, setQuestions] = useState<QuestionResponse[]>([])
+  const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [asakaiChoices, setAsakaiChoices] = useState<{ [choice: number]: number }>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
+
+  console.log('render', 'firebaseUid', firebaseUid)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -38,23 +42,20 @@ const AsakaiQuestioning = () => {
       setIsLoading(false)
       return
     }
-    const data = await response.json()
+    const { questioningId, questions } = (await response.json()) as {
+      questioningId: number
+      questions: QuestionResponse[]
+    }
     setIsLoading(false)
-    setQuestions(data)
+    setQuestioningId(questioningId)
+    setQuestions(questions)
     setQuestionIndex(0)
   }
 
-  const getAndSetFirebaseToken = async () => {
-    const token = await getFirebaseToken()
-    if (!token) {
-      return
-    }
-    await firebaseAuth.signInWithCustomToken(token)
-  }
+  useFirebaseAuth(setFirebaseUid)
 
   useEffect(() => {
     void fetchAndSetQuestions(false)
-    void getAndSetFirebaseToken()
     // eslint-disable-next-line
   }, [])
 
@@ -103,10 +104,18 @@ const AsakaiQuestioning = () => {
     setAlterodos(data)
   }
 
-  const chose = async (questionId: number, choice: number) => {
+  const chose = async (questionId: number, choice: 1 | 2) => {
     const choices = asakaiChoices
     choices[questionId] = choice
     setAsakaiChoices(choices)
+
+    try {
+      const res = await answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
+      console.log('res', res)
+    } catch (e) {
+      console.log('error', e)
+      return
+    }
 
     if (questionIndex === questions.length - 1) {
       await handleAsakaiFinish()

@@ -1,3 +1,8 @@
+export class AsakaiQuestioning {
+    questioningId: number
+    questions: QuestionWithCategoryNameDto[]
+}
+
 export class QuestionWithCategoryNameDto {
     readonly id: number
     readonly categoryName: string

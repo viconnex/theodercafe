@@ -16,3 +16,11 @@ export type Alterodos = {
   alterodo: SimilarityWithUserId & UserAlterodoResponse
   varieto: SimilarityWithUserId & UserAlterodoResponse
 }
+
+export type QuestionResponse = {
+  categoryName: string | null
+  id: number
+  isValidated: boolean
+  option1: string
+  option2: string
+}

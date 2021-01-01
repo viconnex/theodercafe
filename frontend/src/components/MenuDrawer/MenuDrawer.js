@@ -11,6 +11,7 @@ import Drawer from '@material-ui/core/Drawer'
 import { decodeJWT } from 'services/jwtDecode'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
+import { logout } from 'services/auth/setAuth'
 
 const style = (theme) => ({
   drawerHeader: {
@@ -45,11 +46,9 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
       drawerLinks.push({ label: 'Admin', path: '/admin' })
     }
   }
-
-  const logout = () => {
-    localStorage.removeItem('jwt_token')
-    toggleDrawer(false)()
-    window.location = ''
+  const onLogout = () => {
+    logout()
+    toggleDrawer(false)
   }
 
   return (
@@ -69,7 +68,7 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
           </Link>
         ))}
         {isLogin ? (
-          <ListItem button onClick={logout}>
+          <ListItem button onClick={onLogout}>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
