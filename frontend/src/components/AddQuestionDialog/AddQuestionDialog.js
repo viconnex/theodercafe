@@ -8,8 +8,7 @@ import Button from '@material-ui/core/Button'
 import Close from '@material-ui/icons/Close'
 import Creatable from 'react-select/creatable'
 import { withSnackbar } from 'notistack'
-import { fetchRequest } from 'utils/helpers'
-import { fetchRequestResponse } from 'services/api'
+import { fetchRequest, fetchRequestResponse } from 'services/api'
 import style from './style'
 
 const postQuestion = async (option1, option2, category) => {

@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Question } from 'components/Question'
-import { fetchRequest } from 'utils/helpers'
 import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
 import { useSnackbar } from 'notistack'
 import { Alterodo } from 'components/Alterodo'
-import { fetchRequestResponse } from 'services/api'
-import { getUserId } from 'services/jwtDecode'
+import { fetchRequest, fetchRequestResponse } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
 import { Alterodos, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
+import { User } from 'services/authentication'
 import useStyle from './style'
 
-const AsakaiQuestioning = () => {
+const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
@@ -21,8 +20,6 @@ const AsakaiQuestioning = () => {
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
-
-  console.log('render', 'firebaseUid', firebaseUid)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -82,7 +79,7 @@ const AsakaiQuestioning = () => {
 
   const handleAsakaiFinish = async () => {
     let response
-    const excludedUserId = getUserId() as null | number
+    const excludedUserId = user?.id
     setIsLoading(true)
     try {
       response = await fetchRequest({
@@ -110,13 +107,7 @@ const AsakaiQuestioning = () => {
     setAsakaiChoices(choices)
 
     if (firebaseUid) {
-      try {
-        const res = await answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
-        console.log('res', res)
-      } catch (e) {
-        console.log('error', e)
-        return
-      }
+      await answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
     }
 
     if (questionIndex === questions.length - 1) {
@@ -147,7 +138,11 @@ const AsakaiQuestioning = () => {
       return (
         <React.Fragment>
           <div className={classes.email}>
-            <EmailSnackbar asakaiChoices={asakaiChoices} alterodoUserId={alterodos?.alterodo.userId} />
+            <EmailSnackbar
+              connectedUserId={user?.id}
+              asakaiChoices={asakaiChoices}
+              alterodoUserId={alterodos?.alterodo.userId}
+            />
           </div>
           <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
         </React.Fragment>

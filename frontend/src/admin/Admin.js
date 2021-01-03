@@ -4,6 +4,7 @@ import jsonServerProvider from 'ra-data-json-server'
 import { API_BASE_URL } from 'utils/constants/apiConstants'
 import { CategoryCreate } from 'components/CategoryCreate'
 import { UserEdit, UserList } from 'admin/Users'
+import { JWT_STORAGE_KEY } from 'services/authentication'
 import { QuestionList } from './QuestionList'
 import { QuestionEdit } from './QuestionEdit'
 
@@ -12,7 +13,7 @@ const httpClient = (url, options = {}) => {
     options.headers = new Headers({ Accept: 'application/json' })
   }
   // add your own headers here
-  options.headers.set('Authorization', `Bearer ${localStorage.jwt_token}`)
+  options.headers.set('Authorization', `Bearer ${localStorage[JWT_STORAGE_KEY]}`)
 
   return fetchUtils.fetchJson(url, options)
 }

@@ -1,14 +1,56 @@
 import { WithSnackbarProps } from 'notistack'
 import { useEffect } from 'react'
-import { decodeJWT } from 'services/jwtDecode'
+
+import jwtDecode from 'jwt-decode'
 
 export const FIREBASE_JWT_STORAGE_KEY = 'firebase_token'
 export const JWT_STORAGE_KEY = 'jwt_token'
 
-export const useSetAuth = (
-  setPictureUrl: (pictureUrl: number) => void,
-  enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'],
-) => {
+export enum AuthRole {
+  Admin = 'admin',
+  NonAdmin = 'nonAdmin',
+}
+
+export type JwtTokenPayload = {
+  id: number
+  email: string
+  exp: number
+  role: AuthRole
+  givenName: string
+  familyName: string
+  pictureUrl: string | null
+}
+
+export type User = {
+  id: number
+  hasExpired: boolean
+  role: AuthRole
+  givenName: string
+  familyName: string
+  pictureUrl: string | null
+}
+
+export const decodeJWT = (jwtToken: string): User => {
+  const decoded = jwtDecode<JwtTokenPayload>(jwtToken)
+  return {
+    id: decoded.id,
+    hasExpired: decoded.exp < new Date().getTime() / 1000,
+    role: decoded.role,
+    givenName: decoded.givenName,
+    familyName: decoded.familyName,
+    pictureUrl: decoded.pictureUrl,
+  }
+}
+
+export const getUser = () => {
+  const token = localStorage.getItem(JWT_STORAGE_KEY)
+  if (!token) {
+    return null
+  }
+  return decodeJWT(token)
+}
+
+export const useSetAuth = (setUser: (user: User) => void, enqueueSnackbar: WithSnackbarProps['enqueueSnackbar']) => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
 
@@ -28,8 +70,7 @@ export const useSetAuth = (
         localStorage.setItem(FIREBASE_JWT_STORAGE_KEY, firebaseToken)
       }
 
-      const decoded = decodeJWT(token)
-      setPictureUrl(decoded.pictureUrl)
+      setUser(decodeJWT(token))
 
       enqueueSnackbar('Hello ou Bonjour ?', {
         variant: 'success',
@@ -52,6 +93,7 @@ export const useSetAuth = (
 }
 
 export const logout = () => {
-  localStorage.removeItem('jwt_token')
+  localStorage.removeItem(JWT_STORAGE_KEY)
+  localStorage.removeItem(FIREBASE_JWT_STORAGE_KEY)
   window.location.host = ''
 }

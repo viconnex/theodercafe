@@ -6,7 +6,6 @@ import IconButton from '@material-ui/core/IconButton'
 import ArrowBack from '@material-ui/icons/ArrowBack'
 import TuneIcon from '@material-ui/icons/Tune'
 import ArrowForward from '@material-ui/icons/ArrowForward'
-import { isUser } from 'services/jwtDecode'
 
 import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse } from 'services/api'
@@ -15,7 +14,7 @@ import { FilterDrawer } from 'components/FilterDrawer'
 import Voter from './Voter'
 import useStyle from './style'
 
-const AllQuestioning = ({ questions, isLoading }) => {
+const AllQuestioning = ({ questions, isLoading, user }) => {
   const [filters, setFilters] = useState({
     isValidated: true,
     isNotValidated: false,
@@ -155,7 +154,7 @@ const AllQuestioning = ({ questions, isLoading }) => {
   const question = filteredQuestions[questionIndex]
 
   const chose = async (questionId, choice) => {
-    if (!isUser()) {
+    if (!user) {
       return setOpenLoginDialog(true)
     }
     changeQuestion(1)
@@ -175,7 +174,7 @@ const AllQuestioning = ({ questions, isLoading }) => {
     }
   }
   const vote = async (questionId, isUpVote) => {
-    if (!isUser()) {
+    if (!user) {
       return setOpenLoginDialog(true)
     }
     const newVote = { ...votes }

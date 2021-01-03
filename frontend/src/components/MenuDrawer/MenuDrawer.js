@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -8,7 +8,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import IconButton from '@material-ui/core/IconButton'
 import { Link } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
-import { decodeJWT } from 'services/jwtDecode'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
 import { logout } from 'services/authentication'
@@ -27,7 +26,7 @@ const style = (theme) => ({
   },
 })
 
-const AppDrawer = ({ classes, toggleDrawer, open }) => {
+const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
   const drawerLinks = [
     { label: 'Questions', path: '/' },
     { label: 'A propos', path: '/a-propos' },
@@ -35,17 +34,12 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
     { label: 'La carte', path: '/carte' },
   ]
 
-  let isLogin = false
-
-  if (localStorage.jwt_token) {
-    const decoded = decodeJWT(localStorage.jwt_token)
-    if (!decoded.hasExpired) {
-      isLogin = true
-    }
-    if (decoded.role === 'admin') {
+  useEffect(() => {
+    if (userRole === 'admin') {
       drawerLinks.push({ label: 'Admin', path: '/admin' })
     }
-  }
+  }, [userRole])
+
   const onLogout = () => {
     logout()
     toggleDrawer(false)
@@ -67,7 +61,7 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
             </ListItem>
           </Link>
         ))}
-        {isLogin ? (
+        {userRole ? (
           <ListItem button onClick={onLogout}>
             <ListItemText primary="Logout" />
           </ListItem>

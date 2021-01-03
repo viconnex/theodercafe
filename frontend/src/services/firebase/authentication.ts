@@ -2,7 +2,7 @@ import jwtDecode from 'jwt-decode'
 import { useEffect } from 'react'
 import { FIREBASE_JWT_STORAGE_KEY, JWT_STORAGE_KEY } from 'services/authentication'
 import { firebaseAuth } from 'services/firebase/initialiseFirebase'
-import { fetchRequest } from 'utils/helpers'
+import { fetchRequest } from 'services/api'
 
 export const getFirebaseToken = async () => {
   const savedFirebaseToken = localStorage.getItem(FIREBASE_JWT_STORAGE_KEY)

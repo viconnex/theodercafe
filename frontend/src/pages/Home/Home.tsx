@@ -10,20 +10,26 @@ import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning'
 import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import { fetchRequestResponse } from 'services/api'
+import { User } from 'services/authentication'
 import useStyles from './style'
 
-const Home = () => {
+const Home = ({ user }: { user: User | null }) => {
   const [questions, setQuestions] = useState([])
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
   const [isAsakaiMode, setIsAsakaiMode] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
-
   const { enqueueSnackbar } = useSnackbar()
+
   const fetchQuestions = async () => {
     setIsLoading(true)
-    const response = await fetchRequestResponse({ uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET' }, 200, {
-      enqueueSnackbar,
-    })
+    const response = await fetchRequestResponse(
+      { uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET', params: null, body: null },
+      200,
+      {
+        enqueueSnackbar,
+        successMessage: null,
+      },
+    )
     if (!response) {
       setIsLoading(false)
       return
@@ -38,29 +44,33 @@ const Home = () => {
     // eslint-disable-next-line
   }, [])
 
-  const handleModeChange = (isAsakai) => {
+  const handleModeChange = (isAsakai: boolean) => {
     setIsAsakaiMode(isAsakai)
   }
 
-  const toggleModal = (open) => () => setAddQuestionDialog(open)
+  const toggleModal = (open: boolean) => setAddQuestionDialog(open)
   const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
       <ModeSelector isAsakaiMode={isAsakaiMode} handleModeChange={handleModeChange} />
       <div className={classes.questioningContainer}>
-        {isAsakaiMode ? <AsakaiQuestioning /> : <AllQuestioning questions={questions} isLoading={isLoading} />}
+        {isAsakaiMode ? (
+          <AsakaiQuestioning user={user} />
+        ) : (
+          <AllQuestioning user={user} questions={questions} isLoading={isLoading} />
+        )}
       </div>
-      <Fab className={classes.addButton} size="small" onClick={toggleModal(true)}>
+      <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>
         <AddIcon />
       </Fab>
       <AddQuestionDialog
         className={classes.modal}
         open={addQuestionDialog}
-        onClose={toggleModal(false)}
+        onClose={() => toggleModal(false)}
         handleQuestionAdded={() => setAddQuestionDialog(false)}
       />
     </div>
   )
 }
 
-export default withSnackbar(Home)
+export default Home

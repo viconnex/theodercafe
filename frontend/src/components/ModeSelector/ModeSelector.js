@@ -12,7 +12,7 @@ const tooltipTitle = (
   </div>
 )
 
-const ModeSelector = ({ handleModeChange, handleFilterOptionChange, isAsakaiMode, filterOption }) => {
+const ModeSelector = ({ handleModeChange, isAsakaiMode }) => {
   const handleSwitch = (event) => {
     handleModeChange(!!event.target.checked)
   }
