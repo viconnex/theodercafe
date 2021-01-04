@@ -22,8 +22,8 @@ const postQuestion = async (option1, option2, category) => {
 const choisis = (option1, option2) => (Math.floor(Math.random() * 2) === 0 ? option1 : option2)
 
 class AddQuestionDialog extends Component {
-  componentDidMount = async () => {
-    await this.fetchCategories()
+  componentDidMount = () => {
+    void this.fetchCategories()
   }
 
   fetchCategories = async () => {

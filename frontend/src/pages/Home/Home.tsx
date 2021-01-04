@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useSnackbar, withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 
@@ -40,7 +40,7 @@ const Home = ({ user }: { user: User | null }) => {
   }
 
   useEffect(() => {
-    fetchQuestions()
+    void fetchQuestions()
     // eslint-disable-next-line
   }, [])
 

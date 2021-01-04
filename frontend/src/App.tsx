@@ -33,6 +33,17 @@ const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
   const [user, setUser] = React.useState<User | null>(getUser())
 
+  useEffect(() => {
+    const newUser = getUser()
+    if (!user && newUser) {
+      setUser(newUser)
+      return
+    }
+    if (user && !newUser) {
+      setUser(null)
+    }
+  })
+
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open)
   }
@@ -41,10 +52,6 @@ const App = () => {
 
   const { enqueueSnackbar } = useSnackbar()
   useSetAuth(setUser, enqueueSnackbar)
-
-  const homeProps = {
-    user,
-  }
 
   const userRole = user?.role ?? null
 
@@ -70,7 +77,7 @@ const App = () => {
               <PrivateRoute exact path="/admin" component={Admin} userRole={userRole} isAdminRoute />
               <PrivateRoute exact path="/alterodo" component={Alterodo} userRole={userRole} isAdminRoute={false} />
               <PrivateRoute exact path="/carte" component={Map} userRole={userRole} isAdminRoute={false} />
-              <Route path="/" component={() => <Home {...homeProps} />} />
+              <Route path="/" render={() => <Home user={user} />} />
             </Switch>
           </Suspense>
           <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} userRole={userRole} />
