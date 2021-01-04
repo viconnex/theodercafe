@@ -61,15 +61,6 @@ const Question = ({
         </div>
       )}
       <div className={classes.questionContainer}>
-        <div className={classes.optionContainer}>
-          <div
-            onClick={() => handleChoice(question.id, 1)}
-            className={`${classes.option} ${choice === 1 ? classes.chosenQuestion : ''}`}
-          >
-            <span className={!choice ? classes.chosable : ''}>{question.option1}</span>
-          </div>
-          {plusOneEnabled && choice1Trigger > 0 && <PlusOne update={choice1Trigger} />}
-        </div>
         {questioningRatio && questioningRatio.choice1 > 0 && (
           <div
             className={`${classes.questioningAnswersContainer} ${
@@ -85,7 +76,26 @@ const Question = ({
             <div className={classes.questioningAnswersNumber}>{questioningAnswers?.choice1}</div>
           </div>
         )}
+        <div className={classes.optionContainer}>
+          <div
+            onClick={() => handleChoice(question.id, 1)}
+            className={`${classes.option} ${choice === 1 ? classes.chosenQuestion : ''}`}
+          >
+            <span className={!choice ? classes.chosable : ''}>{question.option1}</span>
+          </div>
+          {plusOneEnabled && choice1Trigger > 0 && <PlusOne update={choice1Trigger} />}
+        </div>
         <div className={classes.separator}> ou </div>
+        <div className={classes.optionContainer}>
+          <div
+            onClick={() => handleChoice(question.id, 2)}
+            className={`${classes.option} ${classes.option2} ${choice === 2 ? classes.chosenQuestion : ''}`}
+          >
+            <span className={!choice ? classes.chosable : ''}>{question.option2}</span>
+          </div>
+          {plusOneEnabled && choice2Trigger > 0 && <PlusOne update={choice2Trigger} />}
+          <span style={{ padding: '8px' }}> ?</span>
+        </div>
         {questioningRatio && questioningRatio.choice2 > 0 && (
           <div
             className={`${classes.questioningAnswersContainer} ${
@@ -101,16 +111,6 @@ const Question = ({
             <div className={classes.questioningAnswersNumber}>{questioningAnswers?.choice2}</div>
           </div>
         )}
-        <div className={classes.optionContainer}>
-          <div
-            onClick={() => handleChoice(question.id, 2)}
-            className={`${classes.option} ${classes.option2} ${choice === 2 ? classes.chosenQuestion : ''}`}
-          >
-            <span className={!choice ? classes.chosable : ''}>{question.option2}</span>
-          </div>
-          {plusOneEnabled && choice2Trigger > 0 && <PlusOne update={choice2Trigger} />}
-          <span style={{ padding: '8px' }}> ?</span>
-        </div>
       </div>
     </React.Fragment>
   )

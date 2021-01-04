@@ -55,10 +55,10 @@ const useStyle = makeStyles(() => {
       display: 'flex',
     },
     questioningAnswersContainerTop: {
-      marginTop: '8px',
+      marginBottom: '8px',
     },
     questioningAnswersContainerBottom: {
-      marginBottom: '8px',
+      marginTop: '8px',
     },
     questioningAnswersBar: {
       backgroundColor: colors.theodoGreen,

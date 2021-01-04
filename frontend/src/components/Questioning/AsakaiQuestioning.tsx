@@ -154,7 +154,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     if (question && !alterodos) {
       return (
         <React.Fragment>
-          {!user && (
+          {!user && questionIndex === 0 && (
             <Button className={classes.activateLive} onClick={login} variant="contained" color="secondary">
               Activer le live
             </Button>
