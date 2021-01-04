@@ -5,16 +5,19 @@ import { PlusOne } from 'components/PlusOne'
 import { Choice, QuestionResponse } from 'components/Questioning/types'
 import useStyle from './style'
 
+/* eslint-disable complexity */
 const Question = ({
   question,
   choice,
   chose,
   plusOneEnabled,
+  hideCategory,
 }: {
   question: QuestionResponse
   choice: Choice | null
   chose: (questionId: number, choiceToHandle: Choice) => void
   plusOneEnabled: boolean
+  hideCategory?: boolean
 }) => {
   const [choice1Trigger, setChoice1Trigger] = React.useState(0)
   const [choice2Trigger, setChoice2Trigger] = React.useState(0)
@@ -35,10 +38,16 @@ const Question = ({
 
   return (
     <div>
-      <div className={classes.categoryContainer}>
-        <div className={classes.categoryTitle}>Catégorie</div>
-        <Chip size="small" label={question.categoryName ? question.categoryName : 'hors catégorie'} color="secondary" />
-      </div>
+      {!hideCategory && (
+        <div className={classes.categoryContainer}>
+          <div className={classes.categoryTitle}>Catégorie</div>
+          <Chip
+            size="small"
+            label={question.categoryName ? question.categoryName : 'hors catégorie'}
+            color="secondary"
+          />
+        </div>
+      )}
       <div className={classes.questionContainer}>
         <div className={classes.optionContainer}>
           <div

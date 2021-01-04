@@ -6,7 +6,7 @@ import { Alterodo } from 'components/Alterodo'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
-import { Alterodos, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import { Alterodos, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, User } from 'services/authentication'
@@ -17,7 +17,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
-  const [asakaiChoices, setAsakaiChoices] = useState<{ [choice: number]: number }>({})
+  const [asakaiChoices, setAsakaiChoices] = useState<{ [questionId: number]: Choice }>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
@@ -146,7 +146,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     if (question && !alterodos) {
       return (
         <React.Fragment>
-          <Question question={question} choice={null} chose={chose} plusOneEnabled />
+          <Question hideCategory question={question} choice={asakaiChoices[question.id]} chose={chose} plusOneEnabled />
           <Browser
             hideArrows={!asakaiChoices[question.id]}
             questionIndex={questionIndex}
