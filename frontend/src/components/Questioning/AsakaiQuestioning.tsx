@@ -10,6 +10,7 @@ import { Alterodos, QuestioningAnswers, QuestionResponse } from 'components/Ques
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, User } from 'services/authentication'
+import Browser from 'components/Questioning/Browser'
 import useStyle from './style'
 
 const AsakaiQuestioning = ({ user }: { user: User | null }) => {
@@ -121,7 +122,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   }
 
   const chose = async (questionId: number, choice: 1 | 2) => {
-    const choices = asakaiChoices
+    const choices = { ...asakaiChoices }
     choices[questionId] = choice
     setAsakaiChoices(choices)
 
@@ -138,8 +139,6 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
 
   const classes = useStyle()
 
-  console.log('render', questioningAnswers)
-
   const QuestionContent = () => {
     if (isLoading) {
       return <CircularProgress color="secondary" />
@@ -148,9 +147,12 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
       return (
         <React.Fragment>
           <Question question={question} choice={null} chose={chose} plusOneEnabled />
-          <div className={classes.asakaibrowser}>
-            <div className={classes.counter}>{`${questionIndex + 1} / ${questions.length}`}</div>
-          </div>
+          <Browser
+            hideArrows={!asakaiChoices[question.id]}
+            questionIndex={questionIndex}
+            changeQuestion={changeQuestion}
+            questionLength={questions.length}
+          />
         </React.Fragment>
       )
     }

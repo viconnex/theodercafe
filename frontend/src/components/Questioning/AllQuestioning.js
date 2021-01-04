@@ -11,6 +11,7 @@ import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
+import Browser from 'components/Questioning/Browser'
 import Voter from './Voter'
 import useStyle from './style'
 
@@ -204,19 +205,11 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
       return (
         <React.Fragment>
           <Question question={question} chose={chose} choice={choices[question.id]} />
-          <div className={classes.browser}>
-            <IconButton
-              disabled={questionIndex === 0}
-              classes={{ root: classes.nextButton }}
-              onClick={() => changeQuestion(-1)}
-            >
-              <ArrowBack />
-            </IconButton>
-            <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
-              <ArrowForward />
-            </IconButton>
-            <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
-          </div>
+          <Browser
+            questionIndex={questionIndex}
+            changeQuestion={changeQuestion}
+            questionLength={filteredQuestions.length}
+          />
           <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
           <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
         </React.Fragment>
