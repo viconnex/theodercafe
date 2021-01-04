@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core'
+import { color } from 'highcharts'
 import colors from 'ui/colors'
 
 const useStyle = makeStyles(() => {
@@ -17,6 +18,9 @@ const useStyle = makeStyles(() => {
     questionContainer: {
       fontSize: '20px',
       padding: '5px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     },
     option: {
       cursor: 'pointer',
@@ -29,8 +33,7 @@ const useStyle = makeStyles(() => {
       margin: '5px',
     },
     chosenQuestion: {
-      backgroundColor: 'white',
-      color: 'black',
+      border: '1px solid white',
     },
     optionContainer: {
       display: 'flex',
@@ -44,6 +47,27 @@ const useStyle = makeStyles(() => {
     },
     pageContainer: {
       marginTop: '30px',
+    },
+    questioningAnswersContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100px',
+      display: 'flex',
+    },
+    questioningAnswersContainerTop: {
+      marginTop: '8px',
+    },
+    questioningAnswersContainerBottom: {
+      marginBottom: '8px',
+    },
+    questioningAnswersBar: {
+      backgroundColor: colors.theodoGreen,
+      height: '12px',
+    },
+    questioningAnswersNumber: {
+      color: colors.theodoGreen,
+      marginLeft: '6px',
+      fontSize: '12px',
     },
   }
 })

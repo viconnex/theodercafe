@@ -146,7 +146,14 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     if (question && !alterodos) {
       return (
         <React.Fragment>
-          <Question hideCategory question={question} choice={asakaiChoices[question.id]} chose={chose} plusOneEnabled />
+          <Question
+            questioningAnswers={asakaiChoices[question.id] ? questioningAnswers : null}
+            hideCategory
+            question={question}
+            choice={asakaiChoices[question.id]}
+            chose={chose}
+            plusOneEnabled
+          />
           <Browser
             hideArrows={!asakaiChoices[question.id]}
             questionIndex={questionIndex}
