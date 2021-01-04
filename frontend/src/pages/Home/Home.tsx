@@ -13,6 +13,15 @@ import { fetchRequestResponse } from 'services/api'
 import { User } from 'services/authentication'
 import useStyles from './style'
 
+const AsakaiModeTooltipContent = () => {
+  return (
+    <React.Fragment>
+      <div>En mode Asakai, réponds à 10 questions pour connaître ton Alterodo.</div>
+      <div style={{ marginTop: '8px' }}> Les réponses ne sont pas enregsitrées si tu actives le mode coach.</div>
+    </React.Fragment>
+  )
+}
+
 const Home = ({ user }: { user: User | null }) => {
   const [questions, setQuestions] = useState([])
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
@@ -52,7 +61,13 @@ const Home = ({ user }: { user: User | null }) => {
   const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
-      <ModeSelector isAsakaiMode={isAsakaiMode} handleModeChange={handleModeChange} />
+      <ModeSelector
+        label="Mode Asakai"
+        isModeOn={isAsakaiMode}
+        handleModeChange={handleModeChange}
+        tooltipContent={<AsakaiModeTooltipContent />}
+        withMargin
+      />
       <div className={classes.questioningContainer}>
         {isAsakaiMode ? (
           <AsakaiQuestioning user={user} />

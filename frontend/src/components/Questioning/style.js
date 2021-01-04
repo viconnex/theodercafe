@@ -3,6 +3,9 @@ import colors from 'ui/colors'
 
 const useStyle = makeStyles((theme) => {
   return {
+    activateLive: {
+      marginBottom: '24px',
+    },
     optionContainer: {
       display: 'flex',
       justifyContent: 'center',

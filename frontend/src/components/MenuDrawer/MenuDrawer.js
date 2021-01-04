@@ -8,9 +8,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import IconButton from '@material-ui/core/IconButton'
 import { Link, useHistory } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
-import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
-import { logout } from 'services/authentication'
+import { login, logout } from 'services/authentication'
 
 const style = (theme) => ({
   drawerHeader: {
@@ -66,7 +65,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
-          <ListItem button onClick={() => (window.location = API_BASE_URL + GOOGLE_AUTH_URI)}>
+          <ListItem button onClick={login}>
             <Button color="primary" variant="contained">
               Login
             </Button>

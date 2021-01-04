@@ -5,12 +5,13 @@ import { useSnackbar } from 'notistack'
 import { Alterodo } from 'components/Alterodo'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
-import { CircularProgress } from '@material-ui/core'
+import { Button, CircularProgress } from '@material-ui/core'
 import { Alterodos, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
-import { AuthRole, User } from 'services/authentication'
+import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
+import { ModeSelector } from 'components/ModeSelector'
 import useStyle from './style'
 
 const AsakaiQuestioning = ({ user }: { user: User | null }) => {
@@ -20,6 +21,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [asakaiChoices, setAsakaiChoices] = useState<{ [questionId: number]: Choice }>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [isCoachMode, setIsCoachMode] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
   const [questioningAnswers, setQuestioningAnswers] = useState<QuestioningAnswers | null>(null)
 
@@ -146,6 +148,11 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     if (question && !alterodos) {
       return (
         <React.Fragment>
+          {!user && (
+            <Button className={classes.activateLive} onClick={login} variant="contained" color="secondary">
+              Activer le live
+            </Button>
+          )}
           <Question
             questioningAnswers={asakaiChoices[question.id] ? questioningAnswers : null}
             hideCategory
@@ -183,7 +190,15 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   return (
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
-        <div>Le set du jour</div>
+        {user && (
+          <ModeSelector
+            label="Mode Coach"
+            isModeOn={isCoachMode}
+            handleModeChange={setIsCoachMode}
+            tooltipContent={null}
+            withMargin={false}
+          />
+        )}
         {user?.role === AuthRole.Admin && (
           <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
             Changer le set du jour

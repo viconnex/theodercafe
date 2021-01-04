@@ -6,8 +6,10 @@ const useStyle = makeStyles((theme) => ({
     alignItems: 'flex-start',
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '8px',
     width: '100%',
+  },
+  modeSelectorContainerMargin: {
+    marginTop: '8px',
   },
   selectorWithInfo: {
     display: 'flex',
