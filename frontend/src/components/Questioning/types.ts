@@ -29,3 +29,5 @@ export type QuestioningAnswers = {
   choice1: number
   choice2: number
 }
+
+export type Choice = 1 | 2

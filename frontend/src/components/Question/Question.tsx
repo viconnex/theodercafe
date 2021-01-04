@@ -1,15 +1,27 @@
 import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
 import Chip from '@material-ui/core/Chip'
 
 import { PlusOne } from 'components/PlusOne'
-import style from './style'
+import { Choice, QuestionResponse } from 'components/Questioning/types'
+import useStyle from './style'
 
-const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
+const Question = ({
+  question,
+  choice,
+  chose,
+  plusOneEnabled,
+}: {
+  question: QuestionResponse
+  choice: Choice | null
+  chose: (questionId: number, choiceToHandle: Choice) => void
+  plusOneEnabled: boolean
+}) => {
   const [choice1Trigger, setChoice1Trigger] = React.useState(0)
   const [choice2Trigger, setChoice2Trigger] = React.useState(0)
 
-  const handleChoice = (questionId, choiceToHandle) => {
+  const classes = useStyle()
+
+  const handleChoice = (questionId: number, choiceToHandle: Choice) => {
     chose(questionId, choiceToHandle)
     if (!plusOneEnabled) {
       return
@@ -53,4 +65,4 @@ const Question = ({ classes, question, choice, chose, plusOneEnabled }) => {
   )
 }
 
-export default withStyles(style)(Question)
+export default Question
