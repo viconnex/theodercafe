@@ -3,7 +3,7 @@ import { Question } from 'components/Question'
 import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
 import { useSnackbar } from 'notistack'
 import { Alterodo } from 'components/Alterodo'
-import { fetchRequest, fetchRequestResponse } from 'services/api'
+import { fetchRequest, fetchRequestResponse, postChoice } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { Button, CircularProgress } from '@material-ui/core'
 import { Alterodos, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
@@ -12,6 +12,7 @@ import { useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
+import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 import useStyle from './style'
 
 const AsakaiQuestioning = ({ user }: { user: User | null }) => {
@@ -89,13 +90,16 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     void fetchAndSetQuestions(true)
   }
 
-  const changeQuestion = (increment: number) => {
+  const changeQuestion = async (increment: number) => {
     let index = questionIndex + increment
     if (index < 0) {
       index = 0
     }
     if (index < questions.length && index >= 0) {
       setQuestionIndex(index)
+    }
+    if (index === questions.length) {
+      await handleAsakaiFinish()
     }
   }
 
@@ -123,20 +127,22 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     setAlterodos(data)
   }
 
-  const chose = async (questionId: number, choice: 1 | 2) => {
+  const chose = (questionId: number, choice: 1 | 2) => {
     const choices = { ...asakaiChoices }
     choices[questionId] = choice
     setAsakaiChoices(choices)
 
     if (firebaseUid) {
-      await answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
+      void answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
     }
 
-    if (questionIndex === questions.length - 1) {
-      await handleAsakaiFinish()
-      return
+    if (!isCoachMode && user) {
+      void postChoice(questionId, choice, enqueueSnackbar, null)
     }
-    // changeQuestion(1)
+
+    if (!firebaseUid) {
+      void changeQuestion(1)
+    }
   }
 
   const classes = useStyle()

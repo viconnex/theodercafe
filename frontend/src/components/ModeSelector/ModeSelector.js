@@ -12,7 +12,7 @@ const ModeSelector = ({ handleModeChange, isModeOn, label, tooltipContent, withM
   const classes = useStyle()
 
   const tooltipTitle = <div style={{ fontSize: '15px', padding: '8px', lineHeight: '15px' }}>{tooltipContent}</div>
-  console.log('classes.modeSelectorContainer', classes.modeSelectorContainer)
+
   return (
     <div className={`${classes.modeSelectorContainer} ${withMargin ? classes.modeSelectorContainerMargin : ''}`}>
       <div className={classes.selectorWithInfo}>

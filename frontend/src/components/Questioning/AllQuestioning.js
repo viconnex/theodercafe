@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack'
 import TuneIcon from '@material-ui/icons/Tune'
 
 import { LoginDialog } from 'components/Login'
-import { fetchRequestResponse } from 'services/api'
+import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
@@ -158,13 +158,7 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
     changeQuestion(1)
 
     if (choices[questionId] !== choice) {
-      const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`
-      const body = { choice }
-
-      await fetchRequestResponse({ uri, method: 'PUT', body }, 200, {
-        enqueueSnackbar,
-        successMessage: 'Choix enregistré',
-      })
+      await postChoice(questionId, choice, enqueueSnackbar, 'Choix enregistré')
 
       const newChoices = { ...choices }
       newChoices[questionId] = choice
