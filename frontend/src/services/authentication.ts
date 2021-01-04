@@ -47,7 +47,12 @@ export const getUser = () => {
   if (!token) {
     return null
   }
-  return decodeJWT(token)
+  try {
+    const user = decodeJWT(token)
+    return !user.hasExpired ? user : null
+  } catch {
+    return null
+  }
 }
 
 export const useSetAuth = (setUser: (user: User) => void, enqueueSnackbar: WithSnackbarProps['enqueueSnackbar']) => {

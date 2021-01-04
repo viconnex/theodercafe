@@ -9,7 +9,7 @@ import { CircularProgress } from '@material-ui/core'
 import { Alterodos, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
-import { User } from 'services/authentication'
+import { AuthRole, User } from 'services/authentication'
 import useStyle from './style'
 
 const AsakaiQuestioning = ({ user }: { user: User | null }) => {
@@ -23,11 +23,12 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const fetchAndSetQuestions = async (newSet: boolean) => {
+  const fetchAndSetQuestions = async (changeQuestioning: boolean) => {
     setIsLoading(true)
+    const basePath = changeQuestioning ? `/questions/${ASAKAI_MODE}/reset` : `/questions/${ASAKAI_MODE}`
     const response = await fetchRequestResponse(
       {
-        uri: `/questions/${ASAKAI_MODE}?maxNumber=${ASAKAI_QUESTION_COUNT}${newSet ? '&newSet=true' : ''}`,
+        uri: `${basePath}?maxNumber=${ASAKAI_QUESTION_COUNT}`,
         method: 'GET',
         params: null,
         body: null,
@@ -64,7 +65,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
 
   const changeAsakaiSet = () => {
     resetQuestioning()
-    fetchAndSetQuestions(true)
+    void fetchAndSetQuestions(true)
   }
 
   const changeQuestion = (increment: number) => {
@@ -155,9 +156,11 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
         <div>Le set du jour</div>
-        <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
-          Changer le set du jour
-        </div>
+        {user?.role === AuthRole.Admin && (
+          <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
+            Changer le set du jour
+          </div>
+        )}
       </div>
       <div className={classes.questioningContent}>
         <QuestionContent />

@@ -29,12 +29,19 @@ export class QuestionController {
     }
 
     @Get('/asakai')
-    findAsakaiSet(@Query() query: { maxNumber: number; newSet: boolean }): Promise<AsakaiQuestioning> {
-        const maxNumber = query.maxNumber || 10
-        const findFromHistoricIfExists = query.newSet ? false : true
+    findAsakaiSet(@Query() query: { maxNumber?: number; newSet?: boolean }): Promise<AsakaiQuestioning> {
+        const maxNumber = query.maxNumber ?? 10
 
-        return this.questionService.findAsakaiSet(maxNumber, findFromHistoricIfExists)
+        return this.questionService.findAsakaiSet(maxNumber, true)
         // return this.questionService.findInOrder([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
+    }
+
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
+    @Get('/asakai/reset')
+    resetAsakaiSet(@Query() query: { maxNumber?: number }): Promise<AsakaiQuestioning> {
+        const maxNumber = query.maxNumber ?? 10
+
+        return this.questionService.findAsakaiSet(maxNumber, false)
     }
 
     @Get('/all')
