@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -34,11 +34,9 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
     { label: 'La carte', path: '/carte' },
   ]
 
-  useEffect(() => {
-    if (userRole === 'admin') {
-      drawerLinks.push({ label: 'Admin', path: '/admin' })
-    }
-  }, [userRole])
+  if (userRole === 'admin') {
+    drawerLinks.push({ label: 'Admin', path: '/admin' })
+  }
 
   const history = useHistory()
 
