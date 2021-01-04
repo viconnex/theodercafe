@@ -6,8 +6,8 @@ import { Alterodo } from 'components/Alterodo'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { CircularProgress } from '@material-ui/core'
-import { Alterodos, QuestionResponse } from 'components/Questioning/types'
-import { answerQuestioning } from 'services/firebase/requests'
+import { Alterodos, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, User } from 'services/authentication'
 import useStyle from './style'
@@ -20,8 +20,11 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
+  const [questioningAnswers, setQuestioningAnswers] = useState<QuestioningAnswers | null>(null)
 
   const { enqueueSnackbar } = useSnackbar()
+
+  const question = questions[questionIndex]
 
   const fetchAndSetQuestions = async (changeQuestioning: boolean) => {
     setIsLoading(true)
@@ -51,6 +54,21 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   }
 
   useFirebaseAuth(setFirebaseUid)
+  useEffect(() => {
+    if (!question || !firebaseUid) {
+      return
+    }
+    const unsubscribe = onAnswerChange({
+      questioningId,
+      questionId: question.id,
+      setQuestioningAnswers,
+    })
+    return () => {
+      if (unsubscribe) {
+        unsubscribe()
+      }
+    }
+  }, [questioningId, question, firebaseUid])
 
   useEffect(() => {
     void fetchAndSetQuestions(false)
@@ -115,11 +133,12 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
       await handleAsakaiFinish()
       return
     }
-    changeQuestion(1)
+    // changeQuestion(1)
   }
-  const question = questions[questionIndex]
 
   const classes = useStyle()
+
+  console.log('render', questioningAnswers)
 
   const QuestionContent = () => {
     if (isLoading) {

@@ -24,3 +24,8 @@ export type QuestionResponse = {
   option1: string
   option2: string
 }
+
+export type QuestioningAnswers = {
+  choice1: number
+  choice2: number
+}
