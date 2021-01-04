@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import IconButton from '@material-ui/core/IconButton'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
@@ -40,8 +40,10 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
     }
   }, [userRole])
 
+  const history = useHistory()
+
   const onLogout = () => {
-    logout()
+    logout(history)
     toggleDrawer(false)
   }
 

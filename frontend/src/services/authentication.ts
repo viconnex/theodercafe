@@ -1,5 +1,6 @@
 import { WithSnackbarProps } from 'notistack'
 import { useEffect } from 'react'
+import { History } from 'history'
 
 import jwtDecode from 'jwt-decode'
 
@@ -97,8 +98,8 @@ export const useSetAuth = (setUser: (user: User) => void, enqueueSnackbar: WithS
   }, [])
 }
 
-export const logout = () => {
+export const logout = (history: History) => {
   localStorage.removeItem(JWT_STORAGE_KEY)
   localStorage.removeItem(FIREBASE_JWT_STORAGE_KEY)
-  window.location.host = ''
+  history.go(0)
 }

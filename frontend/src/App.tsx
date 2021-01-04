@@ -31,22 +31,11 @@ const theme = createMuiTheme({
 
 const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
-  const [user, setUser] = React.useState<User | null>(null)
+  const [user, setUser] = React.useState<User | null>(getUser())
 
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open)
   }
-
-  useEffect(() => {
-    const newUser = getUser()
-    if (!user && newUser) {
-      setUser(newUser)
-      return
-    }
-    if (user && !newUser) {
-      setUser(null)
-    }
-  })
 
   const classes = useStyle()
 
