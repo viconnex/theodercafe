@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core'
-import { color } from 'highcharts'
 import colors from 'ui/colors'
 
 const useStyle = makeStyles(() => {
@@ -51,23 +50,23 @@ const useStyle = makeStyles(() => {
     questioningAnswersContainer: {
       justifyContent: 'center',
       alignItems: 'center',
-      width: '100px',
+      width: '150px',
       display: 'flex',
-    },
-    questioningAnswersContainerTop: {
-      marginBottom: '8px',
-    },
-    questioningAnswersContainerBottom: {
-      marginTop: '8px',
     },
     questioningAnswersBar: {
       backgroundColor: colors.theodoGreen,
-      height: '12px',
+      height: '14px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      fontSize: '12px',
+      position: 'relative',
     },
     questioningAnswersNumber: {
       color: colors.theodoGreen,
       marginLeft: '6px',
       fontSize: '12px',
+      position: 'absolute',
     },
   }
 })

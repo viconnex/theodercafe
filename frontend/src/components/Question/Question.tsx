@@ -3,13 +3,16 @@ import Chip from '@material-ui/core/Chip'
 
 import { PlusOne } from 'components/PlusOne'
 import { Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import colors from 'ui/colors'
 import useStyle from './style'
 
-const getAnswersRatio = (answers: QuestioningAnswers) => {
-  return {
-    choice1: answers.choice1 / (answers.choice1 + answers.choice2),
-    choice2: answers.choice2 / (answers.choice1 + answers.choice2),
+const getNumberOffset = (number: number) => {
+  const base = 7
+  const offset = 5
+  if (number <= 1) {
+    return base + offset
   }
+  return (Math.floor(Math.log10(number)) + 1) * base + offset
 }
 
 const AnswerBar = ({
@@ -22,19 +25,33 @@ const AnswerBar = ({
   questioningAnswers: QuestioningAnswers
 }) => {
   const classes = useStyle()
-  const questioningRatio = getAnswersRatio(questioningAnswers)
   const choiceField = `choice${option}` as keyof QuestioningAnswers
+  const ratio = questioningAnswers[choiceField] / (questioningAnswers.choice1 + questioningAnswers.choice2)
+
   return (
     <div
-      className={`${classes.questioningAnswersContainer} ${choice === 1 ? classes.questioningAnswersContainerTop : ''}`}
+      style={{ opacity: choice ? '100%' : '0', [`margin${option === 1 ? 'Bottom' : 'Top'}`]: '8px' }}
+      className={`${classes.questioningAnswersContainer}`}
     >
       <div
         className={classes.questioningAnswersBar}
         style={{
-          width: `${Math.round(questioningRatio[choiceField] * 100)}%`,
+          width: `${Math.round(ratio * 100)}%`,
+          minWidth: `${getNumberOffset(ratio * 100) + 10}px`,
+          backgroundColor: ratio === 0 ? 'rgba(0,0,0,0)' : undefined,
+          color: ratio === 0 ? colors.theodoGreen : undefined,
         }}
-      />
-      <div className={classes.questioningAnswersNumber}>{questioningAnswers[choiceField]}</div>
+      >
+        {`${Math.round(ratio * 100)}%`}
+        {questioningAnswers[choiceField] > 0 && (
+          <div
+            className={classes.questioningAnswersNumber}
+            style={{ right: `-${getNumberOffset(questioningAnswers[choiceField])}px` }}
+          >
+            {questioningAnswers[choiceField]}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

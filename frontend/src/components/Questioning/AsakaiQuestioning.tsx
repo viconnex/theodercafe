@@ -160,7 +160,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
             </Button>
           )}
           <Question
-            questioningAnswers={asakaiChoices[question.id] ? questioningAnswers : null}
+            questioningAnswers={questioningAnswers}
             hideCategory
             question={question}
             choice={asakaiChoices[question.id]}

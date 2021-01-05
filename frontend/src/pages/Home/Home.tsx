@@ -17,7 +17,7 @@ const AsakaiModeTooltipContent = () => {
   return (
     <React.Fragment>
       <div>En mode Asakai, réponds à 10 questions pour connaître ton Alterodo.</div>
-      <div style={{ marginTop: '8px' }}> Les réponses ne sont pas enregsitrées si tu actives le mode coach.</div>
+      <div style={{ marginTop: '8px' }}> Les réponses ne sont pas enregistrées si tu actives le mode coach.</div>
     </React.Fragment>
   )
 }
