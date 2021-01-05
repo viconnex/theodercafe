@@ -21,20 +21,18 @@ const Browser = ({
   return (
     <div className={classes.asakaibrowser}>
       <div className={classes.counter}>{`${questionIndex + 1} / ${questionLength}`}</div>
-      {!hideArrows && (
-        <React.Fragment>
-          <IconButton
-            disabled={questionIndex === 0}
-            classes={{ root: classes.nextButton }}
-            onClick={() => changeQuestion(-1)}
-          >
-            <ArrowBack />
-          </IconButton>
-          <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
-            <ArrowForward />
-          </IconButton>
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        <IconButton
+          disabled={questionIndex === 0 || hideArrows}
+          classes={{ root: classes.nextButton }}
+          onClick={() => changeQuestion(-1)}
+        >
+          <ArrowBack />
+        </IconButton>
+        <IconButton classes={{ root: classes.nextButton }} disabled={hideArrows} onClick={() => changeQuestion(1)}>
+          <ArrowForward />
+        </IconButton>
+      </React.Fragment>
     </div>
   )
 }

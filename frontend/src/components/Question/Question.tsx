@@ -5,13 +5,38 @@ import { PlusOne } from 'components/PlusOne'
 import { Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
 import useStyle from './style'
 
-const getAnswersRatio = (answers: null | undefined | QuestioningAnswers) => {
-  return answers
-    ? {
-        choice1: answers.choice1 / (answers.choice1 + answers.choice2),
-        choice2: answers.choice2 / (answers.choice1 + answers.choice2),
-      }
-    : null
+const getAnswersRatio = (answers: QuestioningAnswers) => {
+  return {
+    choice1: answers.choice1 / (answers.choice1 + answers.choice2),
+    choice2: answers.choice2 / (answers.choice1 + answers.choice2),
+  }
+}
+
+const AnswerBar = ({
+  option,
+  choice,
+  questioningAnswers,
+}: {
+  option: Choice
+  choice: Choice | null
+  questioningAnswers: QuestioningAnswers
+}) => {
+  const classes = useStyle()
+  const questioningRatio = getAnswersRatio(questioningAnswers)
+  const choiceField = `choice${option}` as keyof QuestioningAnswers
+  return (
+    <div
+      className={`${classes.questioningAnswersContainer} ${choice === 1 ? classes.questioningAnswersContainerTop : ''}`}
+    >
+      <div
+        className={classes.questioningAnswersBar}
+        style={{
+          width: `${Math.round(questioningRatio[choiceField] * 100)}%`,
+        }}
+      />
+      <div className={classes.questioningAnswersNumber}>{questioningAnswers[choiceField]}</div>
+    </div>
+  )
 }
 
 /* eslint-disable complexity */
@@ -46,7 +71,6 @@ const Question = ({
       setChoice2Trigger(choice2Trigger + 1)
     }
   }
-  const questioningRatio = getAnswersRatio(questioningAnswers)
 
   return (
     <React.Fragment>
@@ -61,21 +85,7 @@ const Question = ({
         </div>
       )}
       <div className={classes.questionContainer}>
-        {questioningRatio && questioningRatio.choice1 > 0 && (
-          <div
-            className={`${classes.questioningAnswersContainer} ${
-              choice === 1 ? classes.questioningAnswersContainerTop : ''
-            }`}
-          >
-            <div
-              className={classes.questioningAnswersBar}
-              style={{
-                width: `${Math.round(questioningRatio.choice1 * 100)}%`,
-              }}
-            />
-            <div className={classes.questioningAnswersNumber}>{questioningAnswers?.choice1}</div>
-          </div>
-        )}
+        {questioningAnswers && <AnswerBar questioningAnswers={questioningAnswers} option={1} choice={choice} />}
         <div className={classes.optionContainer}>
           <div
             onClick={() => handleChoice(question.id, 1)}
@@ -96,21 +106,7 @@ const Question = ({
           {plusOneEnabled && choice2Trigger > 0 && <PlusOne update={choice2Trigger} />}
           <span style={{ padding: '8px' }}> ?</span>
         </div>
-        {questioningRatio && questioningRatio.choice2 > 0 && (
-          <div
-            className={`${classes.questioningAnswersContainer} ${
-              choice === 2 ? classes.questioningAnswersContainerBottom : ''
-            }`}
-          >
-            <div
-              className={classes.questioningAnswersBar}
-              style={{
-                width: `${Math.round(questioningRatio.choice2 * 100)}%`,
-              }}
-            />
-            <div className={classes.questioningAnswersNumber}>{questioningAnswers?.choice2}</div>
-          </div>
-        )}
+        {questioningAnswers && <AnswerBar questioningAnswers={questioningAnswers} option={2} choice={choice} />}
       </div>
     </React.Fragment>
   )
