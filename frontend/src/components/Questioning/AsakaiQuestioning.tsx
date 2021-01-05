@@ -6,20 +6,69 @@ import { Alterodo } from 'components/Alterodo'
 import { fetchRequest, fetchRequestResponse, postChoice } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { Button, CircularProgress } from '@material-ui/core'
-import { Alterodos, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import { Alterodos, AsakaiChoices, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
-import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 import useStyle from './style'
+
+const QuestionContent = ({
+  isLoading,
+  chose,
+  questions,
+  question,
+  user,
+  questionIndex,
+  questioningAnswers,
+  asakaiChoices,
+  changeQuestion,
+}: {
+  isLoading: boolean
+  chose: (questionId: number, choice: Choice) => void
+  questions: QuestionResponse[]
+  question: QuestionResponse | undefined
+  user: User | null
+  questionIndex: number
+  questioningAnswers: QuestioningAnswers | null
+  asakaiChoices: AsakaiChoices
+  changeQuestion: (increment: number) => Promise<void>
+}) => {
+  const classes = useStyle()
+  if (!question || isLoading) {
+    return <CircularProgress color="secondary" />
+  }
+  return (
+    <React.Fragment>
+      {!user && questionIndex === 0 && (
+        <Button className={classes.activateLive} onClick={login} variant="contained" color="secondary">
+          Activer le live
+        </Button>
+      )}
+      <Question
+        questioningAnswers={questioningAnswers}
+        hideCategory
+        question={question}
+        choice={asakaiChoices[question.id]}
+        chose={chose}
+        plusOneEnabled
+      />
+      <Browser
+        hideArrows={!asakaiChoices[question.id]}
+        questionIndex={questionIndex}
+        changeQuestion={changeQuestion}
+        questionLength={questions.length}
+      />
+    </React.Fragment>
+  )
+}
 
 const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
-  const [asakaiChoices, setAsakaiChoices] = useState<{ [questionId: number]: Choice }>({})
+  const [asakaiChoices, setAsakaiChoices] = useState<AsakaiChoices>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isCoachMode, setIsCoachMode] = useState(false)
@@ -127,7 +176,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     setAlterodos(data)
   }
 
-  const chose = (questionId: number, choice: 1 | 2) => {
+  const chose = (questionId: number, choice: Choice) => {
     const choices = { ...asakaiChoices }
     choices[questionId] = choice
     setAsakaiChoices(choices)
@@ -146,52 +195,6 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   }
 
   const classes = useStyle()
-
-  const QuestionContent = () => {
-    if (isLoading) {
-      return <CircularProgress color="secondary" />
-    }
-    if (question && !alterodos) {
-      return (
-        <React.Fragment>
-          {!user && questionIndex === 0 && (
-            <Button className={classes.activateLive} onClick={login} variant="contained" color="secondary">
-              Activer le live
-            </Button>
-          )}
-          <Question
-            questioningAnswers={questioningAnswers}
-            hideCategory
-            question={question}
-            choice={asakaiChoices[question.id]}
-            chose={chose}
-            plusOneEnabled
-          />
-          <Browser
-            hideArrows={!asakaiChoices[question.id]}
-            questionIndex={questionIndex}
-            changeQuestion={changeQuestion}
-            questionLength={questions.length}
-          />
-        </React.Fragment>
-      )
-    }
-    if (alterodos) {
-      return (
-        <React.Fragment>
-          <div className={classes.email}>
-            <EmailSnackbar
-              connectedUserId={user?.id}
-              asakaiChoices={asakaiChoices}
-              alterodoUserId={alterodos?.alterodo.userId}
-            />
-          </div>
-          <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
-        </React.Fragment>
-      )
-    }
-    return <CircularProgress color="secondary" />
-  }
 
   return (
     <div className={classes.questioningContainer}>
@@ -212,7 +215,30 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
         )}
       </div>
       <div className={classes.questioningContent}>
-        <QuestionContent />
+        {!alterodos ? (
+          <QuestionContent
+            isLoading={isLoading}
+            chose={chose}
+            questions={questions}
+            question={question}
+            user={user}
+            questionIndex={questionIndex}
+            questioningAnswers={questioningAnswers}
+            asakaiChoices={asakaiChoices}
+            changeQuestion={changeQuestion}
+          />
+        ) : (
+          <React.Fragment>
+            <div className={classes.email}>
+              <EmailSnackbar
+                connectedUserId={user?.id}
+                asakaiChoices={asakaiChoices}
+                alterodoUserId={alterodos?.alterodo.userId}
+              />
+            </div>
+            <Alterodo className={classes.alterodo} alterodos={alterodos} resetQuestioning={resetQuestioning} isAsakai />
+          </React.Fragment>
+        )}
       </div>
     </div>
   )

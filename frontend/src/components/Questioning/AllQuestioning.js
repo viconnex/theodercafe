@@ -12,6 +12,49 @@ import Browser from 'components/Questioning/Browser'
 import Voter from './Voter'
 import useStyle from './style'
 
+const QuestioningContent = ({
+  isLoading,
+  question,
+  questionIndex,
+  choices,
+  chose,
+  areChoicesFetched,
+  changeQuestion,
+  classes,
+  filteredQuestions,
+  votes,
+  vote,
+}) => {
+  const getValidationInformation = (questionValidation) => {
+    if (questionValidation === null) {
+      return 'Question en attente de validation'
+    }
+    return questionValidation ? 'Question validée' : 'Question invalidée'
+  }
+
+  if (isLoading) {
+    return <CircularProgress color="secondary" />
+  }
+  if (question) {
+    return (
+      <React.Fragment>
+        <Question plusOneEnabled question={question} chose={chose} choice={choices[question.id]} />
+        <Browser
+          questionIndex={questionIndex}
+          changeQuestion={changeQuestion}
+          questionLength={filteredQuestions.length}
+        />
+        <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
+        <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
+      </React.Fragment>
+    )
+  }
+  if (areChoicesFetched) {
+    return <div>Aucune question pour les filtres sélectionnés</div>
+  }
+  return <CircularProgress color="secondary" />
+}
+
 const AllQuestioning = ({ questions, isLoading, user }) => {
   const [filters, setFilters] = useState({
     isValidated: true,
@@ -125,13 +168,6 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
     // eslint-disable-next-line
   }, [])
 
-  const getValidationInformation = (questionValidation) => {
-    if (questionValidation === null) {
-      return 'Question en attente de validation'
-    }
-    return questionValidation ? 'Question validée' : 'Question invalidée'
-  }
-
   const isNotAnsweredQuestion = (question) => {
     return areChoicesFetched ? !choices[question.id] : false
   }
@@ -188,30 +224,6 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
 
   const classes = useStyle()
 
-  const QuestioningContent = () => {
-    if (isLoading) {
-      return <CircularProgress color="secondary" />
-    }
-    if (question) {
-      return (
-        <React.Fragment>
-          <Question question={question} chose={chose} choice={choices[question.id]} />
-          <Browser
-            questionIndex={questionIndex}
-            changeQuestion={changeQuestion}
-            questionLength={filteredQuestions.length}
-          />
-          <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
-          <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
-        </React.Fragment>
-      )
-    }
-    if (areChoicesFetched) {
-      return <div>Aucune question pour les filtres sélectionnés</div>
-    }
-    return <CircularProgress color="secondary" />
-  }
-
   return (
     <React.Fragment>
       <div className={classes.asakaiSubtitle}>
@@ -220,7 +232,19 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
         </Button>
       </div>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
-        <QuestioningContent />
+        <QuestioningContent
+          isLoading={isLoading}
+          question={question}
+          questionIndex={questionIndex}
+          choices={choices}
+          chose={chose}
+          areChoicesFetched={areChoicesFetched}
+          changeQuestion={changeQuestion}
+          classes={classes}
+          filteredQuestions={filteredQuestions}
+          votes={votes}
+          vote={vote}
+        />
       </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
       <FilterDrawer

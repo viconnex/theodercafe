@@ -79,7 +79,7 @@ const Question = ({
 
   const handleChoice = (questionId: number, choiceToHandle: Choice) => {
     chose(questionId, choiceToHandle)
-    if (!plusOneEnabled) {
+    if (!plusOneEnabled || choice === choiceToHandle) {
       return
     }
     if (choiceToHandle === 1) {

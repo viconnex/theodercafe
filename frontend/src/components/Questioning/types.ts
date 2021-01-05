@@ -31,3 +31,5 @@ export type QuestioningAnswers = {
 }
 
 export type Choice = 1 | 2
+
+export type AsakaiChoices = { [questionId: number]: Choice }
