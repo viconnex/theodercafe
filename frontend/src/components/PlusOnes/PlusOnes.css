@@ -8,15 +8,12 @@
   height: 25px;
   justify-content: center;
   width: 25px;
-  animation: vanish 0.6s 1 ease-out forwards;
+  animation: vanish 0.8s 1 linear forwards;
   position: absolute;
 }
 
 @keyframes vanish {
   0% {
-    opacity: 1;
-  }
-  75% {
     opacity: 1;
   }
   100% {

@@ -52,7 +52,6 @@ const QuestionContent = ({
         question={question}
         choice={asakaiChoices[question.id]}
         chose={chose}
-        plusOneEnabled
       />
       <Browser
         hideArrows={!asakaiChoices[question.id]}

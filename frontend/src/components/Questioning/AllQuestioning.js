@@ -38,7 +38,7 @@ const QuestioningContent = ({
   if (question) {
     return (
       <React.Fragment>
-        <Question plusOneEnabled question={question} chose={chose} choice={choices[question.id]} />
+        <Question question={question} chose={chose} choice={choices[question.id]} />
         <Browser
           questionIndex={questionIndex}
           changeQuestion={changeQuestion}
