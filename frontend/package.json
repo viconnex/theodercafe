@@ -11,6 +11,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "classnames": "^2.2.6",
+    "clsx": "^1.1.1",
     "firebase": "^8.2.0",
     "highcharts": "^8.0.0",
     "highcharts-react-official": "^2.2.2",
