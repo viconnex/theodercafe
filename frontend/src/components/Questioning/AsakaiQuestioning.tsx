@@ -223,7 +223,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
             label="Live mode"
             isModeOn={!!firebaseUid}
             handleModeChange={changeLiveMode}
-            tooltipContent={null}
+            tooltipContent="Les réponses des Theodoers en Live !"
             withMargin={false}
             isLoading={isConnectingToFirebase}
           />
