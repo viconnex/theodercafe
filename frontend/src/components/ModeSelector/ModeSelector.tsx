@@ -50,7 +50,6 @@ const ModeSelector = ({
           label={label}
           classes={{ root: classes.switchControl }}
         />
-        {isLoading && <CircularProgress color="secondary" size={16} className={classes.loader} />}
         {tooltipContent && (
           <Tooltip title={tooltipTitle} enterTouchDelay={0} leaveTouchDelay={3000}>
             <IconButton color="secondary" classes={{ root: classes.infoButton }}>
@@ -58,6 +57,7 @@ const ModeSelector = ({
             </IconButton>
           </Tooltip>
         )}
+        {isLoading && <CircularProgress color="secondary" size={16} className={classes.loader} />}
       </div>
     </div>
   )
