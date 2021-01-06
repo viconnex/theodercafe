@@ -57,14 +57,8 @@ const useStyle = makeStyles(() => ({
   loader: {
     marginLeft: '8px',
   },
+  body1test: {
+    fontSize: '14px',
+  },
 }))
 export default useStyle
-
-export const useTypoStyle = makeStyles(
-  () => ({
-    body1: {
-      fontSize: '14px',
-    },
-  }),
-  { name: 'MuiTypography' },
-)

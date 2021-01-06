@@ -3,7 +3,14 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 import InfoIcon from '@material-ui/icons/Info'
 import { CircularProgress, IconButton, Tooltip } from '@material-ui/core'
-import useStyle, { useTypoStyle } from './style'
+import styled from 'styled-components'
+import useStyle from './style'
+
+const StyledFormControl = styled(FormControlLabel)`
+  .MuiTypography-body1 {
+    font-size: 14px;
+  }
+`
 
 const ModeSelector = ({
   handleModeChange,
@@ -24,14 +31,13 @@ const ModeSelector = ({
     handleModeChange(!!event.target.checked)
   }
   const classes = useStyle()
-  const typoClasses = useTypoStyle()
 
   const tooltipTitle = <div style={{ fontSize: '15px', padding: '8px', lineHeight: '15px' }}>{tooltipContent}</div>
 
   return (
     <div className={`${classes.modeSelectorContainer} ${withMargin ? classes.modeSelectorContainerMargin : ''}`}>
       <div className={classes.selectorWithInfo}>
-        <FormControlLabel
+        <StyledFormControl
           control={
             <Switch
               color="default"
@@ -42,7 +48,6 @@ const ModeSelector = ({
             />
           }
           label={label}
-          className={typoClasses.body1}
           classes={{ root: classes.switchControl }}
         />
         {isLoading && <CircularProgress color="secondary" size={16} className={classes.loader} />}
