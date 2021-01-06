@@ -105,7 +105,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     setQuestionIndex(0)
   }
 
-  useFirebaseAuth(setFirebaseUid)
+  useFirebaseAuth(setFirebaseUid, user)
   useEffect(() => {
     if (!question || !firebaseUid) {
       return
