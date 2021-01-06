@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { History } from 'history'
 
 import jwtDecode from 'jwt-decode'
-import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
+import { signout as firebaseSignout } from 'services/firebase/authentication'
 
 export const FIREBASE_JWT_STORAGE_KEY = 'firebase_token'
 export const JWT_STORAGE_KEY = 'jwt_token'
@@ -107,6 +107,6 @@ export const useSetAuth = (setUser: (user: User) => void, enqueueSnackbar: WithS
 export const logout = (history: History) => {
   localStorage.removeItem(JWT_STORAGE_KEY)
   localStorage.removeItem(FIREBASE_JWT_STORAGE_KEY)
-  void firebaseAuth.signOut()
+  void firebaseSignout()
   history.go(0)
 }

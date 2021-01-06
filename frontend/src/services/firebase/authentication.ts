@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { FIREBASE_JWT_STORAGE_KEY, JWT_STORAGE_KEY, User } from 'services/authentication'
 import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import { fetchRequest } from 'services/api'
+import { IS_LIVE_ACTIVATED_BY_DEFAULT } from 'components/Questioning/AsakaiQuestioning'
 
 export const getFirebaseToken = async () => {
   const savedFirebaseToken = localStorage.getItem(FIREBASE_JWT_STORAGE_KEY)
@@ -40,30 +41,43 @@ export const isTokenValid = (token: string) => {
   }
 }
 
-export const useFirebaseAuth = (setUid: (uid: string) => void, user: User | null) => {
+export const signin = async (setIsConnectingToFirebase: (connect: boolean) => void) => {
+  const token = await getFirebaseToken()
+  if (!token) {
+    setIsConnectingToFirebase(false)
+    return
+  }
+  try {
+    await firebaseAuth.signInWithCustomToken(token)
+  } catch {
+    console.log('authentication to firebase failed')
+    setIsConnectingToFirebase(false)
+  }
+}
+
+export const signout = async () => {
+  await firebaseAuth.signOut()
+}
+
+export const useFirebaseAuth = (
+  setUid: (uid: string | null) => void,
+  user: User | null,
+  setIsConnectingToFirebase: (connect: boolean) => void,
+) => {
   useEffect(() => {
-    const signin = async () => {
-      const token = await getFirebaseToken()
-      if (!token) {
-        return
-      }
-      try {
-        await firebaseAuth.signInWithCustomToken(token)
-      } catch {
-        console.log('authentication to firebase failed')
-      }
-    }
-    if (!user) {
+    if (!user || !IS_LIVE_ACTIVATED_BY_DEFAULT) {
       return
     }
-    void signin()
+    setIsConnectingToFirebase(true)
+    void signin(setIsConnectingToFirebase)
   }, [user])
 
-  firebaseAuth.onAuthStateChanged((user) => {
-    if (user) {
-      setUid(user.uid)
+  firebaseAuth.onAuthStateChanged((newUser) => {
+    if (newUser) {
+      setUid(newUser.uid)
+      setIsConnectingToFirebase(false)
     } else {
-      // User is signed out
+      setUid(null)
     }
   })
 }

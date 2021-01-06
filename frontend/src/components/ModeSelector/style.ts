@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
   modeSelectorContainer: {
     alignItems: 'flex-start',
     display: 'flex',
@@ -25,7 +25,7 @@ const useStyle = makeStyles((theme) => ({
     fontSize: '10px',
     alignSelf: 'center',
     fontStyle: 'italic',
-    textAlign: 'left  ',
+    textAlign: 'left',
   },
   modeSelector: {
     display: 'flex',
@@ -54,5 +54,17 @@ const useStyle = makeStyles((theme) => ({
   switchTrack: {
     backgroundColor: 'grey',
   },
+  loader: {
+    marginLeft: '8px',
+  },
 }))
 export default useStyle
+
+export const useTypoStyle = makeStyles(
+  () => ({
+    body1: {
+      fontSize: '14px',
+    },
+  }),
+  { name: 'MuiTypography' },
+)

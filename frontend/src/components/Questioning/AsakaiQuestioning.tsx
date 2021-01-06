@@ -8,11 +8,13 @@ import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { Button, CircularProgress } from '@material-ui/core'
 import { Alterodos, AsakaiChoices, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
-import { useFirebaseAuth } from 'services/firebase/authentication'
+import { signin, signout, useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
 import useStyle from './style'
+
+export const IS_LIVE_ACTIVATED_BY_DEFAULT = false
 
 const QuestionContent = ({
   isLoading,
@@ -73,6 +75,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [isCoachMode, setIsCoachMode] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
   const [questioningAnswers, setQuestioningAnswers] = useState<QuestioningAnswers | null>(null)
+  const [isConnectingToFirebase, setIsConnectingToFirebase] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -105,7 +108,8 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     setQuestionIndex(0)
   }
 
-  useFirebaseAuth(setFirebaseUid, user)
+  useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase)
+
   useEffect(() => {
     if (!question || !firebaseUid) {
       return
@@ -193,6 +197,22 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     }
   }
 
+  const changeLiveMode = async () => {
+    if (!firebaseUid) {
+      if (!user) {
+        login()
+      } else {
+        setIsConnectingToFirebase(true)
+        await signin(setIsConnectingToFirebase)
+        setIsConnectingToFirebase(false)
+      }
+    } else {
+      setIsConnectingToFirebase(true)
+      await signout()
+      setIsConnectingToFirebase(false)
+    }
+  }
+
   const classes = useStyle()
 
   return (
@@ -200,10 +220,20 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
       <div className={classes.asakaiSubtitle}>
         {user && (
           <ModeSelector
+            label="Live mode"
+            isModeOn={!!firebaseUid}
+            handleModeChange={changeLiveMode}
+            tooltipContent={null}
+            withMargin={false}
+            isLoading={isConnectingToFirebase}
+          />
+        )}
+        {user && (
+          <ModeSelector
             label="Mode Coach"
             isModeOn={isCoachMode}
             handleModeChange={setIsCoachMode}
-            tooltipContent={null}
+            tooltipContent="En mode Coach, les réponses ne sont pas enregistrées."
             withMargin={false}
           />
         )}
