@@ -1,8 +1,10 @@
 import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+import { JwtPayload } from 'src/auth/auth.types'
 import { ValidatedUser } from './google.strategy'
 import { createFirebaseJWT } from './firebase'
 import { ADMIN_STRATEGY } from './jwt.admin.strategy'
+import { USER_STRATEGY } from './jwt.user.strategy'
 
 @Controller('auth')
 export class AuthController {
@@ -20,9 +22,9 @@ export class AuthController {
 
         if (validatedUser) {
             res.redirect(
-                `${process.env.FRONT_BASE_URL}?login=success&jwt=${validatedUser.jwt}&firebase_jwt=${createFirebaseJWT(
-                    validatedUser.email,
-                )}`,
+                `${process.env.FRONT_BASE_URL}?login=success&jwt_token=${
+                    validatedUser.jwt
+                }&firebase_token=${createFirebaseJWT(validatedUser.id)}`,
             )
         } else {
             res.redirect(`${process.env.FRONT_BASE_URL}?login=failure`)
@@ -33,5 +35,11 @@ export class AuthController {
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
     protectedResource(): string {
         return 'JWT is working!'
+    }
+
+    @Get('refresh_firebase_token')
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    createUserFirebaseToken(@Req() req: { user: JwtPayload }) {
+        return { token: createFirebaseJWT(req.user.id) }
     }
 }

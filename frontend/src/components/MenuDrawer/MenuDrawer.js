@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -6,11 +6,10 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Divider from '@material-ui/core/Divider'
 import ChevronRightIcon from '@material-ui/icons/ChevronRight'
 import IconButton from '@material-ui/core/IconButton'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
-import { decodeJWT } from 'services/jwtDecode'
-import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { Button } from '@material-ui/core'
+import { login, logout } from 'services/authentication'
 
 const style = (theme) => ({
   drawerHeader: {
@@ -26,7 +25,7 @@ const style = (theme) => ({
   },
 })
 
-const AppDrawer = ({ classes, toggleDrawer, open }) => {
+const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
   const drawerLinks = [
     { label: 'Questions', path: '/' },
     { label: 'A propos', path: '/a-propos' },
@@ -34,22 +33,15 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
     { label: 'La carte', path: '/carte' },
   ]
 
-  let isLogin = false
-
-  if (localStorage.jwt_token) {
-    const decoded = decodeJWT(localStorage.jwt_token)
-    if (!decoded.hasExpired) {
-      isLogin = true
-    }
-    if (decoded.role === 'admin') {
-      drawerLinks.push({ label: 'Admin', path: '/admin' })
-    }
+  if (userRole === 'admin') {
+    drawerLinks.push({ label: 'Admin', path: '/admin' })
   }
 
-  const logout = () => {
-    localStorage.removeItem('jwt_token')
-    toggleDrawer(false)()
-    window.location = ''
+  const history = useHistory()
+
+  const onLogout = () => {
+    logout(history)
+    toggleDrawer(false)
   }
 
   return (
@@ -68,12 +60,12 @@ const AppDrawer = ({ classes, toggleDrawer, open }) => {
             </ListItem>
           </Link>
         ))}
-        {isLogin ? (
-          <ListItem button onClick={logout}>
+        {userRole ? (
+          <ListItem button onClick={onLogout}>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
-          <ListItem button onClick={() => (window.location = API_BASE_URL + GOOGLE_AUTH_URI)}>
+          <ListItem button onClick={login}>
             <Button color="primary" variant="contained">
               Login
             </Button>

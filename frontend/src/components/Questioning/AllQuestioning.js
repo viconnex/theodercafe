@@ -2,20 +2,60 @@ import React, { useEffect, useState } from 'react'
 import { Question } from 'components/Question'
 import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 import { useSnackbar } from 'notistack'
-import IconButton from '@material-ui/core/IconButton'
-import ArrowBack from '@material-ui/icons/ArrowBack'
 import TuneIcon from '@material-ui/icons/Tune'
-import ArrowForward from '@material-ui/icons/ArrowForward'
-import { isUser } from 'services/jwtDecode'
 
 import { LoginDialog } from 'components/Login'
-import { fetchRequestResponse } from 'services/api'
+import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
+import Browser from 'components/Questioning/Browser'
 import Voter from './Voter'
 import useStyle from './style'
 
-const AllQuestioning = ({ questions, isLoading }) => {
+const QuestioningContent = ({
+  isLoading,
+  question,
+  questionIndex,
+  choices,
+  chose,
+  areChoicesFetched,
+  changeQuestion,
+  classes,
+  filteredQuestions,
+  votes,
+  vote,
+}) => {
+  const getValidationInformation = (questionValidation) => {
+    if (questionValidation === null) {
+      return 'Question en attente de validation'
+    }
+    return questionValidation ? 'Question validée' : 'Question invalidée'
+  }
+
+  if (isLoading) {
+    return <CircularProgress color="secondary" />
+  }
+  if (question) {
+    return (
+      <React.Fragment>
+        <Question question={question} chose={chose} choice={choices[question.id]} />
+        <Browser
+          questionIndex={questionIndex}
+          changeQuestion={changeQuestion}
+          questionLength={filteredQuestions.length}
+        />
+        <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
+        <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
+      </React.Fragment>
+    )
+  }
+  if (areChoicesFetched) {
+    return <div>Aucune question pour les filtres sélectionnés</div>
+  }
+  return <CircularProgress color="secondary" />
+}
+
+const AllQuestioning = ({ questions, isLoading, user }) => {
   const [filters, setFilters] = useState({
     isValidated: true,
     isNotValidated: false,
@@ -128,13 +168,6 @@ const AllQuestioning = ({ questions, isLoading }) => {
     // eslint-disable-next-line
   }, [])
 
-  const getValidationInformation = (questionValidation) => {
-    if (questionValidation === null) {
-      return 'Question en attente de validation'
-    }
-    return questionValidation ? 'Question validée' : 'Question invalidée'
-  }
-
   const isNotAnsweredQuestion = (question) => {
     return areChoicesFetched ? !choices[question.id] : false
   }
@@ -155,19 +188,13 @@ const AllQuestioning = ({ questions, isLoading }) => {
   const question = filteredQuestions[questionIndex]
 
   const chose = async (questionId, choice) => {
-    if (!isUser()) {
+    if (!user) {
       return setOpenLoginDialog(true)
     }
     changeQuestion(1)
 
     if (choices[questionId] !== choice) {
-      const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`
-      const body = { choice }
-
-      await fetchRequestResponse({ uri, method: 'PUT', body }, 200, {
-        enqueueSnackbar,
-        successMessage: 'Choix enregistré',
-      })
+      await postChoice(questionId, choice, enqueueSnackbar, 'Choix enregistré')
 
       const newChoices = { ...choices }
       newChoices[questionId] = choice
@@ -175,7 +202,7 @@ const AllQuestioning = ({ questions, isLoading }) => {
     }
   }
   const vote = async (questionId, isUpVote) => {
-    if (!isUser()) {
+    if (!user) {
       return setOpenLoginDialog(true)
     }
     const newVote = { ...votes }
@@ -197,38 +224,6 @@ const AllQuestioning = ({ questions, isLoading }) => {
 
   const classes = useStyle()
 
-  const QuestioningContent = () => {
-    if (isLoading) {
-      return <CircularProgress color="secondary" />
-    }
-    if (question) {
-      return (
-        <React.Fragment>
-          <Question question={question} chose={chose} choice={choices[question.id]} />
-          <div className={classes.browser}>
-            <IconButton
-              disabled={questionIndex === 0}
-              classes={{ root: classes.nextButton }}
-              onClick={() => changeQuestion(-1)}
-            >
-              <ArrowBack />
-            </IconButton>
-            <IconButton classes={{ root: classes.nextButton }} onClick={() => changeQuestion(1)}>
-              <ArrowForward />
-            </IconButton>
-            <div className={classes.counter}>{`${questionIndex + 1} / ${filteredQuestions.length}`}</div>
-          </div>
-          <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
-          <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
-        </React.Fragment>
-      )
-    }
-    if (areChoicesFetched) {
-      return <div>Aucune question pour les filtres sélectionnés</div>
-    }
-    return <CircularProgress color="secondary" />
-  }
-
   return (
     <React.Fragment>
       <div className={classes.asakaiSubtitle}>
@@ -237,7 +232,19 @@ const AllQuestioning = ({ questions, isLoading }) => {
         </Button>
       </div>
       <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
-        <QuestioningContent />
+        <QuestioningContent
+          isLoading={isLoading}
+          question={question}
+          questionIndex={questionIndex}
+          choices={choices}
+          chose={chose}
+          areChoicesFetched={areChoicesFetched}
+          changeQuestion={changeQuestion}
+          classes={classes}
+          filteredQuestions={filteredQuestions}
+          votes={votes}
+          vote={vote}
+        />
       </div>
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
       <FilterDrawer

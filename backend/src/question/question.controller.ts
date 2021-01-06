@@ -17,7 +17,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 import { QuestionService } from './question.service'
 import { Question } from './question.entity'
-import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { AsakaiQuestioning, QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 
 @Controller('questions')
 export class QuestionController {
@@ -29,11 +29,19 @@ export class QuestionController {
     }
 
     @Get('/asakai')
-    findAsakaiSet(@Query() query: { maxNumber: number; newSet: boolean }): Promise<QuestionWithCategoryNameDto[]> {
-        const maxNumber = query.maxNumber || 10
-        const findFromHistoricIfExists = query.newSet ? false : true
-        return this.questionService.findAsakaiSet(maxNumber, findFromHistoricIfExists)
+    findAsakaiSet(@Query() query: { maxNumber?: number; newSet?: boolean }): Promise<AsakaiQuestioning> {
+        const maxNumber = query.maxNumber ?? 10
+
+        return this.questionService.findAsakaiSet(maxNumber, true)
         // return this.questionService.findInOrder([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
+    }
+
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
+    @Get('/asakai/reset')
+    resetAsakaiSet(@Query() query: { maxNumber?: number }): Promise<AsakaiQuestioning> {
+        const maxNumber = query.maxNumber ?? 10
+
+        return this.questionService.findAsakaiSet(maxNumber, false)
     }
 
     @Get('/all')

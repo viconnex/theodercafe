@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { JwtPayload } from './auth.types'
 import { AuthService } from './auth.service'
 
 export const ADMIN_STRATEGY = 'admin'
@@ -14,7 +15,7 @@ export class JwtAdminStrategy extends PassportStrategy(Strategy, ADMIN_STRATEGY)
         })
     }
 
-    async validate(payload, done: Function): Promise<void> {
+    async validate(payload: JwtPayload, done: Function): Promise<void> {
         try {
             const validClaims = await this.authService.verifyAdminRequest(payload.email)
 

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import React, { lazy, Suspense, useEffect } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/Toolbar'
 import { createMuiTheme } from '@material-ui/core/styles'
@@ -14,11 +14,10 @@ import MenuIcon from 'components/MenuIcon/MenuIcon'
 import { Home } from 'pages/Home'
 import { ThemeProvider } from '@material-ui/styles'
 import colors from 'ui/colors'
-import { getPictureUrl } from 'services/jwtDecode'
 import { Alterodo } from 'pages/Alterodo'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
-import { useSetAuth } from './services/auth/setAuth'
+import { getUser, User, useSetAuth } from './services/authentication'
 
 const Admin = lazy(() => import('./admin/Admin'))
 const Map = lazy(() => import('./pages/Map/Map'))
@@ -32,16 +31,29 @@ const theme = createMuiTheme({
 
 const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
+  const [user, setUser] = React.useState<User | null>(getUser())
 
-  const toggleDrawer = (open) => () => {
+  useEffect(() => {
+    const newUser = getUser()
+    if (!user && newUser) {
+      setUser(newUser)
+      return
+    }
+    if (user && !newUser) {
+      setUser(null)
+    }
+  })
+
+  const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open)
   }
 
-  const [pictureUrl, setPictureUrl] = React.useState(getPictureUrl())
   const classes = useStyle()
 
   const { enqueueSnackbar } = useSnackbar()
-  useSetAuth(setPictureUrl, enqueueSnackbar)
+  useSetAuth(setUser, enqueueSnackbar)
+
+  const userRole = user?.role ?? null
 
   return (
     <ThemeProvider theme={theme}>
@@ -53,7 +65,7 @@ const App = () => {
                 <img src={logo} alt="logo" height="20" />
               </Link>
               <IconButton edge="start" aria-label="Menu" onClick={toggleDrawer(true)}>
-                <MenuIcon pictureUrl={pictureUrl} />
+                <MenuIcon pictureUrl={user?.pictureUrl ?? null} />
               </IconButton>
             </ToolBar>
           </AppBar>
@@ -62,13 +74,13 @@ const App = () => {
             <Switch>
               <Route exact path="/a-propos" component={About} />
               <Route exact path="/login" component={LoginPage} />
-              <PrivateRoute exact path="/admin" component={Admin} isAdminRoute />
-              <PrivateRoute exact path="/alterodo" component={Alterodo} isAdminRoute={false} />
-              <PrivateRoute exact path="/carte" component={Map} isAdminRoute={false} />
-              <Route path="/" component={Home} />
+              <PrivateRoute exact path="/admin" component={Admin} userRole={userRole} isAdminRoute />
+              <PrivateRoute exact path="/alterodo" component={Alterodo} userRole={userRole} isAdminRoute={false} />
+              <PrivateRoute exact path="/carte" component={Map} userRole={userRole} isAdminRoute={false} />
+              <Route path="/" render={() => <Home user={user} />} />
             </Switch>
           </Suspense>
-          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} />
+          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} userRole={userRole} />
         </div>
       </Router>
     </ThemeProvider>

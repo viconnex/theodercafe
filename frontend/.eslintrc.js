@@ -70,7 +70,7 @@ module.exports = {
     complexity: ['warn', 8],
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',
-    '@typescript-eslint/strict-boolean-expressions': 'warn',
+    '@typescript-eslint/strict-boolean-expressions': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'warn',
     '@typescript-eslint/no-unsafe-member-access': 'warn',
@@ -81,6 +81,7 @@ module.exports = {
     'react/no-unescaped-entities': 'off',
     '@typescript-eslint/restrict-plus-operands': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
+    // 'no-unreachable': 'off',
   },
   root: true,
   settings: {

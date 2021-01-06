@@ -3,12 +3,11 @@ import React, { useState } from 'react'
 import { CircularProgress, IconButton, InputBase, Paper, Slide } from '@material-ui/core'
 import { Send } from '@material-ui/icons'
 import { ASAKAI_EMAIL_PATH, USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
-import { fetchRequest } from 'utils/helpers'
+import { fetchRequest } from 'services/api'
 import { useSnackbar } from 'notistack'
-import { getUserId } from 'services/jwtDecode'
 import useStyles from './style'
 
-const EmailSnackbar = ({ asakaiChoices, alterodoUserId }) => {
+const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [isSendingEmail, setIsSendingEmail] = useState(false)
@@ -22,7 +21,7 @@ const EmailSnackbar = ({ asakaiChoices, alterodoUserId }) => {
   const onSendClick = async (event) => {
     event.preventDefault()
     const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${ASAKAI_EMAIL_PATH}`
-    const body = { email, asakaiChoices, alterodoUserId, addedByUserId: getUserId() }
+    const body = { email, asakaiChoices, alterodoUserId, addedByUserId: connectedUserId }
     setIsSendingEmail(true)
     try {
       const response = await fetchRequest({ uri, method: 'POST', body })

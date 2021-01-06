@@ -1,12 +1,12 @@
 import { HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
+import { Category } from 'src/category/category.entity'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
-import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { AsakaiQuestioning, QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { Question } from './question.entity'
-import { Category } from 'src/category/category.entity'
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.3
 
@@ -51,7 +51,7 @@ export class QuestionService {
         return this.questionRepository.save(question)
     }
 
-    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<QuestionWithCategoryNameDto[]> {
+    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<AsakaiQuestioning> {
         if (findFromHistoricIfExists) {
             const currentSet = await this.questioningHistoricService.findLastOfTheDay()
             if (currentSet && currentSet.questioning.length) {
@@ -61,15 +61,18 @@ export class QuestionService {
                         currentSet.questioning.indexOf(question1.id.toString()) -
                         currentSet.questioning.indexOf(question2.id.toString()),
                 )
-                return questionWithCategories.map(
-                    (questionWithCategory): QuestionWithCategoryNameDto => ({
-                        id: questionWithCategory.id,
-                        option1: questionWithCategory.option1,
-                        option2: questionWithCategory.option2,
-                        isValidated: questionWithCategory.isValidated,
-                        categoryName: questionWithCategory.category.name,
-                    }),
-                )
+                return {
+                    questions: questionWithCategories.map(
+                        (questionWithCategory: Question): QuestionWithCategoryNameDto => ({
+                            id: questionWithCategory.id,
+                            option1: questionWithCategory.option1,
+                            option2: questionWithCategory.option2,
+                            isValidated: questionWithCategory.isValidated,
+                            categoryName: questionWithCategory.category.name,
+                        }),
+                    ),
+                    questioningId: currentSet.id,
+                }
             }
         }
 
@@ -80,9 +83,14 @@ export class QuestionService {
 
         const asakaiSet = await this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount)
 
-        await this.questioningHistoricService.saveNew(asakaiSet.map((question): string => question.id.toString()))
+        const questioning = await this.questioningHistoricService.saveNew(
+            asakaiSet.map((question): string => question.id.toString()),
+        )
 
-        return asakaiSet
+        return {
+            questions: asakaiSet,
+            questioningId: questioning.id,
+        }
     }
 
     findInOrder(orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> {

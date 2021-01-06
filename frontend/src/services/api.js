@@ -1,4 +1,5 @@
-import { fetchRequest } from 'utils/helpers'
+import { JWT_STORAGE_KEY } from 'services/authentication'
+import { API_BASE_URL, USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 
 export const fetchRequestResponse = async (
   { uri, method, body, params },
@@ -26,4 +27,40 @@ export const fetchRequestResponse = async (
     enqueueSnackbar(successMessage, { variant: 'success' })
   }
   return response
+}
+
+export const fetchRequest = async ({ uri, method, body, params }) => {
+  const request = {
+    method,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  }
+  if (body) {
+    request['body'] = JSON.stringify(body)
+  }
+  const token = localStorage.getItem(JWT_STORAGE_KEY)
+  if (token) {
+    request.headers['Authorization'] = 'Bearer ' + token
+  }
+
+  const url = new URL(API_BASE_URL + uri)
+  if (params) {
+    url.search = new URLSearchParams(params).toString()
+  }
+
+  const response = await fetch(url, request)
+
+  return response
+}
+
+export const postChoice = async (questionId, choice, enqueueSnackbar, successMessage) => {
+  const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${questionId}/choice`
+  const body = { choice }
+
+  await fetchRequestResponse({ uri, method: 'PUT', body, params: null }, 200, {
+    enqueueSnackbar,
+    successMessage,
+  })
 }

@@ -43,7 +43,7 @@ export class UserController {
 
     @Put(':id')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
-    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<User> {
+    async updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<User> {
         return this.userService.update(id, questionBody)
     }
 }

@@ -3,21 +3,14 @@ import colors from 'ui/colors'
 
 const useStyle = makeStyles((theme) => {
   return {
-    nextButton: {
-      color: 'white',
+    activateLive: {
+      marginBottom: '24px',
     },
     optionContainer: {
       display: 'flex',
       justifyContent: 'center',
     },
-    counter: {
-      fontSize: '14px',
-      marginTop: '-8px',
-      marginBottom: '20px',
-    },
-    asakaibrowser: {
-      marginTop: '15px',
-    },
+
     filterOption: {
       fontSize: '11px',
     },

@@ -1,13 +1,15 @@
 import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
   modeSelectorContainer: {
     alignItems: 'flex-start',
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '8px',
     width: '100%',
+  },
+  modeSelectorContainerMargin: {
+    marginTop: '8px',
   },
   selectorWithInfo: {
     display: 'flex',
@@ -23,7 +25,7 @@ const useStyle = makeStyles((theme) => ({
     fontSize: '10px',
     alignSelf: 'center',
     fontStyle: 'italic',
-    textAlign: 'left  ',
+    textAlign: 'left',
   },
   modeSelector: {
     display: 'flex',
@@ -51,6 +53,12 @@ const useStyle = makeStyles((theme) => ({
   },
   switchTrack: {
     backgroundColor: 'grey',
+  },
+  loader: {
+    marginLeft: '8px',
+  },
+  body1test: {
+    fontSize: '14px',
   },
 }))
 export default useStyle
