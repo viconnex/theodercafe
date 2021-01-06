@@ -1,7 +1,6 @@
 import useStyle from 'components/PlusOnes/PlusOnes.style'
 import { Choice, QuestioningAnswers } from 'components/Questioning/types'
 import React, { memo } from 'react'
-import './PlusOnes.css'
 
 const PlusOne = memo(({ update, isUpDirection }: { update: number; isUpDirection: boolean }) => {
   const classes = useStyle({ isUpDirection })
