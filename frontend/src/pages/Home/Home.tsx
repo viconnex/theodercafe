@@ -59,13 +59,11 @@ const Home = ({ user }: { user: User | null }) => {
         tooltipContent="En mode Asakai, réponds à 10 questions pour connaître ton Alterodo"
         withMargin
       />
-      <div className={classes.questioningContainer}>
-        {isAsakaiMode ? (
-          <AsakaiQuestioning user={user} />
-        ) : (
-          <AllQuestioning user={user} questions={questions} isLoading={isLoading} />
-        )}
-      </div>
+      {isAsakaiMode ? (
+        <AsakaiQuestioning user={user} />
+      ) : (
+        <AllQuestioning user={user} questions={questions} isLoading={isLoading} />
+      )}
       <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>
         <AddIcon />
       </Fab>

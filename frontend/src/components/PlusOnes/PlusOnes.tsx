@@ -19,7 +19,7 @@ const PlusOnes = ({
 }: {
   update: number
   option: Choice
-  choice: Choice | null
+  choice: Choice | undefined
   questioningAnswers?: QuestioningAnswers | null
 }) => {
   if (update > 0) {

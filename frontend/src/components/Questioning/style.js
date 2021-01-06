@@ -27,6 +27,10 @@ const useStyle = makeStyles((theme) => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
+      width: '100%',
+      height: '100%',
+      justifyContent: 'center',
+      position: 'relative',
     },
     questioningContent: {
       display: 'flex',

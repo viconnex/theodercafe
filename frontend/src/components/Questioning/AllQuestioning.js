@@ -225,13 +225,13 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
   const classes = useStyle()
 
   return (
-    <React.Fragment>
+    <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
         <Button startIcon={<TuneIcon />} color="secondary" variant="text" onClick={() => setIsDrawerOpen(true)}>
           Filtres
         </Button>
       </div>
-      <div className={`${classes.questioningContent} ${classes.allQuestioningContent}`}>
+      <div className={`${classes.questioningContent}`}>
         <QuestioningContent
           isLoading={isLoading}
           question={question}
@@ -253,7 +253,7 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
         filters={filters}
         handeFilterChange={handeFilterChange}
       />
-    </React.Fragment>
+    </div>
   )
 }
 

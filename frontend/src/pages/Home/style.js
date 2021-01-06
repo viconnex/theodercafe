@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 
-const useStyle = makeStyles((theme) => {
+const useStyle = makeStyles(() => {
   return {
     pageContainer: {
       display: 'flex',
@@ -9,14 +9,7 @@ const useStyle = makeStyles((theme) => {
       alignItems: 'center',
       position: 'relative',
     },
-    questioningContainer: {
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      position: 'relative',
-      width: '100%',
-    },
+
     addButton: {
       bottom: '16px',
       right: '0px',
