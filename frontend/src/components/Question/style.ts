@@ -1,4 +1,5 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Theme } from '@material-ui/core'
+import { Choice } from 'components/Questioning/types'
 import colors from 'ui/colors'
 
 const useStyle = makeStyles(() => {
@@ -47,13 +48,22 @@ const useStyle = makeStyles(() => {
     pageContainer: {
       marginTop: '30px',
     },
-    questioningAnswersContainer: {
+  }
+})
+
+export default useStyle
+
+export const useAnswerBarStyle = makeStyles<Theme, { isChoiceMade: boolean; option: Choice }>(() => {
+  return {
+    container: (props) => ({
       justifyContent: 'center',
       alignItems: 'center',
       width: '150px',
       display: 'flex',
-    },
-    questioningAnswersBar: {
+      opacity: props.isChoiceMade ? '100%' : '0%',
+      [`margin${props.option === 1 ? 'Bottom' : 'Top'}`]: '8px',
+    }),
+    bar: {
       backgroundColor: colors.theodoGreen,
       height: '14px',
       display: 'flex',
@@ -62,7 +72,7 @@ const useStyle = makeStyles(() => {
       fontSize: '12px',
       position: 'relative',
     },
-    questioningAnswersNumber: {
+    number: {
       color: colors.theodoGreen,
       marginLeft: '6px',
       fontSize: '12px',
@@ -70,5 +80,3 @@ const useStyle = makeStyles(() => {
     },
   }
 })
-
-export default useStyle

@@ -5,7 +5,7 @@ import { PlusOnes } from 'components/PlusOnes'
 import { Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
 import colors from 'ui/colors'
 import { ChoiceTrigger } from 'components/Question/types'
-import useStyle from './style'
+import useStyle, { useAnswerBarStyle } from './style'
 
 const getNumberOffset = (number: number) => {
   const base = 7
@@ -25,17 +25,14 @@ const AnswerBar = ({
   choice: Choice | null
   questioningAnswers: QuestioningAnswers
 }) => {
-  const classes = useStyle()
+  const classes = useAnswerBarStyle({ isChoiceMade: !!choice, option })
   const choiceField = `choice${option}` as keyof QuestioningAnswers
   const ratio = questioningAnswers[choiceField] / (questioningAnswers.choice1 + questioningAnswers.choice2)
 
   return (
-    <div
-      style={{ opacity: choice ? '100%' : '0', [`margin${option === 1 ? 'Bottom' : 'Top'}`]: '8px' }}
-      className={`${classes.questioningAnswersContainer}`}
-    >
+    <div className={`${classes.container}`}>
       <div
-        className={classes.questioningAnswersBar}
+        className={classes.bar}
         style={{
           width: `${Math.round(ratio * 100)}%`,
           minWidth: `${getNumberOffset(ratio * 100) + 10}px`,
@@ -45,10 +42,7 @@ const AnswerBar = ({
       >
         {`${Math.round(ratio * 100)}%`}
         {questioningAnswers[choiceField] > 0 && (
-          <div
-            className={classes.questioningAnswersNumber}
-            style={{ right: `-${getNumberOffset(questioningAnswers[choiceField])}px` }}
-          >
+          <div className={classes.number} style={{ right: `-${getNumberOffset(questioningAnswers[choiceField])}px` }}>
             {questioningAnswers[choiceField]}
           </div>
         )}
