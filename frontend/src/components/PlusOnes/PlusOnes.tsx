@@ -1,5 +1,5 @@
 import useStyle from 'components/PlusOnes/PlusOnes.style'
-import { Choice, QuestioningAnswers } from 'components/Questioning/types'
+import { Choice } from 'components/Questioning/types'
 import React, { memo } from 'react'
 
 const PlusOne = memo(({ update, isUpDirection }: { update: number; isUpDirection: boolean }) => {
@@ -13,24 +13,23 @@ const PlusOne = memo(({ update, isUpDirection }: { update: number; isUpDirection
 
 const PlusOnes = ({
   update,
-  questioningAnswers,
+  answersCount,
   choice,
   option,
 }: {
   update: number
   option: Choice
   choice: Choice | undefined
-  questioningAnswers?: QuestioningAnswers | null
+  answersCount: number | null
 }) => {
   if (update > 0) {
     return <PlusOne isUpDirection={option === 1} update={update} />
   }
-  const field = `choice${option}` as keyof QuestioningAnswers
 
-  if (choice && questioningAnswers) {
+  if (choice && answersCount !== null) {
     return (
       <React.Fragment>
-        {Array.from({ length: questioningAnswers[field] }, (_, i) => i).map((i) => {
+        {Array.from({ length: answersCount }, (_, i) => i).map((i) => {
           return <PlusOne key={i} update={i} isUpDirection={option === 1} />
         })}
       </React.Fragment>

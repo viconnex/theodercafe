@@ -64,7 +64,12 @@ const Option = ({
       <div className={classes.textContainer}>
         <span className={classes.text}>{questionOption}</span>
       </div>
-      <PlusOnes questioningAnswers={questioningAnswers} choice={choice} option={option} update={choiceTrigger} />
+      <PlusOnes
+        answersCount={questioningAnswers ? questioningAnswers[choiceField] : null}
+        choice={choice}
+        option={option}
+        update={choiceTrigger}
+      />
     </div>
   )
 }
