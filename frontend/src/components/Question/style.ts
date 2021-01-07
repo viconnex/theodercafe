@@ -67,7 +67,7 @@ export const useOptionStyle = ({
         opacity: 0.8,
         position: 'absolute',
         width: `${(ratio ?? 0) * 100}%`,
-        animation: `$grow 0.7s 1 ease-out`,
+        animation: `$grow 0.5s 1 ease-out`,
       },
       text: {
         borderBottom: !isChoiceMade ? '0.7px dashed' : undefined,
