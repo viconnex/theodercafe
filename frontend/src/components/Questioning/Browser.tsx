@@ -23,7 +23,7 @@ const Browser = ({
       <div className={classes.counter}>{`${questionIndex + 1} / ${questionLength}`}</div>
       <React.Fragment>
         <IconButton
-          disabled={questionIndex === 0 || hideArrows}
+          disabled={questionIndex === 0}
           classes={{ root: classes.nextButton }}
           onClick={() => changeQuestion(-1)}
         >
