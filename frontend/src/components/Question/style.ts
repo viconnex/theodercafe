@@ -1,5 +1,4 @@
 import { makeStyles, Theme } from '@material-ui/core'
-import { Choice } from 'components/Questioning/types'
 import colors from 'ui/colors'
 
 const useStyle = makeStyles(() => {
@@ -36,18 +35,18 @@ export const useOptionStyle = makeStyles<
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      width: showBar ? '90%' : undefined,
+      width: showBar ? '88%' : undefined,
       maxWidth: '500px',
       cursor: 'pointer',
       position: 'relative',
       border: isChoiceMade && (showBar || isChosenOption) ? '0.5px solid white' : undefined,
       minHeight: '40px',
-      padding: '8px',
+      padding: '8px 20px',
       opacity: isChoiceMade && showBar && !isChosenOption ? 0.5 : undefined,
     }),
     number: {
       position: 'absolute',
-      left: 8,
+      left: 5,
       fontSize: '14px',
     },
     bar: (props) => ({

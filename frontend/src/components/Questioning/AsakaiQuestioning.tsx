@@ -111,7 +111,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase)
 
   useEffect(() => {
-    if (!question || !firebaseUid) {
+    if (!question || !firebaseUid || !questioningId) {
       return
     }
     const unsubscribe = onAnswerChange({

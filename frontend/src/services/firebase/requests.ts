@@ -23,13 +23,10 @@ export const onAnswerChange = ({
   questionId,
   setQuestioningAnswers,
 }: {
-  questioningId: number | null
+  questioningId: number
   questionId: number
   setQuestioningAnswers: (answers: QuestioningAnswers) => void
 }) => {
-  if (!questioningId) {
-    return
-  }
   const answers = { choice1: 0, choice2: 0 }
   return db.collection(`questioning/${questioningId}/questions/${questionId}/users`).onSnapshot(function (snapshot) {
     snapshot.docChanges().forEach(function (change) {
