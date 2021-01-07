@@ -26,44 +26,67 @@ const useStyle = makeStyles(() => {
 
 export default useStyle
 
-export const useOptionStyle = makeStyles<
-  Theme,
-  { isChosenOption: boolean; isChoiceMade: boolean; ratio: number | null; showBar: boolean }
->(() => {
-  return {
-    container: ({ isChoiceMade, isChosenOption, showBar }) => ({
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: showBar ? '88%' : undefined,
-      maxWidth: '500px',
-      cursor: 'pointer',
-      position: 'relative',
-      border: isChoiceMade && (showBar || isChosenOption) ? '0.5px solid white' : undefined,
-      minHeight: '40px',
-      padding: '8px 20px',
-      opacity: isChoiceMade && showBar && !isChosenOption ? 0.5 : undefined,
-    }),
-    number: {
-      position: 'absolute',
-      left: 5,
-      fontSize: '14px',
-    },
-    bar: (props) => ({
-      backgroundColor: colors.theodoGreen,
-      opacity: 0.8,
-      position: 'absolute',
-      height: '100%',
-      width: `${(props.ratio ?? 0) * 100}%`,
-      left: 0,
-    }),
-    text: ({ isChoiceMade }) => ({
-      borderBottom: !isChoiceMade ? '0.7px dashed' : undefined,
-      zIndex: 1,
-      fontSize: '20px',
-    }),
-    textContainer: {
-      zIndex: 1,
-    },
-  }
-})
+export const useOptionStyle = ({
+  isChoiceMade,
+  isChosenOption,
+  showBar,
+  ratio,
+  previousRatio,
+}: {
+  isChosenOption: boolean
+  isChoiceMade: boolean
+  previousRatio: number
+  ratio: number | null
+  showBar: boolean
+}) => {
+  /* eslint-disable complexity */
+  const useStyles = makeStyles(() => {
+    return {
+      container: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: showBar ? '88%' : undefined,
+        maxWidth: '500px',
+        cursor: 'pointer',
+        position: 'relative',
+        border: isChoiceMade && (showBar || isChosenOption) ? '0.5px solid white' : undefined,
+        minHeight: '40px',
+        padding: '8px 20px',
+        opacity: isChoiceMade && showBar && !isChosenOption ? 0.5 : undefined,
+      },
+      number: {
+        position: 'absolute',
+        left: 5,
+        fontSize: '14px',
+      },
+      bar: {
+        backgroundColor: colors.theodoGreen,
+        height: '100%',
+        left: 0,
+        opacity: 0.8,
+        position: 'absolute',
+        width: `${(ratio ?? 0) * 100}%`,
+        animation: `$grow 0.7s 1 ease-out`,
+      },
+      text: {
+        borderBottom: !isChoiceMade ? '0.7px dashed' : undefined,
+        zIndex: 1,
+        fontSize: '20px',
+      },
+      textContainer: {
+        zIndex: 1,
+      },
+      '@keyframes grow': {
+        '0%': {
+          width: `${previousRatio * 100}%`,
+        },
+        '100%': {
+          width: `${(ratio ?? 0) * 100}%`,
+        },
+      },
+    }
+  })
+
+  return useStyles()
+}

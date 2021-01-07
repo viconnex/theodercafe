@@ -1,20 +1,11 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import Chip from '@material-ui/core/Chip'
 
 import { PlusOnes } from 'components/PlusOnes'
 import { Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
-import { ChoiceTrigger } from 'components/Question/types'
 import useStyle, { useOptionStyle } from './style'
 
-const getNumberOffset = (number: number) => {
-  const base = 7
-  const offset = 5
-  if (number <= 1) {
-    return base + offset
-  }
-  return (Math.floor(Math.log10(number)) + 1) * base + offset
-}
-
+/* eslint-disable complexity */
 const Option = ({
   option,
   choice,
@@ -46,12 +37,21 @@ const Option = ({
   }
 
   const choiceField = `choice${option}` as keyof QuestioningAnswers
-  const ratio = questioningAnswers
-    ? questioningAnswers[choiceField] / (questioningAnswers.choice1 + questioningAnswers.choice2)
-    : null
+  const totalAnswers = (questioningAnswers?.choice1 ?? 0) + (questioningAnswers?.choice2 ?? 0)
+  const ratio = questioningAnswers && totalAnswers > 0 ? questioningAnswers[choiceField] / totalAnswers : null
 
   const showBar = !!questioningAnswers && !!choice
-  const classes = useOptionStyle({ isChoiceMade: !!choice, ratio, isChosenOption: choice === option, showBar })
+  const previousRatio = useRef(0)
+
+  const classes = useOptionStyle({
+    isChoiceMade: !!choice,
+    previousRatio: previousRatio.current,
+    ratio,
+    isChosenOption: choice === option,
+    showBar,
+  })
+
+  previousRatio.current = !choice ? 0 : ratio ?? 0
 
   return (
     <div onClick={handleChoice} className={classes.container}>

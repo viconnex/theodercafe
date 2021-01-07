@@ -41,6 +41,7 @@ const QuestionContent = ({
   if (!question || isLoading) {
     return <CircularProgress color="secondary" />
   }
+  const choice = asakaiChoices[question.id]
   return (
     <React.Fragment>
       {!user && questionIndex === 0 && (
@@ -52,11 +53,11 @@ const QuestionContent = ({
         questioningAnswers={questioningAnswers}
         hideCategory
         question={question}
-        choice={asakaiChoices[question.id]}
+        choice={choice}
         chose={chose}
       />
       <Browser
-        hideArrows={!asakaiChoices[question.id]}
+        hideArrows={!choice}
         questionIndex={questionIndex}
         changeQuestion={changeQuestion}
         questionLength={questions.length}
