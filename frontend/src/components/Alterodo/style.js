@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import colors from 'ui/colors'
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles(() => ({
   picture: {
     marginTop: '16px',
     borderRadius: '100%',

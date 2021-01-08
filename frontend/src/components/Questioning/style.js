@@ -63,9 +63,6 @@ const useStyle = makeStyles((theme) => {
       cursor: 'pointer',
     },
     email: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'flex-end',
       zIndex: 1,
       [theme.breakpoints.up('sm')]: {
         justifyContent: 'center',
