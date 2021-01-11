@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { UserWithPublicFields } from 'src/user/user.types'
+import { DeepPartial } from 'typeorm'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {
@@ -16,7 +17,6 @@ import {
 
 import { UserService } from '../user/user.service'
 import { createUsersChoicesMatrix, getBestAlterodos } from './userToQuestionChoice.helpers'
-import { DeepPartial } from 'typeorm'
 
 // eslint-disable-next-line
 const PCA = require('pca-js')
@@ -57,7 +57,7 @@ export class UserToQuestionChoiceService {
         return await this.userToQuestionChoiceRepository.find({ userId })
     }
 
-    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId: null | string) {
+    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId?: string) {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         if (answeredQuestionsIds.length === 0) {
             throw new BadRequestException('user must answer to at least one question')
@@ -159,7 +159,7 @@ export class UserToQuestionChoiceService {
 
     private async findAlterodosFromAsakaiChoices(
         asakaiChoices: AsakaiChoices,
-        excludedUserId: string | null,
+        excludedUserId?: string,
     ): Promise<Alterodos> {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         const commonAnswersWithUsers: { [id: number]: SimilarityWithUserId } = {}

@@ -25,7 +25,7 @@ export class UserToQuestionChoiceController {
     @Post('asakai')
     async findAsakaiAlterodos(
         @Body()
-        { asakaiChoices, excludedUserId }: { asakaiChoices: AsakaiChoices; excludedUserId: string },
+        { asakaiChoices, excludedUserId }: { asakaiChoices: AsakaiChoices; excludedUserId?: string },
     ): Promise<AlterodoResponse> {
         return this.userToQuestionChoiceService.findAsakaiAlterodos(asakaiChoices, excludedUserId)
     }
