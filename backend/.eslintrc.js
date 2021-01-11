@@ -55,8 +55,6 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         '@typescript-eslint/prefer-optional-chain': 'error',
         '@typescript-eslint/prefer-nullish-coalescing': 'error',
-        '@typescript-eslint/strict-boolean-expressions': 'error',
-        '@typescript-eslint/strict-boolean-expressions': 'warn',
         '@typescript-eslint/no-unsafe-member-access': 'warn',
         '@typescript-eslint/no-unsafe-call': 'warn',
         'no-prototype-builtins': 'warn',
