@@ -90,7 +90,10 @@ export class UserService {
 
         const existingUser = await this.userRepository.findOne({ email: emailLowerCase })
         if (existingUser && !existingUser.isAdmin) {
-            throw new BadRequestException('there is already an user with the specified email')
+            throw new BadRequestException({
+                message: 'there is already an user with the specified email',
+                code: 'existing-email',
+            })
         }
         const addedByUser = addedByUserId ? (await this.userRepository.findOne({ id: addedByUserId })) ?? null : null
         const asakaiAlterodoUser = alterodoUserId
@@ -127,7 +130,7 @@ export class UserService {
             console.log(`email sent to ${emailLowerCase}`)
         } catch (e) {
             console.log('error while sending email', e)
-            return
+            throw new BadRequestException({ code: 'mail-service-error', message: 'service de mail indisponible' })
         }
 
         return newUser

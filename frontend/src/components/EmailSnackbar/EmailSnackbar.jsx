@@ -26,7 +26,14 @@ const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
     try {
       const response = await fetchRequest({ uri, method: 'POST', body })
       if (!response || response.status !== 201) {
-        enqueueSnackbar('Email invalide ou déjà existant', { variant: 'error' })
+        const body = await response.json()
+        if (body?.code === 'existing-email') {
+          enqueueSnackbar('Email déjà existant', { variant: 'error' })
+        } else if (body?.code === 'mail-service-error') {
+          enqueueSnackbar("Service d'envoi d'email indisponible", { variant: 'error' })
+        } else {
+          enqueueSnackbar('Email non envoyé', { variant: 'error' })
+        }
       } else {
         setShowInput(false)
         enqueueSnackbar('Email envoyé !', { variant: 'success' })
