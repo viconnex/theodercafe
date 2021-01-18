@@ -5,7 +5,7 @@ export class AsakaiQuestioning {
 
 export class QuestionWithCategoryNameDto {
     readonly id: number
-    readonly categoryName: string
+    readonly categoryName?: string
     readonly option1: string
     readonly option2: string
     readonly isValidated: boolean

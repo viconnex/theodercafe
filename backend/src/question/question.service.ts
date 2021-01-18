@@ -68,7 +68,7 @@ export class QuestionService {
                             option1: questionWithCategory.option1,
                             option2: questionWithCategory.option2,
                             isValidated: questionWithCategory.isValidated,
-                            categoryName: questionWithCategory.category.name,
+                            categoryName: questionWithCategory.category?.name,
                         }),
                     ),
                     questioningId: currentSet.id,
