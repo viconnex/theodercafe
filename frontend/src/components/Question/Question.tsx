@@ -38,7 +38,10 @@ const Option = ({
 
   const choiceField = `choice${option}` as keyof QuestioningAnswers
   const totalAnswers = (questioningAnswers?.choice1 ?? 0) + (questioningAnswers?.choice2 ?? 0)
-  const ratio = questioningAnswers && totalAnswers > 0 ? questioningAnswers[choiceField] / totalAnswers : null
+  const ratio =
+    questioningAnswers && totalAnswers > 0
+      ? Math.max(Math.min(questioningAnswers[choiceField] / totalAnswers, 1), 0)
+      : null
 
   const showBar = !!questioningAnswers && !!choice
   const previousRatio = useRef(0)

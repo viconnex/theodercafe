@@ -210,6 +210,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     } else {
       setIsConnectingToFirebase(true)
       await signout()
+      setQuestioningAnswers(null)
       setIsConnectingToFirebase(false)
     }
   }
