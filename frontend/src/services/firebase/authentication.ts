@@ -4,6 +4,7 @@ import { FIREBASE_JWT_STORAGE_KEY, User } from 'services/authentication'
 import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import { fetchRequest } from 'services/api'
 import { IS_LIVE_ACTIVATED_BY_DEFAULT } from 'components/Questioning/AsakaiQuestioning'
+import { WithSnackbarProps } from 'notistack'
 
 export const getFirebaseToken = async () => {
   const savedFirebaseToken = localStorage.getItem(FIREBASE_JWT_STORAGE_KEY)
@@ -41,7 +42,10 @@ export const isTokenValid = (token: string) => {
   }
 }
 
-export const signin = async (setIsConnectingToFirebase: (connect: boolean) => void) => {
+export const signin = async (
+  setIsConnectingToFirebase: (connect: boolean) => void,
+  enqueueSnackbar?: WithSnackbarProps['enqueueSnackbar'],
+) => {
   const token = await getFirebaseToken()
   if (!token) {
     setIsConnectingToFirebase(false)
@@ -49,8 +53,11 @@ export const signin = async (setIsConnectingToFirebase: (connect: boolean) => vo
   }
   try {
     await firebaseAuth.signInWithCustomToken(token)
-  } catch {
-    console.log('authentication to firebase failed')
+  } catch (e) {
+    console.log('authentication to firebase failed', e)
+    if (enqueueSnackbar) {
+      enqueueSnackbar('Echec de connexion à Firebase', { variant: 'error' })
+    }
     setIsConnectingToFirebase(false)
   }
 }
@@ -63,13 +70,14 @@ export const useFirebaseAuth = (
   setUid: (uid: string | null) => void,
   user: User | null,
   setIsConnectingToFirebase: (connect: boolean) => void,
+  enqueueSnackbar?: WithSnackbarProps['enqueueSnackbar'],
 ) => {
   useEffect(() => {
     if (!user || !IS_LIVE_ACTIVATED_BY_DEFAULT) {
       return
     }
     setIsConnectingToFirebase(true)
-    void signin(setIsConnectingToFirebase)
+    void signin(setIsConnectingToFirebase, enqueueSnackbar)
   }, [user])
 
   firebaseAuth.onAuthStateChanged((newUser) => {

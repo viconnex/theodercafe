@@ -109,7 +109,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     setQuestionIndex(0)
   }
 
-  useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase)
+  useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase, enqueueSnackbar)
 
   useEffect(() => {
     if (!question || !firebaseUid || !questioningId) {
@@ -204,7 +204,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
         login()
       } else {
         setIsConnectingToFirebase(true)
-        await signin(setIsConnectingToFirebase)
+        await signin(setIsConnectingToFirebase, enqueueSnackbar)
         setIsConnectingToFirebase(false)
       }
     } else {
