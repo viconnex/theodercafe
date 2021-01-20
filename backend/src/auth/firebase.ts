@@ -5,8 +5,8 @@ export const createFirebaseJWT = (id: number) => {
     const expirationTime = issuingTime + 3600 // Maximum expiration time is one hour
     const payload = {
         alg: 'RS256',
-        iss: 'firebase-adminsdk-o2guq@theodercafe.iam.gserviceaccount.com',
-        sub: 'firebase-adminsdk-o2guq@theodercafe.iam.gserviceaccount.com',
+        iss: process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL,
+        sub: process.env.FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL,
         aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
         iat: issuingTime,
         exp: expirationTime,
