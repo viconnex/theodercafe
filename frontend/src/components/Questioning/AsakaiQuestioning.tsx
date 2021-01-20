@@ -14,7 +14,7 @@ import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
 import useStyle from './style'
 
-export const IS_LIVE_ACTIVATED_BY_DEFAULT = false
+export const IS_LIVE_ACTIVATED_BY_DEFAULT = true
 
 const QuestionContent = ({
   isLoading,

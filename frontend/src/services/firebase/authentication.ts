@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import { useEffect } from 'react'
-import { FIREBASE_JWT_STORAGE_KEY, JWT_STORAGE_KEY, User } from 'services/authentication'
+import { FIREBASE_JWT_STORAGE_KEY, User } from 'services/authentication'
 import { firebaseAuth } from 'services/firebase/initialiseFirebase'
 import { fetchRequest } from 'services/api'
 import { IS_LIVE_ACTIVATED_BY_DEFAULT } from 'components/Questioning/AsakaiQuestioning'
