@@ -6,7 +6,7 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
-  <SnackbarProvider maxSnack={2} autoHideDuration={1300}>
+  <SnackbarProvider maxSnack={2} autoHideDuration={1800}>
     <App />
   </SnackbarProvider>,
   document.getElementById('root'),
