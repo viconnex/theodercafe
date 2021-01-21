@@ -33,6 +33,7 @@ export const onAnswerChange = ({
   const userAnswers: Record<string, Choice> = {}
   const answers = { choice1: 0, choice2: 0 }
   return db.collection(`questioning/${questioningId}/questions/${questionId}/users`).onSnapshot(function (snapshot) {
+    let needUpdate = 0
     snapshot.docChanges().forEach(function (change) {
       const id = change.doc.id
       const choice = change.doc.data()?.choice as Choice
@@ -46,13 +47,16 @@ export const onAnswerChange = ({
           answers[otherChoiceField] -= 1
           answers[choiceField] += 1
           userAnswers[id] = choice
+          needUpdate += 1
         }
       } else {
+        needUpdate += 1
         answers[choiceField] += 1
         userAnswers[id] = choice
       }
     })
-
-    setQuestioningAnswers({ ...answers })
+    if (needUpdate > 0) {
+      setQuestioningAnswers({ ...answers })
+    }
   })
 }
