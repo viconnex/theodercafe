@@ -1,36 +1,57 @@
+import React, { memo, useEffect, useState } from 'react'
 import useStyle from 'components/PlusOnes/PlusOnes.style'
 import { Choice } from 'components/Questioning/types'
-import React, { memo } from 'react'
 
-const PlusOne = memo(({ update, isUpDirection }: { update: number; isUpDirection: boolean }) => {
+const PlusOne = memo(({ trigger, isUpDirection }: { trigger: number; isUpDirection: boolean }) => {
   const classes = useStyle({ isUpDirection })
   return (
-    <div key={update} className={classes.plusOne}>
+    <div key={trigger} className={classes.plusOne}>
       +1
     </div>
   )
 })
 
 const PlusOnes = ({
-  update,
+  trigger,
   answersCount,
   choice,
   option,
 }: {
-  update: number
+  trigger: number
   option: Choice
   choice: Choice | undefined
   answersCount: number | null
 }) => {
-  if (update > 0) {
-    return <PlusOne isUpDirection={option === 1} update={update} />
-  }
+  const [delayedTrigger, setDelayedTrigger] = useState(0)
+  /* eslint-disable complexity */
+  useEffect(() => {
+    if (!choice) {
+      setDelayedTrigger(0)
+      return
+    }
 
-  if (choice && answersCount !== null) {
+    if (choice && answersCount && answersCount > delayedTrigger) {
+      const duration = Math.min(1000 / (answersCount - delayedTrigger), 100)
+      for (let i = 0; i < answersCount - delayedTrigger; i++) {
+        setTimeout(() => {
+          setDelayedTrigger(delayedTrigger + 1 + i)
+        }, i * duration)
+      }
+    } else if (answersCount && answersCount < delayedTrigger) {
+      setDelayedTrigger(Math.max(answersCount, 0))
+    } else if (!answersCount) {
+      setDelayedTrigger(0)
+    }
+  }, [answersCount, choice])
+
+  if (trigger > 0) {
+    return <PlusOne isUpDirection={option === 1} trigger={trigger} />
+  }
+  if (choice && answersCount !== null && delayedTrigger > 0) {
     return (
       <React.Fragment>
-        {Array.from({ length: answersCount }, (_, i) => i).map((i) => {
-          return <PlusOne key={i} update={i} isUpDirection={option === 1} />
+        {Array.from({ length: delayedTrigger }, (_, i) => i).map((i) => {
+          return <PlusOne key={i} trigger={i} isUpDirection={option === 1} />
         })}
       </React.Fragment>
     )

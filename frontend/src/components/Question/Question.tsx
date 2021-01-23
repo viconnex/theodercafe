@@ -21,7 +21,7 @@ const Option = ({
   questionId: number
   chose: (id: number, choiceToHandle: Choice) => void
 }) => {
-  const [choiceTrigger, setChoiceTrigger] = React.useState(0)
+  const [plusOneTrigger, setPlusOneTrigger] = React.useState(0)
 
   const handleChoice = () => {
     if (choice === option) {
@@ -33,7 +33,7 @@ const Option = ({
       return // let PlusOne updates come from realtime updates
     }
 
-    setChoiceTrigger(choiceTrigger + 1)
+    setPlusOneTrigger(plusOneTrigger + 1)
   }
 
   const choiceField = `choice${option}` as keyof QuestioningAnswers
@@ -71,7 +71,7 @@ const Option = ({
         answersCount={questioningAnswers ? questioningAnswers[choiceField] : null}
         choice={choice}
         option={option}
-        update={choiceTrigger}
+        trigger={plusOneTrigger}
       />
     </div>
   )
