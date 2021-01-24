@@ -10,6 +10,7 @@ import { Link, useHistory } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
 import { Button } from '@material-ui/core'
 import { login, logout } from 'services/authentication'
+import { CHOSE_QUESTIONING_PATH } from 'App'
 
 const style = (theme) => ({
   drawerHeader: {
@@ -35,6 +36,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
 
   if (userRole === 'admin') {
     drawerLinks.push({ label: 'Admin', path: '/admin' })
+    drawerLinks.push({ label: 'Choix du set', path: CHOSE_QUESTIONING_PATH })
   }
 
   const history = useHistory()
