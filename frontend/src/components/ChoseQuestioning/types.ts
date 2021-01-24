@@ -1,3 +1,5 @@
+import { QuestionResponse } from 'components/Questioning/types'
+
 export type AdminQuestionResponse = {
   id: number
   categoryId: number | null
@@ -12,4 +14,9 @@ export type AdminQuestionResponse = {
   option1: string
   option2: string
   upVotes: null | string
+}
+
+export type QuestioningResponse = {
+  questioningId: number
+  questions: QuestionResponse[]
 }

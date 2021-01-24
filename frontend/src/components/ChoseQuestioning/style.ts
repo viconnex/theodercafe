@@ -9,6 +9,15 @@ const useStyle = makeStyles(() => {
     },
     root: {
       backgroundColor: 'white',
+      marginTop: '16px',
+    },
+    questioning: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+    questioningPart: {
+      marginLeft: '16px',
     },
   }
 })
