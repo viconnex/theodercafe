@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common'
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
 import { Category } from 'src/category/category.entity'
@@ -118,5 +118,18 @@ export class QuestionService {
     }
     find(options: FindManyOptions<Question>): Promise<Question[]> {
         return this.questionRepository.find(options)
+    }
+
+    async createNewHistoric(questionIds: number[]) {
+        const questions = await this.questionRepository
+            .createQueryBuilder('questions')
+            .where('questions.id in (:...questionIds)', { questionIds })
+            .getMany()
+        if (questions.length !== questionIds.length) {
+            throw new BadRequestException(
+                `Only found ${questions.length} questions out of ${questionIds.length} requested`,
+            )
+        }
+        return this.questioningHistoricService.saveNew(questionIds.map((id) => id.toString()))
     }
 }

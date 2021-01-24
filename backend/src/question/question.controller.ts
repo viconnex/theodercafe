@@ -84,4 +84,10 @@ export class QuestionController {
     updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<Question> {
         return this.questionService.update(id, questionBody)
     }
+
+    @Post('/questioning-historic')
+    @UseGuards(AuthGuard(ADMIN_STRATEGY))
+    createNewHistoric(@Body() questionIds: number[]) {
+        return this.questionService.createNewHistoric(questionIds)
+    }
 }
