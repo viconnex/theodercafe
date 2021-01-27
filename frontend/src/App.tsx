@@ -15,6 +15,7 @@ import { Home } from 'pages/Home'
 import { ThemeProvider } from '@material-ui/styles'
 import colors from 'ui/colors'
 import { Alterodo } from 'pages/Alterodo'
+import Dojo from 'Dojo'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
 import { getUser, User, useSetAuth } from './services/authentication'
@@ -74,6 +75,7 @@ const App = () => {
             <Switch>
               <Route exact path="/a-propos" component={About} />
               <Route exact path="/login" component={LoginPage} />
+              <Route exact path="/dojo" component={Dojo} />
               <PrivateRoute exact path="/admin" component={Admin} userRole={userRole} isAdminRoute />
               <PrivateRoute exact path="/alterodo" component={Alterodo} userRole={userRole} isAdminRoute={false} />
               <PrivateRoute exact path="/carte" component={Map} userRole={userRole} isAdminRoute={false} />

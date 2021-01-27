@@ -1,0 +1,17 @@
+.dojo {
+  padding: 32px;
+}
+.dojo__container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding: 32px;
+}
+
+.dojo__post {
+  margin-top: 16px;
+}
+.dojo__remote {
+  color: black;
+  margin-top: 16px;
+}
