@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Question } from 'components/Question'
 import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 import { useSnackbar } from 'notistack'
@@ -9,23 +9,36 @@ import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
+import { Choice, QuestionResponse, UserChoice, UserVote } from 'components/Questioning/types'
+import { User } from 'services/authentication'
 import Voter from './Voter'
 import useStyle from './style'
 
 const QuestioningContent = ({
+  areChoicesFetched,
+  choices,
+  chose,
   isLoading,
   question,
   questionIndex,
-  choices,
-  chose,
-  areChoicesFetched,
   changeQuestion,
-  classes,
   filteredQuestions,
-  votes,
   vote,
+  votes,
+}: {
+  areChoicesFetched: boolean
+  choices: Record<number, Choice>
+  isLoading: boolean
+  chose: (questionId: number, choice: Choice) => void
+  question: QuestionResponse | undefined
+  questionIndex: number
+  changeQuestion: (increment: number) => void
+  filteredQuestions: QuestionResponse[]
+  vote: (questionId: number, isUpVote: boolean) => void
+  votes: Record<number, boolean>
 }) => {
-  const getValidationInformation = (questionValidation) => {
+  const classes = useStyle()
+  const getValidationInformation = (questionValidation: boolean) => {
     if (questionValidation === null) {
       return 'Question en attente de validation'
     }
@@ -55,7 +68,15 @@ const QuestioningContent = ({
   return <CircularProgress color="secondary" />
 }
 
-const AllQuestioning = ({ questions, isLoading, user }) => {
+const AllQuestioning = ({
+  questions,
+  isLoading,
+  user,
+}: {
+  questions: QuestionResponse[]
+  isLoading: boolean
+  user: User | null
+}) => {
   const [filters, setFilters] = useState({
     isValidated: true,
     isNotValidated: false,
@@ -69,13 +90,14 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
   })
 
   const [questionIndex, setQuestionIndex] = useState(0)
-  const [filteredQuestions, setFilteredQuestions] = useState([])
-  const [choices, setChoices] = useState({})
-  const [votes, setVotes] = useState({})
+  const [filteredQuestions, setFilteredQuestions] = useState<QuestionResponse[]>([])
+  const [choices, setChoices] = useState<Record<number, Choice>>({})
+  const [votes, setVotes] = useState<Record<number, boolean>>({})
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
+  /* eslint-disable complexity */
   useEffect(() => {
     const newFilteredQuestions = questions.filter((question) => {
       if (
@@ -130,15 +152,20 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
     if (!localStorage.jwt_token) {
       return setAreChoicesFetched(true)
     }
-    const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET' }, 200, {
-      enqueueSnackbar,
-    })
+    const response = await fetchRequestResponse(
+      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET', body: null, params: null },
+      200,
+      {
+        enqueueSnackbar,
+        successMessage: null,
+      },
+    )
     if (!response) {
       setAreChoicesFetched(true)
       return
     }
-    const userChoices = await response.json()
-    const choicesDic = {}
+    const userChoices = (await response.json()) as UserChoice[]
+    const choicesDic: Record<number, Choice> = {}
     userChoices.forEach((choice) => {
       choicesDic[choice.questionId] = choice.choice
     })
@@ -149,35 +176,40 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
     if (!localStorage.jwt_token) {
       return
     }
-    const response = await fetchRequestResponse({ uri: `/${USER_TO_QUESTIONS_VOTES_URI}/user`, method: 'GET' }, 200, {
-      enqueueSnackbar,
-    })
+    const response = await fetchRequestResponse(
+      { uri: `/${USER_TO_QUESTIONS_VOTES_URI}/user`, method: 'GET', body: null, params: null },
+      200,
+      {
+        enqueueSnackbar,
+        successMessage: null,
+      },
+    )
     if (!response) {
       return
     }
-    const userVotes = await response.json()
-    const votesDic = {}
+    const userVotes = (await response.json()) as UserVote[]
+    const votesDic: Record<number, boolean> = {}
     userVotes.forEach((vote) => {
       votesDic[vote.questionId] = vote.isUpVote
     })
     setVotes(votesDic)
   }
   useEffect(() => {
-    fetchChoices()
-    fetchVotes()
+    void fetchChoices()
+    void fetchVotes()
     // eslint-disable-next-line
   }, [])
 
-  const isNotAnsweredQuestion = (question) => {
+  const isNotAnsweredQuestion = (question: QuestionResponse) => {
     return areChoicesFetched ? !choices[question.id] : false
   }
 
-  const handeFilterChange = (option) => (event) => {
+  const handeFilterChange = (option: keyof typeof filters) => (event: ChangeEvent<HTMLInputElement>) => {
     setFilters({ ...filters, [option]: event.target.checked })
     setQuestionIndex(0)
   }
 
-  const changeQuestion = (increment) => {
+  const changeQuestion = (increment: number) => {
     let index = questionIndex + increment
     if (index < 0 || index === filteredQuestions.length) {
       index = 0
@@ -187,7 +219,7 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
 
   const question = filteredQuestions[questionIndex]
 
-  const chose = async (questionId, choice) => {
+  const chose = async (questionId: number, choice: Choice) => {
     if (!user) {
       return setOpenLoginDialog(true)
     }
@@ -201,7 +233,7 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
       setChoices(newChoices)
     }
   }
-  const vote = async (questionId, isUpVote) => {
+  const vote = (questionId: number, isUpVote: boolean) => {
     if (!user) {
       return setOpenLoginDialog(true)
     }
@@ -218,8 +250,7 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
       body = { isUpVote }
     }
     setVotes(newVote)
-
-    return fetchRequestResponse({ uri, method, body }, 200, { enqueueSnackbar })
+    void fetchRequestResponse({ uri, method, body, params: null }, 200, { enqueueSnackbar, successMessage: null })
   }
 
   const classes = useStyle()
@@ -240,7 +271,6 @@ const AllQuestioning = ({ questions, isLoading, user }) => {
           chose={chose}
           areChoicesFetched={areChoicesFetched}
           changeQuestion={changeQuestion}
-          classes={classes}
           filteredQuestions={filteredQuestions}
           votes={votes}
           vote={vote}

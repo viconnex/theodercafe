@@ -69,6 +69,8 @@ export class QuestionService {
                             option2: questionWithCategory.option2,
                             isValidated: questionWithCategory.isValidated,
                             categoryName: questionWithCategory.category?.name,
+                            isJoke: questionWithCategory.isJoke,
+                            isJokeOnSomeone: questionWithCategory.isJokeOnSomeone,
                         }),
                     ),
                     questioningId: currentSet.id,

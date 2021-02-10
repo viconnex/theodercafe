@@ -9,6 +9,8 @@ export class QuestionWithCategoryNameDto {
     readonly option1: string
     readonly option2: string
     readonly isValidated: boolean
+    readonly isJoke: boolean
+    readonly isJokeOnSomeone: boolean
 }
 
 export class QuestionPostDTO {

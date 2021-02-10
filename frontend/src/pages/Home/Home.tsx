@@ -16,7 +16,7 @@ import useStyles from './style'
 const Home = ({ user }: { user: User | null }) => {
   const [questions, setQuestions] = useState([])
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
-  const [isAsakaiMode, setIsAsakaiMode] = useState(true)
+  const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
   const [isLoading, setIsLoading] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 

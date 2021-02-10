@@ -23,6 +23,8 @@ export type QuestionResponse = {
   isValidated: boolean
   option1: string
   option2: string
+  isJoke: boolean
+  isJokeOnSomeone: boolean
 }
 
 export type QuestioningAnswers = {
@@ -33,3 +35,14 @@ export type QuestioningAnswers = {
 export type Choice = 1 | 2
 
 export type AsakaiChoices = { [questionId: number]: Choice }
+
+export type UserChoice = {
+  id: number
+  choice: Choice
+  questionId: number
+}
+export type UserVote = {
+  id: number
+  isUpVote: boolean
+  questionId: number
+}
