@@ -11,6 +11,7 @@ import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
 import { Choice, QuestionResponse, UserChoice, UserVote } from 'components/Questioning/types'
 import { User } from 'services/authentication'
+import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import Voter from './Voter'
 import useStyle from './style'
 
@@ -68,17 +69,9 @@ const QuestioningContent = ({
   return <CircularProgress color="secondary" />
 }
 
-const AllQuestioning = ({
-  questions,
-  isLoading,
-  user,
-}: {
-  questions: QuestionResponse[]
-  isLoading: boolean
-  user: User | null
-}) => {
+const AllQuestioning = ({ user }: { user: User | null }) => {
   const [filters, setFilters] = useState({
-    isValidated: true,
+    isValidated: false,
     isNotValidated: false,
     isInValidation: false,
     isNotJoke: false,
@@ -88,7 +81,8 @@ const AllQuestioning = ({
     isNotAnswered: true,
     isAnswered: false,
   })
-
+  const [questions, setQuestions] = useState<QuestionResponse[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionResponse[]>([])
   const [choices, setChoices] = useState<Record<number, Choice>>({})
@@ -96,6 +90,25 @@ const AllQuestioning = ({
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const fetchQuestions = async () => {
+    setIsLoading(true)
+    const response = await fetchRequestResponse(
+      { uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET', params: null, body: null },
+      200,
+      {
+        enqueueSnackbar,
+        successMessage: null,
+      },
+    )
+    if (!response) {
+      setIsLoading(false)
+      return
+    }
+    const data = (await response.json()) as QuestionResponse[]
+    setQuestions(data)
+    setIsLoading(false)
+  }
 
   /* eslint-disable complexity */
   useEffect(() => {
@@ -195,6 +208,7 @@ const AllQuestioning = ({
     setVotes(votesDic)
   }
   useEffect(() => {
+    void fetchQuestions()
     void fetchChoices()
     void fetchVotes()
     // eslint-disable-next-line
