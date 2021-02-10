@@ -99,11 +99,11 @@ export class QuestionService {
         return this.questionRepository.findInOrder(orderedIds)
     }
 
-    findAll(): Promise<QuestionWithCategoryNameDto[]> {
+    findAll() {
         return this.questionRepository.findAll()
     }
 
-    findAdminList(): Promise<Question[]> {
+    findAdminList() {
         return this.questionRepository.findAdminList()
     }
 

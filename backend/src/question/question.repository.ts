@@ -1,6 +1,6 @@
 import { DeleteResult, EntityRepository, Repository } from 'typeorm'
 import { Question } from './question.entity'
-import { QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { QuestionAdmin, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 
 const FIND_QUESTION_QUERY = `
     SELECT
@@ -39,11 +39,11 @@ export class QuestionRepository extends Repository<Question> {
         return this.delete(Number(id))
     }
 
-    findAll = async (): Promise<QuestionWithCategoryNameDto[]> => {
-        return this.query(`${FIND_QUESTION_QUERY} ORDER BY random()`)
+    findAll = async () => {
+        return this.query(`${FIND_QUESTION_QUERY} ORDER BY id ASC`) as Promise<QuestionWithCategoryNameDto[]>
     }
 
-    findAdminList = async (): Promise<Question[]> => {
+    findAdminList = () => {
         return this.query(`
             SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJoke", "isJokeOnSomeone", "choice1count", "choice2count", "up_votes_count" AS "upVotes", "down_votes_count" AS "downVotes" FROM questions AS q
             LEFT JOIN (
@@ -65,7 +65,7 @@ export class QuestionRepository extends Repository<Question> {
             ) as u_to_q_votes
             ON q.id = "u_to_q_votes"."questionId"
             ORDER BY "q"."id" ASC;
-        `)
+        `) as Promise<QuestionAdmin[]>
     }
 
     findAsakaiSet = async (
