@@ -52,7 +52,17 @@ const QuestioningContent = ({
   if (question) {
     return (
       <React.Fragment>
-        <Question question={question} chose={chose} choice={questionsPolls[question.id]?.userChoice} />
+        <Question
+          questioningAnswers={
+            questionsPolls[question.id] && {
+              choice1: questionsPolls[question.id]?.choice1Count,
+              choice2: questionsPolls[question.id]?.choice2Count,
+            }
+          }
+          question={question}
+          chose={chose}
+          choice={questionsPolls[question.id]?.userChoice}
+        />
         <Browser
           questionIndex={questionIndex}
           changeQuestion={changeQuestion}

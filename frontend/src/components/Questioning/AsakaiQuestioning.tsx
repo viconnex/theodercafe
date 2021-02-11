@@ -181,6 +181,11 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   }
 
   const chose = (questionId: number, choice: Choice) => {
+    if (asakaiChoices[questionId] === choice) {
+      void changeQuestion(1)
+      return
+    }
+
     const choices = { ...asakaiChoices }
     choices[questionId] = choice
     setAsakaiChoices(choices)

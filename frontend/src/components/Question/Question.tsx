@@ -24,10 +24,11 @@ const Option = ({
   const [plusOneTrigger, setPlusOneTrigger] = React.useState(0)
 
   const handleChoice = () => {
+    chose(questionId, option)
+
     if (choice === option) {
       return
     }
-    chose(questionId, option)
 
     if (questioningAnswers) {
       return // let PlusOne updates come from realtime updates
