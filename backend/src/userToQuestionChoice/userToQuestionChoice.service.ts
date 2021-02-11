@@ -53,8 +53,8 @@ export class UserToQuestionChoiceService {
         return this.userToQuestionChoiceRepository.save(initialChoice)
     }
 
-    async getAllUserChoices(userId: number): Promise<UserToQuestionChoice[]> {
-        return await this.userToQuestionChoiceRepository.find({ userId })
+    async getQuestionsPolls(userId: number) {
+        return await this.userToQuestionChoiceRepository.getQuestionsPolls(userId)
     }
 
     async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId?: string) {

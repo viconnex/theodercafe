@@ -49,3 +49,10 @@ export interface AsakaiEmailDTO {
     alterodoUserId?: number
     addedByUserId?: number | null
 }
+
+export type QuestionPoll = {
+    questionId: number
+    choice1: number | null
+    choice2: number | null
+    userChoice: number | null
+}

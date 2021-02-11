@@ -18,8 +18,8 @@ export type Alterodos = {
 }
 
 export type QuestionResponse = {
-  categoryName?: string
   id: number
+  categoryName?: string
   isValidated: boolean
   option1: string
   option2: string

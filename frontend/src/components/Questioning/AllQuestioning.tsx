@@ -9,7 +9,7 @@ import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
-import { Choice, QuestionResponse, UserChoice, UserVote } from 'components/Questioning/types'
+import { Choice, QuestioningAnswers, QuestionResponse, UserChoice, UserVote } from 'components/Questioning/types'
 import { User } from 'services/authentication'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import Voter from './Voter'
@@ -166,7 +166,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
       return setAreChoicesFetched(true)
     }
     const response = await fetchRequestResponse(
-      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}/user`, method: 'GET', body: null, params: null },
+      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`, method: 'GET', body: null, params: null },
       200,
       {
         enqueueSnackbar,
@@ -208,9 +208,13 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     setVotes(votesDic)
   }
   useEffect(() => {
-    void fetchQuestions()
     void fetchChoices()
     void fetchVotes()
+    // eslint-disable-next-line
+  }, [user])
+
+  useEffect(() => {
+    void fetchQuestions()
     // eslint-disable-next-line
   }, [])
 

@@ -13,6 +13,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+import { User } from 'src/user/user.entity'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { AlterodoResponse, AsakaiChoices, AsakaiEmailDTO, QuestionFilters, UserMap } from './userToQuestionChoice.types'
@@ -30,15 +31,11 @@ export class UserToQuestionChoiceController {
         return this.userToQuestionChoiceService.findAsakaiAlterodos(asakaiChoices, excludedUserId)
     }
 
-    @Get('user')
+    @Get('')
     @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
-    async getChoices(@Request() req): Promise<UserToQuestionChoice[]> {
-        if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found')
-        }
-
-        return await this.userToQuestionChoiceService.getAllUserChoices(req.user.id)
+    async getChoices(@Request() req: { user: User }) {
+        return await this.userToQuestionChoiceService.getQuestionsPolls(req.user.id)
     }
 
     @Put(':id/choice')
