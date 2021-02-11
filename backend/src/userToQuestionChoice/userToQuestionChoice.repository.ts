@@ -122,7 +122,7 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
         }
 
         return this.query(`
-            SELECT "questions"."id", "choice1", "choice2", "choice" as "userChoice"
+            SELECT "questions"."id" as "questionId", "choice1" as "choice1Count", "choice2" as "choice2Count", "choice" as "userChoice"
             FROM questions
             LEFT JOIN (
             SELECT

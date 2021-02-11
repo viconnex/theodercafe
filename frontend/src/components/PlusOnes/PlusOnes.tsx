@@ -19,7 +19,7 @@ const PlusOnes = ({
 }: {
   trigger: number
   option: Choice
-  choice: Choice | undefined
+  choice: Choice | undefined | null
   answersCount: number | null
 }) => {
   const [delayedTrigger, setDelayedTrigger] = useState(0)

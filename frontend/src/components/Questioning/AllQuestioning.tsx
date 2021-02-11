@@ -9,7 +9,7 @@ import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
-import { Choice, QuestioningAnswers, QuestionResponse, UserChoice, UserVote } from 'components/Questioning/types'
+import { Choice, QuestionResponse, QuestionsPolls, UserVote } from 'components/Questioning/types'
 import { User } from 'services/authentication'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
 import Voter from './Voter'
@@ -17,7 +17,7 @@ import useStyle from './style'
 
 const QuestioningContent = ({
   areChoicesFetched,
-  choices,
+  questionsPolls,
   chose,
   isLoading,
   question,
@@ -28,7 +28,7 @@ const QuestioningContent = ({
   votes,
 }: {
   areChoicesFetched: boolean
-  choices: Record<number, Choice>
+  questionsPolls: QuestionsPolls
   isLoading: boolean
   chose: (questionId: number, choice: Choice) => void
   question: QuestionResponse | undefined
@@ -52,7 +52,7 @@ const QuestioningContent = ({
   if (question) {
     return (
       <React.Fragment>
-        <Question question={question} chose={chose} choice={choices[question.id]} />
+        <Question question={question} chose={chose} choice={questionsPolls[question.id]?.userChoice} />
         <Browser
           questionIndex={questionIndex}
           changeQuestion={changeQuestion}
@@ -85,7 +85,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionResponse[]>([])
-  const [choices, setChoices] = useState<Record<number, Choice>>({})
+  const [questionsPolls, setQuestionsPolls] = useState<QuestionsPolls>({})
   const [votes, setVotes] = useState<Record<number, boolean>>({})
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
@@ -163,7 +163,8 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
 
   const fetchChoices = async () => {
     if (!localStorage.jwt_token) {
-      return setAreChoicesFetched(true)
+      setAreChoicesFetched(true)
+      return
     }
     const response = await fetchRequestResponse(
       { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`, method: 'GET', body: null, params: null },
@@ -177,12 +178,8 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
       setAreChoicesFetched(true)
       return
     }
-    const userChoices = (await response.json()) as UserChoice[]
-    const choicesDic: Record<number, Choice> = {}
-    userChoices.forEach((choice) => {
-      choicesDic[choice.questionId] = choice.choice
-    })
-    setChoices(choicesDic)
+    const questionPolls = (await response.json()) as QuestionsPolls
+    setQuestionsPolls(questionPolls)
     setAreChoicesFetched(true)
   }
   const fetchVotes = async () => {
@@ -219,7 +216,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
   }, [])
 
   const isNotAnsweredQuestion = (question: QuestionResponse) => {
-    return areChoicesFetched ? !choices[question.id] : false
+    return areChoicesFetched ? !questionsPolls[question.id]?.userChoice : false
   }
 
   const handeFilterChange = (option: keyof typeof filters) => (event: ChangeEvent<HTMLInputElement>) => {
@@ -241,14 +238,32 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     if (!user) {
       return setOpenLoginDialog(true)
     }
-    changeQuestion(1)
 
-    if (choices[questionId] !== choice) {
+    if (questionsPolls[questionId]?.userChoice !== choice) {
       await postChoice(questionId, choice, enqueueSnackbar, 'Choix enregistré')
 
-      const newChoices = { ...choices }
-      newChoices[questionId] = choice
-      setChoices(newChoices)
+      const newQuestionsPolls = { ...questionsPolls }
+      const choiceField = `choice${choice}Count` as 'choice1Count'
+      const otherChoiceField = `choice${choice === 1 ? 2 : 1}Count` as 'choice2Count'
+
+      if (questionsPolls[questionId]?.userChoice) {
+        // user is changing its minde
+        newQuestionsPolls[questionId] = {
+          userChoice: choice,
+          [choiceField]: questionsPolls[questionId][choiceField] + 1,
+          [otherChoiceField]: Math.max(questionsPolls[questionId][otherChoiceField] - 1, 0),
+        }
+      } else {
+        newQuestionsPolls[questionId] = {
+          userChoice: choice,
+          [choiceField]: questionsPolls[questionId][choiceField] + 1,
+          [otherChoiceField]: questionsPolls[questionId][otherChoiceField],
+        }
+      }
+
+      setQuestionsPolls(newQuestionsPolls)
+    } else {
+      changeQuestion(1)
     }
   }
   const vote = (questionId: number, isUpVote: boolean) => {
@@ -285,7 +300,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
           isLoading={isLoading}
           question={question}
           questionIndex={questionIndex}
-          choices={choices}
+          questionsPolls={questionsPolls}
           chose={chose}
           areChoicesFetched={areChoicesFetched}
           changeQuestion={changeQuestion}

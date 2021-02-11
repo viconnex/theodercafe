@@ -52,7 +52,13 @@ export interface AsakaiEmailDTO {
 
 export type QuestionPoll = {
     questionId: number
-    choice1: number | null
-    choice2: number | null
+    choice1Count: string | null
+    choice2Count: string | null
+    userChoice: number | null
+}
+
+export type FormattedQuestionPoll = {
+    choice1Count: number
+    choice2Count: number
     userChoice: number | null
 }

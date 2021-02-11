@@ -36,11 +36,14 @@ export type Choice = 1 | 2
 
 export type AsakaiChoices = { [questionId: number]: Choice }
 
-export type UserChoice = {
-  id: number
-  choice: Choice
-  questionId: number
+export type QuestionPoll = {
+  choice1Count: number
+  choice2Count: number
+  userChoice: Choice | null
 }
+
+export type QuestionsPolls = Record<string, QuestionPoll>
+
 export type UserVote = {
   id: number
   isUpVote: boolean

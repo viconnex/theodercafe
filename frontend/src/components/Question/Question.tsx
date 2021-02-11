@@ -15,7 +15,7 @@ const Option = ({
   chose,
 }: {
   option: Choice
-  choice: Choice | undefined
+  choice: Choice | undefined | null
   questioningAnswers?: QuestioningAnswers | null
   questionOption: string
   questionId: number
@@ -86,7 +86,7 @@ const Question = ({
   questioningAnswers,
 }: {
   question: QuestionResponse
-  choice: Choice | undefined
+  choice: Choice | undefined | null
   chose: (questionId: number, choiceToHandle: Choice) => void
   hideCategory?: boolean
   questioningAnswers?: QuestioningAnswers | null

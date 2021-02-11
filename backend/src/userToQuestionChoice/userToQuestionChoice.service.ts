@@ -10,6 +10,7 @@ import {
     Alterodos,
     AsakaiChoices,
     AsakaiEmailDTO,
+    FormattedQuestionPoll,
     QuestionFilters,
     SimilarityWithUserId,
     UserMap,
@@ -54,7 +55,18 @@ export class UserToQuestionChoiceService {
     }
 
     async getQuestionsPolls(userId: number) {
-        return await this.userToQuestionChoiceRepository.getQuestionsPolls(userId)
+        const questionPollsByQuestionId: Record<string, FormattedQuestionPoll> = {}
+        const questionPolls = await this.userToQuestionChoiceRepository.getQuestionsPolls(userId)
+
+        questionPolls.forEach((questionPoll) => {
+            questionPollsByQuestionId[questionPoll.questionId] = {
+                userChoice: questionPoll.userChoice,
+                choice1Count: questionPoll.choice1Count ? parseInt(questionPoll.choice1Count) : 0,
+                choice2Count: questionPoll.choice2Count ? parseInt(questionPoll.choice2Count) : 0,
+            }
+        })
+
+        return questionPollsByQuestionId
     }
 
     async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId?: string) {
