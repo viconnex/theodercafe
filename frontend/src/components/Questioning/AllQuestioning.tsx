@@ -112,6 +112,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
       setAreChoicesFetched(true)
       return
     }
+    setAreChoicesFetched(false)
     const response = await fetchRequestResponse(
       { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`, method: 'GET', body: null, params: null },
       200,
