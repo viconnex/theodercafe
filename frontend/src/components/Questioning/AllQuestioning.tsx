@@ -244,20 +244,20 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
 
   const question = filteredQuestions[questionIndex]
 
-  const chose = async (questionId: number, choice: Choice) => {
+  const chose = (questionId: number, choice: Choice) => {
     if (!user) {
       return setOpenLoginDialog(true)
     }
 
     if (questionsPolls[questionId]?.userChoice !== choice) {
-      await postChoice(questionId, choice, enqueueSnackbar, 'Choix enregistré')
+      void postChoice(questionId, choice, enqueueSnackbar, 'Choix enregistré')
 
       const newQuestionsPolls = { ...questionsPolls }
       const choiceField = `choice${choice}Count` as 'choice1Count'
       const otherChoiceField = `choice${choice === 1 ? 2 : 1}Count` as 'choice2Count'
 
       if (questionsPolls[questionId]?.userChoice) {
-        // user is changing its minde
+        // user is changing its mind
         newQuestionsPolls[questionId] = {
           userChoice: choice,
           [choiceField]: questionsPolls[questionId][choiceField] + 1,
