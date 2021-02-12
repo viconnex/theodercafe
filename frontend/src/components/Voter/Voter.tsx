@@ -29,7 +29,11 @@ const Voter = ({
     <div className={classes.voter}>
       <div className={classes.thumbContainer}>
         <Tooltip title="Je n'aime pas cette question">
-          <IconButton className={downVoteClass} onClick={() => vote(questionId, false)}>
+          <IconButton
+            className={downVoteClass}
+            onClick={() => vote(questionId, false)}
+            style={{ paddingBottom: '4px' }}
+          >
             <ThumbDown />
           </IconButton>
         </Tooltip>
@@ -37,7 +41,7 @@ const Voter = ({
       </div>
       <div className={classes.thumbContainer}>
         <Tooltip title="J'aime cette question">
-          <IconButton className={upVoteClass} onClick={() => vote(questionId, true)}>
+          <IconButton className={upVoteClass} onClick={() => vote(questionId, true)} style={{ paddingBottom: '4px' }}>
             <ThumbUp />
           </IconButton>
         </Tooltip>
