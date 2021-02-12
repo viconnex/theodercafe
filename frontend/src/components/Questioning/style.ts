@@ -12,16 +12,7 @@ const useStyle = makeStyles((theme) => {
     },
 
     filterOption: {
-      fontSize: '11px',
-    },
-    neutralVote: {
-      color: colors.white,
-    },
-    upVote: {
-      color: colors.theodoGreen,
-    },
-    downVote: {
-      color: colors.red,
+      fontSize: '12px',
     },
     questioningContainer: {
       display: 'flex',

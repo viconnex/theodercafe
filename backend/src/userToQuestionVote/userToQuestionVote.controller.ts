@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { DeleteResult } from 'typeorm'
+import { User } from '../user/user.entity'
 import { UserToQuestionVoteService } from './userToQuestionVote.service'
 import { UserToQuestionVote } from './userToQuestionVote.entity'
 import { USER_STRATEGY } from '../auth/jwt.user.strategy'
@@ -21,15 +22,11 @@ import { USER_STRATEGY } from '../auth/jwt.user.strategy'
 export class UserToQuestionVoteController {
     constructor(private readonly userToQuestionVoteService: UserToQuestionVoteService) {}
 
-    @Get('user')
+    @Get('')
     @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
-    async getChoices(@Request() req): Promise<UserToQuestionVote[]> {
-        if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found')
-        }
-
-        return await this.userToQuestionVoteService.getAllUserVotes(req.user.id)
+    async getVotes(@Request() req: { user: User }) {
+        return await this.userToQuestionVoteService.getQuestionsVotes(req.user.id)
     }
 
     @Put(':id/vote')

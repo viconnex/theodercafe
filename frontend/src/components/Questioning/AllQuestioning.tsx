@@ -9,10 +9,10 @@ import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
-import { Choice, QuestionResponse, QuestionsPolls, UserVote } from 'components/Questioning/types'
+import { Choice, QuestionResponse, QuestionsPolls, QuestionsVotes } from 'components/Questioning/types'
 import { User } from 'services/authentication'
 import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
-import Voter from './Voter'
+import Voter from '../Voter/Voter'
 import useStyle from './style'
 
 const AllQuestioning = ({ user }: { user: User | null }) => {
@@ -32,7 +32,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
   const [questionIndex, setQuestionIndex] = useState(0)
   const [filteredQuestions, setFilteredQuestions] = useState<QuestionResponse[]>([])
   const [questionsPolls, setQuestionsPolls] = useState<QuestionsPolls>({})
-  const [votes, setVotes] = useState<Record<number, boolean>>({})
+  const [questionsVotes, setQuestionsVotes] = useState<QuestionsVotes>({})
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
@@ -134,7 +134,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
       return
     }
     const response = await fetchRequestResponse(
-      { uri: `/${USER_TO_QUESTIONS_VOTES_URI}/user`, method: 'GET', body: null, params: null },
+      { uri: `/${USER_TO_QUESTIONS_VOTES_URI}`, method: 'GET', body: null, params: null },
       200,
       {
         enqueueSnackbar,
@@ -144,12 +144,8 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     if (!response) {
       return
     }
-    const userVotes = (await response.json()) as UserVote[]
-    const votesDic: Record<number, boolean> = {}
-    userVotes.forEach((vote) => {
-      votesDic[vote.questionId] = vote.isUpVote
-    })
-    setVotes(votesDic)
+    const questionsVotes = (await response.json()) as QuestionsVotes
+    setQuestionsVotes(questionsVotes)
   }
   useEffect(() => {
     void fetchChoices()
@@ -217,19 +213,41 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     if (!user) {
       return setOpenLoginDialog(true)
     }
-    const newVote = { ...votes }
     const uri = `/${USER_TO_QUESTIONS_VOTES_URI}/${questionId}/vote`
     let method = 'PUT'
-    let body
+    let body: undefined | { isUpVote: boolean } = { isUpVote }
+    const newQuestionsVotes = { ...questionsVotes }
 
-    if (questionId in votes && votes[questionId] === isUpVote) {
-      Reflect.deleteProperty(newVote, questionId)
-      method = 'DELETE'
+    const voteField = `${isUpVote ? 'up' : 'down'}VoteCount` as 'upVoteCount'
+    const otherChoiceField = `${isUpVote ? 'down' : 'up'}VoteCount` as 'downVoteCount'
+
+    if (!(questionId in questionsVotes) || questionsVotes[questionId].isUserUpVote === null) {
+      // user adds a vote
+      newQuestionsVotes[questionId] = {
+        isUserUpVote: isUpVote,
+        [voteField]: questionId in questionsVotes ? questionsVotes[questionId][voteField] + 1 : 1,
+        [otherChoiceField]: questionId in questionsVotes ? questionsVotes[questionId][otherChoiceField] : 0,
+      }
+    } else if (questionsVotes[questionId].isUserUpVote !== isUpVote) {
+      // user changes its vote
+      newQuestionsVotes[questionId] = {
+        isUserUpVote: isUpVote,
+        [voteField]: questionsVotes[questionId][voteField] + 1,
+        [otherChoiceField]: Math.max(questionsVotes[questionId][otherChoiceField] - 1, 0),
+      }
     } else {
-      newVote[questionId] = isUpVote
-      body = { isUpVote }
+      // user removes its vote
+      method = 'DELETE'
+      body = undefined
+
+      newQuestionsVotes[questionId] = {
+        isUserUpVote: null,
+        [voteField]: Math.max(questionsVotes[questionId][voteField] - 1, 0),
+        [otherChoiceField]: questionsVotes[questionId][otherChoiceField],
+      }
     }
-    setVotes(newVote)
+
+    setQuestionsVotes(newQuestionsVotes)
     void fetchRequestResponse({ uri, method, body, params: null }, 200, { enqueueSnackbar, successMessage: null })
   }
 
@@ -266,7 +284,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
             questionLength={filteredQuestions.length}
           />
           <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
-          <Voter questionId={question.id} isUpVote={votes[question.id]} vote={vote} />
+          <Voter questionId={question.id} questionVote={questionsVotes[question.id]} vote={vote} />
         </React.Fragment>
       )
     }

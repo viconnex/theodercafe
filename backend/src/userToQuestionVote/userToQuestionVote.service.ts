@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DeleteResult } from 'typeorm'
+import { FormattedQuestionVote } from 'src/userToQuestionVote/types'
 import { UserToQuestionVoteRepository } from './userToQuestionVote.repository'
 import { UserToQuestionVote } from './userToQuestionVote.entity'
 
@@ -40,5 +41,20 @@ export class UserToQuestionVoteService {
 
     async unVote(questionId: number, userId: number): Promise<DeleteResult> {
         return this.userToQuestionVoteRepository.delete({ userId, questionId })
+    }
+
+    async getQuestionsVotes(userId: number) {
+        const questionVotesByQuestionId: Record<string, FormattedQuestionVote> = {}
+        const questionVotes = await this.userToQuestionVoteRepository.getQuestionsVotes(userId)
+
+        questionVotes.forEach((questionVote) => {
+            questionVotesByQuestionId[questionVote.questionId] = {
+                isUserUpVote: questionVote.isUserUpVote,
+                upVoteCount: questionVote.upVoteCount ? parseInt(questionVote.upVoteCount) : 0,
+                downVoteCount: questionVote.downVoteCount ? parseInt(questionVote.downVoteCount) : 0,
+            }
+        })
+
+        return questionVotesByQuestionId
     }
 }

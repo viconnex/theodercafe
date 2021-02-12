@@ -41,11 +41,11 @@ export type QuestionPoll = {
   choice2Count: number
   userChoice: Choice | null
 }
+export type QuestionVote = {
+  upVoteCount: number
+  downVoteCount: number
+  isUserUpVote: boolean | null
+}
 
 export type QuestionsPolls = Record<string, QuestionPoll>
-
-export type UserVote = {
-  id: number
-  isUpVote: boolean
-  questionId: number
-}
+export type QuestionsVotes = Record<string, QuestionVote>
