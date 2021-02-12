@@ -186,7 +186,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     }
 
     if (questionsPolls[questionId]?.userChoice !== choice) {
-      void postChoice(questionId, choice, enqueueSnackbar, 'Choix enregistré')
+      void postChoice(questionId, choice, enqueueSnackbar, null)
 
       const newQuestionsPolls = { ...questionsPolls }
       const choiceField = `choice${choice}Count` as 'choice1Count'
