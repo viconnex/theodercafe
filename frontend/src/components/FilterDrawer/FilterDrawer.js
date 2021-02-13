@@ -33,7 +33,7 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
                 control={
                   <Checkbox
                     checked={filters[attribute.name]}
-                    onChange={handeFilterChange(attribute.name)}
+                    onChange={(e) => handeFilterChange(attribute.name)(e.target.checked)}
                     color="primary"
                   />
                 }
@@ -81,6 +81,8 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
           { name: 'isNotJokeOnSomeone', label: 'Pas une blague sur les theodoers' },
         ]}
       />
+      <Divider />
+      <FilterGroup filterAttributes={[{ name: 'isMBTI', label: 'MBTI' }]} />
     </Drawer>
   )
 }

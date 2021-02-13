@@ -67,7 +67,7 @@ module.exports = {
     'react/no-string-refs': 'warn',
     'react-hooks/rules-of-hooks': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
-    complexity: ['warn', 8],
+    complexity: 'off',
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',
     '@typescript-eslint/strict-boolean-expressions': 'off',

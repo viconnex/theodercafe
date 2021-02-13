@@ -3,7 +3,38 @@ import Chip from '@material-ui/core/Chip'
 
 import { PlusOnes } from 'components/PlusOnes'
 import { Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import {
+  MBTI_EXTRAVERSION,
+  MBTI_FEELING,
+  MBTI_INTROVERSION,
+  MBTI_INTUITION,
+  MBTI_JUGEMENT,
+  MBTI_PERCEPTION,
+  MBTI_SENSATION,
+  MBTI_THINKING,
+} from 'utils/constants/questionConstants'
 import useStyle, { useOptionStyle } from './style'
+
+const getMBTISubtitle = (questionOption: string) => {
+  if (questionOption === MBTI_THINKING) {
+    return 'Méthode, logique'
+  } else if (questionOption === MBTI_FEELING) {
+    return 'Empathie, soutien'
+  } else if (questionOption === MBTI_JUGEMENT) {
+    return 'Je planifie tout'
+  } else if (questionOption === MBTI_PERCEPTION) {
+    return "Je fais tout à l'arrache"
+  } else if (questionOption === MBTI_SENSATION) {
+    return 'Je préfère des faits précis'
+  } else if (questionOption === MBTI_INTUITION) {
+    return "J'aime avoir la vue d'ensemble"
+  } else if (questionOption === MBTI_EXTRAVERSION) {
+    return 'Je me ressource quand je suis avec les autres'
+  } else if (questionOption === MBTI_INTROVERSION) {
+    return 'Je me ressource quand je suis seul'
+  }
+  return null
+}
 
 /* eslint-disable complexity */
 const Option = ({
@@ -46,6 +77,7 @@ const Option = ({
 
   const showBar = !!questioningAnswers && !!choice
   const previousRatio = useRef(0)
+  const mbtiSubtitle = getMBTISubtitle(questionOption)
 
   const classes = useOptionStyle({
     isChoiceMade: !!choice,
@@ -53,6 +85,7 @@ const Option = ({
     ratio,
     isChosenOption: choice === option,
     showBar,
+    hasSubtitle: !!mbtiSubtitle,
   })
 
   previousRatio.current = !choice ? 0 : ratio ?? 0
@@ -66,7 +99,8 @@ const Option = ({
         </React.Fragment>
       )}
       <div className={classes.textContainer}>
-        <span className={classes.text}>{questionOption}</span>
+        <div className={classes.text}>{questionOption}</div>
+        {mbtiSubtitle && <div className={classes.subtitle}>{mbtiSubtitle}</div>}
       </div>
       <PlusOnes
         answersCount={questioningAnswers ? questioningAnswers[choiceField] : null}

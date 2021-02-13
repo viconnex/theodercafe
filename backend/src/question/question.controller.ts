@@ -45,7 +45,7 @@ export class QuestionController {
     }
 
     @Get('/all')
-    findAll(): Promise<QuestionWithCategoryNameDto[]> {
+    findAll() {
         return this.questionService.findAll()
     }
 

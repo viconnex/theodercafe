@@ -1,8 +1,9 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Question } from 'components/Question'
 import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 import { useSnackbar } from 'notistack'
 import TuneIcon from '@material-ui/icons/Tune'
+import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew'
 
 import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse, postChoice } from 'services/api'
@@ -11,8 +12,9 @@ import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
 import { Choice, QuestionResponse, QuestionsPolls, QuestionsVotes } from 'components/Questioning/types'
 import { User } from 'services/authentication'
-import { ALL_QUESTIONS_MODE } from 'utils/constants/questionConstants'
-import Voter from '../Voter/Voter'
+import { ALL_QUESTIONS_MODE, MBTIcategoryName, sortMBTI } from 'utils/constants/questionConstants'
+import Voter from 'components/Voter/Voter'
+import colors from 'ui/colors'
 import useStyle from './style'
 
 const AllQuestioning = ({ user }: { user: User | null }) => {
@@ -26,6 +28,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     isNotJokeOnSomeone: false,
     isNotAnswered: true,
     isAnswered: false,
+    isMBTI: false,
   })
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -58,49 +61,54 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
 
   /* eslint-disable complexity */
   useEffect(() => {
-    const newFilteredQuestions = questions.filter((question) => {
-      if (
-        !(
-          (!filters.isValidated && !filters.isNotValidated && !filters.isInValidation) ||
-          (filters.isValidated && question.isValidated === true) ||
-          (filters.isNotValidated && question.isValidated === false) ||
-          (filters.isInValidation && question.isValidated === null)
-        )
-      ) {
-        return false
-      }
-      if (
-        !(
-          (!filters.isNotAnswered && !filters.isAnswered) ||
-          (filters.isNotAnswered && isNotAnsweredQuestion(question)) ||
-          (filters.isAnswered && !isNotAnsweredQuestion(question))
-        )
-      ) {
-        return false
-      }
+    const newFilteredQuestions = questions
+      .filter((question) => {
+        if (filters.isMBTI) {
+          return question.categoryName === MBTIcategoryName
+        }
+        if (
+          !(
+            (!filters.isValidated && !filters.isNotValidated && !filters.isInValidation) ||
+            (filters.isValidated && question.isValidated === true) ||
+            (filters.isNotValidated && question.isValidated === false) ||
+            (filters.isInValidation && question.isValidated === null)
+          )
+        ) {
+          return false
+        }
+        if (
+          !(
+            (!filters.isNotAnswered && !filters.isAnswered) ||
+            (filters.isNotAnswered && isNotAnsweredQuestion(question)) ||
+            (filters.isAnswered && !isNotAnsweredQuestion(question))
+          )
+        ) {
+          return false
+        }
 
-      if (
-        !(
-          (!filters.isJoke && !filters.isNotJoke) ||
-          (filters.isJoke && question.isJoke) ||
-          (filters.isNotJoke && question.isJoke === false)
-        )
-      ) {
-        return false
-      }
+        if (
+          !(
+            (!filters.isJoke && !filters.isNotJoke) ||
+            (filters.isJoke && question.isJoke) ||
+            (filters.isNotJoke && question.isJoke === false)
+          )
+        ) {
+          return false
+        }
 
-      if (
-        !(
-          (!filters.isJokeOnSomeone && !filters.isNotJokeOnSomeone) ||
-          (filters.isJokeOnSomeone && question.isJokeOnSomeone) ||
-          (filters.isNotJokeOnSomeone && question.isJokeOnSomeone === false)
-        )
-      ) {
-        return false
-      }
+        if (
+          !(
+            (!filters.isJokeOnSomeone && !filters.isNotJokeOnSomeone) ||
+            (filters.isJokeOnSomeone && question.isJokeOnSomeone) ||
+            (filters.isNotJokeOnSomeone && question.isJokeOnSomeone === false)
+          )
+        ) {
+          return false
+        }
 
-      return true
-    })
+        return true
+      })
+      .sort(sortMBTI)
     setFilteredQuestions(newFilteredQuestions)
     // eslint-disable-next-line
   }, [filters, questions, areChoicesFetched])
@@ -162,8 +170,8 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     return areChoicesFetched ? !questionsPolls[question.id]?.userChoice : false
   }
 
-  const handeFilterChange = (option: keyof typeof filters) => (event: ChangeEvent<HTMLInputElement>) => {
-    setFilters({ ...filters, [option]: event.target.checked })
+  const handeFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
+    setFilters({ ...filters, [option]: checked })
     setQuestionIndex(0)
   }
 
@@ -299,6 +307,14 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
       <div className={classes.asakaiSubtitle}>
         <Button startIcon={<TuneIcon />} color="secondary" variant="text" onClick={() => setIsDrawerOpen(true)}>
           Filtres
+        </Button>
+        <Button
+          startIcon={<AccessibilityNewIcon style={{ color: filters.isMBTI ? colors.bordeaux : undefined }} />}
+          color="secondary"
+          variant="text"
+          onClick={() => handeFilterChange('isMBTI')(!filters.isMBTI)}
+        >
+          MBTI
         </Button>
       </div>
       <div className={`${classes.questioningContent}`}>{renderQuestionContent()}</div>

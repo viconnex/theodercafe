@@ -32,12 +32,14 @@ export const useOptionStyle = ({
   showBar,
   ratio,
   previousRatio,
+  hasSubtitle,
 }: {
   isChosenOption: boolean
   isChoiceMade: boolean
   previousRatio: number
   ratio: number | null
   showBar: boolean
+  hasSubtitle: boolean
 }) => {
   /* eslint-disable complexity */
   const useStyles = makeStyles(() => {
@@ -70,9 +72,12 @@ export const useOptionStyle = ({
         animation: `$grow 0.5s 1 ease-out`,
       },
       text: {
-        borderBottom: !isChoiceMade ? '0.7px dashed' : undefined,
+        borderBottom: !isChoiceMade && !hasSubtitle ? '0.7px dashed' : undefined,
         zIndex: 1,
         fontSize: '20px',
+      },
+      subtitle: {
+        marginTop: '4px',
       },
       textContainer: {
         zIndex: 1,
