@@ -19,7 +19,7 @@ export const FILTER_OPTIONS = [
 
 export const ASAKAI_QUESTION_COUNT = 10
 
-export const MBTIcategoryName = 'MBTI'
+export const MBTI_CATEGORY_NAME = 'MBTI'
 
 export const MBTI_EXTRAVERSION = 'Extraverti (E)'
 export const MBTI_INTROVERSION = 'Introverti (I)'

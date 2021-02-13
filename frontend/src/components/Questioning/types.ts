@@ -49,3 +49,16 @@ export type QuestionVote = {
 
 export type QuestionsPolls = Record<string, QuestionPoll>
 export type QuestionsVotes = Record<string, QuestionVote>
+
+export type Filters = {
+  isValidated: boolean
+  isNotValidated: boolean
+  isInValidation: boolean
+  isNotJoke: boolean
+  isJoke: boolean
+  isJokeOnSomeone: boolean
+  isNotJokeOnSomeone: boolean
+  isNotAnswered: boolean
+  isAnswered: boolean
+  isMBTI: boolean
+}

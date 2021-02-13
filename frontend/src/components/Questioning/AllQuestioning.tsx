@@ -12,9 +12,10 @@ import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
 import { Choice, QuestionResponse, QuestionsPolls, QuestionsVotes } from 'components/Questioning/types'
 import { User } from 'services/authentication'
-import { ALL_QUESTIONS_MODE, MBTIcategoryName, sortMBTI } from 'utils/constants/questionConstants'
+import { ALL_QUESTIONS_MODE, sortMBTI } from 'utils/constants/questionConstants'
 import Voter from 'components/Voter/Voter'
 import colors from 'ui/colors'
+import { filterQuestion } from 'components/Questioning/utils'
 import useStyle from './style'
 
 const AllQuestioning = ({ user }: { user: User | null }) => {
@@ -62,53 +63,9 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
   /* eslint-disable complexity */
   useEffect(() => {
     const newFilteredQuestions = questions
-      .filter((question) => {
-        if (filters.isMBTI) {
-          return question.categoryName === MBTIcategoryName
-        }
-        if (
-          !(
-            (!filters.isValidated && !filters.isNotValidated && !filters.isInValidation) ||
-            (filters.isValidated && question.isValidated === true) ||
-            (filters.isNotValidated && question.isValidated === false) ||
-            (filters.isInValidation && question.isValidated === null)
-          )
-        ) {
-          return false
-        }
-        if (
-          !(
-            (!filters.isNotAnswered && !filters.isAnswered) ||
-            (filters.isNotAnswered && isNotAnsweredQuestion(question)) ||
-            (filters.isAnswered && !isNotAnsweredQuestion(question))
-          )
-        ) {
-          return false
-        }
-
-        if (
-          !(
-            (!filters.isJoke && !filters.isNotJoke) ||
-            (filters.isJoke && question.isJoke) ||
-            (filters.isNotJoke && question.isJoke === false)
-          )
-        ) {
-          return false
-        }
-
-        if (
-          !(
-            (!filters.isJokeOnSomeone && !filters.isNotJokeOnSomeone) ||
-            (filters.isJokeOnSomeone && question.isJokeOnSomeone) ||
-            (filters.isNotJokeOnSomeone && question.isJokeOnSomeone === false)
-          )
-        ) {
-          return false
-        }
-
-        return true
-      })
+      .filter(filterQuestion(filters, areChoicesFetched, questionsPolls))
       .sort(sortMBTI)
+
     setFilteredQuestions(newFilteredQuestions)
     // eslint-disable-next-line
   }, [filters, questions, areChoicesFetched])
@@ -165,10 +122,6 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     void fetchQuestions()
     // eslint-disable-next-line
   }, [])
-
-  const isNotAnsweredQuestion = (question: QuestionResponse) => {
-    return areChoicesFetched ? !questionsPolls[question.id]?.userChoice : false
-  }
 
   const handeFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
     setFilters({ ...filters, [option]: checked })
