@@ -134,4 +134,12 @@ export class QuestionService {
         }
         return this.questioningHistoricService.saveNew(questionIds.map((id) => id.toString()))
     }
+
+    findByCategoryName(categoryName: string) {
+        return this.questionRepository
+            .createQueryBuilder('questions')
+            .leftJoin('questions.category', 'category')
+            .where('category.name = :categoryName', { categoryName })
+            .getMany()
+    }
 }

@@ -6,12 +6,14 @@ import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoiceController } from './userToQuestionChoice.controller'
 import { UserModule } from '../user/user.module'
 import { UserToQuestionVoteModule } from '../userToQuestionVote/userToQuestionVote.module'
+import { QuestionModule } from '../question/question.module'
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([UserToQuestionChoice, UserToQuestionChoiceRepository]),
         UserModule,
         UserToQuestionVoteModule,
+        QuestionModule,
     ],
     providers: [UserToQuestionChoiceService],
     controllers: [UserToQuestionChoiceController],

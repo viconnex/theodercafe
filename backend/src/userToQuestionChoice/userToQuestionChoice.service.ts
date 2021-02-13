@@ -3,13 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { UserWithPublicFields } from 'src/user/user.types'
 import { DeepPartial } from 'typeorm'
+import { QuestionService } from '../question/question.service'
+import { MBTI_INDEX_LETTERS_BY_OPTION_1, MbtiIndexAndLetters } from './constants'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {
-    AlterodoResponse,
     Alterodos,
     AsakaiChoices,
     AsakaiEmailDTO,
+    Choice,
     FormattedQuestionPoll,
     QuestionFilters,
     SimilarityWithUserId,
@@ -28,6 +30,7 @@ export class UserToQuestionChoiceService {
         @InjectRepository(UserToQuestionChoiceRepository)
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
         private readonly userService: UserService,
+        private readonly questionService: QuestionService,
     ) {}
 
     async saveChoice(questionId: number, userId: number, choice: number): Promise<UserToQuestionChoice> {
@@ -200,5 +203,64 @@ export class UserToQuestionChoiceService {
         })
 
         return getBestAlterodos(Object.values(commonAnswersWithUsers), Math.sqrt(Object.keys(asakaiChoices).length))
+    }
+
+    async getMBTIprofiles(requestUserId: number) {
+        const questions = await this.questionService.findByCategoryName('MBTI')
+        const questionIdToIndexAndLetter: Record<number, MbtiIndexAndLetters> = {}
+        questions.forEach((question) => {
+            if (!(question.option1 in MBTI_INDEX_LETTERS_BY_OPTION_1)) {
+                throw new Error(`L'option "${question.option1}" n'est pas valide`)
+            }
+            questionIdToIndexAndLetter[question.id] = MBTI_INDEX_LETTERS_BY_OPTION_1[
+                question.option1
+            ] as MbtiIndexAndLetters
+        })
+
+        const usersAnswers = await this.userToQuestionChoiceRepository
+            .createQueryBuilder('user_to_question_choices')
+            .where('user_to_question_choices.questionId IN (:...questionIds)', {
+                questionIds: questions.map((question) => question.id),
+            })
+            .getMany()
+
+        const mbtiChoicesByUser: Record<number, [string | null, string | null, string | null, string | null]> = {}
+        const usersHavingCompletedMbti: number[] = []
+        let hasRequestUserCompletedMbti = false
+
+        usersAnswers.forEach((userAnswer) => {
+            if (!(userAnswer.userId in mbtiChoicesByUser)) {
+                mbtiChoicesByUser[userAnswer.userId] = [null, null, null, null]
+            }
+            mbtiChoicesByUser[userAnswer.userId][questionIdToIndexAndLetter[userAnswer.questionId].index] =
+                questionIdToIndexAndLetter[userAnswer.questionId][userAnswer.choice as Choice]
+            if (mbtiChoicesByUser[userAnswer.userId].every((choice) => !!choice)) {
+                usersHavingCompletedMbti.push(userAnswer.userId)
+                if (userAnswer.userId === requestUserId) {
+                    hasRequestUserCompletedMbti = true
+                }
+            }
+        })
+
+        const usersWithPublicFields = await this.userService.findWithPublicFields(usersHavingCompletedMbti)
+        const usersWithPublicFieldsByUserId: Record<number, UserWithPublicFields> = {}
+        usersWithPublicFields.forEach((user) => {
+            usersWithPublicFieldsByUserId[user.id] = { ...user }
+        })
+
+        const mbtiProfiles: Record<string, UserWithPublicFields[]> = {}
+
+        for (const userId in mbtiChoicesByUser) {
+            if (mbtiChoicesByUser[userId].includes(null)) {
+                continue
+            }
+            const profile = mbtiChoicesByUser[userId].join('')
+            if (profile in mbtiProfiles) {
+                mbtiProfiles[profile].push(usersWithPublicFieldsByUserId[userId])
+            } else {
+                mbtiProfiles[profile] = [usersWithPublicFieldsByUserId[userId]]
+            }
+        }
+        return { mbtiProfiles, hasRequestUserCompletedMbti }
     }
 }

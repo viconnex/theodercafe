@@ -50,15 +50,17 @@ export interface AsakaiEmailDTO {
     addedByUserId?: number | null
 }
 
+export type Choice = 1 | 2
+
 export type QuestionPoll = {
     questionId: number
     choice1Count: string | null
     choice2Count: string | null
-    userChoice: number | null
+    userChoice: Choice | null
 }
 
 export type FormattedQuestionPoll = {
     choice1Count: number
     choice2Count: number
-    userChoice: number | null
+    userChoice: Choice | null
 }

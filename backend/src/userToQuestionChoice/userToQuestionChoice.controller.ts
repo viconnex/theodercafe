@@ -13,7 +13,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { User } from 'src/user/user.entity'
+import { User } from '../user/user.entity'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { AlterodoResponse, AsakaiChoices, AsakaiEmailDTO, QuestionFilters, UserMap } from './userToQuestionChoice.types'
@@ -44,21 +44,14 @@ export class UserToQuestionChoiceController {
     async chose(
         @Param('id') questionId: number,
         @Body() body: { choice: number },
-        @Request() req,
+        @Request() req: { user: User },
     ): Promise<UserToQuestionChoice> {
-        if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found')
-        }
         return this.userToQuestionChoiceService.saveChoice(questionId, req.user.id, body.choice)
     }
 
     @Get('alterodos')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async getUserAlterodos(@Request() req): Promise<AlterodoResponse> {
-        if (!req || !req.user || !req.user.id) {
-            throw new BadRequestException('user not found')
-        }
-
+    async getUserAlterodos(@Request() req: { user: User }): Promise<AlterodoResponse> {
         return await this.userToQuestionChoiceService.getUserAlterodos(req.user.id)
     }
 
@@ -74,5 +67,11 @@ export class UserToQuestionChoiceController {
             throw new BadRequestException('you must provide an email address')
         }
         return this.userToQuestionChoiceService.handleAsakaiEmailSending(asakaiEmailDTO)
+    }
+
+    @Get('mbti')
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    getMBTIprofiles(@Request() req: { user: User }) {
+        return this.userToQuestionChoiceService.getMBTIprofiles(req.user.id)
     }
 }
