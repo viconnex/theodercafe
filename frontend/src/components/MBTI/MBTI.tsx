@@ -6,11 +6,14 @@ import { useSnackbar } from 'notistack'
 import { fetchRequestResponse } from 'services/api'
 import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 
-import Highcharts from 'highcharts'
+import Highcharts, { Point } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
+import Exporting from 'highcharts/modules/exporting'
 import HC_more from 'highcharts/highcharts-more'
+import { MBTI_TYPES } from 'utils/constants/questionConstants'
 
 HC_more(Highcharts)
+Exporting(Highcharts)
 
 const getChartOptions = (profiles: ProfileResponse | null) => {
   if (!profiles) {
@@ -24,12 +27,16 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
     title: {
       text: 'Profiles MBTI',
     },
+    tooltip: {
+      useHTML: true,
+      pointFormat: `<b>{point.name} :</b> {point.typeName}`,
+    },
     plotOptions: {
       packedbubble: {
         minSize: '20%',
-        maxSize: '20%',
+        maxSize: '10%',
         layoutAlgorithm: {
-          gravitationalConstant: 0.05,
+          gravitationalConstant: 0.02,
           splitSeries: 'true',
           seriesInteraction: false,
           dragBetweenSeries: false,
@@ -42,6 +49,8 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
         type: 'packedbubble',
         name: type,
         data: users.map((user) => ({
+          typeName: MBTI_TYPES[type as keyof typeof MBTI_TYPES].name,
+          name: user.givenName || user.familyName ? `${user.givenName ?? ''} ${user.familyName ?? ''}` : 'inconnu',
           value: 1,
           marker: {
             height: 10,
