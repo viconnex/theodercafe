@@ -31,6 +31,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
     { label: 'A propos', path: '/a-propos' },
     { label: 'Mon alterodo', path: '/alterodo' },
     { label: 'La carte', path: '/carte' },
+    { label: 'MBTI', path: '/mbti' },
   ]
 
   if (userRole === 'admin') {
