@@ -17,6 +17,7 @@ import Voter from 'components/Voter/Voter'
 import colors from 'ui/colors'
 import { filterQuestion } from 'components/Questioning/utils'
 import { useHistory } from 'react-router-dom'
+import { ExploreOutlined } from '@material-ui/icons'
 import useStyle from './style'
 
 const AllQuestioning = ({ user }: { user: User | null }) => {
@@ -278,6 +279,18 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
         </Button>
       </div>
       <div className={`${classes.questioningContent}`}>{renderQuestionContent()}</div>
+      {filters.isMBTI && (
+        <div className={classes.questioningAction}>
+          <Button
+            color="secondary"
+            variant="outlined"
+            onClick={() => history.push('mbti')}
+            endIcon={<ExploreOutlined />}
+          >
+            Voir les profils
+          </Button>
+        </div>
+      )}
       <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
       <FilterDrawer
         open={isDrawerOpen}

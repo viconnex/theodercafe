@@ -23,6 +23,10 @@ const useStyle = makeStyles((theme) => {
       justifyContent: 'center',
       position: 'relative',
     },
+    questioningAction: {
+      width: '100%',
+      marginTop: '24px',
+    },
     questioningContent: {
       display: 'flex',
       flexDirection: 'column',
