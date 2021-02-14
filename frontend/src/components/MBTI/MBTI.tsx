@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { CircularProgress } from '@material-ui/core'
 import useStyle from 'components/MBTI/style'
-import { MBTIResponse, ProfileResponse } from 'components/MBTI/types'
+import { MBTIResponse, ProfileResponse, UserWithPublicFields } from 'components/MBTI/types'
 import { useSnackbar } from 'notistack'
 import { fetchRequestResponse } from 'services/api'
 import { USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 
-import Highcharts, { Point } from 'highcharts'
+import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import Exporting from 'highcharts/modules/exporting'
 import HC_more from 'highcharts/highcharts-more'
@@ -33,8 +33,6 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
     },
     plotOptions: {
       packedbubble: {
-        minSize: '20%',
-        maxSize: '10%',
         layoutAlgorithm: {
           gravitationalConstant: 0.02,
           splitSeries: 'true',
@@ -48,7 +46,7 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
       return {
         type: 'packedbubble',
         name: type,
-        data: users.map((user) => ({
+        data: (users as UserWithPublicFields[]).map((user) => ({
           typeName: MBTI_TYPES[type as keyof typeof MBTI_TYPES].name,
           name: user.givenName || user.familyName ? `${user.givenName ?? ''} ${user.familyName ?? ''}` : 'inconnu',
           value: 1,
@@ -97,13 +95,7 @@ const MBTI = () => {
       {!profiles ? (
         <CircularProgress color="secondary" />
       ) : (
-        <div>
-          <HighchartsReact
-            containerProps={{ className: 'chart-container' }}
-            highcharts={Highcharts}
-            options={getChartOptions(profiles)}
-          />
-        </div>
+        <HighchartsReact highcharts={Highcharts} options={getChartOptions(profiles)} />
       )}
     </div>
   )

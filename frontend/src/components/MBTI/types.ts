@@ -7,5 +7,7 @@ export type UserWithPublicFields = {
   pictureUrl: string | null
 }
 
-export type ProfileResponse = Record<keyof typeof MBTI_TYPES, UserWithPublicFields[]>
+export type ProfileResponse = {
+  [key in keyof typeof MBTI_TYPES]?: UserWithPublicFields[]
+}
 export type MBTIResponse = { mbtiProfiles: ProfileResponse; hasRequestUserCompletedMbti: boolean }
