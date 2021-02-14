@@ -16,6 +16,7 @@ import { ALL_QUESTIONS_MODE, sortMBTI } from 'utils/constants/questionConstants'
 import Voter from 'components/Voter/Voter'
 import colors from 'ui/colors'
 import { filterQuestion } from 'components/Questioning/utils'
+import { useHistory } from 'react-router-dom'
 import useStyle from './style'
 
 const AllQuestioning = ({ user }: { user: User | null }) => {
@@ -128,12 +129,18 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     setQuestionIndex(0)
   }
 
+  const history = useHistory()
+
   const changeQuestion = (increment: number) => {
     let index = questionIndex + increment
-    if (index < 0 || index === filteredQuestions.length) {
+    if (index < 0) {
       index = 0
     }
-    setQuestionIndex(index)
+    if (index < filteredQuestions.length && index >= 0) {
+      setQuestionIndex(index)
+    } else if (filters.isMBTI && index === filteredQuestions.length) {
+      history.push('mbti')
+    }
   }
 
   const question = filteredQuestions[questionIndex]
