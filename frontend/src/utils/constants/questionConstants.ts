@@ -45,3 +45,87 @@ export const sortMBTI = (question1: QuestionResponse, question2: QuestionRespons
   // @ts-ignore
   return MBTI_SORT[question1.option1] - MBTI_SORT[question2.option2] || 0
 }
+
+export const MBTI_ARCHITECT = 'INTJ'
+export const MBTI_LOGICIAN = 'INTP'
+export const MBTI_COMMANDER = 'ENTJ'
+export const MBTI_DEBATER = 'ENTP'
+export const MBTI_LOGISTICIAN = 'ISTJ'
+export const MBTI_DEFENDER = 'ISFJ'
+export const MBTI_EXECUTIVE = 'ESTJ'
+export const MBTI_CONSUL = 'ESFJ'
+export const MBTI_ADVOCATE = 'INFJ'
+export const MBTI_MEDIATOR = 'INFP'
+export const MBTI_PROTAGONIST = 'ENFJ'
+export const MBTI_CAMPAIGNER = 'ENFP'
+export const MBTI_VIRTUOSO = 'ISTP'
+export const MBTI_ADVENTURER = 'ISFP'
+export const MBTI_ENTREPRENEUR = 'ESTP'
+export const MBTI_ENTERTAINER = 'ESFP'
+
+export const MBTI_TYPES = {
+  [MBTI_ARCHITECT]: {
+    name: 'Architecte',
+    description: 'coucou',
+  },
+  [MBTI_LOGICIAN]: {
+    name: 'Logicien',
+    description: 'coucou',
+  },
+  [MBTI_COMMANDER]: {
+    name: 'Commandant',
+    description: 'coucou',
+  },
+  [MBTI_DEBATER]: {
+    name: 'Innovateur',
+    description: 'coucou',
+  },
+  [MBTI_LOGISTICIAN]: {
+    name: 'Logisticien',
+    description: 'coucou',
+  },
+  [MBTI_DEFENDER]: {
+    name: 'Défenseur',
+    description: 'coucou',
+  },
+  [MBTI_EXECUTIVE]: {
+    name: 'Directeur',
+    description: 'coucou',
+  },
+  [MBTI_CONSUL]: {
+    name: 'Consul',
+    description: 'coucou',
+  },
+  [MBTI_ADVOCATE]: {
+    name: 'Avocat',
+    description: 'coucou',
+  },
+  [MBTI_MEDIATOR]: {
+    name: 'Médiateur',
+    description: 'coucou',
+  },
+  [MBTI_PROTAGONIST]: {
+    name: 'Protagoniste',
+    description: 'coucou',
+  },
+  [MBTI_CAMPAIGNER]: {
+    name: 'Inspirateur',
+    description: 'coucou',
+  },
+  [MBTI_VIRTUOSO]: {
+    name: 'Virtuose',
+    description: 'coucou',
+  },
+  [MBTI_ADVENTURER]: {
+    name: 'Aventurier',
+    description: 'coucou',
+  },
+  [MBTI_ENTREPRENEUR]: {
+    name: 'Entrepreneur',
+    description: 'coucou',
+  },
+  [MBTI_ENTERTAINER]: {
+    name: 'Amuseur',
+    description: 'coucou',
+  },
+}

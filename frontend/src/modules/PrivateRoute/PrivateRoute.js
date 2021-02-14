@@ -1,6 +1,6 @@
-import { Button } from '@material-ui/core'
 import React from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Button } from '@material-ui/core'
+import { Route } from 'react-router-dom'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 
 import { makeStyles } from '@material-ui/core'
