@@ -10,7 +10,7 @@ const LoginPage = () => {
     <div className={classes.container}>
       <div>
         <Button variant="contained" href={API_BASE_URL + GOOGLE_AUTH_URI}>
-          Login with Google
+          Login Google
         </Button>
       </div>
     </div>

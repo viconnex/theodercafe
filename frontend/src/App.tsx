@@ -21,6 +21,7 @@ import { getUser, User, useSetAuth } from './services/authentication'
 
 const Admin = lazy(() => import('./admin/Admin'))
 const Map = lazy(() => import('./pages/Map/Map'))
+const MBTI = lazy(() => import('./components/MBTI/MBTI'))
 
 const theme = createMuiTheme({
   palette: {
@@ -77,6 +78,7 @@ const App = () => {
               <PrivateRoute exact path="/admin" component={Admin} userRole={userRole} isAdminRoute />
               <PrivateRoute exact path="/alterodo" component={Alterodo} userRole={userRole} isAdminRoute={false} />
               <PrivateRoute exact path="/carte" component={Map} userRole={userRole} isAdminRoute={false} />
+              <PrivateRoute exact path="/mbti" component={MBTI} userRole={userRole} isAdminRoute={false} />
               <Route path="/" render={() => <Home user={user} />} />
             </Switch>
           </Suspense>
