@@ -13,6 +13,7 @@ import {
     UseInterceptors,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+import { JwtPayload as RequestUser } from 'src/auth/auth.types'
 import { User } from '../user/user.entity'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
@@ -34,7 +35,7 @@ export class UserToQuestionChoiceController {
     @Get('')
     @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
-    async getChoices(@Request() req: { user: User }) {
+    async getChoices(@Request() req: { user: RequestUser }) {
         return await this.userToQuestionChoiceService.getQuestionsPolls(req.user.id)
     }
 
@@ -44,14 +45,14 @@ export class UserToQuestionChoiceController {
     async chose(
         @Param('id') questionId: number,
         @Body() body: { choice: number },
-        @Request() req: { user: User },
+        @Request() req: { user: RequestUser },
     ): Promise<UserToQuestionChoice> {
         return this.userToQuestionChoiceService.saveChoice(questionId, req.user.id, body.choice)
     }
 
     @Get('alterodos')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async getUserAlterodos(@Request() req: { user: User }): Promise<AlterodoResponse> {
+    async getUserAlterodos(@Request() req: { user: RequestUser }): Promise<AlterodoResponse> {
         return await this.userToQuestionChoiceService.getUserAlterodos(req.user.id)
     }
 
@@ -71,7 +72,7 @@ export class UserToQuestionChoiceController {
 
     @Get('mbti')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    getMBTIprofiles(@Request() req: { user: User }) {
-        return this.userToQuestionChoiceService.getMBTIprofiles(req.user.id)
+    getMBTIprofiles(@Request() req: { user: RequestUser }) {
+        return this.userToQuestionChoiceService.getMBTIprofiles(req.user)
     }
 }

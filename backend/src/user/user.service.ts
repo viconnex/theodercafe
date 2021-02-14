@@ -26,7 +26,7 @@ export class UserService {
                 `)
     }
 
-    findOne(id: string) {
+    findOne(id: string | number) {
         return this.userRepository.findOne(id)
     }
 

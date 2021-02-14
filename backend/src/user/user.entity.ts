@@ -15,6 +15,8 @@ export const getCompanyFromEmail = (email: string): string => {
     return email.split('@')[1].split('.')[0]
 }
 
+export const THEODO_COMPANY = 'theodo'
+
 @Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
@@ -53,18 +55,10 @@ export class User {
     @Exclude()
     isLoginPending: boolean
 
-    @OneToMany(
-        () => UserToQuestionChoice,
-        userToQuestionChoice => userToQuestionChoice.user,
-        { cascade: true },
-    )
+    @OneToMany(() => UserToQuestionChoice, (userToQuestionChoice) => userToQuestionChoice.user, { cascade: true })
     userToQuestionChoices: UserToQuestionChoice[]
 
-    @OneToMany(
-        () => UserToQuestionVote,
-        userToQuestionVote => userToQuestionVote.user,
-        { cascade: true },
-    )
+    @OneToMany(() => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.user, { cascade: true })
     userToQuestionVotes: UserToQuestionVote[]
 
     @CreateDateColumn()

@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { UserWithPublicFields } from 'src/user/user.types'
 import { DeepPartial } from 'typeorm'
+import { THEODO_COMPANY, User } from 'src/user/user.entity'
+import { JwtPayload } from 'src/auth/auth.types'
 import { QuestionService } from '../question/question.service'
 import { MBTI_INDEX_LETTERS_BY_OPTION_1, MbtiIndexAndLetters } from './constants'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'
@@ -205,7 +207,7 @@ export class UserToQuestionChoiceService {
         return getBestAlterodos(Object.values(commonAnswersWithUsers), Math.sqrt(Object.keys(asakaiChoices).length))
     }
 
-    async getMBTIprofiles(requestUserId: number) {
+    async getMBTIprofiles(requestUser: JwtPayload) {
         const questions = await this.questionService.findByCategoryName('MBTI')
         const questionIdToIndexAndLetter: Record<number, MbtiIndexAndLetters> = {}
         questions.forEach((question) => {
@@ -217,12 +219,25 @@ export class UserToQuestionChoiceService {
             ] as MbtiIndexAndLetters
         })
 
-        const usersAnswers = await this.userToQuestionChoiceRepository
-            .createQueryBuilder('user_to_question_choices')
-            .where('user_to_question_choices.questionId IN (:...questionIds)', {
+        const userAnswersBaseQueryBuilder = this.userToQuestionChoiceRepository.createQueryBuilder(
+            'user_to_question_choices',
+        )
+        const requestUserWithCompany = await this.userService.findOne(requestUser.id)
+
+        if (requestUserWithCompany?.company === THEODO_COMPANY) {
+            userAnswersBaseQueryBuilder
+                .leftJoin('user_to_question_choices.user', 'user')
+                .where('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
+                .andWhere('user_to_question_choices.questionId IN (:...questionIds)', {
+                    questionIds: questions.map((question) => question.id),
+                })
+        } else {
+            userAnswersBaseQueryBuilder.where('user_to_question_choices.questionId IN (:...questionIds)', {
                 questionIds: questions.map((question) => question.id),
             })
-            .getMany()
+        }
+
+        const usersAnswers = await userAnswersBaseQueryBuilder.getMany()
 
         const mbtiChoicesByUser: Record<number, [string | null, string | null, string | null, string | null]> = {}
         const usersHavingCompletedMbti: number[] = []
@@ -236,7 +251,7 @@ export class UserToQuestionChoiceService {
                 questionIdToIndexAndLetter[userAnswer.questionId][userAnswer.choice as Choice]
             if (mbtiChoicesByUser[userAnswer.userId].every((choice) => !!choice)) {
                 usersHavingCompletedMbti.push(userAnswer.userId)
-                if (userAnswer.userId === requestUserId) {
+                if (userAnswer.userId === requestUser.id) {
                     hasRequestUserCompletedMbti = true
                 }
             }
