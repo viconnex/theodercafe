@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
-import { UserWithPublicFields } from 'src/user/user.types'
 import { DeepPartial } from 'typeorm'
-import { THEODO_COMPANY, User } from 'src/user/user.entity'
-import { JwtPayload } from 'src/auth/auth.types'
+import { UserWithPublicFields } from '../user/user.types'
+import { THEODO_COMPANY } from '../user/user.entity'
+import { JwtPayload } from '../auth/auth.types'
 import { QuestionService } from '../question/question.service'
 import { MBTI_INDEX_LETTERS_BY_OPTION_1, MbtiIndexAndLetters } from './constants'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'

@@ -66,66 +66,71 @@ export const MBTI_ENTERTAINER = 'ESFP'
 export const MBTI_TYPES = {
   [MBTI_ARCHITECT]: {
     name: 'Architecte',
-    description: 'coucou',
+    description: 'Penseurs imaginatifs et stratèges, avec un plan pour tout.',
   },
   [MBTI_LOGICIAN]: {
     name: 'Logicien',
-    description: 'coucou',
+    description: 'Inventeurs innovateurs dotés d’une soif inextinguible de connaissances.',
   },
   [MBTI_COMMANDER]: {
     name: 'Commandant',
-    description: 'coucou',
+    description:
+      'Leaders hardis, imaginatifs et dotés d’un fort caractère, qui trouvent toujours un moyen d’arriver à leurs fins, ou le créent.',
   },
   [MBTI_DEBATER]: {
     name: 'Innovateur',
-    description: 'coucou',
+    description: 'Penseurs astucieux et curieux incapables de résister à un défi intellectuel.',
   },
   [MBTI_LOGISTICIAN]: {
     name: 'Logisticien',
-    description: 'coucou',
+    description: 'Individus pragmatiques et intéressés par les faits, dont le sérieux ne saurait être mis en cause.',
   },
   [MBTI_DEFENDER]: {
     name: 'Défenseur',
-    description: 'coucou',
+    description: 'Protecteurs très dévoués et très chaleureux, toujours prêts à défendre ceux qu’ils aiment.',
   },
   [MBTI_EXECUTIVE]: {
     name: 'Directeur',
-    description: 'coucou',
+    description:
+      'Excellents gestionnaires, d’une efficacité inégalée quand il s’agit de gérer les choses, ou les gens.',
   },
   [MBTI_CONSUL]: {
     name: 'Consul',
-    description: 'coucou',
+    description:
+      'Personnes extraordinairement attentionnées, sociables et populaires, toujours prêtes à aider les autres.',
   },
   [MBTI_ADVOCATE]: {
     name: 'Avocat',
-    description: 'coucou',
+    description: 'Idéalistes calmes et mystiques et pourtant très inspirants et infatigables.',
   },
   [MBTI_MEDIATOR]: {
     name: 'Médiateur',
-    description: 'coucou',
+    description: 'Personnes poétiques, gentilles et altruistes qui sont toujours prêtes à soutenir une bonne cause.',
   },
   [MBTI_PROTAGONIST]: {
     name: 'Protagoniste',
-    description: 'coucou',
+    description: 'Leaders charismatiques et inspirants, capables de fasciner leur public.',
   },
   [MBTI_CAMPAIGNER]: {
     name: 'Inspirateur',
-    description: 'coucou',
+    description:
+      'Esprits libres enthousiastes, créatifs et sociables, qui arrivent toujours à trouver une raison de sourire.',
   },
   [MBTI_VIRTUOSO]: {
     name: 'Virtuose',
-    description: 'coucou',
+    description: 'Expérimentateurs hardis et pragmatiques, maîtres de toutes sortes d’outils.',
   },
   [MBTI_ADVENTURER]: {
     name: 'Aventurier',
-    description: 'coucou',
+    description: 'Artistes flexibles et charmants, toujours prêts à explorer et à essayer quelque chose de nouveau.',
   },
   [MBTI_ENTREPRENEUR]: {
     name: 'Entrepreneur',
-    description: 'coucou',
+    description:
+      'Personnes astucieuses, énergiques et très perspicaces, qui aiment vraiment vivre à la pointe du progrès.',
   },
   [MBTI_ENTERTAINER]: {
     name: 'Amuseur',
-    description: 'coucou',
+    description: 'Amuseurs spontanés, énergiques et enthousiastes; avec eux, on ne s’ennuie jamais.',
   },
 }

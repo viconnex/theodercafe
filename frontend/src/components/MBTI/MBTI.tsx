@@ -12,6 +12,8 @@ import Exporting from 'highcharts/modules/exporting'
 import HC_more from 'highcharts/highcharts-more'
 import { MBTI_TYPES } from 'utils/constants/questionConstants'
 
+import './style.css'
+
 HC_more(Highcharts)
 Exporting(Highcharts)
 
@@ -29,7 +31,7 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
     },
     tooltip: {
       useHTML: true,
-      pointFormat: `<b>{point.name} :</b> {point.typeName}`,
+      pointFormat: `<div><b>{point.name} :</b> {point.typeName}</div><br/><div>{point.description}</div>`,
     },
     plotOptions: {
       packedbubble: {
@@ -48,6 +50,7 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
         name: type,
         data: (users as UserWithPublicFields[]).map((user) => ({
           typeName: MBTI_TYPES[type as keyof typeof MBTI_TYPES].name,
+          description: MBTI_TYPES[type as keyof typeof MBTI_TYPES].description,
           name: user.givenName || user.familyName ? `${user.givenName ?? ''} ${user.familyName ?? ''}` : 'inconnu',
           value: 1,
           marker: {
