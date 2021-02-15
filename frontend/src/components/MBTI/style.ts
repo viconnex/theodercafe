@@ -5,9 +5,8 @@ const useStyle = makeStyles(() => {
     page: {
       display: 'flex',
       flexDirection: 'column',
-      width: '100%',
       height: '100%',
-      padding: '16px 0',
+      padding: '32px',
     },
     actions: {
       display: 'flex',
@@ -23,6 +22,7 @@ const useStyle = makeStyles(() => {
       width: '100%',
       height: '100%',
       justifyContent: 'center',
+      marginTop: '32px',
     },
   }
 })

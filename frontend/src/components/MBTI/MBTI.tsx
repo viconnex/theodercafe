@@ -25,7 +25,6 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
   const options: Highcharts.Options = {
     chart: {
       type: 'packedbubble',
-      height: '100%',
     },
     title: {
       text: 'Profiles MBTI',
@@ -113,7 +112,11 @@ const MBTI = () => {
             </div>
           </div>
           <div className={classes.chartContainer}>
-            <HighchartsReact highcharts={Highcharts} options={getChartOptions(profiles)} />
+            <HighchartsReact
+              highcharts={Highcharts}
+              options={getChartOptions(profiles)}
+              containerProps={{ style: { width: '100%', height: '100%' } }}
+            />
           </div>
         </React.Fragment>
       )}
