@@ -21,7 +21,6 @@ const Home = ({ user }: { user: User | null }) => {
     if (urlParams.get(MBTI_URL_PARAM)) {
       setShowMbtiInitially(true)
       setIsAsakaiMode(false)
-      window.history.replaceState({}, '', window.location.pathname)
     }
   }, [])
 
