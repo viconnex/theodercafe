@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CircularProgress } from '@material-ui/core'
+import { Button, CircularProgress } from '@material-ui/core'
 import useStyle from 'components/MBTI/style'
 import { MBTIResponse, ProfileResponse, UserWithPublicFields } from 'components/MBTI/types'
 import { useSnackbar } from 'notistack'
@@ -13,6 +13,7 @@ import HC_more from 'highcharts/highcharts-more'
 import { MBTI_TYPES } from 'utils/constants/questionConstants'
 
 import './style.css'
+import { useHistory } from 'react-router-dom'
 
 HC_more(Highcharts)
 Exporting(Highcharts)
@@ -68,6 +69,7 @@ const getChartOptions = (profiles: ProfileResponse | null) => {
 
 const MBTI = () => {
   const [profiles, setProfiles] = useState<null | ProfileResponse>(null)
+  const [hasCompletedMbti, setHasCompletedMbti] = useState<boolean | null>(null)
 
   const { enqueueSnackbar } = useSnackbar()
   const fetchProfiles = async () => {
@@ -84,6 +86,7 @@ const MBTI = () => {
     }
     const profileResponse = (await response.json()) as MBTIResponse
     setProfiles(profileResponse.mbtiProfiles)
+    setHasCompletedMbti(profileResponse.hasRequestUserCompletedMbti)
   }
 
   useEffect(() => {
@@ -91,14 +94,28 @@ const MBTI = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const history = useHistory()
+
   const classes = useStyle()
 
   return (
-    <div className={classes.container}>
+    <div className={classes.page}>
       {!profiles ? (
         <CircularProgress color="secondary" />
       ) : (
-        <HighchartsReact highcharts={Highcharts} options={getChartOptions(profiles)} />
+        <React.Fragment>
+          <div className={classes.actions}>
+            {!hasCompletedMbti && <div>Tu n'as pas encore répondu aux 4 questions du MBTI !</div>}
+            <div className={classes.actionButton}>
+              <Button onClick={() => history.push('/?mbti=true')} variant="contained">
+                {!hasCompletedMbti ? 'Remplir mon profil' : 'Modifier mon profil'}
+              </Button>
+            </div>
+          </div>
+          <div className={classes.chartContainer}>
+            <HighchartsReact highcharts={Highcharts} options={getChartOptions(profiles)} />
+          </div>
+        </React.Fragment>
       )}
     </div>
   )
