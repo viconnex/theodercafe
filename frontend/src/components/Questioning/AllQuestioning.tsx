@@ -20,7 +20,7 @@ import { useHistory } from 'react-router-dom'
 import { ExploreOutlined } from '@material-ui/icons'
 import useStyle from './style'
 
-const AllQuestioning = ({ user }: { user: User | null }) => {
+const AllQuestioning = ({ user, showMbtiInitially }: { user: User | null; showMbtiInitially: boolean }) => {
   const [filters, setFilters] = useState({
     isValidated: false,
     isNotValidated: false,
@@ -31,7 +31,7 @@ const AllQuestioning = ({ user }: { user: User | null }) => {
     isNotJokeOnSomeone: false,
     isNotAnswered: true,
     isAnswered: false,
-    isMBTI: false,
+    isMBTI: showMbtiInitially,
   })
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [isLoading, setIsLoading] = useState(false)
