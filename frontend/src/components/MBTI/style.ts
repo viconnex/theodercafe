@@ -22,6 +22,7 @@ const useStyle = makeStyles(() => {
       flexDirection: 'column',
       alignItems: 'center',
       width: '100%',
+      maxWidth: '888px',
       height: '100%',
       justifyContent: 'center',
       marginTop: '32px',
