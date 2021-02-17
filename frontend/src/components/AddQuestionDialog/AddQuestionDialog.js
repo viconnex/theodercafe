@@ -119,7 +119,7 @@ class AddQuestionDialog extends Component {
             value={categorySelectValue}
           />
           <Button color="primary" type="submit">
-            Poser une question
+            Ajouter une question
           </Button>
         </form>
       </Dialog>
