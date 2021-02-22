@@ -11,7 +11,7 @@ const useStyle = makeStyles((theme) => ({
     height: 'calc(var(--vh, 1vh) * 100)',
     textAlign: 'center',
     padding: '0px 15px',
-    overflow: 'scroll',
+    overflow: 'auto',
   },
   appBar: {
     background: 'white',
