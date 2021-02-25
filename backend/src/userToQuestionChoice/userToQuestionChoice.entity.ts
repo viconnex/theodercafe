@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer'
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Choice } from './userToQuestionChoice.types'
 import { Question } from '../question/question.entity'
 import { User } from '../user/user.entity'
 
@@ -24,5 +25,5 @@ export class UserToQuestionChoice {
     user: User
 
     @Column({ nullable: false })
-    choice: number
+    choice: Choice
 }

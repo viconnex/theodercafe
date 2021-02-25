@@ -67,6 +67,15 @@ export class UserService {
         }
     }
 
+    async getUsersPictures() {
+        const usersWithPics = await this.userRepository.find({ select: ['id', 'pictureUrl'] })
+        const userPicturesObject = {}
+        usersWithPics.forEach((user) => {
+            userPicturesObject[user.id] = user.pictureUrl
+        })
+        return userPicturesObject
+    }
+
     async createOrUpdateAfterLogin(email: string, profile: GoogleProfile): Promise<User> {
         const user = await this.findByEmail(email)
 

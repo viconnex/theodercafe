@@ -27,9 +27,9 @@ export type QuestionResponse = {
   isJokeOnSomeone: boolean
 }
 
-export type QuestioningAnswers = {
-  choice1: number
-  choice2: number
+export type UsersAnswers = {
+  choice1: number[]
+  choice2: number[]
 }
 
 export type Choice = 1 | 2
@@ -37,8 +37,8 @@ export type Choice = 1 | 2
 export type AsakaiChoices = { [questionId: number]: Choice }
 
 export type QuestionPoll = {
-  choice1Count: number
-  choice2Count: number
+  choice1UserIds: number[]
+  choice2UserIds: number[]
   userChoice: Choice | null
 }
 export type QuestionVote = {
@@ -62,3 +62,5 @@ export type Filters = {
   isAnswered: boolean
   isMBTI: boolean
 }
+
+export type UsersPictures = Record<string, string | null>

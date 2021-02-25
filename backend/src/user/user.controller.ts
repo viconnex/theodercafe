@@ -5,10 +5,17 @@ import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 import { UserService } from 'src/user/user.service'
 import { User } from 'src/user/user.entity'
 import { DeleteResult } from 'typeorm'
+import { USER_STRATEGY } from 'src/auth/jwt.user.strategy'
 
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) {}
+
+    @Get('pictures')
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    async getUserPictures() {
+        return this.userService.getUsersPictures()
+    }
 
     @Get('')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))

@@ -6,7 +6,14 @@ import { Alterodo } from 'components/Alterodo'
 import { fetchRequest, fetchRequestResponse, postChoice } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { Button, CircularProgress } from '@material-ui/core'
-import { Alterodos, AsakaiChoices, Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import {
+  Alterodos,
+  AsakaiChoices,
+  Choice,
+  QuestionResponse,
+  UsersAnswers,
+  UsersPictures,
+} from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { signin, signout, useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, login, User } from 'services/authentication'
@@ -23,9 +30,10 @@ const QuestionContent = ({
   question,
   user,
   questionIndex,
-  questioningAnswers,
+  usersAnswers,
   asakaiChoices,
   changeQuestion,
+  usersPictures,
 }: {
   isLoading: boolean
   chose: (questionId: number, choice: Choice) => void
@@ -33,9 +41,10 @@ const QuestionContent = ({
   question: QuestionResponse | undefined
   user: User | null
   questionIndex: number
-  questioningAnswers: QuestioningAnswers | null
+  usersAnswers: UsersAnswers | null
   asakaiChoices: AsakaiChoices
   changeQuestion: (increment: number) => Promise<void>
+  usersPictures: UsersPictures | null
 }) => {
   const classes = useStyle()
   if (!question || isLoading) {
@@ -50,7 +59,8 @@ const QuestionContent = ({
         </Button>
       )}
       <Question
-        questioningAnswers={questioningAnswers}
+        usersPictures={usersPictures}
+        usersAnswers={usersAnswers}
         hideCategory
         question={question}
         choice={choice}
@@ -66,7 +76,7 @@ const QuestionContent = ({
   )
 }
 
-const AsakaiQuestioning = ({ user }: { user: User | null }) => {
+const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPictures: UsersPictures | null }) => {
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
@@ -75,7 +85,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [isCoachMode, setIsCoachMode] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
-  const [questioningAnswers, setQuestioningAnswers] = useState<QuestioningAnswers | null>(null)
+  const [usersAnswers, setUsersAnswers] = useState<UsersAnswers | null>(null)
   const [isConnectingToFirebase, setIsConnectingToFirebase] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar()
@@ -118,7 +128,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     const unsubscribe = onAnswerChange({
       questioningId,
       questionId: question.id,
-      setQuestioningAnswers,
+      setUsersAnswers,
     })
     return () => {
       if (unsubscribe) {
@@ -175,7 +185,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
       setIsLoading(false)
       return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' })
     }
-    const data = await response.json()
+    const data = (await response.json()) as Alterodos
     setIsLoading(false)
     setAlterodos(data)
   }
@@ -215,7 +225,7 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
     } else {
       setIsConnectingToFirebase(true)
       await signout()
-      setQuestioningAnswers(null)
+      setUsersAnswers(null)
       setIsConnectingToFirebase(false)
     }
   }
@@ -259,9 +269,10 @@ const AsakaiQuestioning = ({ user }: { user: User | null }) => {
             question={question}
             user={user}
             questionIndex={questionIndex}
-            questioningAnswers={questioningAnswers}
+            usersAnswers={usersAnswers}
             asakaiChoices={asakaiChoices}
             changeQuestion={changeQuestion}
+            usersPictures={usersPictures}
           />
         ) : (
           <React.Fragment>

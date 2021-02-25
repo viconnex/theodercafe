@@ -17,7 +17,14 @@ import { JwtPayload as RequestUser } from 'src/auth/auth.types'
 import { User } from '../user/user.entity'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
-import { AlterodoResponse, AsakaiChoices, AsakaiEmailDTO, QuestionFilters, UserMap } from './userToQuestionChoice.types'
+import {
+    AlterodoResponse,
+    AsakaiChoices,
+    AsakaiEmailDTO,
+    Choice,
+    QuestionFilters,
+    UserMap,
+} from './userToQuestionChoice.types'
 import { USER_STRATEGY } from '../auth/jwt.user.strategy'
 
 @Controller('user_to_question_choices')
@@ -44,9 +51,12 @@ export class UserToQuestionChoiceController {
     @UseInterceptors(ClassSerializerInterceptor)
     async chose(
         @Param('id') questionId: number,
-        @Body() body: { choice: number },
+        @Body() body: { choice: Choice },
         @Request() req: { user: RequestUser },
     ): Promise<UserToQuestionChoice> {
+        if (![1, 2].includes(body.choice)) {
+            throw new BadRequestException('choice must be 1 or 2')
+        }
         return this.userToQuestionChoiceService.saveChoice(questionId, req.user.id, body.choice)
     }
 

@@ -1,4 +1,4 @@
-export type AsakaiChoices = Record<number, number>
+export type AsakaiChoices = Record<number, Choice>
 
 type UserAlterodoResponse = {
     givenName: string
@@ -53,14 +53,7 @@ export interface AsakaiEmailDTO {
 export type Choice = 1 | 2
 
 export type QuestionPoll = {
-    questionId: number
-    choice1Count: string | null
-    choice2Count: string | null
-    userChoice: Choice | null
-}
-
-export type FormattedQuestionPoll = {
-    choice1Count: number
-    choice2Count: number
+    choice1UserIds: number[]
+    choice2UserIds: number[]
     userChoice: Choice | null
 }

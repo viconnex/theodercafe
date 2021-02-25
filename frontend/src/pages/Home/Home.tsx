@@ -9,12 +9,15 @@ import AsakaiQuestioning from 'components/Questioning/AsakaiQuestioning'
 import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { User } from 'services/authentication'
 import { MBTI_URL_PARAM } from 'utils/constants/constants'
+import { UsersPictures } from 'components/Questioning/types'
+import { fetchRequest } from 'services/api'
 import useStyles from './style'
 
 const Home = ({ user }: { user: User | null }) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
   const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
   const [showMbtiInitially, setShowMbtiInitially] = useState(false)
+  const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -23,6 +26,34 @@ const Home = ({ user }: { user: User | null }) => {
       setIsAsakaiMode(false)
     }
   }, [])
+
+  const fetchUsersPictures = async () => {
+    if (!user) {
+      return
+    }
+    try {
+      const response = await fetchRequest({
+        uri: '/users/pictures',
+        method: 'GET',
+        body: null,
+        params: null,
+      })
+      const pics = (await response.json()) as UsersPictures
+      setUsersPictures(pics)
+      Object.values(pics).forEach((url) => {
+        if (url) {
+          const image = new Image()
+          image.src = url
+        }
+      })
+    } catch {
+      //
+    }
+  }
+
+  useEffect(() => {
+    void fetchUsersPictures()
+  }, [user])
 
   const handleModeChange = (isAsakai: boolean) => {
     setIsAsakaiMode(isAsakai)
@@ -40,9 +71,9 @@ const Home = ({ user }: { user: User | null }) => {
         withMargin
       />
       {isAsakaiMode ? (
-        <AsakaiQuestioning user={user} />
+        <AsakaiQuestioning user={user} usersPictures={usersPictures} />
       ) : (
-        <AllQuestioning showMbtiInitially={showMbtiInitially} user={user} />
+        <AllQuestioning showMbtiInitially={showMbtiInitially} usersPictures={usersPictures} user={user} />
       )}
       <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>
         <AddIcon />

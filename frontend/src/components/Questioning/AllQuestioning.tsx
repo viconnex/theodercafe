@@ -10,7 +10,7 @@ import { fetchRequestResponse, postChoice } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
-import { Choice, QuestionResponse, QuestionsPolls, QuestionsVotes } from 'components/Questioning/types'
+import { Choice, QuestionResponse, QuestionsPolls, QuestionsVotes, UsersPictures } from 'components/Questioning/types'
 import { User } from 'services/authentication'
 import { ALL_QUESTIONS_MODE, sortMBTI } from 'utils/constants/questionConstants'
 import Voter from 'components/Voter/Voter'
@@ -20,7 +20,15 @@ import { useHistory } from 'react-router-dom'
 import { ExploreOutlined } from '@material-ui/icons'
 import useStyle from './style'
 
-const AllQuestioning = ({ user, showMbtiInitially }: { user: User | null; showMbtiInitially: boolean }) => {
+const AllQuestioning = ({
+  user,
+  showMbtiInitially,
+  usersPictures,
+}: {
+  user: User | null
+  showMbtiInitially: boolean
+  usersPictures: UsersPictures | null
+}) => {
   const [filters, setFilters] = useState({
     isValidated: false,
     isNotValidated: false,
@@ -155,21 +163,25 @@ const AllQuestioning = ({ user, showMbtiInitially }: { user: User | null; showMb
       void postChoice(questionId, choice, enqueueSnackbar, null)
 
       const newQuestionsPolls = { ...questionsPolls }
-      const choiceField = `choice${choice}Count` as 'choice1Count'
-      const otherChoiceField = `choice${choice === 1 ? 2 : 1}Count` as 'choice2Count'
+      const choiceField = `choice${choice}UserIds` as 'choice1UserIds'
+      const otherChoiceField = `choice${choice === 1 ? 2 : 1}UserIds` as 'choice2UserIds'
 
-      if (questionsPolls[questionId]?.userChoice) {
-        // user is changing its mind
+      if (questionId in questionsPolls) {
+        questionsPolls[questionId][choiceField].push(user.id)
+
         newQuestionsPolls[questionId] = {
           userChoice: choice,
-          [choiceField]: questionsPolls[questionId][choiceField] + 1,
-          [otherChoiceField]: Math.max(questionsPolls[questionId][otherChoiceField] - 1, 0),
+          [choiceField]: questionsPolls[questionId][choiceField],
+          [otherChoiceField]:
+            questionsPolls[questionId].userChoice !== null // user is changing its mind if true
+              ? questionsPolls[questionId][otherChoiceField].filter((userId) => userId !== user.id)
+              : questionsPolls[questionId][otherChoiceField],
         }
       } else {
         newQuestionsPolls[questionId] = {
           userChoice: choice,
-          [choiceField]: questionsPolls[questionId][choiceField] + 1,
-          [otherChoiceField]: questionsPolls[questionId][otherChoiceField],
+          [choiceField]: [user.id],
+          [otherChoiceField]: [],
         }
       }
 
@@ -237,12 +249,13 @@ const AllQuestioning = ({ user, showMbtiInitially }: { user: User | null; showMb
       return (
         <React.Fragment>
           <Question
-            questioningAnswers={
+            usersAnswers={
               questionsPolls[question.id] && {
-                choice1: questionsPolls[question.id]?.choice1Count,
-                choice2: questionsPolls[question.id]?.choice2Count,
+                choice1: questionsPolls[question.id]?.choice1UserIds,
+                choice2: questionsPolls[question.id]?.choice2UserIds,
               }
             }
+            usersPictures={usersPictures}
             question={question}
             chose={chose}
             choice={questionsPolls[question.id]?.userChoice}

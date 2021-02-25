@@ -29,6 +29,9 @@ const useMyStyles = (props: { isUpDirection: boolean }) => {
         transform: `translateY(${props.isUpDirection ? '-' : ''}40px) translateX(${translateX}px)`,
       },
     },
+    picture: {
+      clipPath: 'circle',
+    },
   }))
 
   return useStyles(props)

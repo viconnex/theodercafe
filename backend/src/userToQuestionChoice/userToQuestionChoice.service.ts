@@ -14,8 +14,8 @@ import {
     AsakaiChoices,
     AsakaiEmailDTO,
     Choice,
-    FormattedQuestionPoll,
     QuestionFilters,
+    QuestionPoll,
     SimilarityWithUserId,
     UserMap,
 } from './userToQuestionChoice.types'
@@ -35,7 +35,7 @@ export class UserToQuestionChoiceService {
         private readonly questionService: QuestionService,
     ) {}
 
-    async saveChoice(questionId: number, userId: number, choice: number): Promise<UserToQuestionChoice> {
+    async saveChoice(questionId: number, userId: number, choice: Choice): Promise<UserToQuestionChoice> {
         const initialChoice = await this.userToQuestionChoiceRepository.findOne({
             userId,
             questionId,
@@ -60,18 +60,39 @@ export class UserToQuestionChoiceService {
     }
 
     async getQuestionsPolls(userId: number) {
-        const questionPollsByQuestionId: Record<string, FormattedQuestionPoll> = {}
-        const questionPolls = await this.userToQuestionChoiceRepository.getQuestionsPolls(userId)
+        const requestUserWithCompany = await this.userService.findOne(userId)
+        const questionsPolls: Record<number, QuestionPoll> = {}
+        const userToQuestionChoices =
+            requestUserWithCompany?.company !== THEODO_COMPANY
+                ? await this.userToQuestionChoiceRepository.find()
+                : await this.userToQuestionChoiceRepository
+                      .createQueryBuilder('user_to_question_choices')
+                      .leftJoin('user_to_question_choices.user', 'user')
+                      .select([
+                          'user_to_question_choices.questionId',
+                          'user_to_question_choices.userId',
+                          'user_to_question_choices.choice',
+                          'user.company',
+                      ])
+                      .where('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
+                      .getMany()
 
-        questionPolls.forEach((questionPoll) => {
-            questionPollsByQuestionId[questionPoll.questionId] = {
-                userChoice: questionPoll.userChoice,
-                choice1Count: questionPoll.choice1Count ? parseInt(questionPoll.choice1Count) : 0,
-                choice2Count: questionPoll.choice2Count ? parseInt(questionPoll.choice2Count) : 0,
+        userToQuestionChoices.forEach((answer) => {
+            if (!(answer.questionId in questionsPolls)) {
+                questionsPolls[answer.questionId] = {
+                    userChoice: null,
+                    choice1UserIds: [],
+                    choice2UserIds: [],
+                }
             }
+            if (answer.userId === userId) {
+                questionsPolls[answer.questionId].userChoice = answer.choice
+            }
+            const choiceField = `choice${answer.choice}UserIds` as 'choice1UserIds' | 'choice2UserIds'
+            questionsPolls[answer.questionId][choiceField].push(answer.userId)
         })
 
-        return questionPollsByQuestionId
+        return questionsPolls
     }
 
     async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId?: string) {
@@ -248,7 +269,7 @@ export class UserToQuestionChoiceService {
                 mbtiChoicesByUser[userAnswer.userId] = [null, null, null, null]
             }
             mbtiChoicesByUser[userAnswer.userId][questionIdToIndexAndLetter[userAnswer.questionId].index] =
-                questionIdToIndexAndLetter[userAnswer.questionId][userAnswer.choice as Choice]
+                questionIdToIndexAndLetter[userAnswer.questionId][userAnswer.choice]
             if (mbtiChoicesByUser[userAnswer.userId].every((choice) => !!choice)) {
                 usersHavingCompletedMbti.push(userAnswer.userId)
                 if (userAnswer.userId === requestUser.id) {

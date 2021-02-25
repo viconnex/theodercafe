@@ -1,7 +1,7 @@
 import { THEODO_COMPANY } from 'src/user/user.entity'
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
-import { QuestionFilters, QuestionPoll, SimilarityWithUserId } from './userToQuestionChoice.types'
+import { QuestionFilters, SimilarityWithUserId } from './userToQuestionChoice.types'
 
 const COMPANIES = [THEODO_COMPANY]
 if (process.env.NODE_ENV === 'development') {
@@ -114,32 +114,5 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
                 .andWhere('question.isValidated = true')
                 .andWhere('question.isJoke = false')
         }
-    }
-
-    getQuestionsPolls = (userId: number) => {
-        if (typeof userId !== 'number') {
-            throw new Error('the userId must be a number in getQuestionsPolls')
-        }
-
-        return this.query(`
-            SELECT "questions"."id" as "questionId", "choice1" as "choice1Count", "choice2" as "choice2Count", "choice" as "userChoice"
-            FROM questions
-            LEFT JOIN (
-            SELECT
-                "questionId",
-                SUM(CASE when "choice" = 1 then 1 else 0 end) as choice1,
-                SUM(CASE when "choice" = 2 then 1 else 0 end) as choice2
-            FROM user_to_question_choices
-            GROUP BY "questionId"
-            ) AS user_to_question_choices
-            ON questions.id = "user_to_question_choices"."questionId"
-            LEFT JOIN (
-                SELECT "questionId","choice"
-                FROM user_to_question_choices
-                WHERE "user_to_question_choices"."userId" = ${userId}
-            ) AS u_to_q_choices
-            ON questions.id = "u_to_q_choices"."questionId"
-            ORDER BY "questions"."id" ASC;
-        `) as Promise<QuestionPoll[]>
     }
 }

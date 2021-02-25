@@ -1,57 +1,102 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import useStyle from 'components/PlusOnes/PlusOnes.style'
-import { Choice } from 'components/Questioning/types'
+import { Choice, UsersPictures } from 'components/Questioning/types'
 
-const PlusOne = memo(({ trigger, isUpDirection }: { trigger: number; isUpDirection: boolean }) => {
-  const classes = useStyle({ isUpDirection })
-  return (
-    <div key={trigger} className={classes.plusOne}>
-      +1
-    </div>
-  )
-})
+const PlusOne = memo(
+  ({
+    trigger,
+    isUpDirection,
+    picUrl,
+    timeout,
+  }: {
+    trigger: number
+    isUpDirection: boolean
+    picUrl: string | null
+    timeout: number
+  }) => {
+    const classes = useStyle({ isUpDirection })
+    const [unleashPower, setUnleashPower] = useState(false)
+    useEffect(() => {
+      setTimeout(() => setUnleashPower(true), timeout)
+    }, [])
+
+    if (!unleashPower) {
+      return null
+    }
+
+    return (
+      <React.Fragment>
+        {!picUrl ? (
+          <div key={trigger} className={classes.plusOne}>
+            +1
+          </div>
+        ) : (
+          <img
+            key={trigger}
+            className={`${classes.plusOne} ${classes.picture}`}
+            width="32px"
+            src={picUrl}
+            alt="choser"
+          />
+        )}
+      </React.Fragment>
+    )
+  },
+)
 
 const PlusOnes = ({
   trigger,
-  answersCount,
+  usersAnswers,
   choice,
   option,
+  usersPictures,
 }: {
   trigger: number
   option: Choice
   choice: Choice | undefined | null
-  answersCount: number | null
+  usersAnswers: number[] | null
+  usersPictures?: UsersPictures | null
 }) => {
-  const [delayedTrigger, setDelayedTrigger] = useState(0)
+  const [delayedUsersAnswers, setDelayedUserAnswers] = useState<{ id: number; timeout: number }[]>([])
+  const displayed = useRef<Record<number, number>>({})
   /* eslint-disable complexity */
   useEffect(() => {
-    if (!choice) {
-      setDelayedTrigger(0)
+    if (!choice || !usersAnswers) {
+      setDelayedUserAnswers([])
       return
     }
-
-    if (choice && answersCount && answersCount > delayedTrigger) {
-      const duration = Math.min(1000 / (answersCount - delayedTrigger), 100)
-      for (let i = 0; i < answersCount - delayedTrigger; i++) {
-        setTimeout(() => {
-          setDelayedTrigger(delayedTrigger + 1 + i)
-        }, i * duration)
+    const toDisplay: { id: number; timeout: number }[] = []
+    const rememberDisplayed: Record<number, number> = {}
+    let timeoutFactor = 0
+    const duration = Math.min(1000 / toDisplay.length, 100)
+    usersAnswers.forEach((userId) => {
+      if (userId in displayed.current) {
+        toDisplay.push({ id: userId, timeout: displayed.current[userId] })
+        rememberDisplayed[userId] = displayed.current[userId]
+      } else {
+        const timeout = duration * timeoutFactor
+        rememberDisplayed[userId] = timeout
+        toDisplay.push({ id: userId, timeout: timeout })
+        timeoutFactor += 1
       }
-    } else if (answersCount && answersCount < delayedTrigger) {
-      setDelayedTrigger(Math.max(answersCount, 0))
-    } else if (!answersCount) {
-      setDelayedTrigger(0)
-    }
-  }, [answersCount, choice])
+    })
+
+    setDelayedUserAnswers(toDisplay)
+    displayed.current = rememberDisplayed
+  }, [usersAnswers, choice])
 
   if (trigger > 0) {
-    return <PlusOne isUpDirection={option === 1} trigger={trigger} />
+    return <PlusOne isUpDirection={option === 1} trigger={trigger} picUrl={null} timeout={0} />
   }
-  if (choice && answersCount !== null && delayedTrigger > 0) {
+
+  if (choice && delayedUsersAnswers.length > 0) {
     return (
       <React.Fragment>
-        {Array.from({ length: delayedTrigger }, (_, i) => i).map((i) => {
-          return <PlusOne key={i} trigger={i} isUpDirection={option === 1} />
+        {delayedUsersAnswers.map(({ id: userId, timeout }) => {
+          const picUrl = usersPictures && usersAnswers ? usersPictures[userId] ?? null : null
+          return (
+            <PlusOne key={userId} trigger={userId} isUpDirection={option === 1} picUrl={picUrl} timeout={timeout} />
+          )
         })}
       </React.Fragment>
     )

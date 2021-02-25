@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import Chip from '@material-ui/core/Chip'
 
 import { PlusOnes } from 'components/PlusOnes'
-import { Choice, QuestioningAnswers, QuestionResponse } from 'components/Questioning/types'
+import { Choice, QuestionResponse, UsersAnswers, UsersPictures } from 'components/Questioning/types'
 import {
   MBTI_EXTRAVERSION,
   MBTI_FEELING,
@@ -40,17 +40,19 @@ const getMBTISubtitle = (questionOption: string) => {
 const Option = ({
   option,
   choice,
-  questioningAnswers,
+  usersAnswers,
   questionOption,
   questionId,
   chose,
+  usersPictures,
 }: {
   option: Choice
   choice: Choice | undefined | null
-  questioningAnswers?: QuestioningAnswers | null
+  usersAnswers?: UsersAnswers | null
   questionOption: string
   questionId: number
   chose: (id: number, choiceToHandle: Choice) => void
+  usersPictures?: UsersPictures | null
 }) => {
   const [plusOneTrigger, setPlusOneTrigger] = React.useState(0)
 
@@ -61,21 +63,19 @@ const Option = ({
       return
     }
 
-    if (questioningAnswers) {
+    if (usersAnswers) {
       return // let PlusOne updates come from realtime updates
     }
 
     setPlusOneTrigger(plusOneTrigger + 1)
   }
 
-  const choiceField = `choice${option}` as keyof QuestioningAnswers
-  const totalAnswers = (questioningAnswers?.choice1 ?? 0) + (questioningAnswers?.choice2 ?? 0)
+  const choiceField = `choice${option}` as keyof UsersAnswers
+  const totalAnswers = usersAnswers ? usersAnswers.choice1.length + usersAnswers.choice2.length : 0
   const ratio =
-    questioningAnswers && totalAnswers > 0
-      ? Math.max(Math.min(questioningAnswers[choiceField] / totalAnswers, 1), 0)
-      : null
+    usersAnswers && totalAnswers > 0 ? Math.max(Math.min(usersAnswers[choiceField].length / totalAnswers, 1), 0) : null
 
-  const showBar = !!questioningAnswers && !!choice
+  const showBar = !!usersAnswers && !!choice
   const previousRatio = useRef(0)
   const mbtiSubtitle = getMBTISubtitle(questionOption)
 
@@ -92,10 +92,10 @@ const Option = ({
 
   return (
     <div onClick={handleChoice} className={classes.container}>
-      {showBar && questioningAnswers && (
+      {showBar && usersAnswers && (
         <React.Fragment>
           <div className={classes.bar} />
-          <div className={classes.number}>{questioningAnswers[choiceField]}</div>
+          <div className={classes.number}>{usersAnswers[choiceField].length}</div>
         </React.Fragment>
       )}
       <div className={classes.textContainer}>
@@ -103,10 +103,11 @@ const Option = ({
         {mbtiSubtitle && <div className={classes.subtitle}>{mbtiSubtitle}</div>}
       </div>
       <PlusOnes
-        answersCount={questioningAnswers ? questioningAnswers[choiceField] : null}
+        usersAnswers={usersAnswers ? usersAnswers[choiceField] : null}
         choice={choice}
         option={option}
         trigger={plusOneTrigger}
+        usersPictures={usersPictures}
       />
     </div>
   )
@@ -118,13 +119,15 @@ const Question = ({
   choice,
   chose,
   hideCategory,
-  questioningAnswers,
+  usersAnswers,
+  usersPictures,
 }: {
   question: QuestionResponse
   choice: Choice | undefined | null
   chose: (questionId: number, choiceToHandle: Choice) => void
   hideCategory?: boolean
-  questioningAnswers?: QuestioningAnswers | null
+  usersAnswers?: UsersAnswers | null
+  usersPictures?: UsersPictures | null
 }) => {
   const classes = useStyle()
 
@@ -143,19 +146,21 @@ const Question = ({
       <Option
         option={1}
         choice={choice}
-        questioningAnswers={questioningAnswers}
+        usersAnswers={usersAnswers}
         questionOption={question.option1}
         questionId={question.id}
         chose={chose}
+        usersPictures={usersPictures}
       />
       <div className={classes.separator}>ou</div>
       <Option
         option={2}
         choice={choice}
-        questioningAnswers={questioningAnswers}
+        usersAnswers={usersAnswers}
         questionOption={question.option2}
         questionId={question.id}
         chose={chose}
+        usersPictures={usersPictures}
       />
     </React.Fragment>
   )
