@@ -68,8 +68,8 @@ const PlusOnes = ({
     }
     const toDisplay: { id: number; timeout: number }[] = []
     const rememberDisplayed: Record<number, number> = {}
-    let timeoutFactor = 0
 
+    let timeoutFactor = 0
     const interval = Math.min(3000 / usersAnswers.length, 100)
 
     usersAnswers.forEach((userId) => {

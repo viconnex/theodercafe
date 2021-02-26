@@ -1,7 +1,8 @@
 import { makeStyles } from '@material-ui/core'
 
 const useMyStyles = (props: { isUpDirection: boolean }) => {
-  const translateX = Math.random() * 120 - 60
+  const translateXRange = 200
+  const translateX = Math.random() * translateXRange - translateXRange / 2
   const useStyles = makeStyles(() => ({
     plusOne: {
       alignItems: 'center',
@@ -13,7 +14,7 @@ const useMyStyles = (props: { isUpDirection: boolean }) => {
       height: ' 25px',
       justifyContent: ' center',
       width: ' 25px',
-      animation: `$vanish 0.8s 1 ease-out forwards`,
+      animation: `$vanish 0.9s 1 ease-out forwards`,
       position: 'absolute',
       transform: `translateX(${translateX}px)`,
     },
@@ -26,7 +27,7 @@ const useMyStyles = (props: { isUpDirection: boolean }) => {
       },
       '100%': {
         opacity: 0,
-        transform: `translateY(${props.isUpDirection ? '-' : ''}40px) translateX(${translateX}px)`,
+        transform: `translateY(${props.isUpDirection ? '-' : ''}50px) translateX(${translateX}px)`,
       },
     },
     picture: {
