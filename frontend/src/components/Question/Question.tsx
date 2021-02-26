@@ -94,11 +94,11 @@ const Option = ({
     <div onClick={handleChoice} className={classes.container}>
       {showBar && usersAnswers && (
         <React.Fragment>
-          <div className={classes.bar} />
-          <div className={classes.number}>{usersAnswers[choiceField].length}</div>
+          <div className={`${classes.bar} ${classes.faded}`} />
+          <div className={`${classes.number} ${classes.faded}`}>{usersAnswers[choiceField].length}</div>
         </React.Fragment>
       )}
-      <div className={classes.textContainer}>
+      <div className={`${classes.textContainer} ${classes.faded}`}>
         <div className={classes.text}>{questionOption}</div>
         {mbtiSubtitle && <div className={classes.subtitle}>{mbtiSubtitle}</div>}
       </div>

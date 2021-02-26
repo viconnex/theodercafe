@@ -13,7 +13,7 @@ const useMyStyles = (props: { isUpDirection: boolean }) => {
       height: ' 25px',
       justifyContent: ' center',
       width: ' 25px',
-      animation: `$vanish 0.7s 1 ease-out forwards`,
+      animation: `$vanish 0.8s 1 ease-out forwards`,
       position: 'absolute',
       transform: `translateX(${translateX}px)`,
     },

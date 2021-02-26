@@ -55,6 +55,8 @@ export const useOptionStyle = ({
         border: isChoiceMade && (showBar || isChosenOption) ? '0.5px solid white' : undefined,
         minHeight: '40px',
         padding: '8px 20px',
+      },
+      faded: {
         opacity: isChoiceMade && showBar && !isChosenOption ? 0.5 : undefined,
       },
       number: {

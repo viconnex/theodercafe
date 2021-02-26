@@ -63,18 +63,21 @@ const PlusOnes = ({
   useEffect(() => {
     if (!choice || !usersAnswers) {
       setDelayedUserAnswers([])
+      displayed.current = {}
       return
     }
     const toDisplay: { id: number; timeout: number }[] = []
     const rememberDisplayed: Record<number, number> = {}
     let timeoutFactor = 0
-    const duration = Math.min(1000 / toDisplay.length, 100)
+
+    const interval = Math.min(3000 / usersAnswers.length, 100)
+
     usersAnswers.forEach((userId) => {
       if (userId in displayed.current) {
         toDisplay.push({ id: userId, timeout: displayed.current[userId] })
         rememberDisplayed[userId] = displayed.current[userId]
       } else {
-        const timeout = duration * timeoutFactor
+        const timeout = interval * timeoutFactor
         rememberDisplayed[userId] = timeout
         toDisplay.push({ id: userId, timeout: timeout })
         timeoutFactor += 1
