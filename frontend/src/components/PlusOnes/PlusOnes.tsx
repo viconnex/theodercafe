@@ -88,10 +88,6 @@ const PlusOnes = ({
     displayed.current = rememberDisplayed
   }, [usersAnswers, choice])
 
-  if (trigger > 0) {
-    return <PlusOne isUpDirection={option === 1} trigger={trigger} picUrl={null} timeout={0} />
-  }
-
   if (choice && delayedUsersAnswers.length > 0) {
     return (
       <React.Fragment>
@@ -103,6 +99,9 @@ const PlusOnes = ({
         })}
       </React.Fragment>
     )
+  }
+  if (trigger > 0) {
+    return <PlusOne isUpDirection={option === 1} trigger={trigger} picUrl={null} timeout={0} />
   }
   return null
 }
