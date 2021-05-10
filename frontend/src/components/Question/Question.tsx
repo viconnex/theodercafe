@@ -99,7 +99,10 @@ const Option = ({
         </React.Fragment>
       )}
       <div className={`${classes.textContainer} ${classes.faded}`}>
-        <div className={classes.text}>{questionOption}</div>
+        <div className={classes.text}>
+          <span className={classes.textContent}>{questionOption}</span>
+          <span>{option === 2 ? ' ?' : ''}</span>
+        </div>
         {mbtiSubtitle && <div className={classes.subtitle}>{mbtiSubtitle}</div>}
       </div>
       <PlusOnes

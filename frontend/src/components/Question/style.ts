@@ -74,9 +74,11 @@ export const useOptionStyle = ({
         animation: `$grow 0.5s 1 ease-out`,
       },
       text: {
-        borderBottom: !isChoiceMade && !hasSubtitle ? '0.7px dashed' : undefined,
         zIndex: 1,
         fontSize: '20px',
+      },
+      textContent: {
+        borderBottom: !isChoiceMade && !hasSubtitle ? '0.7px dashed' : undefined,
       },
       subtitle: {
         marginTop: '4px',
