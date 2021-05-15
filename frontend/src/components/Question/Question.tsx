@@ -54,20 +54,8 @@ const Option = ({
   chose: (id: number, choiceToHandle: Choice) => void
   usersPictures?: UsersPictures | null
 }) => {
-  const [plusOneTrigger, setPlusOneTrigger] = React.useState(0)
-
   const handleChoice = () => {
     chose(questionId, option)
-
-    if (choice === option) {
-      return
-    }
-
-    if (usersAnswers) {
-      return // let PlusOne updates come from realtime updates
-    }
-
-    setPlusOneTrigger(plusOneTrigger + 1)
   }
 
   const choiceField = `choice${option}` as keyof UsersAnswers
@@ -109,7 +97,6 @@ const Option = ({
         usersAnswers={usersAnswers ? usersAnswers[choiceField] : null}
         choice={choice}
         option={option}
-        trigger={plusOneTrigger}
         usersPictures={usersPictures}
       />
     </div>

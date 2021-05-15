@@ -45,13 +45,11 @@ const PlusOne = memo(
 )
 
 const PlusOnes = ({
-  trigger,
   usersAnswers,
   choice,
   option,
   usersPictures,
 }: {
-  trigger: number
   option: Choice
   choice: Choice | undefined | null
   usersAnswers: number[] | null
@@ -100,9 +98,7 @@ const PlusOnes = ({
       </React.Fragment>
     )
   }
-  if (trigger > 0) {
-    return <PlusOne isUpDirection={option === 1} trigger={trigger} picUrl={null} timeout={0} />
-  }
+
   return null
 }
 export default PlusOnes
