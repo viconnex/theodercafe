@@ -7,6 +7,7 @@ import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
 import { AdminUserList, UserWithPublicFields } from './user.types'
+import { IS_DEV } from 'src/constants'
 
 @Injectable()
 export class UserService {
@@ -98,18 +99,13 @@ export class UserService {
         const emailLowerCase = email.toLocaleLowerCase()
 
         const existingUser = await this.userRepository.findOne({ email: emailLowerCase })
-        if (existingUser && !existingUser.isAdmin) {
-            throw new BadRequestException({
-                message: 'there is already an user with the specified email',
-                code: 'existing-email',
-            })
-        }
+
         const addedByUser = addedByUserId ? (await this.userRepository.findOne({ id: addedByUserId })) ?? null : null
         const asakaiAlterodoUser = alterodoUserId
             ? (await this.userRepository.findOne({ id: alterodoUserId })) ?? null
             : null
 
-        let newUser: null | DeepPartial<User> = null
+        let newUser: null | User = null
         if (!existingUser) {
             newUser = await this.userRepository.save({
                 email: emailLowerCase,
@@ -121,27 +117,75 @@ export class UserService {
             })
         }
 
+        void this.sendWelcomeEmail({ newUserEmail: emailLowerCase })
+
+        void this.sendAlterodoLunchProposalEmail({
+            newUserEmail: newUser?.email ?? existingUser?.email,
+            alterodoUser: asakaiAlterodoUser,
+            coachUserEmail: addedByUser?.email,
+        })
+
+        if (existingUser && !existingUser.isAdmin) {
+            throw new BadRequestException({
+                message: 'there is already a user with the specified email',
+                code: 'existing-email',
+            })
+        }
+
+        return newUser
+    }
+
+    async sendWelcomeEmail({ newUserEmail }: { newUserEmail: string }) {
         const questions = await this.questionService.find({ where: { isValidated: true } })
         const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
         const subject = randomQuestion ? `${randomQuestion.option1} ou ${randomQuestion.option2} ?` : 'Thé ou café ?'
 
+        const toEmail = IS_DEV ? 'victorl@theodo.fr' : newUserEmail
         try {
             await this.mailerService.sendMail({
-                to: emailLowerCase,
+                to: toEmail,
                 cc: 'victorl@theodo.fr',
                 from: 'theodercafe@gmail.com',
                 subject,
                 template: 'welcome',
                 context: {
-                    emailLowerCase,
+                    email: newUserEmail,
                 },
             })
-            console.log(`email sent to ${emailLowerCase}`)
+            console.log(`welcome email sent to ${newUserEmail}`)
         } catch (e) {
             console.log('error while sending email', e)
             throw new BadRequestException({ code: 'mail-service-error', message: 'service de mail indisponible' })
         }
+    }
 
-        return newUser
+    async sendAlterodoLunchProposalEmail({
+        newUserEmail,
+        alterodoUser,
+        coachUserEmail,
+    }: {
+        newUserEmail?: string
+        alterodoUser: User | null
+        coachUserEmail?: string
+    }) {
+        const recipients: string[] = []
+        const cc: string[] = ['victorl@theodo.fr']
+
+        recipients.push(newUserEmail && !IS_DEV ? newUserEmail : 'victorl@theodo.fr')
+        recipients.push(alterodoUser?.email && !IS_DEV ? alterodoUser.email : 'victorl@theodo.fr')
+        cc.push(coachUserEmail && !IS_DEV ? coachUserEmail : 'victorl@theodo.fr')
+
+        try {
+            await this.mailerService.sendMail({
+                to: recipients,
+                cc,
+                from: 'theodercafe@gmail.com',
+                subject: 'Dej Alterodos',
+                template: 'alterodos_lunch',
+            })
+            console.log('alterodos tradition email sent')
+        } catch (e) {
+            console.log('error while sending alterodos email', e)
+        }
     }
 }
