@@ -1,10 +1,11 @@
+import { IS_DEV } from 'src/constants'
 import { THEODO_COMPANY } from 'src/user/user.entity'
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { QuestionFilters, SimilarityWithUserId } from './userToQuestionChoice.types'
 
 const COMPANIES = [THEODO_COMPANY]
-if (process.env.NODE_ENV === 'development') {
+if (IS_DEV) {
     COMPANIES.push('gmail')
 }
 

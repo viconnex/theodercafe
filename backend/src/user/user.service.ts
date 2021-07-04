@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { MailerService } from '@nestjs-modules/mailer'
+import { IS_DEV, OWNER_EMAIL } from 'src/constants'
 import { QuestionService } from 'src/question/question.service'
-import { DeepPartial, DeleteResult } from 'typeorm'
+import { DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
 import { AdminUserList, UserWithPublicFields } from './user.types'
-import { IS_DEV } from 'src/constants'
 
 @Injectable()
 export class UserService {
@@ -140,11 +140,11 @@ export class UserService {
         const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
         const subject = randomQuestion ? `${randomQuestion.option1} ou ${randomQuestion.option2} ?` : 'Thé ou café ?'
 
-        const toEmail = IS_DEV ? 'victorl@theodo.fr' : newUserEmail
+        const toEmail = IS_DEV ? OWNER_EMAIL : newUserEmail
         try {
             await this.mailerService.sendMail({
                 to: toEmail,
-                cc: 'victorl@theodo.fr',
+                cc: OWNER_EMAIL,
                 from: 'theodercafe@gmail.com',
                 subject,
                 template: 'welcome',
@@ -169,11 +169,11 @@ export class UserService {
         coachUserEmail?: string
     }) {
         const recipients: string[] = []
-        const cc: string[] = ['victorl@theodo.fr']
+        const cc: string[] = [OWNER_EMAIL]
 
-        recipients.push(newUserEmail && !IS_DEV ? newUserEmail : 'victorl@theodo.fr')
-        recipients.push(alterodoUser?.email && !IS_DEV ? alterodoUser.email : 'victorl@theodo.fr')
-        cc.push(coachUserEmail && !IS_DEV ? coachUserEmail : 'victorl@theodo.fr')
+        recipients.push(newUserEmail && !IS_DEV ? newUserEmail : OWNER_EMAIL)
+        recipients.push(alterodoUser?.email && !IS_DEV ? alterodoUser.email : OWNER_EMAIL)
+        cc.push(coachUserEmail && !IS_DEV ? coachUserEmail : OWNER_EMAIL)
 
         try {
             await this.mailerService.sendMail({

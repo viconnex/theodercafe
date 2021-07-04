@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config'
 
 import { MailerModule } from '@nestjs-modules/mailer'
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
+import { IS_DEV } from 'src/constants'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { QuestionModule } from './question/question.module'
@@ -29,10 +30,10 @@ import { HealthController } from './health/health.controller'
         QuestioningHistoricModule,
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: process.env.NODE_ENV === 'development' ? ['.env', '.env.dev'] : ['.env', '.env.prod'],
+            envFilePath: IS_DEV ? ['.env', '.env.dev'] : ['.env', '.env.prod'],
         }),
         MailerModule.forRoot({
-            transport: `smtps://theodercafe@gmail.com:${process.env.GMAIL_PASSWORD}@smtp.gmail.com`,
+            transport: `smtps://theodercafe@gmail.com:${process.env.GMAIL_PASSWORD ?? 'xxx'}@smtp.gmail.com`,
             defaults: {
                 from: '"nest-modules" <modules@nestjs.com>',
             },

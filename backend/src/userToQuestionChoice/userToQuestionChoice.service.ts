@@ -297,6 +297,7 @@ export class UserToQuestionChoiceService {
                 mbtiProfiles[profile] = [usersWithPublicFieldsByUserId[userId]]
             }
         }
+
         return { mbtiProfiles, hasRequestUserCompletedMbti }
     }
 }
