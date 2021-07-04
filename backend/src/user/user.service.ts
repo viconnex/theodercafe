@@ -117,7 +117,9 @@ export class UserService {
             })
         }
 
-        void this.sendWelcomeEmail({ newUserEmail: emailLowerCase })
+        if (!existingUser || existingUser.isAdmin) {
+            void this.sendWelcomeEmail({ newUserEmail: emailLowerCase })
+        }
 
         void this.sendAlterodoLunchProposalEmail({
             newUserEmail: newUser?.email ?? existingUser?.email,
