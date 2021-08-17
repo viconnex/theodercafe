@@ -64,7 +64,7 @@ export class QuestionRepository extends Repository<Question> {
             GROUP BY "questionId"
             ) as u_to_q_votes
             ON q.id = "u_to_q_votes"."questionId"
-            ORDER BY "q"."id" ASC;
+            ORDER BY "q"."id" DESC;
         `) as Promise<QuestionAdmin[]>
     }
 
