@@ -1,5 +1,5 @@
 import { JWT_STORAGE_KEY } from 'services/authentication'
-import { API_BASE_URL, USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
+import { API_BASE_URL, USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 
 export const fetchRequestResponse = async (
   { uri, method, body, params },
@@ -60,6 +60,16 @@ export const postChoice = async (questionId, choice, enqueueSnackbar, successMes
   const body = { choice }
 
   await fetchRequestResponse({ uri, method: 'PUT', body, params: null }, 200, {
+    enqueueSnackbar,
+    successMessage,
+  })
+}
+
+export const postVote = async (questionId, isUpVote, enqueueSnackbar, successMessage) => {
+  const uri = `/${USER_TO_QUESTIONS_VOTES_URI}/${questionId}/vote`
+  const body = isUpVote !== null ? { isUpVote } : undefined
+
+  await fetchRequestResponse({ uri, method: isUpVote !== null ? 'PUT' : 'DELETE', body, params: null }, 200, {
     enqueueSnackbar,
     successMessage,
   })

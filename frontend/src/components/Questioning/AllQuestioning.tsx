@@ -6,7 +6,7 @@ import TuneIcon from '@material-ui/icons/Tune'
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew'
 
 import { LoginDialog } from 'components/Login'
-import { fetchRequestResponse, postChoice } from 'services/api'
+import { fetchRequestResponse, postChoice, postVote } from 'services/api'
 import { Button, CircularProgress } from '@material-ui/core'
 import { FilterDrawer } from 'components/FilterDrawer'
 import Browser from 'components/Questioning/Browser'
@@ -194,9 +194,7 @@ const AllQuestioning = ({
     if (!user) {
       return setOpenLoginDialog(true)
     }
-    const uri = `/${USER_TO_QUESTIONS_VOTES_URI}/${questionId}/vote`
-    let method = 'PUT'
-    let body: undefined | { isUpVote: boolean } = { isUpVote }
+    let upVote: boolean | null = isUpVote
     const newQuestionsVotes = { ...questionsVotes }
 
     const voteField = `${isUpVote ? 'up' : 'down'}VoteCount` as 'upVoteCount'
@@ -218,8 +216,7 @@ const AllQuestioning = ({
       }
     } else {
       // user removes its vote
-      method = 'DELETE'
-      body = undefined
+      upVote = null
 
       newQuestionsVotes[questionId] = {
         isUserUpVote: null,
@@ -229,7 +226,7 @@ const AllQuestioning = ({
     }
 
     setQuestionsVotes(newQuestionsVotes)
-    void fetchRequestResponse({ uri, method, body, params: null }, 200, { enqueueSnackbar, successMessage: null })
+    void postVote(questionId, upVote, enqueueSnackbar, null)
   }
 
   const classes = useStyle()

@@ -3,22 +3,26 @@ import { Question } from 'components/Question'
 import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
 import { useSnackbar } from 'notistack'
 import { Alterodo } from 'components/Alterodo'
-import { fetchRequest, fetchRequestResponse, postChoice } from 'services/api'
+import { fetchRequest, fetchRequestResponse, postChoice, postVote } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { Button, CircularProgress } from '@material-ui/core'
 import {
   Alterodos,
   AsakaiChoices,
+  AsakaiVotes,
   Choice,
   QuestionResponse,
   UsersAnswers,
   UsersPictures,
+  UsersVotes,
 } from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
 import { signin, signout, useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
+import Voter from 'components/Voter/Voter'
+
 import useStyle from './style'
 
 export const IS_LIVE_ACTIVATED_BY_DEFAULT = true
@@ -26,31 +30,43 @@ export const IS_LIVE_ACTIVATED_BY_DEFAULT = true
 const QuestionContent = ({
   isLoading,
   chose,
+  vote,
   questions,
   question,
   user,
   questionIndex,
   usersAnswers,
+  usersVotes,
   asakaiChoices,
   changeQuestion,
   usersPictures,
+  asakaiVotes,
 }: {
   isLoading: boolean
   chose: (questionId: number, choice: Choice) => void
+  vote: (questionId: number, vote: boolean) => void
   questions: QuestionResponse[]
   question: QuestionResponse | undefined
   user: User | null
   questionIndex: number
   usersAnswers: UsersAnswers | null
+  usersVotes: UsersVotes | null
   asakaiChoices: AsakaiChoices
   changeQuestion: (increment: number) => Promise<void>
   usersPictures: UsersPictures | null
+  asakaiVotes: AsakaiVotes
 }) => {
   const classes = useStyle()
   if (!question || isLoading) {
     return <CircularProgress color="secondary" />
   }
   const choice = asakaiChoices[question.id]
+
+  const questionVote = {
+    isUserUpVote: asakaiVotes[question.id] ?? null,
+    upVoteCount: usersVotes?.upVotes ?? 0,
+    downVoteCount: usersVotes?.downVotes ?? 0,
+  }
   return (
     <React.Fragment>
       {!user && questionIndex === 0 && (
@@ -72,6 +88,7 @@ const QuestionContent = ({
         changeQuestion={changeQuestion}
         questionLength={questions.length}
       />
+      <Voter questionId={question.id} questionVote={questionVote} vote={vote} />
     </React.Fragment>
   )
 }
@@ -81,11 +98,13 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [asakaiChoices, setAsakaiChoices] = useState<AsakaiChoices>({})
+  const [asakaiVotes, setAsakaiVotes] = useState<AsakaiVotes>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isCoachMode, setIsCoachMode] = useState(false)
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
   const [usersAnswers, setUsersAnswers] = useState<UsersAnswers | null>(null)
+  const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
   const [isConnectingToFirebase, setIsConnectingToFirebase] = useState(false)
 
   const { enqueueSnackbar } = useSnackbar()
@@ -129,6 +148,7 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
       questioningId,
       questionId: question.id,
       setUsersAnswers,
+      setUsersVotes,
     })
     return () => {
       if (unsubscribe) {
@@ -201,7 +221,12 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
     setAsakaiChoices(choices)
 
     if (firebaseUid) {
-      void answerQuestioning({ questioningId, questionId, choice, userId: firebaseUid })
+      void answerQuestioning({
+        questioningId,
+        questionId,
+        choice,
+        userId: firebaseUid,
+      })
     }
 
     if (!isCoachMode && user) {
@@ -210,6 +235,26 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
 
     if (!firebaseUid) {
       void changeQuestion(1)
+    }
+  }
+
+  const vote = (questionId: number, vote: boolean) => {
+    const upVote = asakaiVotes[questionId] === vote ? null : vote
+    const votes = { ...asakaiVotes }
+    votes[questionId] = upVote
+    setAsakaiVotes(votes)
+
+    if (firebaseUid) {
+      void answerQuestioning({
+        questioningId,
+        questionId,
+        upVote,
+        userId: firebaseUid,
+      })
+    }
+
+    if (user) {
+      void postVote(questionId, upVote, enqueueSnackbar, null)
     }
   }
 
@@ -270,9 +315,12 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
             user={user}
             questionIndex={questionIndex}
             usersAnswers={usersAnswers}
+            usersVotes={usersVotes}
             asakaiChoices={asakaiChoices}
+            asakaiVotes={asakaiVotes}
             changeQuestion={changeQuestion}
             usersPictures={usersPictures}
+            vote={vote}
           />
         ) : (
           <React.Fragment>

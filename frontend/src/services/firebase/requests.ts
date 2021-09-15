@@ -1,4 +1,4 @@
-import { Choice, UsersAnswers } from 'components/Questioning/types'
+import { Choice, UpVote, UsersAnswers, UsersVotes } from 'components/Questioning/types'
 import { db } from 'services/firebase/initialiseFirebase'
 import firebase from 'firebase/app'
 
@@ -7,56 +7,91 @@ export const answerQuestioning = async ({
   questionId,
   userId,
   choice,
+  upVote,
 }: {
   questioningId: number | null
   questionId: number
   userId: string | null
-  choice: 1 | 2
+  choice?: Choice
+  upVote?: UpVote
 }) => {
   if (!questioningId || !userId) {
     return
   }
-  await db
-    .doc(`questioning/${questioningId}/questions/${questionId}/users/${userId}`)
-    .set({ choice, timestamp: firebase.firestore.FieldValue.serverTimestamp() })
+  const payload: { timestamp: firebase.firestore.FieldValue; choice?: Choice; upVote?: UpVote } = {
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+  }
+  if (choice !== undefined) {
+    payload.choice = choice
+  }
+  if (upVote !== undefined) {
+    payload.upVote = upVote
+  }
+  console.log('que', questionId)
+  await db.doc(`questioning/${questioningId}/questions/${questionId}/users/${userId}`).set(payload, { merge: true })
 }
 /* eslint-disable complexity */
 export const onAnswerChange = ({
   questioningId,
   questionId,
   setUsersAnswers,
+  setUsersVotes,
 }: {
   questioningId: number
   questionId: number
   setUsersAnswers: (answers: UsersAnswers) => void
+  setUsersVotes: (votes: UsersVotes) => void
 }) => {
-  const usersAnswers: Record<string, Choice> = {}
+  const answersByUserId: Record<string, Choice> = {}
+  const votesByUserId: Record<string, UpVote> = {}
 
   return db.collection(`questioning/${questioningId}/questions/${questionId}/users`).onSnapshot(function (snapshot) {
-    let needUpdate = 0
+    let needAnswerUpdate = 0
+    let needVotesUpdate = 0
+
     snapshot.docChanges().forEach(function (change) {
       const id = change.doc.id
       const choice = change.doc.data()?.choice as Choice
-      if (choice !== 1 && choice !== 2) {
-        return
-      }
-      if (id in usersAnswers) {
-        if (usersAnswers[id] !== choice) {
-          usersAnswers[id] = choice
-          needUpdate += 1
+      const vote = (change.doc.data()?.upVote ?? null) as UpVote
+
+      if (id in answersByUserId) {
+        if (answersByUserId[id] !== choice) {
+          answersByUserId[id] = choice
+          needAnswerUpdate += 1
         }
-      } else {
-        needUpdate += 1
-        usersAnswers[id] = choice
+      } else if (choice === 1 || choice === 2) {
+        needAnswerUpdate += 1
+        answersByUserId[id] = choice
+      }
+
+      if (id in votesByUserId) {
+        if (votesByUserId[id] !== vote) {
+          votesByUserId[id] = vote
+          needVotesUpdate += 1
+        }
+      } else if (vote !== null) {
+        needVotesUpdate += 1
+        votesByUserId[id] = vote
       }
     })
-    if (needUpdate > 0) {
+    if (needAnswerUpdate > 0) {
       const answers: UsersAnswers = { choice1: [], choice2: [] }
-      for (const userId in usersAnswers) {
-        const choiceField = `choice${usersAnswers[userId]}` as keyof typeof answers
+      for (const userId in answersByUserId) {
+        const choiceField = `choice${answersByUserId[userId]}` as keyof typeof answers
         answers[choiceField].push(parseInt(userId))
       }
       setUsersAnswers(answers)
+    }
+    if (needVotesUpdate > 0) {
+      const votes = { upVotes: 0, downVotes: 0 }
+      for (const userId in votesByUserId) {
+        if (null === votesByUserId[userId]) {
+          continue
+        }
+        const voteField = `${votesByUserId[userId] ? 'up' : 'down'}Votes` as keyof typeof votes
+        votes[voteField] += 1
+      }
+      setUsersVotes(votes)
     }
   })
 }
