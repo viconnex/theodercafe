@@ -144,6 +144,8 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
     if (!question || !firebaseUid || !questioningId) {
       return
     }
+    setUsersAnswers(null)
+    setUsersVotes(null)
     const unsubscribe = onAnswerChange({
       questioningId,
       questionId: question.id,
@@ -271,6 +273,7 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
       setIsConnectingToFirebase(true)
       await signout()
       setUsersAnswers(null)
+      setUsersVotes(null)
       setIsConnectingToFirebase(false)
     }
   }

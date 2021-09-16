@@ -27,7 +27,6 @@ export const answerQuestioning = async ({
   if (upVote !== undefined) {
     payload.upVote = upVote
   }
-  console.log('que', questionId)
   await db.doc(`questioning/${questioningId}/questions/${questionId}/users/${userId}`).set(payload, { merge: true })
 }
 /* eslint-disable complexity */
