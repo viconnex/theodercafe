@@ -5,7 +5,6 @@ const useStyle = makeStyles(() => {
   return {
     voter: {
       display: 'flex',
-      marginTop: '16px',
     },
     neutralVote: {
       color: colors.white,

@@ -12,7 +12,7 @@ const Voter = ({
   vote,
 }: {
   questionId: number
-  questionVote: QuestionVote | undefined
+  questionVote: QuestionVote
   vote: (questionId: number, isUpVote: boolean) => void
 }) => {
   const classes = useStyle()
@@ -37,7 +37,7 @@ const Voter = ({
             <ThumbDown />
           </IconButton>
         </Tooltip>
-        {questionVote && <div className={classes.count}>{questionVote.downVoteCount ?? 0}</div>}
+        {!!questionVote && <div className={classes.count}>{questionVote.downVoteCount ?? 0}</div>}
       </div>
       <div className={classes.thumbContainer}>
         <Tooltip title="J'aime cette question">
@@ -45,7 +45,7 @@ const Voter = ({
             <ThumbUp />
           </IconButton>
         </Tooltip>
-        {questionVote && <div className={classes.count}>{questionVote.upVoteCount ?? 0}</div>}
+        {!!questionVote && <div className={classes.count}>{questionVote.upVoteCount ?? 0}</div>}
       </div>
     </div>
   )
