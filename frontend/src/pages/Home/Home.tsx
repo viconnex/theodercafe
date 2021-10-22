@@ -15,7 +15,7 @@ import useStyles from './style'
 
 const Home = ({ user }: { user: User | null }) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
-  const [isAsakaiMode, setIsAsakaiMode] = useState(new Date().getDay() === 1)
+  const [isAsakaiMode, setIsAsakaiMode] = useState([1, 5].includes(new Date().getDay()))
   const [showMbtiInitially, setShowMbtiInitially] = useState(false)
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
 
@@ -64,7 +64,7 @@ const Home = ({ user }: { user: User | null }) => {
   return (
     <div className={classes.pageContainer}>
       <ModeSelector
-        label="Mode Asakai"
+        label={new Date().getHours() >= 11 ? 'Mode Asakai' : 'Mode Dojo'}
         isModeOn={isAsakaiMode}
         handleModeChange={handleModeChange}
         tooltipContent="En mode Asakai, réponds à 10 questions pour connaître ton Alterodo"

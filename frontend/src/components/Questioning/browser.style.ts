@@ -6,7 +6,7 @@ const useStyle = makeStyles(() => {
       marginTop: '8px',
     },
     counter: {
-      fontSize: '14px',
+      fontSize: '17px',
       marginTop: '8px',
     },
     nextButton: {
