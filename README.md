@@ -2,6 +2,11 @@ Fais tes choix sur [theodercafe.com](https://theodercafe.com)
 
 ![preview](app-preview.png)
 
+## Backlog
+
+- In asakai mode, merge postgre db votes with live firebase votes
+- Display a single url for each question so they can be shared
+
 ## Database
 
 - Dev
@@ -9,9 +14,3 @@ Fais tes choix sur [theodercafe.com](https://theodercafe.com)
 
 * Prod
   `psql -h localhost -d theodercafe -U the`
-
-## Deploy
-
-- ssh ubuntu@theodercafe.com
-- pm2 start ecosystem.config.js --env production
-- npm run deploy
