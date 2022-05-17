@@ -39,7 +39,7 @@ const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
         enqueueSnackbar('Email envoyé !', { variant: 'success' })
       }
     } catch (e) {
-      enqueueSnackbar('Problème de connexion au serveur', { variant: 'error' })
+      enqueueSnackbar("Une erreur s'est produite 🧜‍♀️", { variant: 'error' })
     }
     setIsSendingEmail(false)
   }

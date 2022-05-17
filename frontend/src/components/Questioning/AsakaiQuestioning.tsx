@@ -201,7 +201,7 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
       })
     } catch {
       setIsLoading(false)
-      return enqueueSnackbar('Problème de connexion', { variant: 'error' })
+      return enqueueSnackbar("Une erreur s'est produite 🛸", { variant: 'error' })
     }
     if (response.status !== 201) {
       setIsLoading(false)
