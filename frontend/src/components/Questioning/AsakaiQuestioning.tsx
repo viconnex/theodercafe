@@ -6,6 +6,7 @@ import { Alterodo } from 'components/Alterodo'
 import { fetchRequest, fetchRequestResponse, postChoice, postVote } from 'services/api'
 import EmailSnackbar from 'components/EmailSnackbar/EmailSnackbar'
 import { Button, CircularProgress } from '@material-ui/core'
+import { LoginDialog } from 'components/Login'
 import {
   Alterodos,
   AsakaiChoices,
@@ -106,7 +107,7 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
   const [usersAnswers, setUsersAnswers] = useState<UsersAnswers | null>(null)
   const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
   const [isConnectingToFirebase, setIsConnectingToFirebase] = useState(false)
-
+  const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
   const question = questions[questionIndex]
@@ -213,6 +214,9 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
   }
 
   const chose = (questionId: number, choice: Choice) => {
+    if (!user) {
+      return setOpenLoginDialog(true)
+    }
     if (asakaiChoices[questionId] === choice) {
       void changeQuestion(1)
       return
@@ -340,6 +344,7 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
           </React.Fragment>
         )}
       </div>
+      <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
     </div>
   )
 }
