@@ -26,7 +26,7 @@ export const welcomeEmail = `
     <h2> Bienvenue sur Theodercafe !</h2>
     <p>
       Ton compte vient d'être créé, rendez-vous sur theodercafe.com/login et connecte-toi
-      avec ton adresse #{email} pour confirmer l'inscription.
+      avec cet email pour retrouver tes réponses.
     </p>
     <p>
       Tu pourras faire ou refaire tes choix à tête reposée.
