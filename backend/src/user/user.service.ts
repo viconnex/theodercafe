@@ -1,20 +1,19 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { MailerService } from '@nestjs-modules/mailer'
-import { IS_DEV, OWNER_EMAIL } from 'src/constants'
 import { QuestionService } from 'src/question/question.service'
 import { DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
 import { AdminUserList, UserWithPublicFields } from './user.types'
+import sendEmail from './emails/sendinblue'
+import { alterodosLunch, welcomeEmail } from './emails/templates'
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
         private readonly questionService: QuestionService,
-        private readonly mailerService: MailerService,
     ) {}
 
     async findAdminList(): Promise<AdminUserList> {
@@ -142,21 +141,12 @@ export class UserService {
         const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
         const subject = randomQuestion ? `${randomQuestion.option1} ou ${randomQuestion.option2} ?` : 'Thé ou café ?'
 
-        const toEmail = IS_DEV ? OWNER_EMAIL : newUserEmail
-        try {
-            await this.mailerService.sendMail({
-                to: toEmail,
-                cc: OWNER_EMAIL,
-                from: 'theodercafe@gmail.com',
-                subject,
-                template: 'welcome',
-                context: {
-                    email: newUserEmail,
-                },
-            })
-            console.log(`welcome email sent to ${newUserEmail}`)
-        } catch (e) {
-            console.log('error while sending email', e)
+        const isEmailSent = await sendEmail([newUserEmail], [], subject, welcomeEmail)
+
+        if (isEmailSent) {
+            console.log('welcome email sent')
+        } else {
+            console.log('error while sending alterodos email')
             throw new BadRequestException({ code: 'mail-service-error', message: 'service de mail indisponible' })
         }
     }
@@ -171,23 +161,24 @@ export class UserService {
         coachUserEmail?: string
     }) {
         const recipients: string[] = []
-        const cc: string[] = [OWNER_EMAIL]
+        const cc: string[] = []
 
-        recipients.push(newUserEmail && !IS_DEV ? newUserEmail : OWNER_EMAIL)
-        recipients.push(alterodoUser?.email && !IS_DEV ? alterodoUser.email : OWNER_EMAIL)
-        cc.push(coachUserEmail && !IS_DEV ? coachUserEmail : OWNER_EMAIL)
+        if (newUserEmail) {
+            recipients.push(newUserEmail)
+        }
+        if (alterodoUser?.email) {
+            recipients.push(alterodoUser.email)
+        }
+        if (coachUserEmail) {
+            cc.push(coachUserEmail)
+        }
 
-        try {
-            await this.mailerService.sendMail({
-                to: recipients,
-                cc,
-                from: 'theodercafe@gmail.com',
-                subject: 'Dej Alterodos',
-                template: 'alterodos_lunch',
-            })
+        const isEmailSent = await sendEmail(recipients, cc, 'Dej Alterodos', alterodosLunch)
+
+        if (isEmailSent) {
             console.log('alterodos tradition email sent')
-        } catch (e) {
-            console.log('error while sending alterodos email', e)
+        } else {
+            console.log('error while sending alterodos email')
         }
     }
 }

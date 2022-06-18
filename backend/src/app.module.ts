@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule } from '@nestjs/config'
 
-import { MailerModule } from '@nestjs-modules/mailer'
-import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 import { IS_DEV } from 'src/constants'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
@@ -31,19 +29,6 @@ import { HealthController } from './health/health.controller'
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: IS_DEV ? ['.env', '.env.dev'] : ['.env', '.env.prod'],
-        }),
-        MailerModule.forRoot({
-            transport: `smtps://theodercafe@gmail.com:${process.env.GMAIL_PASSWORD ?? 'xxx'}@smtp.gmail.com`,
-            defaults: {
-                from: '"nest-modules" <modules@nestjs.com>',
-            },
-            template: {
-                dir: __dirname + '/../templates',
-                adapter: new PugAdapter(),
-                options: {
-                    strict: true,
-                },
-            },
         }),
     ],
     controllers: [AppController, HealthController],

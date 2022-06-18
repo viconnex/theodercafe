@@ -38,6 +38,8 @@ services:
       TYPEORM_MIGRATIONS: dist/migration/*.js
       TYPEORM_MIGRATIONS_DIR: migration
       NODE_ENV: development
+    env_file:
+      - backend/.env.dev
     command: npm run start:dev
     depends_on:
       - postgresql
