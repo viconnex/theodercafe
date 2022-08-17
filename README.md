@@ -2,6 +2,25 @@ Fais tes choix sur [theodercafe.com](https://theodercafe.com)
 
 ![preview](app-preview.png)
 
+## Install
+
+### Backend
+
+```
+cd backend && cp .env.dev.dist .env.dev && cd ..
+docker-compose up
+docker exec -it backend sh
+npm run migration:run
+```
+
+### Frontend
+
+```
+cd frontend
+npm install
+npm run start
+```
+
 ## Backlog
 
 - In asakai mode, merge postgre db votes with live firebase votes
