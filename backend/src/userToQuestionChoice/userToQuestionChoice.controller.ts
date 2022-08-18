@@ -14,7 +14,6 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { JwtPayload as RequestUser } from 'src/auth/auth.types'
-import { User } from '../user/user.entity'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {

@@ -14,6 +14,7 @@ import { UserToQuestionChoiceModule } from './userToQuestionChoice/userToQuestio
 import { UserToQuestionVoteModule } from './userToQuestionVote/userToQuestionVote.module'
 import { QuestioningHistoricModule } from './questioningHistoric/questioningHistoric.module'
 import { HealthController } from './health/health.controller'
+import { QuestionSetModule } from './questionSet/questionSet.module'
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { HealthController } from './health/health.controller'
             isGlobal: true,
             envFilePath: IS_DEV ? ['.env', '.env.dev'] : ['.env', '.env.prod'],
         }),
+        QuestionSetModule,
     ],
     controllers: [AppController, HealthController],
     providers: [AppService],

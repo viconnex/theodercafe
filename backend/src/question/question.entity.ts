@@ -2,12 +2,14 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToMany,
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
 import { Category } from '../category/category.entity'
+import { QuestionSet } from '../questionSet/questionSet.entity'
 import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity'
 import { UserToQuestionVote } from '../userToQuestionVote/userToQuestionVote.entity'
 
@@ -16,7 +18,7 @@ export class Question {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne((type) => Category, (category) => category.question)
+    @ManyToOne(() => Category, (category) => category.question)
     category: Category
 
     @Column()
@@ -37,13 +39,16 @@ export class Question {
     @Column({ default: false })
     isJoke: boolean
 
-    @OneToMany((type) => UserToQuestionChoice, (userToQuestionChoice) => userToQuestionChoice.question, {
+    @OneToMany(() => UserToQuestionChoice, (userToQuestionChoice) => userToQuestionChoice.question, {
         cascade: true,
     })
     userToQuestionChoices: UserToQuestionChoice[]
 
-    @OneToMany((type) => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.question, { cascade: true })
+    @OneToMany(() => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.question, { cascade: true })
     userToQuestionVotes: UserToQuestionChoice[]
+
+    @ManyToMany(() => QuestionSet, (questionSet) => questionSet.questions)
+    questionSets: QuestionSet[]
 
     @CreateDateColumn()
     createdAt: string
