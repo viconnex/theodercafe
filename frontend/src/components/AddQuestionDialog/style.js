@@ -1,4 +1,6 @@
-const style = {
+import { makeStyles } from '@material-ui/core'
+
+const useStyle = makeStyles(() => ({
   categoryTitle: {
     textAlign: 'center',
   },
@@ -46,6 +48,6 @@ const style = {
   interroBang: {
     marginLeft: '10px',
   },
-}
+}))
 
-export default style
+export default useStyle
