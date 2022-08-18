@@ -28,6 +28,8 @@ export class AddQuestionSet1660752837411 implements MigrationInterface {
             `ALTER TABLE "question_set_questions" ADD CONSTRAINT "FK_e9933e8c55c2a9ad3334daaf3c0" FOREIGN KEY ("questionsId") REFERENCES "questions"("id") ON DELETE CASCADE ON UPDATE NO ACTION`,
             undefined,
         )
+        await queryRunner.commitTransaction()
+        await queryRunner.startTransaction()
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
