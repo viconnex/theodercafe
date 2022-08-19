@@ -17,6 +17,7 @@ export class QuestionPostDTO {
     readonly category: string | number
     readonly option1: string
     readonly option2: string
+    readonly questionSets: { id: number | null; label: string }[]
 }
 
 export type QuestionAdmin = {

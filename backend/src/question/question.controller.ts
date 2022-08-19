@@ -17,7 +17,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 import { QuestionService } from './question.service'
 import { Question } from './question.entity'
-import { AsakaiQuestioning, QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { AsakaiQuestioning, QuestionPostDTO } from './interfaces/question.dto'
 
 @Controller('questions')
 export class QuestionController {

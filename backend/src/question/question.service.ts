@@ -6,6 +6,7 @@ import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
 import { AsakaiQuestioning, QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
+import { QuestionSetService } from '../questionSet/questionSet.service'
 import { Question } from './question.entity'
 
 const JOKE_ON_SOMEONE_PROBABILITY = 0.3
@@ -16,6 +17,7 @@ export class QuestionService {
         @InjectRepository(QuestionRepository) private readonly questionRepository: QuestionRepository,
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
         private readonly questioningHistoricService: QuestioningHistoricService,
+        private readonly questionSetService: QuestionSetService,
     ) {}
 
     async create(questionBody: QuestionPostDTO): Promise<Question> {
@@ -36,11 +38,13 @@ export class QuestionService {
                 )
             }
         }
+        const questionSets = await this.questionSetService.getOrCreateQuestionSets(questionBody.questionSets)
 
         const questionPayload: DeepPartial<Question> = {
             option1: questionBody.option1,
             option2: questionBody.option2,
             isClassic: false,
+            questionSets,
         }
         if (category) {
             questionPayload.category = category

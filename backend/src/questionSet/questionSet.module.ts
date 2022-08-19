@@ -8,5 +8,6 @@ import { QuestionSetRepository } from './questionSet.repository'
     imports: [TypeOrmModule.forFeature([QuestionSetRepository])],
     controllers: [QuestionSetController],
     providers: [QuestionSetService],
+    exports: [QuestionSetService],
 })
 export class QuestionSetModule {}
