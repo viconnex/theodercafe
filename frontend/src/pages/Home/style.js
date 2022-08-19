@@ -15,9 +15,6 @@ const useStyle = makeStyles(() => {
       right: '0px',
       position: 'absolute',
     },
-    modal: {
-      padding: '30px',
-    },
   }
 })
 

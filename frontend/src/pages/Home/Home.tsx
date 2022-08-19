@@ -79,7 +79,6 @@ const Home = ({ user }: { user: User | null }) => {
         <AddIcon />
       </Fab>
       <AddQuestionDialog
-        className={classes.modal}
         open={addQuestionDialog}
         onClose={() => toggleModal(false)}
         handleQuestionAdded={() => setAddQuestionDialog(false)}

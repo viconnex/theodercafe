@@ -10,7 +10,9 @@ export const fetchRequestResponse = async (
   try {
     response = await fetchRequest({ uri, method, body, params })
   } catch {
-    enqueueSnackbar("Une erreur s'est produite 🦦", { variant: 'error' })
+    if (enqueueSnackbar) {
+      enqueueSnackbar("Une erreur s'est produite 🦦", { variant: 'error' })
+    }
     return null
   }
   if (response.status === 401) {

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 
-const useStyle = makeStyles(() => ({
+const useStyle = makeStyles((theme) => ({
   categoryTitle: {
     textAlign: 'center',
   },
@@ -20,7 +20,12 @@ const useStyle = makeStyles(() => ({
     marginTop: '10px',
   },
   dialog: {
-    padding: '20px',
+    [theme.breakpoints.down('sm')]: {
+      padding: '20px 24px',
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding: '24px 48px',
+    },
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'column',
@@ -31,6 +36,8 @@ const useStyle = makeStyles(() => ({
     padding: '16px 5px',
   },
   form: {
+    width: '100%',
+    maxWidth: '400px',
     display: 'flex',
     flexDirection: 'column',
   },
