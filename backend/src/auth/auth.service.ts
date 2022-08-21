@@ -40,16 +40,12 @@ export class AuthService {
         }
     }
 
-    async verifyAdminRequest(email: string): Promise<boolean> {
-        const user = await this.userService.findByEmail(email)
+    async verifyAdminRequest(id: number): Promise<boolean> {
+        const user = await this.userService.findOne(id)
         return !!user && user.isAdmin
     }
 
-    async verifyRegisteredUserRequest(email: string): Promise<boolean> {
-        const user = await this.userService.findByEmail(email)
-        if (user) {
-            return true
-        }
-        return false
+    async verifyRegisteredUserRequest(id: number) {
+        return await this.userService.findOne(id)
     }
 }

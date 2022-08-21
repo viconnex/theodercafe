@@ -17,7 +17,7 @@ export class JwtAdminStrategy extends PassportStrategy(Strategy, ADMIN_STRATEGY)
 
     async validate(payload: JwtPayload, done: Function): Promise<void> {
         try {
-            const validClaims = await this.authService.verifyAdminRequest(payload.email)
+            const validClaims = await this.authService.verifyAdminRequest(payload.id)
 
             if (!validClaims) {
                 return done(new UnauthorizedException('You must be an admin'), false)

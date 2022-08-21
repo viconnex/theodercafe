@@ -6,7 +6,6 @@ import { UserService } from 'src/user/user.service'
 import { User } from 'src/user/user.entity'
 import { DeleteResult } from 'typeorm'
 import { USER_STRATEGY } from 'src/auth/jwt.user.strategy'
-import { JwtPayload as RequestUser } from '../auth/auth.types'
 
 @Controller('users')
 export class UserController {

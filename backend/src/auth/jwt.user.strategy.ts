@@ -17,13 +17,13 @@ export class JwtRegisteredUserStrategy extends PassportStrategy(Strategy, USER_S
 
     async validate(payload: JwtPayload, done: Function): Promise<void> {
         try {
-            const validClaims = await this.authService.verifyRegisteredUserRequest(payload.email)
+            const user = await this.authService.verifyRegisteredUserRequest(payload.id)
 
-            if (!validClaims) {
+            if (!user) {
                 return done(new UnauthorizedException('invalid token claims'), false)
             }
 
-            done(null, payload)
+            done(null, user)
         } catch (err) {
             throw new UnauthorizedException('unauthorized', err.message)
         }
