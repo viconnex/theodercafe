@@ -3,16 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { QuestionService } from 'src/question/question.service'
 import { DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
-import { getCompanyFromEmail, User } from './user.entity'
+import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
 import { AdminUserList, UserWithPublicFields } from './user.types'
 import sendEmail from './emails/sendinblue'
 import { alterodosLunch, welcomeEmail } from './emails/templates'
+import { QuestionSetService } from '../questionSet/questionSet.service'
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserRepository) private readonly userRepository: UserRepository,
+        private readonly questionSetService: QuestionSetService,
         private readonly questionService: QuestionService,
     ) {}
 
@@ -50,12 +52,13 @@ export class UserService {
         return this.userRepository.findOne({ email })
     }
 
-    createNewUser(email: string, profile: GoogleProfile): Promise<User> {
+    async createNewUser(email: string, profile: GoogleProfile): Promise<User> {
         return this.userRepository.save({
             email,
             company: getCompanyFromEmail(email),
             isAdmin: false,
             ...this.getUserInfoFromProfile(profile),
+            selectedQuestionSet: await this.questionSetService.findFromName(getPresetQuestionSetFromEmail(email)),
         })
     }
 
@@ -88,7 +91,7 @@ export class UserService {
             return this.userRepository.save({ ...user, ...this.getUserInfoFromProfile(profile), isLoginPending: false })
         }
 
-        return user ?? this.createNewUser(email, profile)
+        return user ?? (await this.createNewUser(email, profile))
     }
 
     async createUserWithEmail(
@@ -118,6 +121,7 @@ export class UserService {
                 addedByUser,
                 asakaiAlterodoUser,
                 isLoginPending: true,
+                selectedQuestionSet: await this.questionSetService.findFromName(getPresetQuestionSetFromEmail(email)),
             })
         }
 

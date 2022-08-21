@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { QuestionSet } from './questionSet.entity'
+import { PresetQuestionSet, QuestionSet } from './questionSet.entity'
 import { QuestionSetRepository } from './questionSet.repository'
 
 @Injectable()
@@ -28,5 +28,9 @@ export class QuestionSetService {
             }
         }
         return questionSets
+    }
+
+    async findFromName(name: PresetQuestionSet) {
+        return await this.questionSetRepository.findOne({ name })
     }
 }

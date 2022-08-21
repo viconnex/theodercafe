@@ -10,9 +10,18 @@ import {
 import { Exclude } from 'class-transformer'
 import { UserToQuestionChoice } from '../userToQuestionChoice/userToQuestionChoice.entity'
 import { UserToQuestionVote } from '../userToQuestionVote/userToQuestionVote.entity'
+import { PresetQuestionSet, QuestionSet } from '../questionSet/questionSet.entity'
 
 export const getCompanyFromEmail = (email: string): string => {
     return email.split('@')[1].split('.')[0]
+}
+
+export const getPresetQuestionSetFromEmail = (email: string) => {
+    const domain = email.split('@')[1]
+    if (domain === 'theodo.com') {
+        return PresetQuestionSet.TheodoUS
+    }
+    return PresetQuestionSet.TheodoFR
 }
 
 export const THEODO_COMPANY = 'theodo'
@@ -42,6 +51,9 @@ export class User {
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
     asakaiAlterodoUser: User | null
+
+    @ManyToOne(() => QuestionSet, { onDelete: 'SET NULL', nullable: true })
+    selectedQuestionSet: QuestionSet | null
 
     @Column({ default: false })
     @Exclude()

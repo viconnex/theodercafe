@@ -34,7 +34,7 @@ const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const { jwtToken } = useSetAuth({ enqueueSnackbar })
-  const { user } = useSetUser({ jwtToken })
+  const { user, setUser } = useSetUser({ jwtToken })
 
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open)

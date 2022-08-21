@@ -9,6 +9,12 @@ import {
 } from 'typeorm'
 import { Question } from '../question/question.entity'
 
+// eslint-disable-next-line no-shadow
+export enum PresetQuestionSet {
+    TheodoFR = 'Theodo FR',
+    TheodoUS = 'Theodo US',
+}
+
 @Entity('question_set')
 export class QuestionSet {
     @PrimaryGeneratedColumn()
