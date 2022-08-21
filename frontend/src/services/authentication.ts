@@ -82,15 +82,15 @@ export const useSetUser = ({ jwtToken }: { jwtToken: string | null }) => {
     try {
       const userJWT = decodeJWT(jwtToken)
       if (userJWT.hasExpired) {
-        return
+        setUser(null)
       }
       void fetchUser()
     } catch {
-      return
+      setUser(null)
     }
   }, [jwtToken])
 
-  return { user }
+  return { user, setUser }
 }
 
 export const useSetAuth = ({ enqueueSnackbar }: { enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'] }) => {
@@ -137,9 +137,10 @@ export const useSetAuth = ({ enqueueSnackbar }: { enqueueSnackbar: WithSnackbarP
   return { jwtToken }
 }
 
-export const logout = (history: History) => {
+export const logout = (history: History, setUser: (user: User | null) => void) => {
   localStorage.removeItem(JWT_STORAGE_KEY)
   localStorage.removeItem(FIREBASE_JWT_STORAGE_KEY)
   void firebaseSignout()
   history.go(0)
+  setUser(null)
 }

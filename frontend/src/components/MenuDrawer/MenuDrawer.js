@@ -25,7 +25,7 @@ const style = (theme) => ({
   },
 })
 
-const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
+const AppDrawer = ({ classes, toggleDrawer, open, userRole, setUser }) => {
   const drawerLinks = [
     { label: 'Questions', path: '/' },
     { label: 'A propos', path: '/a-propos' },
@@ -41,7 +41,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole }) => {
   const history = useHistory()
 
   const onLogout = () => {
-    logout(history)
+    logout(history, setUser)
     toggleDrawer(false)
   }
 

@@ -70,7 +70,7 @@ const App = () => {
               <Route path="/" render={() => <Home user={user} />} />
             </Switch>
           </Suspense>
-          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} userRole={userRole} />
+          <MenuDrawer open={isDrawerOpen} setUser={setUser} toggleDrawer={toggleDrawer} userRole={userRole} />
         </div>
       </Router>
     </ThemeProvider>
