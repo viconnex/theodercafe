@@ -13,7 +13,6 @@ import {
     UseInterceptors,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { JwtPayload as RequestUser } from 'src/auth/auth.types'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {
@@ -25,6 +24,7 @@ import {
     UserMap,
 } from './userToQuestionChoice.types'
 import { USER_STRATEGY } from '../auth/jwt.user.strategy'
+import { User } from '../user/user.entity'
 
 @Controller('user_to_question_choices')
 export class UserToQuestionChoiceController {
@@ -41,7 +41,7 @@ export class UserToQuestionChoiceController {
     @Get('')
     @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
-    async getChoices(@Request() req: { user: RequestUser }) {
+    async getChoices(@Request() req: { user: User }) {
         return await this.userToQuestionChoiceService.getQuestionsPolls(req.user.id)
     }
 
@@ -51,7 +51,7 @@ export class UserToQuestionChoiceController {
     async chose(
         @Param('id') questionId: number,
         @Body() body: { choice: Choice },
-        @Request() req: { user: RequestUser },
+        @Request() req: { user: User },
     ): Promise<UserToQuestionChoice> {
         if (![1, 2].includes(body.choice)) {
             throw new BadRequestException('choice must be 1 or 2')
@@ -61,7 +61,7 @@ export class UserToQuestionChoiceController {
 
     @Get('alterodos')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async getUserAlterodos(@Request() req: { user: RequestUser }): Promise<AlterodoResponse> {
+    async getUserAlterodos(@Request() req: { user: User }): Promise<AlterodoResponse> {
         return await this.userToQuestionChoiceService.getUserAlterodos(req.user.id)
     }
 
@@ -81,7 +81,7 @@ export class UserToQuestionChoiceController {
 
     @Get('mbti')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    getMBTIprofiles(@Request() req: { user: RequestUser }) {
+    getMBTIprofiles(@Request() req: { user: User }) {
         return this.userToQuestionChoiceService.getMBTIprofiles(req.user)
     }
 }

@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { DeepPartial } from 'typeorm'
 import { UserWithPublicFields } from '../user/user.types'
-import { THEODO_COMPANY } from '../user/user.entity'
-import { JwtPayload } from '../auth/auth.types'
+import { THEODO_COMPANY, User } from '../user/user.entity'
 import { QuestionService } from '../question/question.service'
 import { MBTI_INDEX_LETTERS_BY_OPTION_1, MbtiIndexAndLetters } from './constants'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'
@@ -228,7 +227,7 @@ export class UserToQuestionChoiceService {
         return getBestAlterodos(Object.values(commonAnswersWithUsers), Math.sqrt(Object.keys(asakaiChoices).length))
     }
 
-    async getMBTIprofiles(requestUser: JwtPayload) {
+    async getMBTIprofiles(requestUser: User) {
         const questions = await this.questionService.findByCategoryName('MBTI')
         const questionIdToIndexAndLetter: Record<number, MbtiIndexAndLetters> = {}
         questions.forEach((question) => {

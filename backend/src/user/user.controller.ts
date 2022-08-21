@@ -13,8 +13,8 @@ export class UserController {
 
     @Get('me')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async getMeImFamous(@Request() req: { user: RequestUser }) {
-        return await this.userService.getUser(req.user.id)
+    async getMeImFamous(@Request() req: { user: User }) {
+        return await this.userService.getUserWithQuestionSet(req.user)
     }
 
     @Get('pictures')

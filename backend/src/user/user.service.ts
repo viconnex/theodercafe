@@ -70,9 +70,26 @@ export class UserService {
         }
     }
 
-    async getUser(userId: number) {
-        const user = await this.userRepository.findOneOrFail(userId)
-        return user
+    async getUserWithQuestionSet(user: User) {
+        return await this.userRepository
+            .createQueryBuilder('user')
+            .leftJoin('user.selectedQuestionSet', 'question_set')
+            .select([
+                'user.company',
+                'user.createdAt',
+                'user.email',
+                'user.familyName',
+                'user.givenName',
+                'user.id',
+                'user.isActive',
+                'user.isAdmin',
+                'user.isLoginPending',
+                'user.pictureUrl',
+                'question_set.id',
+                'question_set.name',
+            ])
+            .where('user.id = :id', { id: user.id })
+            .getOne()
     }
 
     async getUsersPictures() {
@@ -91,7 +108,7 @@ export class UserService {
             return this.userRepository.save({ ...user, ...this.getUserInfoFromProfile(profile), isLoginPending: false })
         }
 
-        return user ?? (await this.createNewUser(email, profile))
+        return await this.createNewUser(email, profile)
     }
 
     async createUserWithEmail(
