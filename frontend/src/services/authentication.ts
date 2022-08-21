@@ -36,7 +36,7 @@ type UserResponse = {
   isAdmin: boolean
   isLoginPending: boolean
   pictureUrl: string
-  updatedAt: string
+  selectedQuestionSet: { id: number; name: string }
 }
 
 export type User = {
@@ -45,6 +45,7 @@ export type User = {
   givenName: string
   familyName: string
   pictureUrl: string | null
+  selectedQuestionSet: { id: number; name: string }
 }
 
 export const login = () => {
@@ -71,6 +72,7 @@ export const useSetUser = ({ jwtToken }: { jwtToken: string | null }) => {
         givenName: userResponse.givenName,
         familyName: userResponse.familyName,
         pictureUrl: userResponse.pictureUrl,
+        selectedQuestionSet: userResponse.selectedQuestionSet,
       }
       setUser(user)
     }

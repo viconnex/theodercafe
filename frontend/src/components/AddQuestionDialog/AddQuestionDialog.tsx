@@ -8,8 +8,10 @@ import Close from '@material-ui/icons/Close'
 import Creatable from 'react-select/creatable'
 import { useSnackbar } from 'notistack'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
-import { Category, QuestionSet, QuestionSetOption } from 'components/AddQuestionDialog/types'
+import { Category, QuestionSetOption } from 'components/AddQuestionDialog/types'
 import { ActionMeta, MultiValue } from 'react-select'
+import { User } from 'services/authentication'
+import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 import useStyle from './style'
 
 const postQuestion = async (
@@ -39,20 +41,32 @@ const AddQuestionDialog = ({
   handleQuestionAdded,
   open,
   onClose,
+  user,
+  questionSets,
+  setRefreshQuestionSet,
 }: {
   handleQuestionAdded: () => void
   open: boolean
   onClose: () => void
+  user: User | null
+  questionSets: QuestionSet[]
+  setRefreshQuestionSet: React.Dispatch<React.SetStateAction<number>>
 }) => {
   const { enqueueSnackbar } = useSnackbar()
   const [categories, setCategories] = useState<Category[]>([])
-  const [questionSets, setQuestionSets] = useState<QuestionSet[]>([])
   const [questionSetValues, setQuestionSetValues] = useState<QuestionSetOption[]>([])
   const [option1, setOption1] = useState('')
   const [option2, setOption2] = useState('')
   const [categoryValue, setCategoryValue] = useState<string | number | null>(null)
   const [categoryLabel, setCategoryLabel] = useState<string | null>(null)
   const classes = useStyle()
+
+  useEffect(() => {
+    const defaultQuestionSet = computeDefaultQuestionSet({ questionSets, user })
+    if (defaultQuestionSet) {
+      setQuestionSetValues([{ value: defaultQuestionSet.id, label: defaultQuestionSet.name }])
+    }
+  }, [user, questionSets])
 
   const fetchCategories = async () => {
     const response = await fetchRequestResponse({ uri: '/categories', method: 'GET', params: null, body: null }, 200, {
@@ -64,23 +78,9 @@ const AddQuestionDialog = ({
       setCategories(categoryResponse)
     }
   }
-  const fetchQuestionSets = async () => {
-    const response = await fetchRequestResponse(
-      { uri: '/question_set', method: 'GET', params: null, body: null },
-      200,
-      {
-        enqueueSnackbar: null,
-        successMessage: null,
-      },
-    )
-    if (response) {
-      const questionSetResponse = (await response.json()) as QuestionSet[]
-      setQuestionSets(questionSetResponse)
-    }
-  }
+
   useEffect(() => {
     void fetchCategories()
-    void fetchQuestionSets()
   }, [])
 
   const handleCategoryChange = (newValue: { value: string | number | null; label: string | null } | null) => {
@@ -113,7 +113,7 @@ const AddQuestionDialog = ({
     setCategoryLabel(null)
     setQuestionSetValues([])
     void fetchCategories()
-    void fetchQuestionSets()
+    setRefreshQuestionSet((increment) => increment + 1)
   }
 
   const categoryOptions = categories.map((category) => ({

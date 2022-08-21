@@ -3,11 +3,6 @@ export type Category = {
   name: string
 }
 
-export type QuestionSet = {
-  id: string | number
-  name: string
-}
-
 export type QuestionSetOption = {
   label: string
   value: string | number

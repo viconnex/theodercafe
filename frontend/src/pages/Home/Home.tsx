@@ -10,7 +10,8 @@ import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { User } from 'services/authentication'
 import { MBTI_URL_PARAM } from 'utils/constants/constants'
 import { UsersPictures } from 'components/Questioning/types'
-import { fetchRequest } from 'services/api'
+import { fetchRequest, fetchRequestResponse } from 'services/api'
+import { QuestionSet } from 'utils/questionSet'
 import useStyles from './style'
 
 const Home = ({ user }: { user: User | null }) => {
@@ -18,6 +19,27 @@ const Home = ({ user }: { user: User | null }) => {
   const [isAsakaiMode, setIsAsakaiMode] = useState([1, 5].includes(new Date().getDay()))
   const [showMbtiInitially, setShowMbtiInitially] = useState(false)
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
+  const [questionSets, setQuestionSets] = useState<QuestionSet[]>([])
+  const [refreshQuestionSet, setRefreshQuestionSet] = useState(0)
+
+  const fetchQuestionSets = async () => {
+    const response = await fetchRequestResponse(
+      { uri: '/question_set', method: 'GET', params: null, body: null },
+      200,
+      {
+        enqueueSnackbar: null,
+        successMessage: null,
+      },
+    )
+    if (response) {
+      const questionSetResponse = (await response.json()) as QuestionSet[]
+      setQuestionSets(questionSetResponse)
+    }
+  }
+
+  useEffect(() => {
+    void fetchQuestionSets()
+  }, [refreshQuestionSet])
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -82,6 +104,9 @@ const Home = ({ user }: { user: User | null }) => {
         open={addQuestionDialog}
         onClose={() => toggleModal(false)}
         handleQuestionAdded={() => setAddQuestionDialog(false)}
+        user={user}
+        questionSets={questionSets}
+        setRefreshQuestionSet={setRefreshQuestionSet}
       />
     </div>
   )
