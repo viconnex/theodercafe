@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Put, Res, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, NotFoundException, Param, Put, Request, Res, UseGuards } from '@nestjs/common'
 import { Response } from 'express'
 import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
@@ -6,10 +6,17 @@ import { UserService } from 'src/user/user.service'
 import { User } from 'src/user/user.entity'
 import { DeleteResult } from 'typeorm'
 import { USER_STRATEGY } from 'src/auth/jwt.user.strategy'
+import { JwtPayload as RequestUser } from '../auth/auth.types'
 
 @Controller('users')
 export class UserController {
     constructor(private readonly userService: UserService) {}
+
+    @Get('me')
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    async getMeImFamous(@Request() req: { user: RequestUser }) {
+        return await this.userService.getUser(req.user.id)
+    }
 
     @Get('pictures')
     @UseGuards(AuthGuard(USER_STRATEGY))

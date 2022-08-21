@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react'
+import React, { lazy, Suspense } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import ToolBar from '@material-ui/core/Toolbar'
 import { createMuiTheme } from '@material-ui/core/styles'
@@ -17,7 +17,7 @@ import colors from 'ui/colors'
 import { Alterodo } from 'pages/Alterodo'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
-import { getUser, User, useSetAuth } from './services/authentication'
+import { useSetAuth, useSetUser } from './services/authentication'
 
 const Admin = lazy(() => import('./admin/Admin'))
 const Map = lazy(() => import('./pages/Map/Map'))
@@ -32,27 +32,15 @@ const theme = createMuiTheme({
 
 const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
-  const [user, setUser] = React.useState<User | null>(getUser())
-
-  useEffect(() => {
-    const newUser = getUser()
-    if (!user && newUser) {
-      setUser(newUser)
-      return
-    }
-    if (user && !newUser) {
-      setUser(null)
-    }
-  })
+  const { enqueueSnackbar } = useSnackbar()
+  const { jwtToken } = useSetAuth({ enqueueSnackbar })
+  const { user } = useSetUser({ jwtToken })
 
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open)
   }
 
   const classes = useStyle()
-
-  const { enqueueSnackbar } = useSnackbar()
-  useSetAuth(setUser, enqueueSnackbar)
 
   const userRole = user?.role ?? null
 

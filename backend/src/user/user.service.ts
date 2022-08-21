@@ -67,6 +67,11 @@ export class UserService {
         }
     }
 
+    async getUser(userId: number) {
+        const user = await this.userRepository.findOneOrFail(userId)
+        return user
+    }
+
     async getUsersPictures() {
         const usersWithPics = await this.userRepository.find({ select: ['id', 'pictureUrl'] })
         const userPicturesObject = {}

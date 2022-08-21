@@ -82,49 +82,46 @@ const AllQuestioning = ({
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const fetchChoices = async () => {
-    if (!localStorage.jwt_token) {
-      setAreChoicesFetched(true)
-      return
-    }
-    setAreChoicesFetched(false)
-    const response = await fetchRequestResponse(
-      { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`, method: 'GET', body: null, params: null },
-      200,
-      {
-        enqueueSnackbar,
-        successMessage: null,
-      },
-    )
-    if (!response) {
-      setAreChoicesFetched(true)
-      return
-    }
-    const questionPolls = (await response.json()) as QuestionsPolls
-    setQuestionsPolls(questionPolls)
-    setAreChoicesFetched(true)
-  }
-  const fetchVotes = async () => {
-    if (!localStorage.jwt_token) {
-      return
-    }
-    const response = await fetchRequestResponse(
-      { uri: `/${USER_TO_QUESTIONS_VOTES_URI}`, method: 'GET', body: null, params: null },
-      200,
-      {
-        enqueueSnackbar,
-        successMessage: null,
-      },
-    )
-    if (!response) {
-      return
-    }
-    const questionsVotes = (await response.json()) as QuestionsVotes
-    setQuestionsVotes(questionsVotes)
-  }
   useEffect(() => {
-    void fetchChoices()
-    void fetchVotes()
+    const fetchChoices = async () => {
+      setAreChoicesFetched(false)
+      const response = await fetchRequestResponse(
+        { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`, method: 'GET', body: null, params: null },
+        200,
+        {
+          enqueueSnackbar,
+          successMessage: null,
+        },
+      )
+      if (!response) {
+        setAreChoicesFetched(true)
+        return
+      }
+      const questionPolls = (await response.json()) as QuestionsPolls
+      setQuestionsPolls(questionPolls)
+      setAreChoicesFetched(true)
+    }
+    const fetchVotes = async () => {
+      const response = await fetchRequestResponse(
+        { uri: `/${USER_TO_QUESTIONS_VOTES_URI}`, method: 'GET', body: null, params: null },
+        200,
+        {
+          enqueueSnackbar,
+          successMessage: null,
+        },
+      )
+      if (!response) {
+        return
+      }
+      const questionsVotes = (await response.json()) as QuestionsVotes
+      setQuestionsVotes(questionsVotes)
+    }
+    if (user) {
+      void fetchChoices()
+      void fetchVotes()
+    } else {
+      setAreChoicesFetched(true)
+    }
     // eslint-disable-next-line
   }, [user])
 

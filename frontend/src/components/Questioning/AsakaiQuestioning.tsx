@@ -302,7 +302,7 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
             label="Mode Coach"
             isModeOn={isCoachMode}
             handleModeChange={setIsCoachMode}
-            tooltipContent="En mode Coach, les réponses ne sont pas enregistrées."
+            tooltipContent="En mode Coach, les réponses ne sont pas enregistrées. Renseigne un email à la fin du questionnaire et elles seront associées au nouveau compte"
             withMargin={false}
           />
         )}

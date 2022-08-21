@@ -56,7 +56,7 @@ export const signin = async (
   } catch (e) {
     console.log('authentication to firebase failed', e)
     if (enqueueSnackbar) {
-      enqueueSnackbar('Echec de connexion à Firebase', { variant: 'error' })
+      enqueueSnackbar('Live indisponible', { variant: 'error' })
     }
     setIsConnectingToFirebase(false)
   }
