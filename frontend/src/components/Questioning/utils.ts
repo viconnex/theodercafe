@@ -13,7 +13,7 @@ export const filterQuestion = (filters: Filters, areChoicesFetched: boolean, que
   question: QuestionResponse,
 ) => {
   if (filters.isMBTI) {
-    return question.categoryName === MBTI_CATEGORY_NAME
+    return question.category?.name === MBTI_CATEGORY_NAME
   }
   if (
     !(

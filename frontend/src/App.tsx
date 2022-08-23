@@ -17,7 +17,7 @@ import colors from 'ui/colors'
 import { Alterodo } from 'pages/Alterodo'
 import useStyle from './App.style'
 import logo from './ui/logo/theodercafe.png'
-import { useSetAuth, useSetUser } from './services/authentication'
+import { useLogout, useSetAuth, useSetUser } from './services/authentication'
 
 const Admin = lazy(() => import('./admin/Admin'))
 const Map = lazy(() => import('./pages/Map/Map'))
@@ -33,8 +33,9 @@ const theme = createMuiTheme({
 const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
-  const { jwtToken } = useSetAuth({ enqueueSnackbar })
+  const { jwtToken, setJwtToken } = useSetAuth({ enqueueSnackbar })
   const { user, setUser } = useSetUser({ jwtToken })
+  const { logout } = useLogout({ setJwtToken, setUser })
 
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open)
@@ -67,10 +68,10 @@ const App = () => {
               <PrivateRoute exact path="/alterodo" component={Alterodo} userRole={userRole} isAdminRoute={false} />
               <PrivateRoute exact path="/carte" component={Map} userRole={userRole} isAdminRoute={false} />
               <PrivateRoute exact path="/mbti" component={MBTI} userRole={userRole} isAdminRoute={false} />
-              <Route path="/" render={() => <Home user={user} />} />
+              <Route path="/" render={() => <Home user={user} isLoggedIn={!!jwtToken} />} />
             </Switch>
           </Suspense>
-          <MenuDrawer open={isDrawerOpen} setUser={setUser} toggleDrawer={toggleDrawer} userRole={userRole} />
+          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} userRole={userRole} logout={logout} />
         </div>
       </Router>
     </ThemeProvider>

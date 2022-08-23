@@ -14,12 +14,12 @@ import { fetchRequest, fetchRequestResponse } from 'services/api'
 import { QuestionSet } from 'utils/questionSet'
 import useStyles from './style'
 
-const Home = ({ user }: { user: User | null }) => {
+const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
   const [isAsakaiMode, setIsAsakaiMode] = useState([1, 5].includes(new Date().getDay()))
   const [showMbtiInitially, setShowMbtiInitially] = useState(false)
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
-  const [questionSets, setQuestionSets] = useState<QuestionSet[]>([])
+  const [questionSets, setQuestionSets] = useState<QuestionSet[] | null>(null)
   const [refreshQuestionSet, setRefreshQuestionSet] = useState(0)
 
   const fetchQuestionSets = async () => {
@@ -95,7 +95,13 @@ const Home = ({ user }: { user: User | null }) => {
       {isAsakaiMode ? (
         <AsakaiQuestioning user={user} usersPictures={usersPictures} />
       ) : (
-        <AllQuestioning showMbtiInitially={showMbtiInitially} usersPictures={usersPictures} user={user} />
+        <AllQuestioning
+          showMbtiInitially={showMbtiInitially}
+          usersPictures={usersPictures}
+          isLoggedIn={isLoggedIn}
+          user={user}
+          questionSets={questionSets}
+        />
       )}
       <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>
         <AddIcon />

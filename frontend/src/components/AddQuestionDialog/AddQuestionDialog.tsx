@@ -49,7 +49,7 @@ const AddQuestionDialog = ({
   open: boolean
   onClose: () => void
   user: User | null
-  questionSets: QuestionSet[]
+  questionSets: QuestionSet[] | null
   setRefreshQuestionSet: React.Dispatch<React.SetStateAction<number>>
 }) => {
   const { enqueueSnackbar } = useSnackbar()
@@ -121,10 +121,12 @@ const AddQuestionDialog = ({
     value: category.id,
   }))
   const categorySelectValue = categoryValue ? { label: categoryLabel, value: categoryValue } : null
-  const questionSetOptions: QuestionSetOption[] = questionSets.map((questionSet) => ({
-    label: questionSet.name,
-    value: questionSet.id,
-  }))
+  const questionSetOptions: QuestionSetOption[] = questionSets
+    ? questionSets.map((questionSet) => ({
+        label: questionSet.name,
+        value: questionSet.id,
+      }))
+    : []
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} open={open} PaperProps={{ className: classes.dialog }}>

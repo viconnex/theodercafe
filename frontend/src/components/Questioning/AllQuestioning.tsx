@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Question } from 'components/Question'
 import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 import { useSnackbar } from 'notistack'
@@ -18,16 +18,23 @@ import colors from 'ui/colors'
 import { filterQuestion } from 'components/Questioning/utils'
 import { useHistory } from 'react-router-dom'
 import { ExploreOutlined } from '@material-ui/icons'
+import { computeDefaultQuestionSet } from 'utils/questionSet'
+import { QuestionSet } from 'utils/questionSet'
+
 import useStyle from './style'
 
 const AllQuestioning = ({
   user,
   showMbtiInitially,
   usersPictures,
+  questionSets,
+  isLoggedIn,
 }: {
   user: User | null
   showMbtiInitially: boolean
   usersPictures: UsersPictures | null
+  questionSets: QuestionSet[] | null
+  isLoggedIn: boolean
 }) => {
   const [filters, setFilters] = useState({
     isValidated: false,
@@ -51,10 +58,25 @@ const AllQuestioning = ({
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     setIsLoading(true)
+    if (!questionSets) {
+      return
+    }
+    if (isLoggedIn && !user) {
+      // avoid useless fetch if user is going to be fetched
+      return
+    }
+    const questionSet = computeDefaultQuestionSet({ user, questionSets })
+    const params = questionSet ? { questionSetId: questionSet.id } : {}
+
     const response = await fetchRequestResponse(
-      { uri: `/questions/${ALL_QUESTIONS_MODE}`, method: 'GET', params: null, body: null },
+      {
+        uri: `/questions/${ALL_QUESTIONS_MODE}`,
+        method: 'GET',
+        params,
+        body: null,
+      },
       200,
       {
         enqueueSnackbar,
@@ -68,7 +90,12 @@ const AllQuestioning = ({
     const data = (await response.json()) as QuestionResponse[]
     setQuestions(data)
     setIsLoading(false)
-  }
+    // eslint-disable-next-line
+  }, [user, isLoggedIn, questionSets])
+
+  useEffect(() => {
+    void fetchQuestions()
+  }, [fetchQuestions])
 
   /* eslint-disable complexity */
   useEffect(() => {
@@ -124,11 +151,6 @@ const AllQuestioning = ({
     }
     // eslint-disable-next-line
   }, [user])
-
-  useEffect(() => {
-    void fetchQuestions()
-    // eslint-disable-next-line
-  }, [])
 
   const handeFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
     setFilters({ ...filters, [option]: checked })

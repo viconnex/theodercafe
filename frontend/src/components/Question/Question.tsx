@@ -126,11 +126,7 @@ const Question = ({
       {!hideCategory && (
         <div className={classes.categoryContainer}>
           <div className={classes.categoryTitle}>Catégorie</div>
-          <Chip
-            size="small"
-            label={question.categoryName ? question.categoryName : 'hors catégorie'}
-            color="secondary"
-          />
+          <Chip size="small" label={question.category?.name ?? 'hors catégorie'} color="secondary" />
         </div>
       )}
       <Option

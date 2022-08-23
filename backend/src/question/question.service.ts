@@ -103,8 +103,8 @@ export class QuestionService {
         return this.questionRepository.findInOrder(orderedIds)
     }
 
-    findAll() {
-        return this.questionRepository.findAll()
+    findAll({ questionSetId }: { questionSetId?: number }) {
+        return this.questionRepository.findAll({ questionSetId })
     }
 
     findAdminList() {

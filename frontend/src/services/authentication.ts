@@ -1,5 +1,5 @@
 import { WithSnackbarProps } from 'notistack'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { History } from 'history'
 
 import jwtDecode from 'jwt-decode'
@@ -136,13 +136,23 @@ export const useSetAuth = ({ enqueueSnackbar }: { enqueueSnackbar: WithSnackbarP
     // eslint-disable-next-line
   }, [])
 
-  return { jwtToken }
+  return { jwtToken, setJwtToken }
 }
 
-export const logout = (history: History, setUser: (user: User | null) => void) => {
-  localStorage.removeItem(JWT_STORAGE_KEY)
-  localStorage.removeItem(FIREBASE_JWT_STORAGE_KEY)
-  void firebaseSignout()
-  history.go(0)
-  setUser(null)
+export const useLogout = ({
+  setUser,
+  setJwtToken,
+}: {
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
+  setJwtToken: React.Dispatch<React.SetStateAction<string | null>>
+}) => {
+  const logout = ({ history }: { history: History }) => {
+    localStorage.removeItem(JWT_STORAGE_KEY)
+    localStorage.removeItem(FIREBASE_JWT_STORAGE_KEY)
+    void firebaseSignout()
+    history.go(0)
+    setUser(null)
+    setJwtToken(null)
+  }
+  return { logout }
 }

@@ -45,8 +45,8 @@ export class QuestionController {
     }
 
     @Get('/all')
-    findAll() {
-        return this.questionService.findAll()
+    findAll(@Query() query: { questionSetId?: number }) {
+        return this.questionService.findAll({ questionSetId: query.questionSetId })
     }
 
     @Get('')

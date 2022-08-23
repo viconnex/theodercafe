@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { Link, useHistory } from 'react-router-dom'
 import Drawer from '@material-ui/core/Drawer'
 import { Button } from '@material-ui/core'
-import { login, logout } from 'services/authentication'
+import { login } from 'services/authentication'
 
 const style = (theme) => ({
   drawerHeader: {
@@ -25,7 +25,7 @@ const style = (theme) => ({
   },
 })
 
-const AppDrawer = ({ classes, toggleDrawer, open, userRole, setUser }) => {
+const AppDrawer = ({ classes, toggleDrawer, open, userRole, logout }) => {
   const drawerLinks = [
     { label: 'Questions', path: '/' },
     { label: 'A propos', path: '/a-propos' },
@@ -41,7 +41,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole, setUser }) => {
   const history = useHistory()
 
   const onLogout = () => {
-    logout(history, setUser)
+    logout({ history })
     toggleDrawer(false)
   }
 

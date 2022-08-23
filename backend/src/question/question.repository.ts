@@ -39,8 +39,23 @@ export class QuestionRepository extends Repository<Question> {
         return this.delete(Number(id))
     }
 
-    findAll = async () => {
-        return this.query(`${FIND_QUESTION_QUERY} ORDER BY id ASC`) as Promise<QuestionWithCategoryNameDto[]>
+    findAll = async ({ questionSetId }: { questionSetId?: number }) => {
+        let queryBuilder = this.createQueryBuilder('questions')
+            .leftJoin('questions.category', 'category')
+            .leftJoin('questions.questionSets', 'questionSet')
+            .select([
+                'questions.id',
+                'questions.option1',
+                'questions.option2',
+                'category.name',
+                'questions.isValidated',
+                'questions.isJoke',
+                'questions.isJokeOnSomeone',
+            ])
+        if (questionSetId) {
+            queryBuilder = queryBuilder.where('questionSet.id =:questionSetId', { questionSetId })
+        }
+        return queryBuilder.orderBy('questions.id', 'ASC').getMany()
     }
 
     findAdminList = () => {
