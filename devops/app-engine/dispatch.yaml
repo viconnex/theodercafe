@@ -1,6 +1,0 @@
-dispatch:
-  - url: "api.theodercafe.com/*"
-    service: backend
-
-  - url: "theodercafe.com/*"
-    service: default

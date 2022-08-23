@@ -1,0 +1,73 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - "--no-cache"
+      - "-t"
+      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+      - backend
+      - "-f"
+      - backend/Dockerfile
+    id: Build backend image
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+    id: Push backend image
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - "--platform=managed"
+      - "--image=$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
+      - "--region=$_DEPLOY_REGION"
+      - "--quiet"
+    id: Deploy backend
+    entrypoint: gcloud
+
+  - name: gcr.io/cloud-builders/npm
+    args: [install]
+    dir: "frontend"
+    id: Install frontend
+  - name: gcr.io/cloud-builders/npm
+    dir: "frontend"
+    args: ["run", "create-env"]
+    env:
+      - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
+    id: Create frontend env
+  - name: gcr.io/cloud-builders/npm
+    args: [run, build]
+    dir: "frontend"
+    id: Build frontend
+  - name: "gcr.io/cloud-builders/gcloud"
+    dir: "frontend"
+    entrypoint: bash
+    args:
+      - "-c"
+      - |
+        cp app.yaml ./build
+        cd build
+        gcloud app deploy
+    id: Deploy frontend
+
+images:
+  - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+options:
+  substitutionOption: ALLOW_LOOSE
+substitutions:
+  _PLATFORM: managed
+  _SERVICE_NAME: backend
+  _DEPLOY_REGION: europe-west1
+  _LABELS: gcb-trigger-id=161e373a-3dc6-4e3d-80a3-859cb0ab8f67
+  _TRIGGER_ID: 161e373a-3dc6-4e3d-80a3-859cb0ab8f67
+  _GCR_HOSTNAME: eu.gcr.io
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - backend
+
+timeout: "2400s"
