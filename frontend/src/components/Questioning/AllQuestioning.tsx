@@ -18,23 +18,27 @@ import colors from 'ui/colors'
 import { filterQuestion } from 'components/Questioning/utils'
 import { useHistory } from 'react-router-dom'
 import { ExploreOutlined } from '@material-ui/icons'
-import { computeDefaultQuestionSet } from 'utils/questionSet'
 import { QuestionSet } from 'utils/questionSet'
 
 import useStyle from './style'
+
+const getValidationInformation = (questionValidation: boolean) => {
+  if (questionValidation === null) {
+    return 'Question en attente de validation'
+  }
+  return questionValidation ? 'Question validée' : 'Question invalidée'
+}
 
 const AllQuestioning = ({
   user,
   showMbtiInitially,
   usersPictures,
-  questionSets,
-  isLoggedIn,
+  selectedQuestionSet,
 }: {
   user: User | null
   showMbtiInitially: boolean
   usersPictures: UsersPictures | null
-  questionSets: QuestionSet[] | null
-  isLoggedIn: boolean
+  selectedQuestionSet: QuestionSet | null | undefined
 }) => {
   const [filters, setFilters] = useState({
     isValidated: false,
@@ -60,21 +64,15 @@ const AllQuestioning = ({
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true)
-    if (!questionSets) {
+    if (selectedQuestionSet === null) {
       return
     }
-    if (isLoggedIn && !user) {
-      // avoid useless fetch if user is going to be fetched
-      return
-    }
-    const questionSet = computeDefaultQuestionSet({ user, questionSets })
-    const params = questionSet ? { questionSetId: questionSet.id } : {}
 
     const response = await fetchRequestResponse(
       {
         uri: `/questions/${ALL_QUESTIONS_MODE}`,
         method: 'GET',
-        params,
+        params: selectedQuestionSet !== undefined ? { questionSetId: selectedQuestionSet?.id ?? null } : {},
         body: null,
       },
       200,
@@ -91,7 +89,7 @@ const AllQuestioning = ({
     setQuestions(data)
     setIsLoading(false)
     // eslint-disable-next-line
-  }, [user, isLoggedIn, questionSets])
+  }, [selectedQuestionSet])
 
   useEffect(() => {
     void fetchQuestions()
@@ -251,13 +249,6 @@ const AllQuestioning = ({
   const classes = useStyle()
 
   const renderQuestionContent = () => {
-    const getValidationInformation = (questionValidation: boolean) => {
-      if (questionValidation === null) {
-        return 'Question en attente de validation'
-      }
-      return questionValidation ? 'Question validée' : 'Question invalidée'
-    }
-
     if (isLoading) {
       return <CircularProgress color="secondary" />
     }

@@ -39,6 +39,9 @@ export class QuestionService {
             }
         }
         const questionSets = await this.questionSetService.getOrCreateQuestionSets(questionBody.questionSets)
+        if (!questionSets.length) {
+            throw new Error('No question sets found')
+        }
 
         const questionPayload: DeepPartial<Question> = {
             option1: questionBody.option1,

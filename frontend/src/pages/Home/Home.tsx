@@ -11,7 +11,7 @@ import { User } from 'services/authentication'
 import { MBTI_URL_PARAM } from 'utils/constants/constants'
 import { UsersPictures } from 'components/Questioning/types'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
-import { QuestionSet } from 'utils/questionSet'
+import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 import useStyles from './style'
 
 const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) => {
@@ -21,6 +21,7 @@ const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) 
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
   const [questionSets, setQuestionSets] = useState<QuestionSet[] | null>(null)
   const [refreshQuestionSet, setRefreshQuestionSet] = useState(0)
+  const [selectedQuestionSet, setSelectedQuestionSet] = useState<null | undefined | QuestionSet>(null)
 
   const fetchQuestionSets = async () => {
     const response = await fetchRequestResponse(
@@ -40,6 +41,20 @@ const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) 
   useEffect(() => {
     void fetchQuestionSets()
   }, [refreshQuestionSet])
+
+  useEffect(() => {
+    if (!questionSets) {
+      setSelectedQuestionSet(null)
+      return
+    }
+    if (isLoggedIn && !user) {
+      // avoid useless fetch if user is going to be fetched
+      setSelectedQuestionSet(null)
+      return
+    }
+    const questionSet = computeDefaultQuestionSet({ user, questionSets })
+    setSelectedQuestionSet(questionSet)
+  }, [questionSets, isLoggedIn, user])
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -98,9 +113,8 @@ const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) 
         <AllQuestioning
           showMbtiInitially={showMbtiInitially}
           usersPictures={usersPictures}
-          isLoggedIn={isLoggedIn}
           user={user}
-          questionSets={questionSets}
+          selectedQuestionSet={selectedQuestionSet}
         />
       )}
       <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>

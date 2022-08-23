@@ -1,7 +1,7 @@
 import { User } from 'services/authentication'
 
 export type QuestionSet = {
-  id: string | number
+  id: number
   name: string
 }
 export enum PresetQuestionSet {
@@ -28,5 +28,5 @@ export const computeDefaultQuestionSet = ({
       return theodoUs
     }
   }
-  return questionSets?.find((questionSet) => questionSet.name === 'Theodo FR') ?? null
+  return questionSets?.find((questionSet) => questionSet.name === 'Theodo FR')
 }
