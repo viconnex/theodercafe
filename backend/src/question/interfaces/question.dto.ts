@@ -1,11 +1,6 @@
-export class AsakaiQuestioning {
-    questioningId: number
-    questions: QuestionWithCategoryNameDto[]
-}
-
-export class QuestionWithCategoryNameDto {
+export class QuestionWithCategoryDto {
     readonly id: number
-    readonly categoryName?: string
+    readonly category: { name: string } | null
     readonly option1: string
     readonly option2: string
     readonly isValidated: boolean

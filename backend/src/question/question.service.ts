@@ -4,7 +4,7 @@ import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
 import { Category } from 'src/category/category.entity'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
-import { AsakaiQuestioning, QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { QuestionPostDTO, QuestionWithCategoryNameDto } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { QuestionSetService } from '../questionSet/questionSet.service'
 import { Question } from './question.entity'
@@ -58,52 +58,51 @@ export class QuestionService {
         return this.questionRepository.save(question)
     }
 
-    async findAsakaiSet(maxNumber: number, findFromHistoricIfExists: boolean): Promise<AsakaiQuestioning> {
+    async findAsakaiSet({
+        maxNumber,
+        findFromHistoricIfExists,
+        questionSetId,
+    }: {
+        maxNumber: number
+        findFromHistoricIfExists: boolean
+        questionSetId: number
+    }) {
+        const questionSet = await this.questionSetService.findOneOrFail(questionSetId)
         if (findFromHistoricIfExists) {
-            const currentSet = await this.questioningHistoricService.findLastOfTheDay()
-            if (currentSet && currentSet.questioning.length) {
+            const currentSet = await this.questioningHistoricService.findLastOfTheDay({ questionSetId })
+            if (currentSet?.questioning.length) {
                 const sameQuestions = await this.questionRepository.findByIdsWithCategory(currentSet.questioning)
-                const questionWithCategories = sameQuestions.sort(
+                const inOrderQuestions = sameQuestions.sort(
                     (question1, question2): number =>
                         currentSet.questioning.indexOf(question1.id.toString()) -
                         currentSet.questioning.indexOf(question2.id.toString()),
                 )
                 return {
-                    questions: questionWithCategories.map(
-                        (questionWithCategory: Question): QuestionWithCategoryNameDto => ({
-                            id: questionWithCategory.id,
-                            option1: questionWithCategory.option1,
-                            option2: questionWithCategory.option2,
-                            isValidated: questionWithCategory.isValidated,
-                            categoryName: questionWithCategory.category?.name,
-                            isJoke: questionWithCategory.isJoke,
-                            isJokeOnSomeone: questionWithCategory.isJokeOnSomeone,
-                        }),
-                    ),
+                    questions: inOrderQuestions,
                     questioningId: currentSet.id,
                 }
             }
         }
 
-        const countClassics = await this.questionRepository.countClassics()
-        const jokeAboutSomeoneCount =
-            Math.random() < JOKE_ON_SOMEONE_PROBABILITY && maxNumber - countClassics[0].count > 0 ? 1 : 0
-        const standardQuestionCount = Math.max(maxNumber - countClassics[0].count - jokeAboutSomeoneCount, 0)
+        const countClassics = await this.questionRepository.countClassics({ questionSetId })
+        const jokeOnSomeoneCount = Math.random() < JOKE_ON_SOMEONE_PROBABILITY && maxNumber - countClassics > 0 ? 1 : 0
+        const standardQuestionCount = Math.max(maxNumber - countClassics - jokeOnSomeoneCount, 0)
 
-        const asakaiSet = await this.questionRepository.findAsakaiSet(standardQuestionCount, jokeAboutSomeoneCount)
+        const asakaiSet = await this.questionRepository.findAsakaiSet({
+            standardQuestionCount,
+            jokeOnSomeoneCount,
+            questionSetId,
+        })
 
-        const questioning = await this.questioningHistoricService.saveNew(
-            asakaiSet.map((question): string => question.id.toString()),
-        )
+        const questioning = await this.questioningHistoricService.saveNew({
+            questionIds: asakaiSet.map((question): string => question.id.toString()),
+            questionSet,
+        })
 
         return {
             questions: asakaiSet,
             questioningId: questioning.id,
         }
-    }
-
-    findInOrder(orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> {
-        return this.questionRepository.findInOrder(orderedIds)
     }
 
     findAll({ questionSetId }: { questionSetId?: number }) {
@@ -129,7 +128,8 @@ export class QuestionService {
         return this.questionRepository.find(options)
     }
 
-    async createNewHistoric(questionIds: number[]) {
+    async createNewHistoric({ questionIds, questionSetId }: { questionIds: number[]; questionSetId: number }) {
+        const questionSet = await this.questionSetService.findOneOrFail(questionSetId)
         const questions = await this.questionRepository
             .createQueryBuilder('questions')
             .where('questions.id in (:...questionIds)', { questionIds })
@@ -139,7 +139,10 @@ export class QuestionService {
                 `Only found ${questions.length} questions out of ${questionIds.length} requested`,
             )
         }
-        return this.questioningHistoricService.saveNew(questionIds.map((id) => id.toString()))
+        return this.questioningHistoricService.saveNew({
+            questionIds: questionIds.map((id) => id.toString()),
+            questionSet,
+        })
     }
 
     findByCategoryName(categoryName: string) {

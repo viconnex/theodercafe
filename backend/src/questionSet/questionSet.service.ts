@@ -33,4 +33,8 @@ export class QuestionSetService {
     async findFromName(name: PresetQuestionSet) {
         return await this.questionSetRepository.findOne({ name })
     }
+
+    async findOneOrFail(questionSetId: number) {
+        return await this.questionSetRepository.findOneOrFail(questionSetId)
+    }
 }

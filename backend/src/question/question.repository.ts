@@ -1,24 +1,22 @@
 import { DeleteResult, EntityRepository, Repository } from 'typeorm'
 import { Question } from './question.entity'
-import { QuestionAdmin, QuestionWithCategoryNameDto } from './interfaces/question.dto'
+import { QuestionAdmin, QuestionWithCategoryDto } from './interfaces/question.dto'
 
-const FIND_QUESTION_QUERY = `
-    SELECT
-        "questions"."id","questions"."option1", "questions"."option2", "categories"."name" as "categoryName", "questions"."isValidated", "questions"."isJoke",  "questions"."isJokeOnSomeone"
-    FROM questions
-    LEFT JOIN categories on "questions"."categoryId"="categories"."id"
-`
+function shuffle<T>(array: T[]) {
+    let currentIndex = array.length,
+        randomIndex: number
 
-const findAsakaiSubSet = (
-    isClassic: boolean,
-    isJokeOnSomeone: boolean,
-    limit: string | null = null,
-    isRandom = false,
-): string => {
-    return `${FIND_QUESTION_QUERY}
-            WHERE "questions"."isClassic" = ${isClassic} AND "questions"."isJokeOnSomeone" = ${isJokeOnSomeone} AND "questions"."isValidated" = true
-            ${isRandom ? 'ORDER BY random()' : ''}
-            ${null === limit ? '' : `LIMIT ${limit}`}`
+    // While there remain elements to shuffle.
+    while (currentIndex !== 0) {
+        // Pick a remaining element.
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex--
+
+        // And swap it with the current element.
+        ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+    }
+
+    return array
 }
 
 @EntityRepository(Question)
@@ -39,8 +37,8 @@ export class QuestionRepository extends Repository<Question> {
         return this.delete(Number(id))
     }
 
-    findAll = async ({ questionSetId }: { questionSetId?: number }) => {
-        let queryBuilder = this.createQueryBuilder('questions')
+    getQuestionBaseQueryBuilder = () => {
+        return this.createQueryBuilder('questions')
             .leftJoin('questions.category', 'category')
             .leftJoin('questions.questionSets', 'questionSet')
             .select([
@@ -52,6 +50,10 @@ export class QuestionRepository extends Repository<Question> {
                 'questions.isJoke',
                 'questions.isJokeOnSomeone',
             ])
+    }
+
+    findAll = async ({ questionSetId }: { questionSetId?: number }) => {
+        let queryBuilder = this.getQuestionBaseQueryBuilder()
         if (questionSetId) {
             queryBuilder = queryBuilder.where('questionSet.id =:questionSetId', { questionSetId })
         }
@@ -83,49 +85,51 @@ export class QuestionRepository extends Repository<Question> {
         `) as Promise<QuestionAdmin[]>
     }
 
-    findAsakaiSet = async (
-        standardQuestionCount: number,
-        jokeOnSomeoneCount: number,
-    ): Promise<QuestionWithCategoryNameDto[]> => {
-        return this.query(`
-            SELECT *
-            FROM (
-                ${findAsakaiSubSet(true, false)}
-                UNION (
-                ${findAsakaiSubSet(false, true, jokeOnSomeoneCount.toString(), true)})
-                UNION (
-                ${findAsakaiSubSet(false, false, standardQuestionCount.toString(), true)})
-            ) t
-            ORDER BY random()
-        `)
+    getAsakaiBaseQueryBuilder = ({ questionSetId }: { questionSetId: number }) => {
+        return this.getQuestionBaseQueryBuilder()
+            .where('questions.isValidated = true')
+            .where('questionSet.id = :questionSetId', { questionSetId })
     }
 
-    findInOrder = async (orderedIds: number[]): Promise<QuestionWithCategoryNameDto[]> => {
-        let sqlIdsWithOrder = ''
-        let sqlIds = ''
-        orderedIds.forEach((id, index): void => {
-            const additionalKomma = index !== orderedIds.length - 1 ? ', ' : ''
-            sqlIds = sqlIds + id + additionalKomma
-            sqlIdsWithOrder = sqlIdsWithOrder + `(${id},${index + 1})` + additionalKomma
-        })
-        return this.query(
-            `SELECT * FROM(
-                ${FIND_QUESTION_QUERY}
-                WHERE "questions"."id" in (${sqlIds})
-            ) q
-            JOIN (
-                VALUES ${sqlIdsWithOrder}
-            ) as x (id, ordering) on q.id = x.id
-            ORDER BY x.ordering`,
-        )
+    findAsakaiSet = async ({
+        standardQuestionCount,
+        jokeOnSomeoneCount,
+        questionSetId,
+    }: {
+        standardQuestionCount: number
+        jokeOnSomeoneCount: number
+        questionSetId: number
+    }) => {
+        const classics: QuestionWithCategoryDto[] = await this.getAsakaiBaseQueryBuilder({ questionSetId })
+            .andWhere('questions.isClassic = true AND questions.isJokeOnSomeone = false')
+            .getMany()
+        const jokesOnSomeone: QuestionWithCategoryDto[] =
+            jokeOnSomeoneCount > 0
+                ? await this.getAsakaiBaseQueryBuilder({ questionSetId })
+                      .andWhere('questions.isClassic = false AND questions.isJokeOnSomeone = true')
+                      .limit(jokeOnSomeoneCount)
+                      .getMany()
+                : []
+        const standard: QuestionWithCategoryDto[] = standardQuestionCount
+            ? await this.getAsakaiBaseQueryBuilder({ questionSetId })
+                  .andWhere('questions.isClassic = false AND questions.isJokeOnSomeone = false')
+                  .limit(standardQuestionCount)
+                  .getMany()
+            : []
+
+        return shuffle([...classics, ...jokesOnSomeone, ...standard])
     }
 
-    countClassics = async (): Promise<number> => {
-        return this.query(`SELECT count(*) from "questions" WHERE "isClassic" = true`)
+    countClassics = async ({ questionSetId }: { questionSetId: number }): Promise<number> => {
+        return await this.createQueryBuilder('questions')
+            .leftJoin('questions.questionSets', 'questionSet')
+            .where('questionSet.id = :questionSetId', { questionSetId })
+            .andWhere('questions.isClassic = true')
+            .getCount()
     }
 
-    findByIdsWithCategory = async (questionIds: string[]): Promise<Question[]> => {
-        const qb = this.createQueryBuilder('questions').leftJoinAndSelect('questions.category', 'category')
+    findByIdsWithCategory = async (questionIds: string[]): Promise<QuestionWithCategoryDto[]> => {
+        const qb = this.getQuestionBaseQueryBuilder()
         if (questionIds.length) {
             qb.where('questions.id IN (:...questionIds)', { questionIds })
         }

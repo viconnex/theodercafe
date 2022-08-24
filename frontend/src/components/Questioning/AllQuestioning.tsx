@@ -34,11 +34,13 @@ const AllQuestioning = ({
   showMbtiInitially,
   usersPictures,
   selectedQuestionSet,
+  isFetchingQuestionSet,
 }: {
   user: User | null
   showMbtiInitially: boolean
   usersPictures: UsersPictures | null
   selectedQuestionSet: QuestionSet | null | undefined
+  isFetchingQuestionSet: boolean
 }) => {
   const [filters, setFilters] = useState({
     isValidated: false,
@@ -64,7 +66,7 @@ const AllQuestioning = ({
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true)
-    if (selectedQuestionSet === null) {
+    if (isFetchingQuestionSet) {
       return
     }
 

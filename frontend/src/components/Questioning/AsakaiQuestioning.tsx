@@ -23,6 +23,7 @@ import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
 import Voter from 'components/Voter/Voter'
+import { QuestionSet } from 'utils/questionSet'
 
 import useStyle from './style'
 
@@ -94,7 +95,17 @@ const QuestionContent = ({
   )
 }
 
-const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPictures: UsersPictures | null }) => {
+const AsakaiQuestioning = ({
+  user,
+  usersPictures,
+  selectedQuestionSet,
+  isFetchingQuestionSet,
+}: {
+  user: User | null
+  usersPictures: UsersPictures | null
+  selectedQuestionSet: QuestionSet | null | undefined
+  isFetchingQuestionSet: boolean
+}) => {
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
@@ -114,12 +125,19 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
 
   const fetchAndSetQuestions = async (changeQuestioning: boolean) => {
     setIsLoading(true)
+    if (isFetchingQuestionSet) {
+      return
+    }
     const basePath = changeQuestioning ? `/questions/${ASAKAI_MODE}/reset` : `/questions/${ASAKAI_MODE}`
+    const params: { maxNumber: number; questionSetId?: number } = { maxNumber: ASAKAI_QUESTION_COUNT }
+    if (selectedQuestionSet) {
+      params.questionSetId = selectedQuestionSet.id
+    }
     const response = await fetchRequestResponse(
       {
         uri: `${basePath}?maxNumber=${ASAKAI_QUESTION_COUNT}`,
         method: 'GET',
-        params: null,
+        params,
         body: null,
       },
       200,
@@ -138,6 +156,11 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
     setQuestions(questions)
     setQuestionIndex(0)
   }
+
+  useEffect(() => {
+    void fetchAndSetQuestions(false)
+    // eslint-disable-next-line
+  }, [selectedQuestionSet])
 
   useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase, enqueueSnackbar)
 
@@ -159,11 +182,6 @@ const AsakaiQuestioning = ({ user, usersPictures }: { user: User | null; usersPi
       }
     }
   }, [questioningId, question, firebaseUid])
-
-  useEffect(() => {
-    void fetchAndSetQuestions(false)
-    // eslint-disable-next-line
-  }, [])
 
   const resetQuestioning = () => {
     setAlterodos(null)

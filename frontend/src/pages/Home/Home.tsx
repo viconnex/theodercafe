@@ -108,12 +108,18 @@ const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) 
         withMargin
       />
       {isAsakaiMode ? (
-        <AsakaiQuestioning user={user} usersPictures={usersPictures} />
+        <AsakaiQuestioning
+          user={user}
+          usersPictures={usersPictures}
+          isFetchingQuestionSet={selectedQuestionSet === null}
+          selectedQuestionSet={selectedQuestionSet}
+        />
       ) : (
         <AllQuestioning
           showMbtiInitially={showMbtiInitially}
           usersPictures={usersPictures}
           user={user}
+          isFetchingQuestionSet={selectedQuestionSet === null}
           selectedQuestionSet={selectedQuestionSet}
         />
       )}

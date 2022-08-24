@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Delete,
@@ -17,7 +18,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 import { QuestionService } from './question.service'
 import { Question } from './question.entity'
-import { AsakaiQuestioning, QuestionPostDTO } from './interfaces/question.dto'
+import { QuestionPostDTO } from './interfaces/question.dto'
 
 @Controller('questions')
 export class QuestionController {
@@ -29,19 +30,32 @@ export class QuestionController {
     }
 
     @Get('/asakai')
-    findAsakaiSet(@Query() query: { maxNumber?: number; newSet?: boolean }): Promise<AsakaiQuestioning> {
+    findAsakaiSet(@Query() query: { maxNumber?: number; questionSetId?: number }) {
         const maxNumber = query.maxNumber ?? 10
+        if (!query.questionSetId) {
+            throw new BadRequestException('questionSetId is required')
+        }
 
-        return this.questionService.findAsakaiSet(maxNumber, true)
-        // return this.questionService.findInOrder([17, 33, 32, 60, 55, 3, 40, 59, 7, 49]);
+        return this.questionService.findAsakaiSet({
+            maxNumber,
+            findFromHistoricIfExists: true,
+            questionSetId: query.questionSetId,
+        })
     }
 
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
     @Get('/asakai/reset')
-    resetAsakaiSet(@Query() query: { maxNumber?: number }): Promise<AsakaiQuestioning> {
+    resetAsakaiSet(@Query() query: { maxNumber?: number; questionSetId?: number }) {
         const maxNumber = query.maxNumber ?? 10
+        if (!query.questionSetId) {
+            throw new BadRequestException('questionSetId is required')
+        }
 
-        return this.questionService.findAsakaiSet(maxNumber, false)
+        return this.questionService.findAsakaiSet({
+            maxNumber,
+            findFromHistoricIfExists: false,
+            questionSetId: query.questionSetId,
+        })
     }
 
     @Get('/all')
@@ -87,7 +101,10 @@ export class QuestionController {
 
     @Post('/questioning-historic')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
-    createNewHistoric(@Body() questionIds: number[]) {
-        return this.questionService.createNewHistoric(questionIds)
+    createNewHistoric(@Body() body: { questionIds: number[]; questionSetId: number }) {
+        return this.questionService.createNewHistoric({
+            questionIds: body.questionIds,
+            questionSetId: body.questionSetId,
+        })
     }
 }
