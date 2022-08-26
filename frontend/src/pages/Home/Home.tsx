@@ -12,6 +12,7 @@ import { MBTI_URL_PARAM } from 'utils/constants/constants'
 import { UsersPictures } from 'components/Questioning/types'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
 import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
+
 import useStyles from './style'
 
 const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) => {

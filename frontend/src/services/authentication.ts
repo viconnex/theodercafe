@@ -6,6 +6,7 @@ import jwtDecode from 'jwt-decode'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { signout as firebaseSignout } from 'services/firebase/authentication'
 import { fetchRequest } from 'services/api'
+import { isNullishCoalesce } from 'typescript'
 
 export const FIREBASE_JWT_STORAGE_KEY = 'firebase_token'
 export const JWT_STORAGE_KEY = 'jwt_token'
@@ -60,7 +61,13 @@ export const decodeJWT = (jwtToken: string) => {
   }
 }
 
-export const useSetUser = ({ jwtToken }: { jwtToken: string | null }) => {
+export const useSetUser = ({
+  jwtToken,
+  setJwtToken,
+}: {
+  jwtToken: string | null
+  setJwtToken: React.Dispatch<React.SetStateAction<string | null>>
+}) => {
   const [user, setUser] = useState<User | null>(null)
   useEffect(() => {
     const fetchUser = async () => {
@@ -85,10 +92,12 @@ export const useSetUser = ({ jwtToken }: { jwtToken: string | null }) => {
       const userJWT = decodeJWT(jwtToken)
       if (userJWT.hasExpired) {
         setUser(null)
+        setJwtToken(null)
       }
       void fetchUser()
     } catch {
       setUser(null)
+      setJwtToken(null)
     }
   }, [jwtToken])
 

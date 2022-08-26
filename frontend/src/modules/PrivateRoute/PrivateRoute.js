@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, CircularProgress } from '@material-ui/core'
 import { Route } from 'react-router-dom'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 
@@ -17,9 +17,14 @@ const useStyle = makeStyles(() => ({
   },
 }))
 
-const RedirectComponent = ({ component: Component, isAdminRoute, userRole, ...props }) => {
+const RedirectComponent = ({ component: Component, isAdminRoute, user, isLoggedIn, ...props }) => {
   const classes = useStyle()
-  if (!userRole) {
+  if (isLoggedIn && !user) {
+    // user is going to be fetched
+    return <CircularProgress style={{ position: 'absolute', left: '50%', top: '50%' }} color="secondary" />
+  }
+
+  if (!user) {
     return (
       <div className={classes.container}>
         <div>Il faut te connecter pour voir cette page</div>
@@ -31,19 +36,25 @@ const RedirectComponent = ({ component: Component, isAdminRoute, userRole, ...pr
       </div>
     )
   }
-  if (isAdminRoute && userRole !== 'admin') {
+  if (isAdminRoute && user.role !== 'admin') {
     return <div>Tu dois être admin pour accéder à cette page</div>
   }
 
-  return <Component {...props} />
+  return <Component user={user} {...props} />
 }
 
-const PrivateRoute = ({ component, isAdminRoute, userRole, ...rest }) => {
+const PrivateRoute = ({ component, isAdminRoute, user, isLoggedIn, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) => (
-        <RedirectComponent userRole={userRole} component={component} {...props} isAdminRoute={isAdminRoute} />
+        <RedirectComponent
+          user={user}
+          isLoggedIn={isLoggedIn}
+          component={component}
+          {...props}
+          isAdminRoute={isAdminRoute}
+        />
       )}
     />
   )

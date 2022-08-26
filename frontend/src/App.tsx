@@ -9,6 +9,7 @@ import { Link, Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { About } from 'components/About'
 import { PrivateRoute } from 'modules/PrivateRoute'
 import { LoginPage } from 'pages/LoginPage'
+import { Settings } from 'components/Settings'
 import MenuIcon from 'components/MenuIcon/MenuIcon'
 
 import { Home } from 'pages/Home'
@@ -34,7 +35,7 @@ const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const { jwtToken, setJwtToken } = useSetAuth({ enqueueSnackbar })
-  const { user, setUser } = useSetUser({ jwtToken })
+  const { user, setUser } = useSetUser({ jwtToken, setJwtToken })
   const { logout } = useLogout({ setJwtToken, setUser })
 
   const toggleDrawer = (open: boolean) => () => {
@@ -42,8 +43,6 @@ const App = () => {
   }
 
   const classes = useStyle()
-
-  const userRole = user?.role ?? null
 
   return (
     <ThemeProvider theme={theme}>
@@ -64,14 +63,43 @@ const App = () => {
             <Switch>
               <Route exact path="/a-propos" component={About} />
               <Route exact path="/login" component={LoginPage} />
-              <PrivateRoute exact path="/admin" component={Admin} userRole={userRole} isAdminRoute />
-              <PrivateRoute exact path="/alterodo" component={Alterodo} userRole={userRole} isAdminRoute={false} />
-              <PrivateRoute exact path="/carte" component={Map} userRole={userRole} isAdminRoute={false} />
-              <PrivateRoute exact path="/mbti" component={MBTI} userRole={userRole} isAdminRoute={false} />
+              <PrivateRoute exact path="/admin" component={Admin} user={user} isLoggedIn={!!jwtToken} isAdminRoute />
+              <PrivateRoute
+                exact
+                path="/alterodo"
+                component={Alterodo}
+                user={user}
+                isLoggedIn={!!jwtToken}
+                isAdminRoute={false}
+              />
+              <PrivateRoute
+                exact
+                path="/carte"
+                component={Map}
+                user={user}
+                isLoggedIn={!!jwtToken}
+                isAdminRoute={false}
+              />
+              <PrivateRoute
+                exact
+                path="/mbti"
+                component={MBTI}
+                user={user}
+                isLoggedIn={!!jwtToken}
+                isAdminRoute={false}
+              />
+              <PrivateRoute
+                exact
+                path="/settings"
+                component={Settings}
+                user={user}
+                isLoggedIn={!!jwtToken}
+                isAdminRoute={false}
+              />
               <Route path="/" render={() => <Home user={user} isLoggedIn={!!jwtToken} />} />
             </Switch>
           </Suspense>
-          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} userRole={userRole} logout={logout} />
+          <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} user={user} logout={logout} />
         </div>
       </Router>
     </ThemeProvider>

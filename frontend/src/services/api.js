@@ -22,7 +22,7 @@ export const fetchRequestResponse = async (
   }
 
   if (!response || response.status !== expectedStatus) {
-    enqueueSnackbar('Une erreur est survenue', { variant: 'error' })
+    enqueueSnackbar("Le serveur n'est pas d'accord avec cette requête", { variant: 'error' })
     return null
   }
   if (successMessage) {

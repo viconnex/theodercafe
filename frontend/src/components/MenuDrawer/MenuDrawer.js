@@ -25,16 +25,16 @@ const style = (theme) => ({
   },
 })
 
-const AppDrawer = ({ classes, toggleDrawer, open, userRole, logout }) => {
+const AppDrawer = ({ classes, toggleDrawer, open, user, logout }) => {
   const drawerLinks = [
-    { label: 'Questions', path: '/' },
+    { label: 'Réglages', path: '/settings' },
     { label: 'A propos', path: '/a-propos' },
     { label: 'Mon alterodo', path: '/alterodo' },
     { label: 'La carte', path: '/carte' },
     { label: 'MBTI', path: '/mbti' },
   ]
 
-  if (userRole === 'admin') {
+  if (user?.role === 'admin') {
     drawerLinks.push({ label: 'Admin', path: '/admin' })
   }
 
@@ -61,7 +61,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, userRole, logout }) => {
             </ListItem>
           </Link>
         ))}
-        {userRole ? (
+        {user ? (
           <ListItem button onClick={onLogout}>
             <ListItemText primary="Logout" />
           </ListItem>
