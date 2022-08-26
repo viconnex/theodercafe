@@ -8,3 +8,7 @@ export interface UserWithPublicFields {
 }
 
 export type AdminUserList = (User & { answerCount: null | number })[]
+
+export type PostSettingsBody = {
+    selectedQuestionSetId: number
+}

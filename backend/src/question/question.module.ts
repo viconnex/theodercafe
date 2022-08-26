@@ -6,12 +6,11 @@ import { CategoryRepository } from '../category/category.repository'
 import { Question } from './question.entity'
 import { QuestionService } from './question.service'
 import { QuestioningHistoricModule } from '../questioningHistoric/questioningHistoric.module'
-import { QuestionSetRepository } from '../questionSet/questionSet.repository'
 import { QuestionSetModule } from '../questionSet/questionSet.module'
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Question, QuestionRepository, CategoryRepository, QuestionSetRepository]),
+        TypeOrmModule.forFeature([Question, QuestionRepository, CategoryRepository]),
         QuestioningHistoricModule,
         QuestionSetModule,
     ],

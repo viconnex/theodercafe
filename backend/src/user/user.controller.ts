@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Put, Request, Res, UseGuards } from '@nestjs/common'
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+    Request,
+    Res,
+    UseGuards,
+} from '@nestjs/common'
 import { Response } from 'express'
 import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
@@ -6,6 +18,7 @@ import { UserService } from 'src/user/user.service'
 import { User } from 'src/user/user.entity'
 import { DeleteResult } from 'typeorm'
 import { USER_STRATEGY } from 'src/auth/jwt.user.strategy'
+import { PostSettingsBody } from 'src/user/user.types'
 
 @Controller('users')
 export class UserController {
@@ -21,6 +34,12 @@ export class UserController {
     @UseGuards(AuthGuard(USER_STRATEGY))
     async getUserPictures() {
         return this.userService.getUsersPictures()
+    }
+
+    @Post('settings')
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    async postSettings(@Request() req: { user: User }, @Body() settingsBody: PostSettingsBody) {
+        return await this.userService.changeSettings({ user: req.user, settings: settingsBody })
     }
 
     @Get('')

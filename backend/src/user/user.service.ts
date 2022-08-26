@@ -5,7 +5,7 @@ import { DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
-import { AdminUserList, UserWithPublicFields } from './user.types'
+import { AdminUserList, PostSettingsBody, UserWithPublicFields } from './user.types'
 import sendEmail from './emails/sendinblue'
 import { alterodosLunch, welcomeEmail } from './emails/templates'
 import { QuestionSetService } from '../questionSet/questionSet.service'
@@ -206,5 +206,10 @@ export class UserService {
         } else {
             console.log('error while sending alterodos email')
         }
+    }
+
+    async changeSettings({ user, settings }: { user: User; settings: PostSettingsBody }) {
+        const questionSet = await this.questionSetService.findOneOrFail(settings.selectedQuestionSetId)
+        return await this.userRepository.save({ ...user, selectedQuestionSet: questionSet })
     }
 }
