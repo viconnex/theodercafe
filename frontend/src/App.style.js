@@ -15,6 +15,7 @@ const useStyle = makeStyles((theme) => ({
   },
   appBar: {
     background: 'white',
+    height: '68px',
   },
   shim: {
     marginBottom: '20px',
@@ -27,7 +28,7 @@ const useStyle = makeStyles((theme) => ({
     borderRadius: '30px',
   },
   toolbarSpace: {
-    ...theme.mixins.toolbar,
+    minHeight: '68px',
   },
 }))
 export default useStyle
