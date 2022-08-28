@@ -18,7 +18,7 @@ import {
   UsersVotes,
 } from 'components/Questioning/types'
 import { answerQuestioning, onAnswerChange } from 'services/firebase/requests'
-import { signin, signout, useFirebaseAuth } from 'services/firebase/authentication'
+import { useFirebaseAuth } from 'services/firebase/authentication'
 import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
@@ -28,6 +28,18 @@ import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 import useStyle from './style'
 
 export const IS_LIVE_ACTIVATED_BY_DEFAULT = true
+
+const LinkToForm = () => {
+  return (
+    <a
+      target="_blank"
+      rel="noreferrer"
+      href="https://docs.google.com/forms/d/e/1FAIpQLSeClG7ZquVyfCakUaAMlpScSWaGx197wIGyS6FMpLxN2v3T_Q/viewform?usp=sf_link"
+    >
+      🦉 C'est ici 🦑
+    </a>
+  )
+}
 
 const QuestionContent = ({
   isLoading,
@@ -229,6 +241,11 @@ const AsakaiQuestioning = ({
     const data = (await response.json()) as Alterodos
     setIsLoading(false)
     setAlterodos(data)
+    enqueueSnackbar('Donne ton avis sur Theodercafe !', {
+      autoHideDuration: null,
+      action: LinkToForm,
+      variant: 'info',
+    })
   }
 
   const chose = (questionId: number, choice: Choice) => {
