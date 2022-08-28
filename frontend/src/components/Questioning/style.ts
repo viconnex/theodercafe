@@ -33,14 +33,14 @@ const useStyle = makeStyles((theme) => {
       width: '100%',
       paddingTop: '8px',
       alignItems: 'center',
+      flex: 1,
+      justifyContent: 'center',
     },
     asakaiSubtitle: {
       alignItems: 'flex-start',
       display: 'flex',
       fontSize: '14px',
       flexDirection: 'column',
-      position: 'absolute',
-      top: 0,
     },
     asakaiModeInfo: {
       fontSize: '11px',
