@@ -23,7 +23,7 @@ import { AuthRole, login, User } from 'services/authentication'
 import Browser from 'components/Questioning/Browser'
 import { ModeSelector } from 'components/ModeSelector'
 import Voter from 'components/Voter/Voter'
-import { QuestionSet } from 'utils/questionSet'
+import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 
 import useStyle from './style'
 
@@ -98,13 +98,13 @@ const QuestionContent = ({
 const AsakaiQuestioning = ({
   user,
   usersPictures,
-  selectedQuestionSet,
-  isFetchingQuestionSet,
+  isDataLoading,
+  questionSets,
 }: {
   user: User | null
   usersPictures: UsersPictures | null
-  selectedQuestionSet: QuestionSet | null | undefined
-  isFetchingQuestionSet: boolean
+  questionSets: QuestionSet[] | null
+  isDataLoading: boolean
 }) => {
   const [questions, setQuestions] = useState<QuestionResponse[]>([])
   const [questioningId, setQuestioningId] = useState<null | number>(null)
@@ -125,11 +125,12 @@ const AsakaiQuestioning = ({
 
   const fetchAndSetQuestions = async (changeQuestioning: boolean) => {
     setIsLoading(true)
-    if (isFetchingQuestionSet) {
+    if (isDataLoading || !questionSets) {
       return
     }
     const basePath = changeQuestioning ? `/questions/${ASAKAI_MODE}/reset` : `/questions/${ASAKAI_MODE}`
     const params: { maxNumber: number; questionSetId?: number } = { maxNumber: ASAKAI_QUESTION_COUNT }
+    const selectedQuestionSet = computeDefaultQuestionSet({ user, questionSets })
     if (selectedQuestionSet) {
       params.questionSetId = selectedQuestionSet.id
     }
@@ -160,7 +161,7 @@ const AsakaiQuestioning = ({
   useEffect(() => {
     void fetchAndSetQuestions(false)
     // eslint-disable-next-line
-  }, [selectedQuestionSet])
+  }, [isDataLoading, user, questionSets])
 
   useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase, enqueueSnackbar)
 

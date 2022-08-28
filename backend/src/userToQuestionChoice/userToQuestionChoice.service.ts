@@ -58,23 +58,26 @@ export class UserToQuestionChoiceService {
         return this.userToQuestionChoiceRepository.save(initialChoice)
     }
 
-    async getQuestionsPolls(userId: number) {
-        const requestUserWithCompany = await this.userService.findOne(userId)
+    async getQuestionsPolls({ user, questionSetId }: { user: User; questionSetId: number }) {
         const questionsPolls: Record<number, QuestionPoll> = {}
-        const userToQuestionChoices =
-            requestUserWithCompany?.company !== THEODO_COMPANY
-                ? await this.userToQuestionChoiceRepository.find()
-                : await this.userToQuestionChoiceRepository
-                      .createQueryBuilder('user_to_question_choices')
-                      .leftJoin('user_to_question_choices.user', 'user')
-                      .select([
-                          'user_to_question_choices.questionId',
-                          'user_to_question_choices.userId',
-                          'user_to_question_choices.choice',
-                          'user.company',
-                      ])
-                      .where('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
-                      .getMany()
+        let queryBuilder = this.userToQuestionChoiceRepository
+            .createQueryBuilder('user_to_question_choices')
+            .leftJoin('user_to_question_choices.question', 'questions')
+            .leftJoin('questions.questionSets', 'question_sets')
+            .where('question_sets.id = :questionSetId', { questionSetId })
+
+        if (user?.company === THEODO_COMPANY) {
+            queryBuilder = queryBuilder
+                .leftJoin('user_to_question_choices.user', 'user')
+                .andWhere('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
+        }
+        const userToQuestionChoices = await queryBuilder
+            .select([
+                'user_to_question_choices.questionId',
+                'user_to_question_choices.userId',
+                'user_to_question_choices.choice',
+            ])
+            .getMany()
 
         userToQuestionChoices.forEach((answer) => {
             if (!(answer.questionId in questionsPolls)) {
@@ -84,7 +87,7 @@ export class UserToQuestionChoiceService {
                     choice2UserIds: [],
                 }
             }
-            if (answer.userId === userId) {
+            if (answer.userId === user.id) {
                 questionsPolls[answer.questionId].userChoice = answer.choice
             }
             const choiceField = `choice${answer.choice}UserIds` as 'choice1UserIds' | 'choice2UserIds'

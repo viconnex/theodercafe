@@ -12,7 +12,7 @@ import { MBTI_URL_PARAM } from 'utils/constants/constants'
 import { UsersPictures } from 'components/Questioning/types'
 import QuestionSetSelector from 'components/Settings/QuestionSetSelector'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
-import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
+import { QuestionSet } from 'utils/questionSet'
 
 import useStyles from './style'
 
@@ -31,7 +31,6 @@ const Home = ({
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
   const [questionSets, setQuestionSets] = useState<QuestionSet[] | null>(null)
   const [refreshQuestionSet, setRefreshQuestionSet] = useState(0)
-  const [selectedQuestionSet, setSelectedQuestionSet] = useState<null | undefined | QuestionSet>(null)
 
   const fetchQuestionSets = async () => {
     const response = await fetchRequestResponse(
@@ -51,20 +50,6 @@ const Home = ({
   useEffect(() => {
     void fetchQuestionSets()
   }, [refreshQuestionSet])
-
-  useEffect(() => {
-    if (!questionSets) {
-      setSelectedQuestionSet(null)
-      return
-    }
-    if (isLoggedIn && !user) {
-      // avoid useless fetch if user is going to be fetched
-      setSelectedQuestionSet(null)
-      return
-    }
-    const questionSet = computeDefaultQuestionSet({ user, questionSets })
-    setSelectedQuestionSet(questionSet)
-  }, [questionSets, isLoggedIn, user])
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -128,16 +113,16 @@ const Home = ({
         <AsakaiQuestioning
           user={user}
           usersPictures={usersPictures}
-          isFetchingQuestionSet={selectedQuestionSet === null}
-          selectedQuestionSet={selectedQuestionSet}
+          isDataLoading={!questionSets || (isLoggedIn && !user)}
+          questionSets={questionSets}
         />
       ) : (
         <AllQuestioning
           showMbtiInitially={showMbtiInitially}
           usersPictures={usersPictures}
           user={user}
-          isFetchingQuestionSet={selectedQuestionSet === null}
-          selectedQuestionSet={selectedQuestionSet}
+          isDataLoading={!questionSets || (isLoggedIn && !user)}
+          questionSets={questionSets}
         />
       )}
       <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>

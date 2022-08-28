@@ -18,7 +18,7 @@ import colors from 'ui/colors'
 import { filterQuestion } from 'components/Questioning/utils'
 import { useHistory } from 'react-router-dom'
 import { ExploreOutlined } from '@material-ui/icons'
-import { QuestionSet } from 'utils/questionSet'
+import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 
 import useStyle from './style'
 
@@ -33,14 +33,14 @@ const AllQuestioning = ({
   user,
   showMbtiInitially,
   usersPictures,
-  selectedQuestionSet,
-  isFetchingQuestionSet,
+  questionSets,
+  isDataLoading,
 }: {
   user: User | null
   showMbtiInitially: boolean
   usersPictures: UsersPictures | null
-  selectedQuestionSet: QuestionSet | null | undefined
-  isFetchingQuestionSet: boolean
+  questionSets: QuestionSet[] | null
+  isDataLoading: boolean
 }) => {
   const [filters, setFilters] = useState({
     isValidated: false,
@@ -66,15 +66,16 @@ const AllQuestioning = ({
 
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true)
-    if (isFetchingQuestionSet) {
+    if (isDataLoading || !questionSets) {
       return
     }
+    const questionSet = computeDefaultQuestionSet({ user, questionSets })
 
     const response = await fetchRequestResponse(
       {
         uri: `/questions/${ALL_QUESTIONS_MODE}`,
         method: 'GET',
-        params: selectedQuestionSet !== undefined ? { questionSetId: selectedQuestionSet?.id ?? null } : {},
+        params: questionSet !== undefined ? { questionSetId: questionSet?.id ?? null } : {},
         body: null,
       },
       200,
@@ -91,7 +92,7 @@ const AllQuestioning = ({
     setQuestions(data)
     setIsLoading(false)
     // eslint-disable-next-line
-  }, [selectedQuestionSet])
+  }, [user, questionSets, isDataLoading])
 
   useEffect(() => {
     void fetchQuestions()
@@ -110,10 +111,16 @@ const AllQuestioning = ({
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
+    const questionSet = computeDefaultQuestionSet({ user, questionSets })
     const fetchChoices = async () => {
       setAreChoicesFetched(false)
       const response = await fetchRequestResponse(
-        { uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`, method: 'GET', body: null, params: null },
+        {
+          uri: `/${USER_TO_QUESTIONS_CHOICES_URI}`,
+          method: 'GET',
+          body: null,
+          params: questionSet !== undefined ? { questionSetId: questionSet?.id ?? null } : {},
+        },
         200,
         {
           enqueueSnackbar,
@@ -130,7 +137,12 @@ const AllQuestioning = ({
     }
     const fetchVotes = async () => {
       const response = await fetchRequestResponse(
-        { uri: `/${USER_TO_QUESTIONS_VOTES_URI}`, method: 'GET', body: null, params: null },
+        {
+          uri: `/${USER_TO_QUESTIONS_VOTES_URI}`,
+          method: 'GET',
+          body: null,
+          params: questionSet !== undefined ? { questionSetId: questionSet?.id ?? null } : {},
+        },
         200,
         {
           enqueueSnackbar,
@@ -150,7 +162,7 @@ const AllQuestioning = ({
       setAreChoicesFetched(true)
     }
     // eslint-disable-next-line
-  }, [user])
+  }, [user, questionSets, isDataLoading])
 
   const handeFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
     setFilters({ ...filters, [option]: checked })

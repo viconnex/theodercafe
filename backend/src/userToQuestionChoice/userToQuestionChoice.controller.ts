@@ -41,8 +41,14 @@ export class UserToQuestionChoiceController {
     @Get('')
     @UseGuards(AuthGuard(USER_STRATEGY))
     @UseInterceptors(ClassSerializerInterceptor)
-    async getChoices(@Request() req: { user: User }) {
-        return await this.userToQuestionChoiceService.getQuestionsPolls(req.user.id)
+    async getChoices(@Request() req: { user: User }, @Query() query: { questionSetId?: number }) {
+        if (!query.questionSetId) {
+            throw new BadRequestException('questionSetId is required')
+        }
+        return await this.userToQuestionChoiceService.getQuestionsPolls({
+            user: req.user,
+            questionSetId: query.questionSetId,
+        })
     }
 
     @Put(':id/choice')
