@@ -42,13 +42,9 @@ export const isTokenValid = (token: string) => {
   }
 }
 
-export const signin = async (
-  setIsConnectingToFirebase: (connect: boolean) => void,
-  enqueueSnackbar?: WithSnackbarProps['enqueueSnackbar'],
-) => {
+export const signin = async (enqueueSnackbar?: WithSnackbarProps['enqueueSnackbar']) => {
   const token = await getFirebaseToken()
   if (!token) {
-    setIsConnectingToFirebase(false)
     return
   }
   try {
@@ -58,7 +54,6 @@ export const signin = async (
     if (enqueueSnackbar) {
       enqueueSnackbar('Live indisponible', { variant: 'error' })
     }
-    setIsConnectingToFirebase(false)
   }
 }
 
@@ -69,21 +64,18 @@ export const signout = async () => {
 export const useFirebaseAuth = (
   setUid: (uid: string | null) => void,
   user: User | null,
-  setIsConnectingToFirebase: (connect: boolean) => void,
   enqueueSnackbar?: WithSnackbarProps['enqueueSnackbar'],
 ) => {
   useEffect(() => {
     if (!user || !IS_LIVE_ACTIVATED_BY_DEFAULT) {
       return
     }
-    setIsConnectingToFirebase(true)
-    void signin(setIsConnectingToFirebase, enqueueSnackbar)
+    void signin(enqueueSnackbar)
   }, [user])
 
   firebaseAuth.onAuthStateChanged((newUser) => {
     if (newUser) {
       setUid(newUser.uid)
-      setIsConnectingToFirebase(false)
     } else {
       setUid(null)
     }

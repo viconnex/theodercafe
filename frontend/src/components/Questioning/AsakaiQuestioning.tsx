@@ -117,7 +117,6 @@ const AsakaiQuestioning = ({
   const [firebaseUid, setFirebaseUid] = useState<null | string>(null)
   const [usersAnswers, setUsersAnswers] = useState<UsersAnswers | null>(null)
   const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
-  const [isConnectingToFirebase, setIsConnectingToFirebase] = useState(false)
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
 
@@ -163,7 +162,7 @@ const AsakaiQuestioning = ({
     // eslint-disable-next-line
   }, [isDataLoading, user, questionSets])
 
-  useFirebaseAuth(setFirebaseUid, user, setIsConnectingToFirebase, enqueueSnackbar)
+  useFirebaseAuth(setFirebaseUid, user, enqueueSnackbar)
 
   useEffect(() => {
     if (!question || !firebaseUid || !questioningId) {
@@ -283,39 +282,11 @@ const AsakaiQuestioning = ({
     }
   }
 
-  const changeLiveMode = async () => {
-    if (!firebaseUid) {
-      if (!user) {
-        login()
-      } else {
-        setIsConnectingToFirebase(true)
-        await signin(setIsConnectingToFirebase, enqueueSnackbar)
-        setIsConnectingToFirebase(false)
-      }
-    } else {
-      setIsConnectingToFirebase(true)
-      await signout()
-      setUsersAnswers(null)
-      setUsersVotes(null)
-      setIsConnectingToFirebase(false)
-    }
-  }
-
   const classes = useStyle()
 
   return (
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
-        {user && (
-          <ModeSelector
-            label="Live mode"
-            isModeOn={!!firebaseUid}
-            handleModeChange={changeLiveMode}
-            tooltipContent="Les réponses des Theodoers en Live !"
-            withMargin={false}
-            isLoading={isConnectingToFirebase}
-          />
-        )}
         {user && (
           <ModeSelector
             label="Mode Coach"

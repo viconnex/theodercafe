@@ -22,7 +22,7 @@ export const fetchRequestResponse = async (
   }
 
   if (!response || response.status !== expectedStatus) {
-    enqueueSnackbar("Le serveur n'est pas d'accord avec cette requête", { variant: 'error' })
+    enqueueSnackbar("Le serveur n'a pas l'air de bonne humeur", { variant: 'error' })
     return null
   }
   if (successMessage) {
