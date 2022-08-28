@@ -17,7 +17,7 @@ const style = (theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: '0 8px',
-    ...theme.mixins.toolbar,
+    minHeight: '68px',
   },
   link: {
     textDecoration: 'none',

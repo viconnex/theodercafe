@@ -69,6 +69,7 @@ export const useSetUser = ({
   setJwtToken: React.Dispatch<React.SetStateAction<string | null>>
 }) => {
   const [user, setUser] = useState<User | null>(null)
+  const [refreshUser, setRefreshUser] = useState(0)
   useEffect(() => {
     const fetchUser = async () => {
       const response = await fetchRequest({ uri: '/users/me', method: 'GET', body: null, params: null })
@@ -99,9 +100,9 @@ export const useSetUser = ({
       setUser(null)
       setJwtToken(null)
     }
-  }, [jwtToken])
+  }, [jwtToken, refreshUser])
 
-  return { user, setUser }
+  return { user, setUser, refreshUser: () => setRefreshUser((incr) => incr + 1) }
 }
 
 export const useSetAuth = ({ enqueueSnackbar }: { enqueueSnackbar: WithSnackbarProps['enqueueSnackbar'] }) => {

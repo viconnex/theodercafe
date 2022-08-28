@@ -43,16 +43,17 @@ const RedirectComponent = ({ component: Component, isAdminRoute, user, isLoggedI
   return <Component user={user} {...props} />
 }
 
-const PrivateRoute = ({ component, isAdminRoute, user, isLoggedIn, ...rest }) => {
+const PrivateRoute = ({ component, isAdminRoute, user, isLoggedIn, ...props }) => {
   return (
     <Route
-      {...rest}
-      render={(props) => (
+      {...props}
+      render={(addedByRouteProps) => (
         <RedirectComponent
           user={user}
           isLoggedIn={isLoggedIn}
           component={component}
-          {...props}
+          {...addedByRouteProps}
+          {...props.componentProps}
           isAdminRoute={isAdminRoute}
         />
       )}

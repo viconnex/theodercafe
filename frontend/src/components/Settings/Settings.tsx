@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack'
 
 import { useSelectSetStyle, useSettingsStyle } from './style'
 
-const QuestionSetSelector = ({ user }: { user: User }) => {
+const QuestionSetSelector = ({ user, refreshUser }: { user: User; refreshUser: () => void }) => {
   const [questionSets, setQuestionSets] = useState<QuestionSet[] | null>(null)
   const [selectedQuestionSetId, setSelectedQuestionSetId] = useState(user.selectedQuestionSet.id)
   const { enqueueSnackbar } = useSnackbar()
@@ -45,6 +45,7 @@ const QuestionSetSelector = ({ user }: { user: User }) => {
         successMessage: 'Changements enregistrés',
       },
     )
+    refreshUser()
   }
 
   if (!questionSets) {
@@ -64,12 +65,13 @@ const QuestionSetSelector = ({ user }: { user: User }) => {
   )
 }
 
-const Settings = ({ user }: { user: User }) => {
+const Settings = ({ user, refreshUser }: { user: User; refreshUser: () => void }) => {
+  console.log('object', refreshUser)
   const classes = useSettingsStyle()
   return (
     <div className={classes.page}>
       <div className={classes.container}>
-        <QuestionSetSelector user={user} />
+        <QuestionSetSelector user={user} refreshUser={refreshUser} />
       </div>
     </div>
   )

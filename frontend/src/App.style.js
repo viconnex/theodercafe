@@ -16,6 +16,8 @@ const useStyle = makeStyles((theme) => ({
   appBar: {
     background: 'white',
     height: '68px',
+    display: 'flex',
+    justifyContent: 'center',
   },
   shim: {
     marginBottom: '20px',

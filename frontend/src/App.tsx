@@ -35,7 +35,7 @@ const App = () => {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
   const { enqueueSnackbar } = useSnackbar()
   const { jwtToken, setJwtToken } = useSetAuth({ enqueueSnackbar })
-  const { user, setUser } = useSetUser({ jwtToken, setJwtToken })
+  const { user, setUser, refreshUser } = useSetUser({ jwtToken, setJwtToken })
   const { logout } = useLogout({ setJwtToken, setUser })
 
   const toggleDrawer = (open: boolean) => () => {
@@ -95,6 +95,8 @@ const App = () => {
                 user={user}
                 isLoggedIn={!!jwtToken}
                 isAdminRoute={false}
+                refreshUser={refreshUser}
+                componentProps={{ refreshUser }}
               />
               <Route path="/" render={() => <Home user={user} isLoggedIn={!!jwtToken} />} />
             </Switch>
