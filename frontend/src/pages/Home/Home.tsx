@@ -10,12 +10,21 @@ import AllQuestioning from 'components/Questioning/AllQuestioning'
 import { User } from 'services/authentication'
 import { MBTI_URL_PARAM } from 'utils/constants/constants'
 import { UsersPictures } from 'components/Questioning/types'
+import QuestionSetSelector from 'components/Settings/QuestionSetSelector'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
 import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 
 import useStyles from './style'
 
-const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) => {
+const Home = ({
+  user,
+  isLoggedIn,
+  refreshUser,
+}: {
+  user: User | null
+  isLoggedIn: boolean
+  refreshUser: () => void
+}) => {
   const [addQuestionDialog, setAddQuestionDialog] = useState(false)
   const [isAsakaiMode, setIsAsakaiMode] = useState([1, 5].includes(new Date().getDay()))
   const [showMbtiInitially, setShowMbtiInitially] = useState(false)
@@ -101,13 +110,22 @@ const Home = ({ user, isLoggedIn }: { user: User | null; isLoggedIn: boolean }) 
   const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
-      <ModeSelector
-        label={new Date().getHours() >= 11 ? 'Mode Asakai' : 'Mode Dojo'}
-        isModeOn={isAsakaiMode}
-        handleModeChange={handleModeChange}
-        tooltipContent="En mode Asakai, réponds à 10 questions pour connaître ton Alterodo"
-        withMargin
-      />
+      <div className={classes.modeSelectorContainer}>
+        <ModeSelector
+          label={new Date().getHours() >= 11 ? 'Mode Asakai' : 'Mode Dojo'}
+          isModeOn={isAsakaiMode}
+          handleModeChange={handleModeChange}
+          tooltipContent="En mode Asakai, réponds à 10 questions pour connaître ton Alterodo"
+          withMargin={false}
+        />
+        {user && questionSets ? (
+          <div className={classes.questionSetSelectorContainer}>
+            <QuestionSetSelector user={user} refreshUser={refreshUser} questionSets={questionSets} isWhite={true} />
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
       {isAsakaiMode ? (
         <AsakaiQuestioning
           user={user}

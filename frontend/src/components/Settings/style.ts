@@ -21,6 +21,19 @@ export const useSettingsStyle = makeStyles(() => ({
 }))
 
 export const useSelectSetStyle = makeStyles(() => ({
+  root: {
+    color: 'white',
+    fontSize: '14px',
+  },
+  icon: {
+    fill: 'white',
+  },
+  notchedOutline: {
+    display: 'none',
+  },
+}))
+
+export const useSelectSetWrapperStyle = makeStyles(() => ({
   container: {
     display: 'flex',
     flexDirection: 'column',

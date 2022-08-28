@@ -98,7 +98,7 @@ const App = () => {
                 refreshUser={refreshUser}
                 componentProps={{ refreshUser }}
               />
-              <Route path="/" render={() => <Home user={user} isLoggedIn={!!jwtToken} />} />
+              <Route path="/" render={() => <Home user={user} isLoggedIn={!!jwtToken} refreshUser={refreshUser} />} />
             </Switch>
           </Suspense>
           <MenuDrawer open={isDrawerOpen} toggleDrawer={toggleDrawer} user={user} logout={logout} />

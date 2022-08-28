@@ -239,22 +239,16 @@ export class UserToQuestionChoiceService {
             ] as MbtiIndexAndLetters
         })
 
-        const userAnswersBaseQueryBuilder = this.userToQuestionChoiceRepository.createQueryBuilder(
-            'user_to_question_choices',
-        )
-        const requestUserWithCompany = await this.userService.findOne(requestUser.id)
-
-        if (requestUserWithCompany?.company === THEODO_COMPANY) {
-            userAnswersBaseQueryBuilder
-                .leftJoin('user_to_question_choices.user', 'user')
-                .where('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
-                .andWhere('user_to_question_choices.questionId IN (:...questionIds)', {
-                    questionIds: questions.map((question) => question.id),
-                })
-        } else {
-            userAnswersBaseQueryBuilder.where('user_to_question_choices.questionId IN (:...questionIds)', {
+        const userAnswersBaseQueryBuilder = this.userToQuestionChoiceRepository
+            .createQueryBuilder('user_to_question_choices')
+            .where('user_to_question_choices.questionId IN (:...questionIds)', {
                 questionIds: questions.map((question) => question.id),
             })
+
+        if (requestUser?.company === THEODO_COMPANY) {
+            userAnswersBaseQueryBuilder
+                .leftJoin('user_to_question_choices.user', 'user')
+                .andWhere('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
         }
 
         const usersAnswers = await userAnswersBaseQueryBuilder.getMany()
