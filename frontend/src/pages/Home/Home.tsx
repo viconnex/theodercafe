@@ -110,7 +110,7 @@ const Home = ({
   const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
-      <div className={classes.modeSelectorContainer}>
+      <div className={classes.modesSelectorContainer}>
         <ModeSelector
           label={new Date().getHours() >= 11 ? 'Mode Asakai' : 'Mode Dojo'}
           isModeOn={isAsakaiMode}
@@ -118,10 +118,8 @@ const Home = ({
           tooltipContent="En mode Asakai, réponds à 10 questions pour connaître ton Alterodo"
           withMargin={false}
         />
-        {user && questionSets ? (
-          <div className={classes.questionSetSelectorContainer}>
-            <QuestionSetSelector user={user} refreshUser={refreshUser} questionSets={questionSets} isWhite={true} />
-          </div>
+        {!!user && questionSets ? (
+          <QuestionSetSelector user={user} refreshUser={refreshUser} questionSets={questionSets} isWhite={true} />
         ) : (
           <></>
         )}

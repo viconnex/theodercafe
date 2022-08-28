@@ -24,6 +24,8 @@ export const useSelectSetStyle = makeStyles(() => ({
   root: {
     color: 'white',
     fontSize: '14px',
+    paddingTop: '8px',
+    paddingBottom: '8px',
   },
   icon: {
     fill: 'white',

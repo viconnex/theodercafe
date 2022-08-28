@@ -9,14 +9,12 @@ const useStyle = makeStyles(() => {
       alignItems: 'center',
       position: 'relative',
     },
-    modeSelectorContainer: {
+    modesSelectorContainer: {
       display: 'flex',
       justifyContent: 'space-between',
       width: '100%',
       alignItems: 'center',
-    },
-    questionSetSelectorContainer: {
-      padding: '2px',
+      marginTop: '8px',
     },
     addButton: {
       bottom: '16px',
