@@ -88,7 +88,7 @@ export class QuestionRepository extends Repository<Question> {
     getAsakaiBaseQueryBuilder = ({ questionSetId }: { questionSetId: number }) => {
         return this.getQuestionBaseQueryBuilder()
             .where('questions.isValidated = true')
-            .where('questionSet.id = :questionSetId', { questionSetId })
+            .andWhere('questionSet.id = :questionSetId', { questionSetId })
     }
 
     findAsakaiSet = async ({
