@@ -58,13 +58,16 @@ export class UserToQuestionChoiceService {
         return this.userToQuestionChoiceRepository.save(initialChoice)
     }
 
-    async getQuestionsPolls({ user, questionSetId }: { user: User; questionSetId: number }) {
+    async getQuestionsPolls({ user, questionSetId }: { user: User; questionSetId?: number }) {
         const questionsPolls: Record<number, QuestionPoll> = {}
-        let queryBuilder = this.userToQuestionChoiceRepository
-            .createQueryBuilder('user_to_question_choices')
-            .leftJoin('user_to_question_choices.question', 'questions')
-            .leftJoin('questions.questionSets', 'question_sets')
-            .where('question_sets.id = :questionSetId', { questionSetId })
+        let queryBuilder = this.userToQuestionChoiceRepository.createQueryBuilder('user_to_question_choices')
+
+        if (questionSetId) {
+            queryBuilder = queryBuilder
+                .leftJoin('user_to_question_choices.question', 'questions')
+                .leftJoin('questions.questionSets', 'question_sets')
+                .where('question_sets.id = :questionSetId', { questionSetId })
+        }
 
         if (user?.company === THEODO_COMPANY) {
             queryBuilder = queryBuilder
