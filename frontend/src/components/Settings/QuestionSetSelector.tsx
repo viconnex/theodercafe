@@ -21,12 +21,12 @@ const QuestionSetSelector = ({
   const { enqueueSnackbar } = useSnackbar()
   const classes = useSelectSetStyle()
 
-  const onChange = (newId: number) => {
+  const onChange = async (newId: number) => {
     if (newId === selectedQuestionSetId) {
       return
     }
     setSelectedQuestionSetId(newId)
-    void fetchRequestResponse(
+    await fetchRequestResponse(
       { uri: '/users/settings', method: 'POST', params: null, body: { selectedQuestionSetId: newId } },
       201,
       {
