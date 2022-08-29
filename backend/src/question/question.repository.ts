@@ -89,6 +89,7 @@ export class QuestionRepository extends Repository<Question> {
         return this.getQuestionBaseQueryBuilder()
             .where('questions.isValidated = true')
             .andWhere('questionSet.id = :questionSetId', { questionSetId })
+            .orderBy('random()')
     }
 
     findAsakaiSet = async ({
