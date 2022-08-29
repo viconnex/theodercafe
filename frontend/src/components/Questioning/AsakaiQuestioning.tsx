@@ -29,18 +29,6 @@ import useStyle from './style'
 
 export const IS_LIVE_ACTIVATED_BY_DEFAULT = true
 
-const LinkToForm = () => {
-  return (
-    <a
-      target="_blank"
-      rel="noreferrer"
-      href="https://docs.google.com/forms/d/e/1FAIpQLSeClG7ZquVyfCakUaAMlpScSWaGx197wIGyS6FMpLxN2v3T_Q/viewform?usp=sf_link"
-    >
-      🦉 C'est ici 🦑
-    </a>
-  )
-}
-
 const QuestionContent = ({
   isLoading,
   chose,
@@ -130,7 +118,7 @@ const AsakaiQuestioning = ({
   const [usersAnswers, setUsersAnswers] = useState<UsersAnswers | null>(null)
   const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const question = questions[questionIndex]
 
@@ -243,7 +231,18 @@ const AsakaiQuestioning = ({
     setAlterodos(data)
     enqueueSnackbar('Donne ton avis sur Theodercafe !', {
       autoHideDuration: null,
-      action: LinkToForm,
+      // eslint-disable-next-line
+      action: (snackbarId) => (
+        <div onClick={() => closeSnackbar(snackbarId)}>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSeClG7ZquVyfCakUaAMlpScSWaGx197wIGyS6FMpLxN2v3T_Q/viewform?usp=sf_link"
+          >
+            🦉 ici 🦑
+          </a>
+        </div>
+      ),
       variant: 'info',
     })
   }
