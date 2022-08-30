@@ -13,6 +13,7 @@ import { UsersPictures } from 'components/Questioning/types'
 import QuestionSetSelector from 'components/Settings/QuestionSetSelector'
 import { fetchRequest, fetchRequestResponse } from 'services/api'
 import { QuestionSet } from 'utils/questionSet'
+import { useIntl } from 'react-intl'
 
 import useStyles from './style'
 
@@ -31,6 +32,7 @@ const Home = ({
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
   const [questionSets, setQuestionSets] = useState<QuestionSet[] | null>(null)
   const [refreshQuestionSet, setRefreshQuestionSet] = useState(0)
+  const intl = useIntl()
 
   const fetchQuestionSets = async () => {
     const response = await fetchRequestResponse(
@@ -100,7 +102,7 @@ const Home = ({
           label={new Date().getHours() >= 11 ? 'Mode Asakai' : 'Mode Dojo'}
           isModeOn={isAsakaiMode}
           handleModeChange={handleModeChange}
-          tooltipContent="En mode Asakai, réponds à 10 questions pour connaître ton Alterodo"
+          tooltipContent={intl.formatMessage({ id: 'home.modeSelector.tooltip' })}
           withMargin={false}
         />
         {!!user && questionSets ? (
