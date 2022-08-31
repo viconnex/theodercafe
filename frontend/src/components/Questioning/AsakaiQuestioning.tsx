@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Question } from 'components/Question'
 import { ASAKAI_MODE, ASAKAI_QUESTION_COUNT } from 'utils/constants/questionConstants'
 import { useSnackbar } from 'notistack'
@@ -119,6 +120,7 @@ const AsakaiQuestioning = ({
   const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const intl = useIntl()
 
   const question = questions[questionIndex]
 
@@ -220,16 +222,16 @@ const AsakaiQuestioning = ({
       })
     } catch {
       setIsLoading(false)
-      return enqueueSnackbar("Une erreur s'est produite 🛸", { variant: 'error' })
+      return enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.error' }), { variant: 'error' })
     }
     if (response.status !== 201) {
       setIsLoading(false)
-      return enqueueSnackbar("Une erreur s'est produite", { variant: 'error' })
+      return enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.error' }), { variant: 'error' })
     }
     const data = (await response.json()) as Alterodos
     setIsLoading(false)
     setAlterodos(data)
-    enqueueSnackbar('Donne ton avis sur Theodercafe !', {
+    enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.feedback' }), {
       autoHideDuration: null,
       // eslint-disable-next-line
       action: (snackbarId) => (
@@ -239,7 +241,7 @@ const AsakaiQuestioning = ({
             rel="noreferrer"
             href="https://docs.google.com/forms/d/e/1FAIpQLSeClG7ZquVyfCakUaAMlpScSWaGx197wIGyS6FMpLxN2v3T_Q/viewform?usp=sf_link"
           >
-            🦉 ici 🦑
+            {intl.formatMessage({ id: 'asakai.finish.feedback.here' })}
           </a>
         </div>
       ),
@@ -308,13 +310,13 @@ const AsakaiQuestioning = ({
             label="Mode Coach"
             isModeOn={isCoachMode}
             handleModeChange={setIsCoachMode}
-            tooltipContent="En mode Coach, les réponses ne sont pas enregistrées. Renseigne un email à la fin du questionnaire et elles seront associées au nouveau compte"
+            tooltipContent={intl.formatMessage({ id: 'asakai.modeSelector.coach.tooltip' })}
             withMargin={false}
           />
         )}
         {user?.role === AuthRole.Admin && (
           <div className={classes.asakaiNewSetButton} onClick={changeAsakaiSet}>
-            Changer le set du jour
+            <FormattedMessage id="asakai.changeTodaySet" />
           </div>
         )}
       </div>

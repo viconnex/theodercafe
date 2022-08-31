@@ -99,7 +99,7 @@ const Home = ({
     <div className={classes.pageContainer}>
       <div className={classes.modesSelectorContainer}>
         <ModeSelector
-          label={new Date().getHours() >= 11 ? 'Mode Asakai' : 'Mode Dojo'}
+          label={intl.formatMessage({ id: 'home.modeSelector.title' })}
           isModeOn={isAsakaiMode}
           handleModeChange={handleModeChange}
           tooltipContent={intl.formatMessage({ id: 'home.modeSelector.tooltip' })}
