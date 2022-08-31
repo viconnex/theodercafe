@@ -19,9 +19,9 @@ const useStyle = makeStyles((theme) => {
       flexDirection: 'column',
       alignItems: 'flex-start',
       width: '100%',
-      height: '100%',
       justifyContent: 'center',
       position: 'relative',
+      flex: 1,
     },
     questioningAction: {
       width: '100%',

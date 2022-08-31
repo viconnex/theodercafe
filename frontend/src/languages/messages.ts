@@ -24,7 +24,7 @@ export const messages = {
     'asakai.finish.error': 'An error occured 🛸',
     'home.modeSelector.title': 'Live Mode',
     'home.modeSelector.tooltip': 'A 10 question set updated everyday',
-    'asakai.finish.feedback': 'Give some !',
+    'asakai.finish.feedback': 'Give some feedback !',
     'asakai.finish.feedback.here': '🦉 here 🦑',
     'asakai.modeSelector.coach': 'Coach Mode',
     'asakai.modeSelector.coach.tooltip':
