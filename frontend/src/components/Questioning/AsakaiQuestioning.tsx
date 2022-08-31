@@ -205,13 +205,20 @@ const AsakaiQuestioning = ({
       setQuestionIndex(index)
     }
     if (index === questions.length) {
-      await handleAsakaiFinish()
+      if (!user) {
+        setQuestionIndex(0)
+      } else {
+        await handleAsakaiFinish()
+      }
     }
   }
 
   const handleAsakaiFinish = async () => {
+    if (!user) {
+      return
+    }
     let response
-    const excludedUserId = user?.id
+    const excludedUserId = user.id
     setIsLoading(true)
     try {
       response = await fetchRequest({
@@ -250,9 +257,6 @@ const AsakaiQuestioning = ({
   }
 
   const chose = (questionId: number, choice: Choice) => {
-    if (!user) {
-      return setOpenLoginDialog(true)
-    }
     if (asakaiChoices[questionId] === choice) {
       void changeQuestion(1)
       return
@@ -281,6 +285,9 @@ const AsakaiQuestioning = ({
   }
 
   const vote = (questionId: number, vote: boolean) => {
+    if (!user) {
+      return setOpenLoginDialog(true)
+    }
     const upVote = asakaiVotes[questionId] === vote ? null : vote
     const votes = { ...asakaiVotes }
     votes[questionId] = upVote
@@ -307,7 +314,7 @@ const AsakaiQuestioning = ({
       <div className={classes.asakaiSubtitle}>
         {user && (
           <ModeSelector
-            label="Mode Coach"
+            label={intl.formatMessage({ id: 'asakai.modeSelector.coach' })}
             isModeOn={isCoachMode}
             handleModeChange={setIsCoachMode}
             tooltipContent={intl.formatMessage({ id: 'asakai.modeSelector.coach.tooltip' })}

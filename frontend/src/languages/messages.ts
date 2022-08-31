@@ -14,6 +14,7 @@ export const messages = {
     'asakai.modeSelector.coach.tooltip':
       'En mode Coach, les réponses ne sont pas enregistrées sur ton compte. Renseigne un email à la fin du questionnaire pour les enregistrer sur un nouveau compte',
     'asakai.changeTodaySet': 'Changer le set du jour',
+    'asakai.activateLive': 'Connecte-toi pour activer le live',
   },
   [Locale.en]: {
     'asakai.finish.error': 'An error occured 🛸',
@@ -25,6 +26,7 @@ export const messages = {
     'asakai.modeSelector.coach.tooltip':
       'With Coach mode, answers are not saved on your account. Enter an email in the end so to save them on a new account',
     'asakai.changeTodaySet': "Change today's set",
+    'asakai.activateLive': 'Login for live mode',
   },
 }
 

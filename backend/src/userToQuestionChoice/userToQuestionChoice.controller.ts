@@ -31,6 +31,7 @@ export class UserToQuestionChoiceController {
     constructor(private readonly userToQuestionChoiceService: UserToQuestionChoiceService) {}
 
     @Post('asakai')
+    @UseGuards(AuthGuard(USER_STRATEGY))
     async findAsakaiAlterodos(
         @Body()
         { asakaiChoices, excludedUserId }: { asakaiChoices: AsakaiChoices; excludedUserId?: string },
