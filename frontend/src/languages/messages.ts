@@ -10,7 +10,7 @@ export const messages = {
     'home.modeSelector.title': 'Mode Live',
     'home.modeSelector.tooltip': 'Un set de 10 questions qui change tous les jours',
     'asakai.finish.error': "Une erreur s'est produite 🛸",
-    'asakai.finish.feedback': 'Donne ton avis sur Theodercafe !',
+    'asakai.finish.feedback': 'Donne ton avis !',
     'asakai.finish.feedback.here': '🦉 ici 🦑',
     'asakai.modeSelector.coach': 'Mode Coach',
     'asakai.modeSelector.coach.tooltip':
