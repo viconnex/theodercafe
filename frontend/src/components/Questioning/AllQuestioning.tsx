@@ -64,6 +64,12 @@ const AllQuestioning = ({
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
+  useEffect(() => {
+    if (showMbtiInitially) {
+      handeFilterChange('isMBTI')(true)
+    }
+  }, [showMbtiInitially])
+
   const fetchQuestions = useCallback(async () => {
     setIsLoading(true)
     if (isDataLoading || !questionSets) {
