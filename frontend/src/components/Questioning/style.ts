@@ -26,6 +26,7 @@ const useStyle = makeStyles((theme) => {
     questioningAction: {
       width: '100%',
       marginTop: '24px',
+      marginBottom: '42px',
     },
     questioningContent: {
       display: 'flex',
