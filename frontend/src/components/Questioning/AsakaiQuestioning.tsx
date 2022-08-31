@@ -74,7 +74,7 @@ const QuestionContent = ({
     <React.Fragment>
       {!user && questionIndex === 0 && (
         <Button className={classes.activateLive} onClick={login} variant="contained" color="secondary">
-          Activer le live
+          <FormattedMessage id="asakai.activateLive" />
         </Button>
       )}
       <Question

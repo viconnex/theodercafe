@@ -21,24 +21,26 @@ export const ASAKAI_QUESTION_COUNT = 10
 
 export const MBTI_CATEGORY_NAME = 'MBTI'
 
-export const MBTI_EXTRAVERSION = 'Extraverti (E)'
-export const MBTI_INTROVERSION = 'Introverti (I)'
-export const MBTI_SENSATION = 'Sensation (S)'
-export const MBTI_INTUITION = 'Intuition (N)'
-export const MBTI_THINKING = 'Thinking (T)'
-export const MBTI_FEELING = 'Feeling (F)'
-export const MBTI_JUGEMENT = 'Jugement (J)'
-export const MBTI_PERCEPTION = 'Perception (P)'
+export enum MBTI_OPTION {
+  MBTI_EXTRAVERSION = 'Extraverti (E)',
+  MBTI_INTROVERSION = 'Introverti (I)',
+  MBTI_SENSATION = 'Sensation (S)',
+  MBTI_INTUITION = 'Intuition (N)',
+  MBTI_THINKING = 'Thinking (T)',
+  MBTI_FEELING = 'Feeling (F)',
+  MBTI_JUGEMENT = 'Jugement (J)',
+  MBTI_PERCEPTION = 'Perception (P)',
+}
 
 const MBTI_SORT = {
-  [MBTI_EXTRAVERSION]: 0,
-  [MBTI_INTROVERSION]: 0,
-  [MBTI_SENSATION]: 1,
-  [MBTI_INTUITION]: 1,
-  [MBTI_THINKING]: 2,
-  [MBTI_FEELING]: 2,
-  [MBTI_JUGEMENT]: 3,
-  [MBTI_PERCEPTION]: 3,
+  [MBTI_OPTION.MBTI_EXTRAVERSION]: 0,
+  [MBTI_OPTION.MBTI_INTROVERSION]: 0,
+  [MBTI_OPTION.MBTI_SENSATION]: 1,
+  [MBTI_OPTION.MBTI_INTUITION]: 1,
+  [MBTI_OPTION.MBTI_THINKING]: 2,
+  [MBTI_OPTION.MBTI_FEELING]: 2,
+  [MBTI_OPTION.MBTI_JUGEMENT]: 3,
+  [MBTI_OPTION.MBTI_PERCEPTION]: 3,
 }
 export const sortMBTI = (question1: QuestionResponse, question2: QuestionResponse) => {
   // eslint-disable-next-line

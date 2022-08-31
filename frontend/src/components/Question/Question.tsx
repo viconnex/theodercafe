@@ -3,37 +3,20 @@ import Chip from '@material-ui/core/Chip'
 
 import { PlusOnes } from 'components/PlusOnes'
 import { Choice, QuestionResponse, UsersAnswers, UsersPictures } from 'components/Questioning/types'
-import {
-  MBTI_EXTRAVERSION,
-  MBTI_FEELING,
-  MBTI_INTROVERSION,
-  MBTI_INTUITION,
-  MBTI_JUGEMENT,
-  MBTI_PERCEPTION,
-  MBTI_SENSATION,
-  MBTI_THINKING,
-} from 'utils/constants/questionConstants'
+
+import { FormattedMessage, useIntl } from 'react-intl'
+import { getLocale, MBTI_OPTION_TRANSLATION } from 'languages/messages'
+
 import useStyle, { useOptionStyle } from './style'
 
-const getMBTISubtitle = (questionOption: string) => {
-  if (questionOption === MBTI_THINKING) {
-    return 'Méthode, logique'
-  } else if (questionOption === MBTI_FEELING) {
-    return 'Empathie, soutien'
-  } else if (questionOption === MBTI_JUGEMENT) {
-    return 'Je planifie tout'
-  } else if (questionOption === MBTI_PERCEPTION) {
-    return "Je fais tout à l'arrache"
-  } else if (questionOption === MBTI_SENSATION) {
-    return 'Je préfère des faits précis'
-  } else if (questionOption === MBTI_INTUITION) {
-    return "J'aime avoir la vue d'ensemble"
-  } else if (questionOption === MBTI_EXTRAVERSION) {
-    return 'Je me ressource quand je suis avec les autres'
-  } else if (questionOption === MBTI_INTROVERSION) {
-    return 'Je me ressource quand je suis seul'
+const getOptionTrad = (questionOption: string) => {
+  if (questionOption in MBTI_OPTION_TRANSLATION) {
+    // eslint-disable-next-line
+    // @ts-ignore
+    return MBTI_OPTION_TRANSLATION[questionOption][getLocale()] as { subtitle: string; option: string }
   }
-  return null
+
+  return { subtitle: null, option: questionOption }
 }
 
 /* eslint-disable complexity */
@@ -65,7 +48,7 @@ const Option = ({
 
   const showBar = !!usersAnswers && !!choice
   const previousRatio = useRef(0)
-  const mbtiSubtitle = getMBTISubtitle(questionOption)
+  const optionTrad = getOptionTrad(questionOption)
 
   const classes = useOptionStyle({
     isChoiceMade: !!choice,
@@ -73,7 +56,7 @@ const Option = ({
     ratio,
     isChosenOption: choice === option,
     showBar,
-    hasSubtitle: !!mbtiSubtitle,
+    hasSubtitle: !!optionTrad?.subtitle,
   })
 
   previousRatio.current = !choice ? 0 : ratio ?? 0
@@ -88,10 +71,10 @@ const Option = ({
       )}
       <div className={`${classes.textContainer} ${classes.faded}`}>
         <div className={classes.text}>
-          <span className={classes.textContent}>{questionOption}</span>
+          <span className={classes.textContent}>{optionTrad.option}</span>
           <span>{option === 2 ? ' ?' : ''}</span>
         </div>
-        {mbtiSubtitle && <div className={classes.subtitle}>{mbtiSubtitle}</div>}
+        {optionTrad?.subtitle && <div className={classes.subtitle}>{optionTrad?.subtitle}</div>}
       </div>
       <PlusOnes
         usersAnswers={usersAnswers ? usersAnswers[choiceField] : null}
@@ -120,13 +103,20 @@ const Question = ({
   usersPictures?: UsersPictures | null
 }) => {
   const classes = useStyle()
+  const intl = useIntl()
 
   return (
     <React.Fragment>
       {!hideCategory && (
         <div className={classes.categoryContainer}>
-          <div className={classes.categoryTitle}>Catégorie</div>
-          <Chip size="small" label={question.category?.name ?? 'hors catégorie'} color="secondary" />
+          <div className={classes.categoryTitle}>
+            <FormattedMessage id="question.category.title" />
+          </div>
+          <Chip
+            size="small"
+            label={question.category?.name ?? intl.formatMessage({ id: 'question.category.noCategory' })}
+            color="secondary"
+          />
         </div>
       )}
       <Option
