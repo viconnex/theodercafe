@@ -285,6 +285,7 @@ const AllQuestioning = ({
             questionIndex={questionIndex}
             changeQuestion={changeQuestion}
             questionLength={filteredQuestions.length}
+            hideRightArrow={!filters.isMBTI && questionIndex === filteredQuestions.length - 1}
           />
           <div className={classes.filterOption}>{getValidationInformation(question.isValidated)}</div>
           <Voter questionId={question.id} questionVote={questionsVotes[question.id]} vote={vote} />

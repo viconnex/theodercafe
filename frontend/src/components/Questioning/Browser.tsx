@@ -9,12 +9,12 @@ const Browser = ({
   questionIndex,
   changeQuestion,
   questionLength,
-  hideArrows,
+  hideRightArrow,
 }: {
   questionIndex: number
   changeQuestion: (inc: number) => void
   questionLength: number
-  hideArrows?: boolean
+  hideRightArrow?: boolean
 }) => {
   const classes = useStyle()
 
@@ -29,7 +29,11 @@ const Browser = ({
         >
           <ArrowBack />
         </IconButton>
-        <IconButton classes={{ root: classes.nextButton }} disabled={hideArrows} onClick={() => changeQuestion(1)}>
+        <IconButton
+          classes={{ root: classes.nextButton }}
+          disabled={!!hideRightArrow}
+          onClick={() => changeQuestion(1)}
+        >
           <ArrowForward />
         </IconButton>
       </React.Fragment>

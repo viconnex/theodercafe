@@ -86,7 +86,7 @@ const QuestionContent = ({
         chose={chose}
       />
       <Browser
-        hideArrows={!choice}
+        hideRightArrow={!choice}
         questionIndex={questionIndex}
         changeQuestion={changeQuestion}
         questionLength={questions.length}
