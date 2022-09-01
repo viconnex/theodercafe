@@ -7,18 +7,21 @@ export enum Locale {
 
 export const messages = {
   [Locale.fr]: {
-    'home.modeSelector.title': 'Mode Live',
-    'home.modeSelector.tooltip': 'Un set de 10 questions qui change tous les jours',
+    'asakai.activateLive': 'Connecte-toi pour activer le live',
+    'asakai.changeTodaySet': 'Changer le set du jour',
     'asakai.finish.error': "Une erreur s'est produite 🛸",
     'asakai.finish.feedback': 'Donne ton avis !',
     'asakai.finish.feedback.here': '🦉 ici 🦑',
     'asakai.modeSelector.coach': 'Mode Coach',
     'asakai.modeSelector.coach.tooltip':
       'En mode Coach, les réponses ne sont pas enregistrées sur ton compte. Renseigne un email à la fin du questionnaire pour les enregistrer sur un nouveau compte',
-    'asakai.changeTodaySet': 'Changer le set du jour',
-    'asakai.activateLive': 'Connecte-toi pour activer le live',
-    'question.category.title': 'Catégorie',
+    'home.modeSelector.title': 'Mode Live',
+    'home.modeSelector.tooltip': 'Un set de 10 questions qui change tous les jours',
     'question.category.noCategory': 'Hors catégorie',
+    'question.category.title': 'Catégorie',
+    'allQuestioning.filters': 'Filtres',
+    'allQuestioning.filters.MBTI': 'MBTI',
+    'allQuestioning.MBTI.seeProfiles': 'Voir les profils',
   },
   [Locale.en]: {
     'asakai.finish.error': 'An error occured 🛸',
@@ -33,6 +36,9 @@ export const messages = {
     'asakai.activateLive': 'Login for live mode',
     'question.category.title': 'Category',
     'question.category.noCategory': 'No category',
+    'allQuestioning.filters': 'Filters',
+    'allQuestioning.filters.MBTI': 'MBTI',
+    'allQuestioning.MBTI.seeProfiles': 'See profiles',
   },
 }
 

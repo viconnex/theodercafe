@@ -4,6 +4,7 @@ import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'util
 import { useSnackbar } from 'notistack'
 import TuneIcon from '@material-ui/icons/Tune'
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew'
+import { FormattedMessage } from 'react-intl'
 
 import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse, postChoice, postVote } from 'services/api'
@@ -308,7 +309,7 @@ const AllQuestioning = ({
     <div className={classes.questioningContainer}>
       <div className={classes.asakaiSubtitle}>
         <Button startIcon={<TuneIcon />} color="secondary" variant="text" onClick={() => setIsDrawerOpen(true)}>
-          Filtres
+          <FormattedMessage id="allQuestioning.filters" />
         </Button>
         <Button
           startIcon={<AccessibilityNewIcon style={{ color: filters.isMBTI ? colors.bordeaux : undefined }} />}
@@ -316,7 +317,7 @@ const AllQuestioning = ({
           variant="text"
           onClick={() => handeFilterChange('isMBTI')(!filters.isMBTI)}
         >
-          MBTI
+          <FormattedMessage id="allQuestioning.filters.MBTI" />
         </Button>
       </div>
       <div className={`${classes.questioningContent}`}>{renderQuestionContent()}</div>
@@ -328,7 +329,7 @@ const AllQuestioning = ({
             onClick={() => history.push('mbti')}
             endIcon={<ExploreOutlined />}
           >
-            Voir les profils
+            <FormattedMessage id="allQuestioning.MBTI.seeProfiles" />
           </Button>
         </div>
       )}
