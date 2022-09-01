@@ -5,7 +5,7 @@ import { DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
-import { AdminUserList, PostSettingsBody, UserWithPublicFields } from './user.types'
+import { AdminUserList, CompanyDomain, PostSettingsBody, UserWithPublicFields } from './user.types'
 import sendEmail from './emails/sendinblue'
 import { alterodosLunch, welcomeEmail } from './emails/templates'
 import { QuestionSetService } from '../questionSet/questionSet.service'
@@ -92,8 +92,12 @@ export class UserService {
             .getOne()
     }
 
-    async getUsersPictures() {
-        const usersWithPics = await this.userRepository.find({ select: ['id', 'pictureUrl'] })
+    async getUsersPictures(companyDomain: CompanyDomain) {
+        const usersWithPics = await this.userRepository
+            .createQueryBuilder('user')
+            .where('user.email LIKE :companyDomain', { companyDomain: `%@${companyDomain.domain}` })
+            .select(['user.id', 'user.pictureUrl'])
+            .getMany()
         const userPicturesObject = {}
         usersWithPics.forEach((user) => {
             userPicturesObject[user.id] = user.pictureUrl

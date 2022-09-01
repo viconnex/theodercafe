@@ -32,8 +32,8 @@ export class UserController {
 
     @Get('pictures')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async getUserPictures() {
-        return this.userService.getUsersPictures()
+    async getUserPictures(@Request() { user }: { user: User }) {
+        return this.userService.getUsersPictures(user.getCompanyDomain())
     }
 
     @Post('settings')
