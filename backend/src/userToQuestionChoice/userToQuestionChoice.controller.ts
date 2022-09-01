@@ -33,10 +33,11 @@ export class UserToQuestionChoiceController {
     @Post('asakai')
     @UseGuards(AuthGuard(USER_STRATEGY))
     async findAsakaiAlterodos(
+        @Request() { user }: { user: User },
         @Body()
-        { asakaiChoices, excludedUserId }: { asakaiChoices: AsakaiChoices; excludedUserId?: string },
+        { asakaiChoices }: { asakaiChoices: AsakaiChoices },
     ): Promise<AlterodoResponse> {
-        return this.userToQuestionChoiceService.findAsakaiAlterodos(asakaiChoices, excludedUserId)
+        return this.userToQuestionChoiceService.findAsakaiAlterodos({ asakaiChoices, user })
     }
 
     @Get('')

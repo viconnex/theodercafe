@@ -1,5 +1,5 @@
 import { IS_DEV } from 'src/constants'
-import { THEODO_COMPANY } from 'src/user/user.entity'
+import { THEODO_COMPANY, User } from 'src/user/user.entity'
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { QuestionFilters, SimilarityWithUserId } from './userToQuestionChoice.types'
@@ -11,15 +11,16 @@ if (IS_DEV) {
 
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
-    async getAsakaiSet(questionIds: string[], excludedUserId?: string): Promise<UserToQuestionChoice[]> {
+    async getAsakaiSet(questionIds: string[], user: User): Promise<UserToQuestionChoice[]> {
         let query = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.company IN (:...companies)', { companies: COMPANIES })
-            .andWhere('user.isActive IS true')
+            .where('user.isActive IS true')
             .andWhere('user.isLoginPending IS false')
+            .andWhere('user.id != :userId', { userId: user.id })
 
-        if (excludedUserId) {
-            query = query.andWhere('user.id != :userId', { userId: excludedUserId })
+        const { domain, isTheodoCompany } = user.getCompanyDomain()
+        if (isTheodoCompany) {
+            query = query.andWhere('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${domain}` })
         }
 
         return query.andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds }).getMany()

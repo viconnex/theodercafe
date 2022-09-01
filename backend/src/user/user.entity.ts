@@ -78,4 +78,9 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt: string
+
+    getCompanyDomain() {
+        const domain = this.email.split('@')[1]
+        return { domain, isTheodoCompany: domain.includes('theodo') }
+    }
 }

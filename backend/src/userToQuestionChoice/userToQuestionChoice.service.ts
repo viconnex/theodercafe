@@ -100,13 +100,13 @@ export class UserToQuestionChoiceService {
         return questionsPolls
     }
 
-    async findAsakaiAlterodos(asakaiChoices: AsakaiChoices, excludedUserId?: string) {
+    async findAsakaiAlterodos({ asakaiChoices, user }: { asakaiChoices: AsakaiChoices; user: User }) {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         if (answeredQuestionsIds.length === 0) {
             throw new BadRequestException('user must answer to at least one question')
         }
 
-        const alterodos = await this.findAlterodosFromAsakaiChoices(asakaiChoices, excludedUserId)
+        const alterodos = await this.findAlterodosFromAsakaiChoices({ asakaiChoices, user })
 
         return this.createAlterodosResponse(answeredQuestionsIds.length, alterodos)
     }
@@ -200,17 +200,17 @@ export class UserToQuestionChoiceService {
         }
     }
 
-    private async findAlterodosFromAsakaiChoices(
-        asakaiChoices: AsakaiChoices,
-        excludedUserId?: string,
-    ): Promise<Alterodos> {
+    private async findAlterodosFromAsakaiChoices({
+        asakaiChoices,
+        user,
+    }: {
+        asakaiChoices: AsakaiChoices
+        user: User
+    }): Promise<Alterodos> {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         const commonAnswersWithUsers: { [id: number]: SimilarityWithUserId } = {}
 
-        const userToQuestionChoices = await this.userToQuestionChoiceRepository.getAsakaiSet(
-            answeredQuestionsIds,
-            excludedUserId,
-        )
+        const userToQuestionChoices = await this.userToQuestionChoiceRepository.getAsakaiSet(answeredQuestionsIds, user)
         if (userToQuestionChoices.length === 0) {
             throw new BadRequestException('no choices have been made by other users')
         }
