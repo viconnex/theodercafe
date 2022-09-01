@@ -128,7 +128,9 @@ const Question = ({
         chose={chose}
         usersPictures={usersPictures}
       />
-      <div className={classes.separator}>ou</div>
+      <div className={classes.separator}>
+        <FormattedMessage id="question.or" />
+      </div>
       <Option
         option={2}
         choice={choice}

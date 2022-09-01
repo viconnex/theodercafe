@@ -19,9 +19,11 @@ export const messages = {
     'home.modeSelector.tooltip': 'Un set de 10 questions qui change tous les jours',
     'question.category.noCategory': 'Hors catégorie',
     'question.category.title': 'Catégorie',
+    'question.or': 'ou',
     'allQuestioning.filters': 'Filtres',
     'allQuestioning.filters.MBTI': 'MBTI',
     'allQuestioning.MBTI.seeProfiles': 'Voir les profils',
+    'allQuestioning.noQuestion': 'Aucune question pour les filtres sélectionnés',
   },
   [Locale.en]: {
     'asakai.finish.error': 'An error occured 🛸',
@@ -39,6 +41,8 @@ export const messages = {
     'allQuestioning.filters': 'Filters',
     'allQuestioning.filters.MBTI': 'MBTI',
     'allQuestioning.MBTI.seeProfiles': 'See profiles',
+    'allQuestioning.noQuestion': 'There is no question for the configured filters',
+    'question.or': 'or',
   },
 }
 

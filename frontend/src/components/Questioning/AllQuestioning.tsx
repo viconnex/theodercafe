@@ -67,7 +67,7 @@ const AllQuestioning = ({
 
   useEffect(() => {
     if (showMbtiInitially) {
-      handeFilterChange('isMBTI')(true)
+      handleFilterChange('isMBTI')(true)
     }
   }, [showMbtiInitially])
 
@@ -171,7 +171,7 @@ const AllQuestioning = ({
     // eslint-disable-next-line
   }, [user, questionSets, isDataLoading])
 
-  const handeFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
+  const handleFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
     setFilters({ ...filters, [option]: checked })
     setQuestionIndex(0)
   }
@@ -300,7 +300,11 @@ const AllQuestioning = ({
       )
     }
     if (areChoicesFetched) {
-      return <div>Aucune question pour les filtres sélectionnés</div>
+      return (
+        <div>
+          <FormattedMessage id="allQuestioning.noQuestion" />
+        </div>
+      )
     }
     return <CircularProgress color="secondary" />
   }
@@ -315,7 +319,7 @@ const AllQuestioning = ({
           startIcon={<AccessibilityNewIcon style={{ color: filters.isMBTI ? colors.bordeaux : undefined }} />}
           color="secondary"
           variant="text"
-          onClick={() => handeFilterChange('isMBTI')(!filters.isMBTI)}
+          onClick={() => handleFilterChange('isMBTI')(!filters.isMBTI)}
         >
           <FormattedMessage id="allQuestioning.filters.MBTI" />
         </Button>
@@ -338,7 +342,7 @@ const AllQuestioning = ({
         open={isDrawerOpen}
         close={() => setIsDrawerOpen(false)}
         filters={filters}
-        handeFilterChange={handeFilterChange}
+        handleFilterChange={handleFilterChange}
       />
     </div>
   )

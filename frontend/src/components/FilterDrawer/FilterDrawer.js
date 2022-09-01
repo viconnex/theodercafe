@@ -8,45 +8,44 @@ import Drawer from '@material-ui/core/Drawer'
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core'
 import style from './style'
 
-const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
-  const FilterGroup = ({ filterAttributes }) => {
-    let undefinedAttributesCount = 0
-    filterAttributes.forEach(({ name: attributeName }) => {
-      if (filters[attributeName] === undefined) {
-        undefinedAttributesCount += 1
-      }
-    })
-    if (undefinedAttributesCount === filterAttributes.length) {
-      return null
+const FilterGroup = ({ filterAttributes, filters, handleFilterChange, classes }) => {
+  let undefinedAttributesCount = 0
+  filterAttributes.forEach(({ name: attributeName }) => {
+    if (filters[attributeName] === undefined) {
+      undefinedAttributesCount += 1
     }
-
-    return (
-      <React.Fragment>
-        <FormGroup className={classes.drawerContent}>
-          {filterAttributes.map((attribute) => {
-            if (filters[attribute.name] === undefined) {
-              return null
-            }
-            return (
-              <FormControlLabel
-                key={attribute.name}
-                control={
-                  <Checkbox
-                    checked={filters[attribute.name]}
-                    onChange={(e) => handeFilterChange(attribute.name)(e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label={attribute.label}
-              />
-            )
-          })}
-        </FormGroup>
-        <Divider />
-      </React.Fragment>
-    )
+  })
+  if (undefinedAttributesCount === filterAttributes.length) {
+    return null
   }
 
+  return (
+    <React.Fragment>
+      <FormGroup className={classes.drawerContent}>
+        {filterAttributes.map((attribute) => {
+          if (filters[attribute.name] === undefined) {
+            return null
+          }
+          return (
+            <FormControlLabel
+              key={attribute.name}
+              control={
+                <Checkbox
+                  checked={filters[attribute.name]}
+                  onChange={(e) => handleFilterChange(attribute.name)(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label={attribute.label}
+            />
+          )
+        })}
+      </FormGroup>
+      <Divider />
+    </React.Fragment>
+  )
+}
+const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => {
   return (
     <Drawer anchor="left" open={open} onClose={close}>
       <div className={classes.drawerHeader}>
@@ -57,6 +56,9 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
       </div>
       <Divider />
       <FilterGroup
+        filters={filters}
+        classes={classes}
+        handleFilterChange={handleFilterChange}
         filterAttributes={[
           { name: 'isValidated', label: 'Validées' },
           { name: 'isNotValidated', label: 'Invalidées' },
@@ -64,25 +66,39 @@ const FilterDrawer = ({ classes, close, open, filters, handeFilterChange }) => {
         ]}
       />
       <FilterGroup
+        filters={filters}
+        classes={classes}
+        handleFilterChange={handleFilterChange}
         filterAttributes={[
           { name: 'isNotAnswered', label: 'Pas encore répondu' },
           { name: 'isAnswered', label: 'Déjà répondu' },
         ]}
       />
       <FilterGroup
+        filters={filters}
+        classes={classes}
+        handleFilterChange={handleFilterChange}
         filterAttributes={[
           { name: 'isJoke', label: 'Blague' },
           { name: 'isNotJoke', label: 'Non Blagues' },
         ]}
       />
       <FilterGroup
+        filters={filters}
+        classes={classes}
+        handleFilterChange={handleFilterChange}
         filterAttributes={[
           { name: 'isJokeOnSomeone', label: 'Blague sur les theodoers' },
           { name: 'isNotJokeOnSomeone', label: 'Pas une blague sur les theodoers' },
         ]}
       />
       <Divider />
-      <FilterGroup filterAttributes={[{ name: 'isMBTI', label: 'MBTI' }]} />
+      <FilterGroup
+        filters={filters}
+        classes={classes}
+        handleFilterChange={handleFilterChange}
+        filterAttributes={[{ name: 'isMBTI', label: 'MBTI' }]}
+      />
     </Drawer>
   )
 }

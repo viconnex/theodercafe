@@ -36,7 +36,7 @@ const Map = () => {
     isNotJokeOnSomeone: true,
   })
 
-  const handeFilterChange = (option) => (event) => {
+  const handleFilterChange = (option) => (event) => {
     setFilters({ ...filters, [option]: event.target.checked })
   }
 
@@ -124,7 +124,7 @@ const Map = () => {
         open={isDrawerOpen}
         close={() => setIsDrawerOpen(false)}
         filters={filters}
-        handeFilterChange={handeFilterChange}
+        handleFilterChange={handleFilterChange}
       />
       <HighchartsReact containerProps={{ className: 'chart-container' }} highcharts={Highcharts} options={options} />
     </div>
