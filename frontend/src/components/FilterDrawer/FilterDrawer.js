@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Drawer from '@material-ui/core/Drawer'
 
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core'
+import { FormattedMessage, useIntl } from 'react-intl'
 import style from './style'
 
 const FilterGroup = ({ filterAttributes, filters, handleFilterChange, classes }) => {
@@ -46,10 +47,13 @@ const FilterGroup = ({ filterAttributes, filters, handleFilterChange, classes })
   )
 }
 const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => {
+  const intl = useIntl()
   return (
     <Drawer anchor="left" open={open} onClose={close}>
-      <div className={classes.drawerHeader}>
-        <div>Filtres</div>
+      <div onClick={close} className={classes.drawerHeader}>
+        <div>
+          <FormattedMessage id="filter.title" />
+        </div>
         <IconButton onClick={close}>
           <ChevronLeftIcon />
         </IconButton>
@@ -60,9 +64,9 @@ const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => 
         classes={classes}
         handleFilterChange={handleFilterChange}
         filterAttributes={[
-          { name: 'isValidated', label: 'Validées' },
-          { name: 'isNotValidated', label: 'Invalidées' },
-          { name: 'isInValidation', label: 'En attente de validation' },
+          { name: 'isValidated', label: intl.formatMessage({ id: 'filter.validated' }) },
+          { name: 'isNotValidated', label: intl.formatMessage({ id: 'filter.isNotValidated' }) },
+          { name: 'isInValidation', label: intl.formatMessage({ id: 'filter.isInValidation' }) },
         ]}
       />
       <FilterGroup
@@ -70,8 +74,8 @@ const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => 
         classes={classes}
         handleFilterChange={handleFilterChange}
         filterAttributes={[
-          { name: 'isNotAnswered', label: 'Pas encore répondu' },
-          { name: 'isAnswered', label: 'Déjà répondu' },
+          { name: 'isNotAnswered', label: intl.formatMessage({ id: 'filter.isNotAnswered' }) },
+          { name: 'isAnswered', label: intl.formatMessage({ id: 'filter.isAnswered' }) },
         ]}
       />
       <FilterGroup
@@ -79,8 +83,8 @@ const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => 
         classes={classes}
         handleFilterChange={handleFilterChange}
         filterAttributes={[
-          { name: 'isJoke', label: 'Blague' },
-          { name: 'isNotJoke', label: 'Non Blagues' },
+          { name: 'isJoke', label: intl.formatMessage({ id: 'filter.isJoke' }) },
+          { name: 'isNotJoke', label: intl.formatMessage({ id: 'filter.isNotJoke' }) },
         ]}
       />
       <FilterGroup
@@ -88,8 +92,8 @@ const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => 
         classes={classes}
         handleFilterChange={handleFilterChange}
         filterAttributes={[
-          { name: 'isJokeOnSomeone', label: 'Blague sur les theodoers' },
-          { name: 'isNotJokeOnSomeone', label: 'Pas une blague sur les theodoers' },
+          { name: 'isJokeOnSomeone', label: intl.formatMessage({ id: 'filter.isJokeOnSomeone' }) },
+          { name: 'isNotJokeOnSomeone', label: intl.formatMessage({ id: 'filter.isNotJokeOnSomeone' }) },
         ]}
       />
       <Divider />
@@ -97,7 +101,7 @@ const FilterDrawer = ({ classes, close, open, filters, handleFilterChange }) => 
         filters={filters}
         classes={classes}
         handleFilterChange={handleFilterChange}
-        filterAttributes={[{ name: 'isMBTI', label: 'MBTI' }]}
+        filterAttributes={[{ name: 'isMBTI', label: intl.formatMessage({ id: 'filter.isMBTI' }) }]}
       />
     </Drawer>
   )
