@@ -36,7 +36,7 @@ export class UserToQuestionChoiceController {
         @Request() { user }: { user: User },
         @Body()
         { asakaiChoices }: { asakaiChoices: AsakaiChoices },
-    ): Promise<AlterodoResponse> {
+    ) {
         return this.userToQuestionChoiceService.findAsakaiAlterodos({ asakaiChoices, user })
     }
 
@@ -66,14 +66,17 @@ export class UserToQuestionChoiceController {
 
     @Get('alterodos')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async getUserAlterodos(@Request() req: { user: User }): Promise<AlterodoResponse> {
-        return await this.userToQuestionChoiceService.getUserAlterodos(req.user.id)
+    async getUserAlterodos(@Request() { user }: { user: User }): Promise<AlterodoResponse> {
+        return await this.userToQuestionChoiceService.getUserAlterodos({ user })
     }
 
     @Get('map')
     @UseGuards(AuthGuard(USER_STRATEGY))
-    async createMap(@Query() questionFilters: QuestionFilters): Promise<UserMap[]> {
-        return await this.userToQuestionChoiceService.createMap(questionFilters)
+    async createMap(
+        @Request() { user }: { user: User },
+        @Query() questionFilters: QuestionFilters,
+    ): Promise<UserMap[]> {
+        return await this.userToQuestionChoiceService.createMap(user.getCompanyDomain(), questionFilters)
     }
 
     @Post('asakai/email')

@@ -1,38 +1,31 @@
-import { IS_DEV } from 'src/constants'
-import { THEODO_COMPANY, User } from 'src/user/user.entity'
+import { User } from 'src/user/user.entity'
+import { CompanyDomain } from 'src/user/user.types'
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { QuestionFilters, SimilarityWithUserId } from './userToQuestionChoice.types'
 
-const COMPANIES = [THEODO_COMPANY]
-if (IS_DEV) {
-    COMPANIES.push('gmail')
-}
-
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
-    async getAsakaiSet(questionIds: string[], user: User): Promise<UserToQuestionChoice[]> {
-        let query = this.createQueryBuilder('user_to_question_choices')
+    async getOthersChoices(questionIds: string[], user: User): Promise<UserToQuestionChoice[]> {
+        const { domain } = user.getCompanyDomain()
+        return this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .where('user.isActive IS true')
             .andWhere('user.isLoginPending IS false')
             .andWhere('user.id != :userId', { userId: user.id })
-
-        const { domain, isTheodoCompany } = user.getCompanyDomain()
-        if (isTheodoCompany) {
-            query = query.andWhere('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${domain}` })
-        }
-
-        return query.andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds }).getMany()
+            .andWhere('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${domain}` })
+            .andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds })
+            .getMany()
     }
 
     async findByFiltersWithCount(
+        companyDomain: CompanyDomain,
         questionFilters: QuestionFilters,
     ): Promise<{ choices: UserToQuestionChoice[]; count: number }> {
         let qb = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .leftJoin('user_to_question_choices.question', 'question')
-            .where('user.company IN (:...companies)', { companies: COMPANIES })
+            .where('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${companyDomain.domain}` })
 
         if (questionFilters.isValidated || questionFilters.isNotValidated || questionFilters.isInValidation) {
             const validationFilters: (boolean | null)[] = []
@@ -78,7 +71,9 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
         return { choices, ...count }
     }
 
-    async selectSimilarityWithUserIds(userId: number): Promise<SimilarityWithUserId[]> {
+    async selectSimilarityWithUser(user: User): Promise<SimilarityWithUserId[]> {
+        const companyDomain = user.getCompanyDomain()
+
         return this.createQueryBuilder('user_to_question_choices')
             .select('user_to_question_choices.userId', 'userId')
             .addSelect('COUNT(*)', 'commonQuestionCount')
@@ -88,13 +83,15 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             )
             .addSelect('0', 'similarity')
             .innerJoin(
-                this.createBaseQuestionSelectionQuery(userId),
+                this.createBaseQuestionSelectionQuery(user.id),
                 'utqc',
                 '"utqc"."questionId" = user_to_question_choices.questionId',
             )
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user_to_question_choices.userId != :userId', { userId })
-            .andWhere('user.company IN (:...companies)', { companies: COMPANIES })
+            .where('user_to_question_choices.userId != :userId', { userId: user.id })
+            .andWhere('user.email LIKE :sameCompanyEmail', {
+                sameCompanyEmail: `%@${companyDomain.domain}`,
+            })
             .groupBy('user_to_question_choices.userId')
             .getRawMany()
     }

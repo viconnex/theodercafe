@@ -35,6 +35,8 @@ export const messages = {
     'question.category.noCategory': 'Hors catégorie',
     'question.category.title': 'Catégorie',
     'question.or': 'ou',
+    'asakai.finish.noOtherUserAnswer':
+      "Ton Alterodo ne peut pas être affiché car aucun utilisateur de ta société n'a répondu à ces questions",
   },
   [Locale.en]: {
     'allQuestioning.filters': 'Filters',
@@ -65,6 +67,8 @@ export const messages = {
     'question.category.noCategory': 'No category',
     'question.category.title': 'Category',
     'question.or': 'or',
+    'asakai.finish.noOtherUserAnswer':
+      'The Alterodo cannot be displayed because no other users of your company answered to these questions',
   },
 }
 

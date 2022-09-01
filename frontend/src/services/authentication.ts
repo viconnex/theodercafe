@@ -6,7 +6,6 @@ import jwtDecode from 'jwt-decode'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
 import { signout as firebaseSignout } from 'services/firebase/authentication'
 import { fetchRequest } from 'services/api'
-import { isNullishCoalesce } from 'typescript'
 
 export const FIREBASE_JWT_STORAGE_KEY = 'firebase_token'
 export const JWT_STORAGE_KEY = 'jwt_token'
@@ -47,6 +46,7 @@ export type User = {
   familyName: string
   pictureUrl: string | null
   selectedQuestionSet: { id: number; name: string }
+  email: string
 }
 
 export const login = () => {
@@ -81,6 +81,7 @@ export const useSetUser = ({
         familyName: userResponse.familyName,
         pictureUrl: userResponse.pictureUrl,
         selectedQuestionSet: userResponse.selectedQuestionSet,
+        email: userResponse.email,
       }
       setUser(user)
     }

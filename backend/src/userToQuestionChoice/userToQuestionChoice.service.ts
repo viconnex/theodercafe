@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 
 import { DeepPartial } from 'typeorm'
-import { UserWithPublicFields } from '../user/user.types'
+import { CompanyDomain, UserWithPublicFields } from '../user/user.types'
 import { THEODO_COMPANY, User } from '../user/user.entity'
 import { QuestionService } from '../question/question.service'
 import { MBTI_INDEX_LETTERS_BY_OPTION_1, MbtiIndexAndLetters } from './constants'
@@ -60,20 +60,18 @@ export class UserToQuestionChoiceService {
 
     async getQuestionsPolls({ user, questionSetId }: { user: User; questionSetId?: number }) {
         const questionsPolls: Record<number, QuestionPoll> = {}
-        let queryBuilder = this.userToQuestionChoiceRepository.createQueryBuilder('user_to_question_choices')
+        let queryBuilder = this.userToQuestionChoiceRepository
+            .createQueryBuilder('user_to_question_choices')
+            .leftJoin('user_to_question_choices.user', 'user')
+            .where('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${user.getCompanyDomain().domain}` })
 
         if (questionSetId) {
             queryBuilder = queryBuilder
                 .leftJoin('user_to_question_choices.question', 'questions')
                 .leftJoin('questions.questionSets', 'question_sets')
-                .where('question_sets.id = :questionSetId', { questionSetId })
+                .andWhere('question_sets.id = :questionSetId', { questionSetId })
         }
 
-        if (user?.company === THEODO_COMPANY) {
-            queryBuilder = queryBuilder
-                .leftJoin('user_to_question_choices.user', 'user')
-                .andWhere('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
-        }
         const userToQuestionChoices = await queryBuilder
             .select([
                 'user_to_question_choices.questionId',
@@ -111,20 +109,20 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(answeredQuestionsIds.length, alterodos)
     }
 
-    async getUserAlterodos(userId: number) {
-        const baseQuestionCount = await this.userToQuestionChoiceRepository.countUserQuestionChoices(userId)
-        const similarityWithUserIds = await this.userToQuestionChoiceRepository.selectSimilarityWithUserIds(userId)
+    async getUserAlterodos({ user }: { user: User }) {
+        const baseQuestionCount = await this.userToQuestionChoiceRepository.countUserQuestionChoices(user.id)
+        const similarityWithUserIds = await this.userToQuestionChoiceRepository.selectSimilarityWithUser(user)
 
         const alterodos = getBestAlterodos(similarityWithUserIds, Math.sqrt(baseQuestionCount))
 
         return this.createAlterodosResponse(baseQuestionCount, alterodos)
     }
 
-    async createMap(questionFilters: QuestionFilters): Promise<UserMap[]> {
+    async createMap(companyDomain: CompanyDomain, questionFilters: QuestionFilters): Promise<UserMap[]> {
         const {
             choices: userToQuestionChoices,
             count: questionCount,
-        } = await this.userToQuestionChoiceRepository.findByFiltersWithCount(questionFilters)
+        } = await this.userToQuestionChoiceRepository.findByFiltersWithCount(companyDomain, questionFilters)
 
         const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount)
         const data = userQuestionMatrixWithUserIndex.usersChoicesMatrix
@@ -210,9 +208,12 @@ export class UserToQuestionChoiceService {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         const commonAnswersWithUsers: { [id: number]: SimilarityWithUserId } = {}
 
-        const userToQuestionChoices = await this.userToQuestionChoiceRepository.getAsakaiSet(answeredQuestionsIds, user)
+        const userToQuestionChoices = await this.userToQuestionChoiceRepository.getOthersChoices(
+            answeredQuestionsIds,
+            user,
+        )
         if (userToQuestionChoices.length === 0) {
-            throw new BadRequestException('no choices have been made by other users')
+            throw new BadRequestException({ code: 'NO_OTHER_USER_ANSWER' })
         }
 
         userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {
@@ -250,12 +251,10 @@ export class UserToQuestionChoiceService {
             .where('user_to_question_choices.questionId IN (:...questionIds)', {
                 questionIds: questions.map((question) => question.id),
             })
-
-        if (requestUser?.company === THEODO_COMPANY) {
-            userAnswersBaseQueryBuilder
-                .leftJoin('user_to_question_choices.user', 'user')
-                .andWhere('user.company = :theodoCompany', { theodoCompany: THEODO_COMPANY })
-        }
+            .leftJoin('user_to_question_choices.user', 'user')
+            .andWhere('user.email LIKE :sameCompanyEmail', {
+                sameCompanyEmail: `%@${requestUser.getCompanyDomain().domain}`,
+            })
 
         const usersAnswers = await userAnswersBaseQueryBuilder.getMany()
 

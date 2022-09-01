@@ -233,7 +233,15 @@ const AsakaiQuestioning = ({
     }
     if (response.status !== 201) {
       setIsLoading(false)
-      return enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.error' }), { variant: 'error' })
+      const content = (await response.json()) as { code?: string } | undefined
+      if (content?.code === 'NO_OTHER_USER_ANSWER') {
+        enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.noOtherUserAnswer' }), {
+          variant: 'error',
+        })
+      } else {
+        enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.error' }), { variant: 'error' })
+      }
+      return
     }
     const data = (await response.json()) as Alterodos
     setIsLoading(false)

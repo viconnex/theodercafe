@@ -81,6 +81,6 @@ export class User {
 
     getCompanyDomain() {
         const domain = this.email.split('@')[1]
-        return { domain, isTheodoCompany: domain.includes('theodo') }
+        return { domain, isM33: domain.includes('theodo') }
     }
 }
