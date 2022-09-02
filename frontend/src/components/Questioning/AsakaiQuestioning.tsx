@@ -260,7 +260,7 @@ const AsakaiQuestioning = ({
               {intl.formatMessage({ id: 'asakai.finish.feedback.here' })}
             </a>
           </div>
-          <div style={{ marginLeft: '12px' }} onClick={() => closeSnackbar(snackbarId)}>
+          <div style={{ marginLeft: '12px', cursor: 'pointer' }} onClick={() => closeSnackbar(snackbarId)}>
             ❌
           </div>
         </>
