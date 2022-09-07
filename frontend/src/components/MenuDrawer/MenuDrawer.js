@@ -11,6 +11,8 @@ import Drawer from '@material-ui/core/Drawer'
 import { Button } from '@material-ui/core'
 import { login } from 'services/authentication'
 
+import { FormattedMessage, useIntl } from 'react-intl'
+
 const style = (theme) => ({
   drawerHeader: {
     display: 'flex',
@@ -26,16 +28,17 @@ const style = (theme) => ({
 })
 
 const AppDrawer = ({ classes, toggleDrawer, open, user, logout }) => {
+  const intl = useIntl()
   const drawerLinks = [
-    { label: 'Réglages', path: '/settings' },
-    { label: 'A propos', path: '/a-propos' },
-    { label: 'Mon alterodo', path: '/alterodo' },
-    { label: 'La carte', path: '/carte' },
-    { label: 'MBTI', path: '/mbti' },
+    { label: intl.formatMessage({ id: 'home.menu.settings' }), path: '/settings' },
+    { label: intl.formatMessage({ id: 'home.menu.about' }), path: '/a-propos' },
+    { label: intl.formatMessage({ id: 'home.menu.myAlterodo' }), path: '/alterodo' },
+    { label: intl.formatMessage({ id: 'home.menu.map' }), path: '/carte' },
+    { label: intl.formatMessage({ id: 'home.menu.mbti' }), path: '/mbti' },
   ]
 
   if (user?.role === 'admin') {
-    drawerLinks.push({ label: 'Admin', path: '/admin' })
+    drawerLinks.push({ label: intl.formatMessage({ id: 'home.menu.admin' }), path: '/admin' })
   }
 
   const history = useHistory()
@@ -68,7 +71,7 @@ const AppDrawer = ({ classes, toggleDrawer, open, user, logout }) => {
         ) : (
           <ListItem button onClick={login}>
             <Button color="primary" variant="contained">
-              Login
+              <FormattedMessage id="home.login" />
             </Button>
           </ListItem>
         )}
