@@ -1,9 +1,8 @@
 import React from 'react'
-import { Button, CircularProgress } from '@material-ui/core'
+import { FormattedMessage } from 'react-intl'
 import { Route } from 'react-router-dom'
 import { API_BASE_URL, GOOGLE_AUTH_URI } from 'utils/constants/apiConstants'
-
-import { makeStyles } from '@material-ui/core'
+import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 
 const useStyle = makeStyles(() => ({
   container: {
@@ -27,17 +26,23 @@ const RedirectComponent = ({ component: Component, isAdminRoute, user, isLoggedI
   if (!user) {
     return (
       <div className={classes.container}>
-        <div>Il faut te connecter pour voir cette page</div>
+        <div>
+          <FormattedMessage id="privateRoute.mustBeConnected" />
+        </div>
         <div className={classes.login}>
           <Button variant="contained" href={API_BASE_URL + GOOGLE_AUTH_URI}>
-            Login Google
+            <FormattedMessage id="privateRoute.loginGoogle" />
           </Button>
         </div>
       </div>
     )
   }
   if (isAdminRoute && user.role !== 'admin') {
-    return <div>Tu dois être admin pour accéder à cette page</div>
+    return (
+      <div>
+        <FormattedMessage id="privateRoute.mustBeAdmin" />
+      </div>
+    )
   }
 
   return <Component user={user} {...props} />
