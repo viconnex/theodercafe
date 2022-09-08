@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Question } from 'components/Question'
 import { USER_TO_QUESTIONS_CHOICES_URI, USER_TO_QUESTIONS_VOTES_URI } from 'utils/constants/apiConstants'
 import { useSnackbar } from 'notistack'
 import TuneIcon from '@material-ui/icons/Tune'
 import AccessibilityNewIcon from '@material-ui/icons/AccessibilityNew'
-import { FormattedMessage } from 'react-intl'
 
 import { LoginDialog } from 'components/Login'
 import { fetchRequestResponse, postChoice, postVote } from 'services/api'
@@ -22,13 +22,6 @@ import { ExploreOutlined } from '@material-ui/icons'
 import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 
 import useStyle from './style'
-
-const getValidationInformation = (questionValidation: boolean | null) => {
-  if (questionValidation === null) {
-    return 'Question en attente de validation'
-  }
-  return questionValidation ? 'Question validée' : 'Question invalidée'
-}
 
 const AllQuestioning = ({
   user,
@@ -65,10 +58,16 @@ const AllQuestioning = ({
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
+  const handleFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
+    setFilters({ ...filters, [option]: checked })
+    setQuestionIndex(0)
+  }
+
   useEffect(() => {
     if (showMbtiInitially) {
       handleFilterChange('isMBTI')(true)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showMbtiInitially])
 
   const fetchQuestions = useCallback(async () => {
@@ -171,11 +170,6 @@ const AllQuestioning = ({
     // eslint-disable-next-line
   }, [user, questionSets, isDataLoading])
 
-  const handleFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
-    setFilters({ ...filters, [option]: checked })
-    setQuestionIndex(0)
-  }
-
   const history = useHistory()
 
   const changeQuestion = (increment: number) => {
@@ -191,6 +185,16 @@ const AllQuestioning = ({
   }
 
   const question = filteredQuestions[questionIndex]
+
+  const getValidationInformation = (questionValidation: boolean | null) => {
+    const intl = useIntl()
+    if (questionValidation === null) {
+      return intl.formatMessage({ id: 'allQuestioning.awaitingValidation' })
+    }
+    return questionValidation
+      ? intl.formatMessage({ id: 'allQuestioning.validated' })
+      : intl.formatMessage({ id: 'allQuestioning.notValidated' })
+  }
 
   const chose = (questionId: number, choice: Choice) => {
     if (!user) {

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { CircularProgress } from '@material-ui/core'
 import { User } from 'services/authentication'
 import { QuestionSet } from 'utils/questionSet'
 import { fetchRequestResponse } from 'services/api'
 import { useSnackbar } from 'notistack'
 import QuestionSetSelector from 'components/Settings/QuestionSetSelector'
-
 import { useSelectSetWrapperStyle, useSettingsStyle } from './style'
 
 const QuestionSetWrapper = ({ user, refreshUser }: { user: User; refreshUser: () => void }) => {
@@ -37,7 +37,9 @@ const QuestionSetWrapper = ({ user, refreshUser }: { user: User; refreshUser: ()
   }
   return (
     <div className={classes.container}>
-      <h3>Set de questions</h3>
+      <h3>
+        <FormattedMessage id="settings.questionSet" />
+      </h3>
       <QuestionSetSelector questionSets={questionSets} user={user} refreshUser={refreshUser} />
     </div>
   )
