@@ -17,6 +17,7 @@ npm run migration:run
 
 ```
 cd frontend
+cp .env.dist .env
 npm install
 npm run start
 ```
