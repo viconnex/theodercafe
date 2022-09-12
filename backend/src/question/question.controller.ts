@@ -18,7 +18,7 @@ import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
 import { QuestionService } from './question.service'
 import { Question } from './question.entity'
-import { QuestionPostDTO } from './interfaces/question.dto'
+import { QuestionPostDTO, QuestionUpdateBody } from './interfaces/question.dto'
 
 @Controller('questions')
 export class QuestionController {
@@ -73,7 +73,7 @@ export class QuestionController {
     }
 
     @Get(':id')
-    async findOne(@Param('id') id: string): Promise<Question> {
+    async findOne(@Param('id') id: string) {
         const question = await this.questionService.findOne(id)
         if (!question) {
             throw new NotFoundException()
@@ -95,8 +95,8 @@ export class QuestionController {
 
     @Put(':id')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
-    updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<Question> {
-        return this.questionService.update(id, questionBody)
+    updateQuestion(@Param('id') id: string, @Body() questionBody: QuestionUpdateBody): Promise<Question> {
+        return this.questionService.update(Number(id), questionBody)
     }
 
     @Post('/questioning-historic')

@@ -4,7 +4,7 @@ import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
 import { Category } from 'src/category/category.entity'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
-import { QuestionPostDTO } from './interfaces/question.dto'
+import { QuestionPostDTO, QuestionUpdateBody } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { QuestionSetService } from '../questionSet/questionSet.service'
 import { Question } from './question.entity'
@@ -113,12 +113,20 @@ export class QuestionService {
         return this.questionRepository.findAdminList()
     }
 
-    findOne(id: string) {
-        return this.questionRepository.findOneQuestion(id)
+    async findOne(id: string) {
+        const question = await this.questionRepository.findOneQuestion(id)
+        if (!question) {
+            return
+        }
+        return {
+            ...question,
+            questionSetIds: question.questionSets.map((questionSet) => questionSet.id),
+        }
     }
 
-    update(id: string | number, question: Question): Promise<Question> {
-        return this.questionRepository.updateQuestion(id, question)
+    async update(id: string | number, question: QuestionUpdateBody) {
+        const questionSets = await this.questionSetService.findByIds(question.questionSetIds)
+        return this.questionRepository.updateQuestion(id, question, questionSets)
     }
 
     delete(id: string): Promise<DeleteResult> {

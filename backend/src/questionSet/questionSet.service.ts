@@ -37,4 +37,8 @@ export class QuestionSetService {
     async findOneOrFail(questionSetId: number) {
         return await this.questionSetRepository.findOneOrFail(questionSetId)
     }
+
+    findByIds(ids: number[]) {
+        return this.questionSetRepository.findByIds(ids)
+    }
 }

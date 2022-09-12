@@ -19,7 +19,7 @@ export class Question {
     id: number
 
     @ManyToOne(() => Category, (category) => category.question)
-    category: Category
+    category: Category | null
 
     @Column()
     option1: string
@@ -33,8 +33,8 @@ export class Question {
     @Column({ default: false })
     isJokeOnSomeone: boolean
 
-    @Column({ nullable: true })
-    isValidated: boolean
+    @Column({ nullable: true, type: 'boolean' })
+    isValidated: boolean | null
 
     @Column({ default: false })
     isJoke: boolean

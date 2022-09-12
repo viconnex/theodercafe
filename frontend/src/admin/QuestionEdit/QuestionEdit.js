@@ -1,5 +1,14 @@
 import React from 'react'
-import { BooleanInput, Edit, ReferenceInput, SelectInput, SimpleForm, TextInput } from 'react-admin'
+import {
+  BooleanInput,
+  Edit,
+  ReferenceArrayInput,
+  ReferenceInput,
+  SelectArrayInput,
+  SelectInput,
+  SimpleForm,
+  TextInput,
+} from 'react-admin'
 
 export const QuestionEdit = (props) => (
   <Edit {...props}>
@@ -14,6 +23,9 @@ export const QuestionEdit = (props) => (
       <ReferenceInput source="category.id" reference="categories" label="Catégorie">
         <SelectInput source="name" />
       </ReferenceInput>
+      <ReferenceArrayInput source="questionSetIds" reference="question_set" label="Question Sets">
+        <SelectArrayInput optionText="name" />
+      </ReferenceArrayInput>
     </SimpleForm>
   </Edit>
 )

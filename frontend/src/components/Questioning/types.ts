@@ -20,7 +20,7 @@ export type Alterodos = {
 export type QuestionResponse = {
   id: number
   category: { name: string } | null
-  isValidated: boolean
+  isValidated: boolean | null
   option1: string
   option2: string
   isJoke: boolean

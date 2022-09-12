@@ -24,6 +24,7 @@ const Admin = () => (
     <Resource name="questions" list={QuestionList} edit={QuestionEdit} />
     <Resource name="categories" list={ListGuesser} edit={EditGuesser} create={CategoryCreate} />
     <Resource name="users" list={UserList} edit={UserEdit} />
+    <Resource name="question_set" />
   </ReactAdmin>
 )
 

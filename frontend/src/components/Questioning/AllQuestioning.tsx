@@ -23,7 +23,7 @@ import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 
 import useStyle from './style'
 
-const getValidationInformation = (questionValidation: boolean) => {
+const getValidationInformation = (questionValidation: boolean | null) => {
   if (questionValidation === null) {
     return 'Question en attente de validation'
   }
