@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { DeepPartial } from 'typeorm'
 import { CompanyDomain, UserWithPublicFields } from '../user/user.types'
-import { THEODO_COMPANY, User } from '../user/user.entity'
+import { User } from '../user/user.entity'
 import { QuestionService } from '../question/question.service'
 import { MBTI_INDEX_LETTERS_BY_OPTION_1, MbtiIndexAndLetters } from './constants'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'

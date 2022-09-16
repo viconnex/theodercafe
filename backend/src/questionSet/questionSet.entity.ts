@@ -13,6 +13,7 @@ import { Question } from '../question/question.entity'
 export enum PresetQuestionSet {
     TheodoFR = 'Theodo FR',
     TheodoUS = 'Theodo US',
+    TheodoUK = 'Theodo UK',
 }
 
 @Entity('question_set')

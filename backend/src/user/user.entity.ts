@@ -21,10 +21,11 @@ export const getPresetQuestionSetFromEmail = (email: string) => {
     if (domain === 'theodo.com') {
         return PresetQuestionSet.TheodoUS
     }
+    if (domain === 'theodo.co.uk') {
+        return PresetQuestionSet.TheodoUK
+    }
     return PresetQuestionSet.TheodoFR
 }
-
-export const THEODO_COMPANY = 'theodo'
 
 @Entity('users')
 export class User {
