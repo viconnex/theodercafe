@@ -1,4 +1,4 @@
-export type AsakaiChoices = Record<number, Choice>
+export type ChoicesByQuestion = Record<number, Choice>
 
 type UserAlterodoResponse = {
     givenName: string
@@ -45,7 +45,7 @@ export interface QuestionFilters {
 
 export interface AsakaiEmailDTO {
     email: string
-    asakaiChoices?: AsakaiChoices
+    asakaiChoices?: ChoicesByQuestion
     alterodoUserId?: number
     addedByUserId?: number | null
 }

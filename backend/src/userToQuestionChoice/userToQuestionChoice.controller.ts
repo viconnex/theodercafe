@@ -17,9 +17,9 @@ import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {
     AlterodoResponse,
-    AsakaiChoices,
     AsakaiEmailDTO,
     Choice,
+    ChoicesByQuestion,
     QuestionFilters,
     UserMap,
 } from './userToQuestionChoice.types'
@@ -35,7 +35,7 @@ export class UserToQuestionChoiceController {
     async findAsakaiAlterodos(
         @Request() { user }: { user: User },
         @Body()
-        { asakaiChoices }: { asakaiChoices: AsakaiChoices },
+        { asakaiChoices }: { asakaiChoices: ChoicesByQuestion },
     ) {
         return this.userToQuestionChoiceService.findAsakaiAlterodos({ asakaiChoices, user })
     }

@@ -2,7 +2,7 @@ import { User } from 'src/user/user.entity'
 import { CompanyDomain } from 'src/user/user.types'
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
-import { QuestionFilters, SimilarityWithUserId } from './userToQuestionChoice.types'
+import { QuestionFilters } from './userToQuestionChoice.types'
 
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
@@ -69,35 +69,6 @@ export class UserToQuestionChoiceRepository extends Repository<UserToQuestionCho
             .getRawOne()
 
         return { choices, ...count }
-    }
-
-    async selectSimilarityWithUser(user: User): Promise<SimilarityWithUserId[]> {
-        const companyDomain = user.getCompanyDomain()
-
-        return this.createQueryBuilder('user_to_question_choices')
-            .select('user_to_question_choices.userId', 'userId')
-            .addSelect('COUNT(*)', 'commonQuestionCount')
-            .addSelect(
-                'SUM(CASE WHEN user_to_question_choices.choice = "targetChoice" THEN 1 ELSE 0 END)',
-                'sameAnswerCount',
-            )
-            .addSelect('0', 'similarity')
-            .innerJoin(
-                this.createBaseQuestionSelectionQuery(user.id),
-                'utqc',
-                '"utqc"."questionId" = user_to_question_choices.questionId',
-            )
-            .leftJoin('user_to_question_choices.user', 'user')
-            .where('user_to_question_choices.userId != :userId', { userId: user.id })
-            .andWhere('user.email LIKE :sameCompanyEmail', {
-                sameCompanyEmail: `%@${companyDomain.domain}`,
-            })
-            .groupBy('user_to_question_choices.userId')
-            .getRawMany()
-    }
-
-    async countUserQuestionChoices(userId: number): Promise<number> {
-        return this.createBaseQuestionSelectionQuery(userId)(this.createQueryBuilder()).getCount()
     }
 
     private createBaseQuestionSelectionQuery(

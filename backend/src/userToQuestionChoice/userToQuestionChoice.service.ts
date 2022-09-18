@@ -10,9 +10,9 @@ import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repositor
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import {
     Alterodos,
-    AsakaiChoices,
     AsakaiEmailDTO,
     Choice,
+    ChoicesByQuestion,
     QuestionFilters,
     QuestionPoll,
     SimilarityWithUserId,
@@ -98,24 +98,28 @@ export class UserToQuestionChoiceService {
         return questionsPolls
     }
 
-    async findAsakaiAlterodos({ asakaiChoices, user }: { asakaiChoices: AsakaiChoices; user: User }) {
+    async findAsakaiAlterodos({ asakaiChoices, user }: { asakaiChoices: ChoicesByQuestion; user: User }) {
         const answeredQuestionsIds = Object.keys(asakaiChoices)
         if (answeredQuestionsIds.length === 0) {
             throw new BadRequestException('user must answer to at least one question')
         }
 
-        const alterodos = await this.findAlterodosFromAsakaiChoices({ asakaiChoices, user })
+        const alterodos = await this.findAlterodosWithSameQuestions({ choicesByQuestion: asakaiChoices, user })
 
         return this.createAlterodosResponse(answeredQuestionsIds.length, alterodos)
     }
 
     async getUserAlterodos({ user }: { user: User }) {
-        const baseQuestionCount = await this.userToQuestionChoiceRepository.countUserQuestionChoices(user.id)
-        const similarityWithUserIds = await this.userToQuestionChoiceRepository.selectSimilarityWithUser(user)
+        const allUserChoices = await this.userToQuestionChoiceRepository.find({ userId: user.id })
 
-        const alterodos = getBestAlterodos(similarityWithUserIds, Math.sqrt(baseQuestionCount))
+        const choicesByQuestion: ChoicesByQuestion = {}
+        for (const questionChoice of allUserChoices) {
+            choicesByQuestion[questionChoice.questionId] = questionChoice.choice
+        }
 
-        return this.createAlterodosResponse(baseQuestionCount, alterodos)
+        const alterodos = await this.findAlterodosWithSameQuestions({ choicesByQuestion, user })
+
+        return this.createAlterodosResponse(allUserChoices.length, alterodos)
     }
 
     async createMap(companyDomain: CompanyDomain, questionFilters: QuestionFilters): Promise<UserMap[]> {
@@ -198,14 +202,14 @@ export class UserToQuestionChoiceService {
         }
     }
 
-    private async findAlterodosFromAsakaiChoices({
-        asakaiChoices,
+    private async findAlterodosWithSameQuestions({
+        choicesByQuestion,
         user,
     }: {
-        asakaiChoices: AsakaiChoices
+        choicesByQuestion: ChoicesByQuestion
         user: User
     }): Promise<Alterodos> {
-        const answeredQuestionsIds = Object.keys(asakaiChoices)
+        const answeredQuestionsIds = Object.keys(choicesByQuestion)
         const commonAnswersWithUsers: { [id: number]: SimilarityWithUserId } = {}
 
         const userToQuestionChoices = await this.userToQuestionChoiceRepository.getOthersChoices(
@@ -217,7 +221,7 @@ export class UserToQuestionChoiceService {
         }
 
         userToQuestionChoices.forEach((userToQuestionChoice: UserToQuestionChoice): void => {
-            const isSameChoice = asakaiChoices[userToQuestionChoice.questionId] === userToQuestionChoice.choice
+            const isSameChoice = choicesByQuestion[userToQuestionChoice.questionId] === userToQuestionChoice.choice
             if (!commonAnswersWithUsers.hasOwnProperty(userToQuestionChoice.userId)) {
                 commonAnswersWithUsers[userToQuestionChoice.userId] = {
                     commonQuestionCount: 1,
@@ -231,7 +235,7 @@ export class UserToQuestionChoiceService {
             }
         })
 
-        return getBestAlterodos(Object.values(commonAnswersWithUsers), Math.sqrt(Object.keys(asakaiChoices).length))
+        return getBestAlterodos(Object.values(commonAnswersWithUsers), Math.sqrt(answeredQuestionsIds.length))
     }
 
     async getMBTIprofiles(requestUser: User) {
