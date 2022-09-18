@@ -237,6 +237,7 @@ const AsakaiQuestioning = ({
       if (content?.code === 'NO_OTHER_USER_ANSWER') {
         enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.noOtherUserAnswer' }), {
           variant: 'error',
+          autoHideDuration: 5000,
         })
       } else {
         enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.error' }), { variant: 'error' })
