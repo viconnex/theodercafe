@@ -92,12 +92,15 @@ export class UserService {
             .getOne()
     }
 
-    async getUsersPictures(companyDomain: CompanyDomain) {
-        const usersWithPics = await this.userRepository
-            .createQueryBuilder('user')
-            .where('user.email LIKE :companyDomain', { companyDomain: `%@${companyDomain.domain}` })
-            .select(['user.id', 'user.pictureUrl'])
-            .getMany()
+    async getUsersPictures(companyDomain: CompanyDomain | null) {
+        let queryBuilder = this.userRepository.createQueryBuilder('user')
+        if (companyDomain) {
+            queryBuilder = queryBuilder.where('user.email LIKE :companyDomain', {
+                companyDomain: `%@${companyDomain.domain}`,
+            })
+        }
+        const usersWithPics = await queryBuilder.select(['user.id', 'user.pictureUrl']).getMany()
+
         const userPicturesObject = {}
         usersWithPics.forEach((user) => {
             userPicturesObject[user.id] = user.pictureUrl
