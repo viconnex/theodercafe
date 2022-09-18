@@ -246,27 +246,6 @@ const AsakaiQuestioning = ({
     const data = (await response.json()) as Alterodos
     setIsLoading(false)
     setAlterodos(data)
-    enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.feedback' }), {
-      autoHideDuration: null,
-      // eslint-disable-next-line
-      action: (snackbarId) => (
-        <>
-          <div onClick={() => closeSnackbar(snackbarId)}>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href="https://docs.google.com/forms/d/e/1FAIpQLSeClG7ZquVyfCakUaAMlpScSWaGx197wIGyS6FMpLxN2v3T_Q/viewform?usp=sf_link"
-            >
-              {intl.formatMessage({ id: 'asakai.finish.feedback.here' })}
-            </a>
-          </div>
-          <div style={{ marginLeft: '12px', cursor: 'pointer' }} onClick={() => closeSnackbar(snackbarId)}>
-            ❌
-          </div>
-        </>
-      ),
-      variant: 'info',
-    })
   }
 
   const chose = (questionId: number, choice: Choice) => {
