@@ -235,10 +235,13 @@ const AsakaiQuestioning = ({
       setIsLoading(false)
       const content = (await response.json()) as { code?: string } | undefined
       if (content?.code === 'NO_OTHER_USER_ANSWER') {
-        enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.noOtherUserAnswer' }), {
-          variant: 'error',
-          autoHideDuration: 5000,
-        })
+        enqueueSnackbar(
+          intl.formatMessage({ id: 'asakai.finish.noOtherUserAnswer' }, { company: user.email.split('@')[1] }),
+          {
+            variant: 'error',
+            autoHideDuration: 6000,
+          },
+        )
       } else {
         enqueueSnackbar(intl.formatMessage({ id: 'asakai.finish.error' }), { variant: 'error' })
       }

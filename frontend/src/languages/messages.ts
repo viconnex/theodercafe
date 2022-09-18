@@ -49,7 +49,7 @@ export const messages = {
     'question.category.title': 'Catégorie',
     'question.or': 'ou',
     'asakai.finish.noOtherUserAnswer':
-      "Ton Alterodo ne peut pas être affiché car aucun utilisateur de ta société n'a répondu à ces questions",
+      "Ton Alterodo ne peut pas être affiché car aucun utilisateur de {company} n'a répondu à ces questions",
     'settings.questionSet': 'Set de questions',
   },
   [Locale.en]: {
@@ -95,7 +95,7 @@ export const messages = {
     'question.category.title': 'Category',
     'question.or': 'or',
     'asakai.finish.noOtherUserAnswer':
-      'The Alterodo cannot be displayed because no other users of your company answered to these questions',
+      'The Alterodo cannot be displayed because no other users of {company} answered to these questions',
     'settings.questionSet': 'Question set',
   },
 }
