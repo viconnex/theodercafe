@@ -85,7 +85,7 @@ export class QuestionService {
         }
 
         const countClassics = await this.questionRepository.countClassics({ questionSetId })
-        const jokeOnSomeoneCount = Math.random() < JOKE_ON_SOMEONE_PROBABILITY && maxNumber - countClassics > 0 ? 1 : 0
+        const jokeOnSomeoneCount = 0
         const standardQuestionCount = Math.max(maxNumber - countClassics - jokeOnSomeoneCount, 0)
 
         const asakaiSet = await this.questionRepository.findAsakaiSet({
