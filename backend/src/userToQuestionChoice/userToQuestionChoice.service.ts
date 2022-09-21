@@ -158,17 +158,13 @@ export class UserToQuestionChoiceService {
         return usersMap
     }
 
-    async handleAsakaiEmailSending({
-        email,
-        addedByUserId,
-        asakaiChoices,
-        alterodoUserId,
-    }: AsakaiEmailDTO): Promise<string> {
-        const newUser = await this.userService.createUserWithEmail(email, addedByUserId, alterodoUserId)
+    async onNewAsakaiEmail({ email, addedByUserId, asakaiChoices, alterodoUserId }: AsakaiEmailDTO) {
+        const createUserReponse = await this.userService.createUserWithEmail(email, addedByUserId, alterodoUserId)
 
-        if (!newUser) {
-            return 'no user created'
+        if (!createUserReponse) {
+            return
         }
+        const { newUser, addedByUser, asakaiAlterodoUser } = createUserReponse
 
         const choices: DeepPartial<UserToQuestionChoice>[] = []
         for (const questionId in asakaiChoices) {
@@ -178,7 +174,13 @@ export class UserToQuestionChoiceService {
             await this.userToQuestionChoiceRepository.save(choices)
         }
 
-        return 'user created'
+        await this.userService.sendWelcomeEmail({ newUserEmail: newUser.email })
+
+        await this.userService.sendAlterodoLunchProposalEmail({
+            newUserEmail: newUser.email,
+            alterodoUser: asakaiAlterodoUser,
+            coachUserEmail: addedByUser?.email,
+        })
     }
 
     private async createAlterodosResponse(baseQuestionCount: number, alterodos: Alterodos) {

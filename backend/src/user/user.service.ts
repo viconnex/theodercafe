@@ -123,50 +123,30 @@ export class UserService {
         addedByUserId: number | null | undefined,
         alterodoUserId: number | null | undefined,
     ) {
-        const emailParts = email.split('@')
-        if (emailParts.length < 2 || !emailParts[0].length || !emailParts[1].length) {
-            throw new BadRequestException('you must provide a valid email address')
-        }
         const emailLowerCase = email.toLocaleLowerCase()
 
         const existingUser = await this.userRepository.findOne({ email: emailLowerCase })
+
+        if (existingUser) {
+            return null
+        }
 
         const addedByUser = addedByUserId ? (await this.userRepository.findOne({ id: addedByUserId })) ?? null : null
         const asakaiAlterodoUser = alterodoUserId
             ? (await this.userRepository.findOne({ id: alterodoUserId })) ?? null
             : null
 
-        let newUser: null | User = null
-        if (!existingUser) {
-            newUser = await this.userRepository.save({
-                email: emailLowerCase,
-                company: getCompanyFromEmail(emailLowerCase),
-                isAdmin: false,
-                addedByUser,
-                asakaiAlterodoUser,
-                isLoginPending: true,
-                selectedQuestionSet: await this.questionSetService.findFromName(getPresetQuestionSetFromEmail(email)),
-            })
-        }
-
-        if (!existingUser || existingUser.isAdmin) {
-            void this.sendWelcomeEmail({ newUserEmail: emailLowerCase })
-        }
-
-        void this.sendAlterodoLunchProposalEmail({
-            newUserEmail: newUser?.email ?? existingUser?.email,
-            alterodoUser: asakaiAlterodoUser,
-            coachUserEmail: addedByUser?.email,
+        const newUser = await this.userRepository.save({
+            email: emailLowerCase,
+            company: getCompanyFromEmail(emailLowerCase),
+            isAdmin: false,
+            addedByUser,
+            asakaiAlterodoUser,
+            isLoginPending: true,
+            selectedQuestionSet: await this.questionSetService.findFromName(getPresetQuestionSetFromEmail(email)),
         })
 
-        if (existingUser && !existingUser.isAdmin) {
-            throw new BadRequestException({
-                message: 'there is already a user with the specified email',
-                code: 'existing-email',
-            })
-        }
-
-        return newUser
+        return { newUser, addedByUser, asakaiAlterodoUser }
     }
 
     async sendWelcomeEmail({ newUserEmail }: { newUserEmail: string }) {
@@ -179,7 +159,7 @@ export class UserService {
         if (isEmailSent) {
             console.log('welcome email sent')
         } else {
-            console.log('error while sending alterodos email')
+            console.log('error while sending welcome email')
             throw new BadRequestException({ code: 'mail-service-error', message: 'service de mail indisponible' })
         }
     }

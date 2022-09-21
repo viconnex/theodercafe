@@ -5,6 +5,7 @@ import { Send } from '@material-ui/icons'
 import { ASAKAI_EMAIL_PATH, USER_TO_QUESTIONS_CHOICES_URI } from 'utils/constants/apiConstants'
 import { fetchRequest } from 'services/api'
 import { useSnackbar } from 'notistack'
+import { getLocale } from 'languages/messages'
 import useStyles from './style'
 
 const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
@@ -21,22 +22,21 @@ const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
   const onSendClick = async (event) => {
     event.preventDefault()
     const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${ASAKAI_EMAIL_PATH}`
-    const body = { email, asakaiChoices, alterodoUserId, addedByUserId: connectedUserId }
+    const userLocale = getLocale()
+    const body = { email, asakaiChoices, alterodoUserId, addedByUserId: connectedUserId, userLocale }
     setIsSendingEmail(true)
     try {
       const response = await fetchRequest({ uri, method: 'POST', body })
       if (!response || response.status !== 201) {
         const body = await response.json()
-        if (body?.code === 'existing-email') {
-          enqueueSnackbar('Email déjà existant', { variant: 'error' })
-        } else if (body?.code === 'mail-service-error') {
-          enqueueSnackbar("Service d'envoi d'email indisponible", { variant: 'error' })
+        if (body?.code === 'mail-service-error') {
+          enqueueSnackbar("Service d'envoi d'email indisponible", { variant: 'error', autoHideDuration: 2000 })
         } else {
-          enqueueSnackbar('Email non envoyé', { variant: 'error' })
+          enqueueSnackbar("Une erreur s'est produite 🦑", { variant: 'error' })
         }
       } else {
         setShowInput(false)
-        enqueueSnackbar('Email envoyé !', { variant: 'success' })
+        enqueueSnackbar('Le compte a été créé !', { variant: 'success' })
       }
     } catch (e) {
       enqueueSnackbar("Une erreur s'est produite 🧜‍♀️", { variant: 'error' })

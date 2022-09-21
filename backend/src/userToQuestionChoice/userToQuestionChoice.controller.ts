@@ -80,11 +80,15 @@ export class UserToQuestionChoiceController {
     }
 
     @Post('asakai/email')
-    create(@Body() asakaiEmailDTO: AsakaiEmailDTO): Promise<string> {
+    create(@Body() asakaiEmailDTO: AsakaiEmailDTO) {
         if (!asakaiEmailDTO.email) {
             throw new BadRequestException('you must provide an email address')
         }
-        return this.userToQuestionChoiceService.handleAsakaiEmailSending(asakaiEmailDTO)
+        const emailParts = asakaiEmailDTO.email.split('@')
+        if (emailParts.length < 2 || !emailParts[0].length || !emailParts[1].length || !emailParts[1].includes('.')) {
+            throw new BadRequestException('you must provide a valid email address')
+        }
+        return this.userToQuestionChoiceService.onNewAsakaiEmail(asakaiEmailDTO)
     }
 
     @Get('mbti')

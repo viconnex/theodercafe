@@ -10,17 +10,12 @@ const sendEmail = async (recipients: string[], cc: string[], subject: string, ht
     let to_emails: string[] = []
     let cc_emails: string[] = []
 
-    if (IS_DEV) {
+    to_emails = recipients
+    if (to_emails.length === 0) {
         to_emails = [OWNER_EMAIL]
-        cc_emails = [OWNER_EMAIL]
-    } else {
-        to_emails = recipients
-        if (to_emails.length === 0) {
-            to_emails = [OWNER_EMAIL]
-        }
-        cc_emails = cc
-        cc.push(OWNER_EMAIL)
     }
+    cc_emails = cc
+    cc.push(OWNER_EMAIL)
 
     const sendSmtpEmail = {
         sender: {
@@ -32,10 +27,15 @@ const sendEmail = async (recipients: string[], cc: string[], subject: string, ht
         htmlContent,
         subject,
     }
+    if (IS_DEV) {
+        console.log('An email would be sent with sensinblue sendTransacEmail', sendSmtpEmail)
+        return true
+    }
+
     try {
         const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
         console.log('successfully sent email', JSON.stringify(data))
-        return true
+        return data?.response?.statusCode === 201
     } catch (e) {
         console.log('error while sending email', e)
         return false
