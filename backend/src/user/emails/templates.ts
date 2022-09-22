@@ -1,6 +1,6 @@
 import { UserLocale } from 'src/user/user.types'
 
-export const alterodosLunch = `
+const ALTERODO_LUNCH_FR = `
 <html><body>
     <p>
       Félicitations, vous êtes les Alterodos du jour !
@@ -24,7 +24,31 @@ export const alterodosLunch = `
 </body></html>
 `
 
-export const WELCOME_EMAIL_FR = `
+const ALTERODO_LUNCH_EN = `
+<html><body>
+    <p>
+      Congrats, you are today's Alterodos !
+    </p>
+    <p>
+      As the tradition requires, a lunch is to be organized to get to know each other better.
+    </p>
+    <p>
+      Unless you prefer having an afternoon tea with biscuits ?
+    </p>
+    <p>
+      It's up to you to find a date ⛳️
+    </p>
+    <p>
+      See you in a while crocodile or Best regards ?
+    </p>
+    <p>
+      Asakai San
+    </p>
+
+</body></html>
+`
+
+const WELCOME_EMAIL_FR = `
     <html><body>
     <h2> Bienvenue sur Theodercafe !</h2>
     <p>
@@ -49,6 +73,10 @@ export const WELCOME_EMAIL_FR = `
     </p>
 
     <p>
+      Je te laisse avec cette reco de designer non professionnel : re-clique sur ta réponse pour passer à la question suivante, pas besoin d'utiliser les flèches.
+    </p>
+
+    <p>
       A+ ou Cordialement ?
     </p>
 
@@ -62,11 +90,11 @@ export const WELCOME_EMAIL_FR = `
 
     </body></html>
 `
-export const WELCOME_EMAIL_EN = `
+const WELCOME_EMAIL_EN = `
     <html><body>
     <h2> Welcome to Theodercafe !</h2>
     <p>
-      Your account has juste been created. Visit theodercafe.com.
+      Your account has juste been created, visit theodercafe.com !
     </p>
     <p>
       If you turn 'live mode' off, you can see and answer all the questions. Use left pannel filters to display
@@ -84,6 +112,9 @@ export const WELCOME_EMAIL_EN = `
     <p>
       And on theodercafe.com/carte, find a projection of Theodoer's answers on a 2D map. 🗺
     </p>
+    <p>
+      As a non professional designer, I recommend you to click again on your answer to go to the next question. No need to use arrows.
+    </p>
 
     <p>
       See you later aligator or Best regards ?
@@ -100,9 +131,11 @@ export const WELCOME_EMAIL_EN = `
     </body></html>
 `
 
-export const computeWelcomeEmail = ({ userLocale }: { userLocale: UserLocale }) => {
-    if (userLocale === UserLocale.en) {
-        return WELCOME_EMAIL_EN
-    }
-    return WELCOME_EMAIL_FR
+export const WELCOME_EMAIL_TEMPLATE = {
+    [UserLocale.en]: WELCOME_EMAIL_EN,
+    [UserLocale.fr]: WELCOME_EMAIL_FR,
+}
+export const ALTERODO_LUNCH_TEMPLATE = {
+    [UserLocale.en]: ALTERODO_LUNCH_EN,
+    [UserLocale.fr]: ALTERODO_LUNCH_FR,
 }

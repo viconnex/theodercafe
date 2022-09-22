@@ -180,6 +180,7 @@ export class UserToQuestionChoiceService {
             newUserEmail: newUser.email,
             alterodoUser: asakaiAlterodoUser,
             coachUserEmail: addedByUser?.email,
+            userLocale,
         })
     }
 

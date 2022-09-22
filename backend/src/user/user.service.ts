@@ -8,7 +8,7 @@ import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user
 import { GoogleProfile } from '../auth/google.strategy'
 import { AdminUserList, CompanyDomain, PostSettingsBody, UserLocale, UserWithPublicFields } from './user.types'
 import sendEmail from './emails/sendinblue'
-import { alterodosLunch, computeWelcomeEmail } from './emails/templates'
+import { ALTERODO_LUNCH_TEMPLATE, WELCOME_EMAIL_TEMPLATE } from './emails/templates'
 import { QuestionSetService } from '../questionSet/questionSet.service'
 
 @Injectable()
@@ -166,9 +166,8 @@ export class UserService {
             const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
             subject = randomQuestion ? `${randomQuestion.option1} ou ${randomQuestion.option2} ?` : 'Thé ou café ?'
         }
-        const template = computeWelcomeEmail({ userLocale })
 
-        const isEmailSent = await sendEmail([newUserEmail], [], subject, template)
+        const isEmailSent = await sendEmail([newUserEmail], [], subject, WELCOME_EMAIL_TEMPLATE[userLocale])
 
         if (isEmailSent) {
             console.log('welcome email sent')
@@ -182,10 +181,12 @@ export class UserService {
         newUserEmail,
         alterodoUser,
         coachUserEmail,
+        userLocale,
     }: {
         newUserEmail?: string
         alterodoUser: User | null
         coachUserEmail?: string
+        userLocale: UserLocale
     }) {
         const recipients: string[] = []
         const cc: string[] = []
@@ -200,7 +201,7 @@ export class UserService {
             cc.push(coachUserEmail)
         }
 
-        const isEmailSent = await sendEmail(recipients, cc, 'Dej Alterodos', alterodosLunch)
+        const isEmailSent = await sendEmail(recipients, cc, 'Dej Alterodos', ALTERODO_LUNCH_TEMPLATE[userLocale])
 
         if (isEmailSent) {
             console.log('alterodos tradition email sent')
