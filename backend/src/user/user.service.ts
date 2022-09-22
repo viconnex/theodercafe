@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { QuestionService } from 'src/question/question.service'
 import { DeleteResult } from 'typeorm'
+import { PresetQuestionSet } from 'src/questionSet/questionSet.entity'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
@@ -108,14 +109,23 @@ export class UserService {
         return userPicturesObject
     }
 
-    async createOrUpdateAfterLogin(email: string, profile: GoogleProfile): Promise<User> {
+    async createOrUpdateAfterLogin(email: string, profile: GoogleProfile) {
         const user = await this.findByEmail(email)
 
         if (user) {
             return this.userRepository.save({ ...user, ...this.getUserInfoFromProfile(profile), isLoginPending: false })
         }
 
-        return await this.createNewUser(email, profile)
+        const newUser = await this.createNewUser(email, profile)
+        // TODO: send locale from client
+        const locale = [PresetQuestionSet.TheodoUK, PresetQuestionSet.TheodoUS].includes(
+            getPresetQuestionSetFromEmail(email),
+        )
+            ? UserLocale.en
+            : UserLocale.fr
+        void this.sendWelcomeEmail({ newUserEmail: email, userLocale: locale })
+
+        return newUser
     }
 
     async createUserWithEmail(

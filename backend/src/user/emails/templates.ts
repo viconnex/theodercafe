@@ -28,8 +28,7 @@ export const WELCOME_EMAIL_FR = `
     <html><body>
     <h2> Bienvenue sur Theodercafe !</h2>
     <p>
-      Ton compte vient d'être créé, rendez-vous sur theodercafe.com/login et connecte-toi
-      avec cet email pour retrouver tes réponses.
+      Ton compte vient d'être créé, rends-toi sur theodercafe.com.
     </p>
     <p>
       Tu pourras faire ou refaire tes choix à tête reposée.
@@ -67,7 +66,7 @@ export const WELCOME_EMAIL_EN = `
     <html><body>
     <h2> Welcome to Theodercafe !</h2>
     <p>
-      Your account has juste been created. Visit theodercafe.com/login and connect with this email to see your answers.
+      Your account has juste been created. Visit theodercafe.com.
     </p>
     <p>
       If you turn 'live mode' off, you can see and answer all the questions. Use left pannel filters to display
