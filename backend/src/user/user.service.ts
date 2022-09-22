@@ -5,9 +5,9 @@ import { DeleteResult } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user.entity'
 import { GoogleProfile } from '../auth/google.strategy'
-import { AdminUserList, CompanyDomain, PostSettingsBody, UserWithPublicFields } from './user.types'
+import { AdminUserList, CompanyDomain, PostSettingsBody, UserLocale, UserWithPublicFields } from './user.types'
 import sendEmail from './emails/sendinblue'
-import { alterodosLunch, welcomeEmail } from './emails/templates'
+import { alterodosLunch, computeWelcomeEmail } from './emails/templates'
 import { QuestionSetService } from '../questionSet/questionSet.service'
 
 @Injectable()
@@ -149,12 +149,16 @@ export class UserService {
         return { newUser, addedByUser, asakaiAlterodoUser }
     }
 
-    async sendWelcomeEmail({ newUserEmail }: { newUserEmail: string }) {
-        const questions = await this.questionService.find({ where: { isValidated: true } })
-        const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
-        const subject = randomQuestion ? `${randomQuestion.option1} ou ${randomQuestion.option2} ?` : 'Thé ou café ?'
+    async sendWelcomeEmail({ newUserEmail, userLocale }: { newUserEmail: string; userLocale: UserLocale }) {
+        let subject = 'Tea or Coffee ?'
+        if (userLocale === UserLocale.fr) {
+            const questions = await this.questionService.find({ where: { isValidated: true } })
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
+            subject = randomQuestion ? `${randomQuestion.option1} ou ${randomQuestion.option2} ?` : 'Thé ou café ?'
+        }
+        const template = computeWelcomeEmail({ userLocale })
 
-        const isEmailSent = await sendEmail([newUserEmail], [], subject, welcomeEmail)
+        const isEmailSent = await sendEmail([newUserEmail], [], subject, template)
 
         if (isEmailSent) {
             console.log('welcome email sent')

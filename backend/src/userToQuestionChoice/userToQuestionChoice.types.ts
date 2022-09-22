@@ -1,3 +1,5 @@
+import { UserLocale } from 'src/user/user.types'
+
 export type ChoicesByQuestion = Record<number, Choice>
 
 type UserAlterodoResponse = {
@@ -48,6 +50,7 @@ export interface AsakaiEmailDTO {
     asakaiChoices?: ChoicesByQuestion
     alterodoUserId?: number
     addedByUserId?: number | null
+    userLocale: UserLocale
 }
 
 export type Choice = 1 | 2

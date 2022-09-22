@@ -158,7 +158,7 @@ export class UserToQuestionChoiceService {
         return usersMap
     }
 
-    async onNewAsakaiEmail({ email, addedByUserId, asakaiChoices, alterodoUserId }: AsakaiEmailDTO) {
+    async onNewAsakaiEmail({ email, addedByUserId, asakaiChoices, alterodoUserId, userLocale }: AsakaiEmailDTO) {
         const createUserReponse = await this.userService.createUserWithEmail(email, addedByUserId, alterodoUserId)
 
         if (!createUserReponse) {
@@ -174,7 +174,7 @@ export class UserToQuestionChoiceService {
             await this.userToQuestionChoiceRepository.save(choices)
         }
 
-        await this.userService.sendWelcomeEmail({ newUserEmail: newUser.email })
+        await this.userService.sendWelcomeEmail({ newUserEmail: newUser.email, userLocale })
 
         await this.userService.sendAlterodoLunchProposalEmail({
             newUserEmail: newUser.email,

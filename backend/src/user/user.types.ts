@@ -17,3 +17,8 @@ export type CompanyDomain = {
     domain: string
     isM33: boolean
 }
+
+export enum UserLocale {
+    fr = 'fr',
+    en = 'en',
+}
