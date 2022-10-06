@@ -52,28 +52,28 @@ const WELCOME_EMAIL_FR = `
     <html><body>
     <h2> Bienvenue sur Theodercafe !</h2>
     <p>
-      Ton compte vient d'être créé, rends-toi sur theodercafe.com.
+      Ton compte vient d'être créé sur <a href="https://theodercafe.com">theodercafe.com</a>
     </p>
     <p>
-      Tu pourras faire ou refaire tes choix à tête reposée.
-
-      Utilise les filtres pour afficher les questions validées ou non, celles auxquelles tu n'as pas encore répondu...
+      Pour faire vivre le jeu, n'hésite pas à ajouter des questions ! Cherche le + en bas à droite de l'écran.
+      Une fois ta question approuvée par un admin, elle pourra tomber en asakai.
     </p>
+    <h3>Mode d'emploi</h3>
     <p>
-      N'hésite pas à ajouter des questions ! C'est la clé de la réussite de Theodercafe. Cherche le bouton '+' en bas à droite de l'écran.
+     Pour voir toutes les questions, désactive le mode Live. Les filtres te permettent d'afficher les questions validées ou non, celles auxquelles tu n'as pas encore répondu...
     </p>
     <p>
       Sur theodercafe.com/alterodo, retrouve la personne qui a le plus de similarité avec toi. 👨‍🌾
     </p>
     <p>
-      Sur theodercafe.com/mbti, tu peux voir les profils MBTI de Theodo. 🦑
+      Sur theodercafe.com/mbti, tu peux remplir et voir les profils MBTI de Theodo. 🦑
     </p>
     <p>
       Et sur theodercafe.com/carte, retrouve les réponses des Theodoers projetées sur une carte en 2d. 🗺
     </p>
 
     <p>
-      Je te laisse avec cette reco de designer non professionnel : re-clique sur ta réponse pour passer à la question suivante, pas besoin d'utiliser les flèches.
+      Je te laisse avec cette astuce de designer amateur : re-clique sur ta réponse pour passer à la question suivante, pas besoin d'utiliser les flèches.
     </p>
 
     <p>
@@ -94,14 +94,15 @@ const WELCOME_EMAIL_EN = `
     <html><body>
     <h2> Welcome to Theodercafe !</h2>
     <p>
-      Your account has juste been created, visit theodercafe.com !
+      Your account has juste been created on theodercafe.com !
     </p>
     <p>
-      If you turn 'live mode' off, you can see and answer all the questions. Use left pannel filters to display
-      validated or not validated questions, questions you have not answered yet...
+      For a better life, don't hesitate to add questions ! Look for the '+' on the bottom right of the screen.
+      Once approved by an admin, it will have a chance to be displayed in the live mode.
     </p>
     <p>
-      Don't hesitate to add questions ! This is the key of the app. Look for the '+' button on the bottom right of the screen.
+      If you turn 'live mode' off, you will see all the questions. Use left pannel filters to display
+      validated or not validated questions, questions you dit not answer yet...
     </p>
     <p>
       On theodercafe.com/alterodo, find the Alterodo with greatest similarity with you. 👨‍🌾
@@ -113,7 +114,7 @@ const WELCOME_EMAIL_EN = `
       And on theodercafe.com/carte, find a projection of Theodoer's answers on a 2D map. 🗺
     </p>
     <p>
-      As a non professional designer, I recommend you to click again on your answer to go to the next question. No need to use arrows.
+      Today's non professional designer tip: click again on your answer to go to the next question. No need to use arrows.
     </p>
 
     <p>
@@ -125,7 +126,7 @@ const WELCOME_EMAIL_EN = `
     </p>
 
     <p>
-      PS: Did you know Theodercafe stand for 'The oder Cafe' in german ?
+      PS: Did you know Theodercafe stood for 'The oder Cafe' in german ?
     </p>
 
     </body></html>
