@@ -72,7 +72,7 @@ const QuestionContent = ({
   }
   return (
     <React.Fragment>
-      {!user && questionIndex === 0 && (
+      {!user && (
         <Button className={classes.activateLive} onClick={login} variant="contained" color="secondary">
           <FormattedMessage id="asakai.activateLive" />
         </Button>
@@ -273,10 +273,6 @@ const AsakaiQuestioning = ({
 
     if (!isCoachMode && user) {
       void postChoice(questionId, choice, enqueueSnackbar, null)
-    }
-
-    if (!firebaseUid) {
-      void changeQuestion(1)
     }
   }
 
