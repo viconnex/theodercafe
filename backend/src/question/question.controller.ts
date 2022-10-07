@@ -9,6 +9,7 @@ import {
     Post,
     Put,
     Query,
+    Request,
     Res,
     UseGuards,
 } from '@nestjs/common'
@@ -16,17 +17,20 @@ import { Response } from 'express'
 import { DeleteResult } from 'typeorm'
 import { AuthGuard } from '@nestjs/passport'
 import { ADMIN_STRATEGY } from 'src/auth/jwt.admin.strategy'
+import { USER_STRATEGY } from 'src/auth/jwt.user.strategy'
 import { QuestionService } from './question.service'
 import { Question } from './question.entity'
 import { QuestionPostDTO, QuestionUpdateBody } from './interfaces/question.dto'
+import { User } from '../user/user.entity'
 
 @Controller('questions')
 export class QuestionController {
     constructor(private readonly questionService: QuestionService) {}
 
     @Post()
-    create(@Body() questionDto: QuestionPostDTO): Promise<Question> {
-        return this.questionService.create(questionDto)
+    @UseGuards(AuthGuard(USER_STRATEGY))
+    create(@Request() { user }: { user: User }, @Body() questionDto: QuestionPostDTO): Promise<Question> {
+        return this.questionService.create(questionDto, user)
     }
 
     @Get('/asakai')

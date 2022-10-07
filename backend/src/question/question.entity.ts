@@ -1,3 +1,4 @@
+import { User } from 'src/user/user.entity'
 import {
     Column,
     CreateDateColumn,
@@ -55,4 +56,7 @@ export class Question {
 
     @UpdateDateColumn()
     updatedAt: string
+
+    @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
+    addedByUser: User | null
 }

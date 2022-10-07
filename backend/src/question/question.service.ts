@@ -8,8 +8,7 @@ import { QuestionPostDTO, QuestionUpdateBody } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { QuestionSetService } from '../questionSet/questionSet.service'
 import { Question } from './question.entity'
-
-const JOKE_ON_SOMEONE_PROBABILITY = 0.3
+import { User } from '../user/user.entity'
 
 @Injectable()
 export class QuestionService {
@@ -20,7 +19,7 @@ export class QuestionService {
         private readonly questionSetService: QuestionSetService,
     ) {}
 
-    async create(questionBody: QuestionPostDTO): Promise<Question> {
+    async create(questionBody: QuestionPostDTO, addedByUser: User): Promise<Question> {
         let category: Category | null = null
         if (typeof questionBody.category === 'number') {
             category = (await this.categoryRepository.findOne(questionBody.category)) ?? null
@@ -48,6 +47,7 @@ export class QuestionService {
             option2: questionBody.option2,
             isClassic: false,
             questionSets,
+            addedByUser,
         }
         if (category) {
             questionPayload.category = category

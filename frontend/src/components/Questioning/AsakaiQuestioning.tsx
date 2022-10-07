@@ -119,7 +119,7 @@ const AsakaiQuestioning = ({
   const [usersAnswers, setUsersAnswers] = useState<UsersAnswers | null>(null)
   const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { enqueueSnackbar } = useSnackbar()
   const intl = useIntl()
 
   const question = questions[questionIndex]
@@ -355,7 +355,11 @@ const AsakaiQuestioning = ({
           </React.Fragment>
         )}
       </div>
-      <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
+      <LoginDialog
+        isOpen={openLoginDialog}
+        handleClose={() => setOpenLoginDialog(false)}
+        actionText={intl.formatMessage({ id: 'loginDialog.saveChoice' })}
+      />
     </div>
   )
 }

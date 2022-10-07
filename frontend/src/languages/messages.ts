@@ -7,10 +7,10 @@ export enum Locale {
 
 export const messages = {
   [Locale.fr]: {
+    'allQuestioning.awaitingValidation': 'Question en attente de validation',
     'allQuestioning.filters': 'Filtres',
     'allQuestioning.filters.MBTI': 'MBTI',
     'allQuestioning.MBTI.seeProfiles': 'Voir les profils',
-    'allQuestioning.awaitingValidation': 'Question en attente de validation',
     'allQuestioning.noQuestion': 'Aucune question pour les filtres sélectionnés',
     'allQuestioning.notValidated': 'Question invalidée',
     'allQuestioning.validated': 'Question validée',
@@ -19,6 +19,8 @@ export const messages = {
     'asakai.finish.error': "Une erreur s'est produite 🛸",
     'asakai.finish.feedback': 'Donne ton avis !',
     'asakai.finish.feedback.here': '🦉 ici 🦑',
+    'asakai.finish.noOtherUserAnswer':
+      "Ton Alterodo ne peut pas être affiché car aucun utilisateur de {company} n'a répondu à ces questions",
     'asakai.modeSelector.coach': 'Mode Coach',
     'asakai.modeSelector.coach.tooltip':
       'En mode Coach, les réponses ne sont pas enregistrées sur ton compte. Renseigne un email à la fin du questionnaire pour les enregistrer sur un nouveau compte',
@@ -42,20 +44,22 @@ export const messages = {
     'home.menu.settings': 'Réglages',
     'home.modeSelector.title': 'Mode Live',
     'home.modeSelector.tooltip': 'Un set de 10 questions qui change tous les jours. Activé par défaut le lundi.',
+    'loginDialog.addQuestion': 'ajouter une question',
+    'loginDialog.cancel': 'Annuler',
+    'loginDialog.mustLogin': 'Tu dois te connecter',
+    'loginDialog.saveChoice': 'sauvegarder ton choix',
     'privateRoute.loginGoogle': 'Login avec Google',
     'privateRoute.mustBeAdmin': 'Tu dois être admin pour accéder à cette page',
     'privateRoute.mustBeConnected': 'Il faut te connecter pour voir cette page',
     'question.category.noCategory': 'Hors catégorie',
     'question.category.title': 'Catégorie',
     'question.or': 'ou',
-    'asakai.finish.noOtherUserAnswer':
-      "Ton Alterodo ne peut pas être affiché car aucun utilisateur de {company} n'a répondu à ces questions",
     'settings.questionSet': 'Set de questions',
   },
   [Locale.en]: {
+    'allQuestioning.awaitingValidation': 'Question awaiting validation',
     'allQuestioning.filters': 'Filters',
     'allQuestioning.filters.MBTI': 'MBTI',
-    'allQuestioning.awaitingValidation': 'Question awaiting validation',
     'allQuestioning.MBTI.seeProfiles': 'See profiles',
     'allQuestioning.noQuestion': 'There is no question for the configured filters',
     'allQuestioning.notValidated': 'Question not validated',
@@ -65,6 +69,8 @@ export const messages = {
     'asakai.finish.error': 'An error occured 🛸',
     'asakai.finish.feedback': 'Give some feedback !',
     'asakai.finish.feedback.here': '🦉 here 🦑',
+    'asakai.finish.noOtherUserAnswer':
+      'The Alterodo cannot be displayed because no other users of {company} answered to these questions',
     'asakai.modeSelector.coach': 'Coach Mode',
     'asakai.modeSelector.coach.tooltip':
       'With Coach mode, answers are not saved on your account. Enter an email in the end so to save them on a new account',
@@ -88,14 +94,16 @@ export const messages = {
     'home.menu.settings': 'Settings',
     'home.modeSelector.title': 'Live Mode',
     'home.modeSelector.tooltip': 'A 10 question set updated everyday. Activated by defaut on Monday.',
+    'loginDialog.addQuestion': 'add a question',
+    'loginDialog.cancel': 'Cancel',
+    'loginDialog.mustLogin': 'Ÿou must login',
+    'loginDialog.saveChoice': 'save your choice',
+    'privateRoute.loginGoogle': 'Login with Google',
     'privateRoute.mustBeAdmin': 'You need to be an admin to have access to this page',
     'privateRoute.mustBeConnected': 'You need to be connected to see this page',
-    'privateRoute.loginGoogle': 'Login with Google',
     'question.category.noCategory': 'No category',
     'question.category.title': 'Category',
     'question.or': 'or',
-    'asakai.finish.noOtherUserAnswer':
-      'The Alterodo cannot be displayed because no other users of {company} answered to these questions',
     'settings.questionSet': 'Question set',
   },
 }

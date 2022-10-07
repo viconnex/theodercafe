@@ -15,6 +15,7 @@ import { fetchRequest, fetchRequestResponse } from 'services/api'
 import { QuestionSet } from 'utils/questionSet'
 import { useIntl } from 'react-intl'
 
+import { LoginDialog } from 'components/Login'
 import useStyles from './style'
 
 const Home = ({
@@ -32,6 +33,7 @@ const Home = ({
   const [usersPictures, setUsersPictures] = useState<UsersPictures | null>(null)
   const [questionSets, setQuestionSets] = useState<QuestionSet[] | null>(null)
   const [refreshQuestionSet, setRefreshQuestionSet] = useState(0)
+  const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const intl = useIntl()
 
   const fetchQuestionSets = async () => {
@@ -93,7 +95,13 @@ const Home = ({
     setIsAsakaiMode(isAsakai)
   }
 
-  const toggleModal = (open: boolean) => setAddQuestionDialog(open)
+  const onAddQuestionDialogToggle = (isOpen: boolean) => {
+    if (!user) {
+      setOpenLoginDialog(true)
+      return
+    }
+    setAddQuestionDialog(isOpen)
+  }
   const classes = useStyles()
   return (
     <div className={classes.pageContainer}>
@@ -127,16 +135,21 @@ const Home = ({
           questionSets={questionSets}
         />
       )}
-      <Fab className={classes.addButton} size="small" onClick={() => toggleModal(true)}>
+      <Fab className={classes.addButton} size="small" onClick={() => onAddQuestionDialogToggle(true)}>
         <AddIcon />
       </Fab>
       <AddQuestionDialog
         open={addQuestionDialog}
-        onClose={() => toggleModal(false)}
+        onClose={() => onAddQuestionDialogToggle(false)}
         handleQuestionAdded={() => setAddQuestionDialog(false)}
         user={user}
         questionSets={questionSets}
         setRefreshQuestionSet={setRefreshQuestionSet}
+      />
+      <LoginDialog
+        isOpen={openLoginDialog}
+        handleClose={() => setOpenLoginDialog(false)}
+        actionText={intl.formatMessage({ id: 'loginDialog.addQuestion' })}
       />
     </div>
   )

@@ -57,6 +57,7 @@ const AllQuestioning = ({
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const [areChoicesFetched, setAreChoicesFetched] = useState(false)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const intl = useIntl()
 
   const handleFilterChange = (option: keyof typeof filters) => (checked: boolean) => {
     setFilters({ ...filters, [option]: checked })
@@ -341,7 +342,11 @@ const AllQuestioning = ({
           </Button>
         </div>
       )}
-      <LoginDialog isOpen={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
+      <LoginDialog
+        isOpen={openLoginDialog}
+        handleClose={() => setOpenLoginDialog(false)}
+        actionText={intl.formatMessage({ id: 'loginDialog.saveChoice' })}
+      />
       <FilterDrawer
         open={isDrawerOpen}
         close={() => setIsDrawerOpen(false)}
