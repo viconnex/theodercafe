@@ -14,6 +14,7 @@ import { MBTI_TYPES } from 'utils/constants/questionConstants'
 
 import './style.css'
 import { useHistory } from 'react-router-dom'
+import { FormattedMessage } from 'react-intl'
 
 HC_more(Highcharts)
 Exporting(Highcharts)
@@ -104,10 +105,18 @@ const MBTI = () => {
       ) : (
         <React.Fragment>
           <div className={classes.actions}>
-            {!hasCompletedMbti && <div>Tu n'as pas encore répondu aux 4 questions du MBTI !</div>}
+            {!hasCompletedMbti && (
+              <div>
+                <FormattedMessage id="mbti.notAnsweredYet" />
+              </div>
+            )}
             <div className={classes.actionButton}>
               <Button onClick={() => history.push('/?mbti=true')} variant="contained">
-                {!hasCompletedMbti ? 'Remplir mon profil' : 'Modifier mon profil'}
+                {!hasCompletedMbti ? (
+                  <FormattedMessage id="mbti.fillProfile" />
+                ) : (
+                  <FormattedMessage id="mbti.changeProfile" />
+                )}
               </Button>
             </div>
           </div>
