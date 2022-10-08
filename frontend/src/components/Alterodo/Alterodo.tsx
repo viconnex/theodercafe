@@ -4,9 +4,48 @@ import MaterialButton from '@material-ui/core/Button'
 import { IconButton, Tooltip } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
 import { Alterodos, UserAlterodoResponse } from 'components/Questioning/types'
+import { FormattedMessage } from 'react-intl'
 import useStyle from './style'
 
-const getAlterodoName = (isAlterodo: boolean) => (isAlterodo ? 'Alterodo' : 'Varieto')
+const SimilarityInfo = ({
+  alterodo,
+  isAlterodo,
+  baseQuestionCount,
+  sameOrDifferentAnswerCount,
+}: {
+  alterodo: UserAlterodoResponse
+  isAlterodo: boolean
+  baseQuestionCount: number
+  sameOrDifferentAnswerCount: number
+}) => {
+  return (
+    <div style={{ fontSize: '15px', padding: '8px', lineHeight: '16px' }}>
+      <div>
+        <FormattedMessage
+          id="alterodo.similarityInfo.explanation"
+          values={{
+            alterodoGivenName: alterodo.givenName,
+            baseQuestionCount,
+            commonQuestionCount: alterodo.commonQuestionCount,
+            sameOrDifferentAnswerCount,
+            isAlterodo,
+          }}
+        />
+      </div>
+      <div style={{ marginTop: '8px' }}>
+        <FormattedMessage
+          id="alterodo.similarityInfo.result"
+          values={{ alterodoGivenName: alterodo.givenName, isAlterodo }}
+        />
+      </div>
+      <div style={{ marginTop: '8px' }}>
+        {sameOrDifferentAnswerCount} / ( √{alterodo.commonQuestionCount} * √{baseQuestionCount} )
+      </div>
+    </div>
+  )
+}
+
+const AlterodoTag = (chunks: string) => <span style={{ fontStyle: 'italic' }}>{chunks}</span>
 
 const Alterodo = ({
   alterodo,
@@ -23,45 +62,39 @@ const Alterodo = ({
     ? alterodo.sameAnswerCount
     : alterodo.commonQuestionCount - alterodo.sameAnswerCount
 
-  const similarityInfo = (
-    <div style={{ fontSize: '15px', padding: '8px', lineHeight: '16px' }}>
-      <div>
-        Sur les {baseQuestionCount} questions auxquelles tu as répondu, {alterodo.givenName} a répondu à{' '}
-        {alterodo.commonQuestionCount} de ces questions, et a choisi{' '}
-        {isAlterodo ? 'la même réponse' : "l'autre réponse"} sur {sameOrDifferentAnswerCount} d'entres elles.
-      </div>
-      <div style={{ marginTop: '8px' }}>
-        Ta {isAlterodo ? 'similarité' : 'diversité'} avec {alterodo.givenName} est :
-      </div>
-      <div style={{ marginTop: '8px' }}>
-        {sameOrDifferentAnswerCount} / ( √{alterodo.commonQuestionCount} * √{baseQuestionCount} )
-      </div>
-    </div>
-  )
   const classes = useStyle()
   return (
     <div>
       <div>
-        Ton <span style={{ fontStyle: 'italic' }}>{getAlterodoName(isAlterodo)}</span>
-        {isAsakai && ' du jour'} est
+        {isAsakai ? (
+          <FormattedMessage id="alterodo.title.today" values={{ alterodoTag: AlterodoTag, isAlterodo }} />
+        ) : (
+          <FormattedMessage id="alterodo.title.general" values={{ alterodoTag: AlterodoTag, isAlterodo }} />
+        )}
       </div>
-      <img className={classes.picture} src={alterodo.pictureUrl} alt="alterodo_profile" />
+      <img className={classes.picture} src={alterodo.pictureUrl} alt="alterodo profile" />
       <div className={classes.name}>
         {alterodo.givenName} {alterodo.familyName}
       </div>
       <div className={classes.similarity}>
-        {isAlterodo ? 'Similarité' : 'Diversité'} :{' '}
+        {isAlterodo ? <FormattedMessage id="alterodo.similarity" /> : <FormattedMessage id="alterodo.diversity" />}
         <span className={classes.similarityValue}>{Math.round(alterodo.similarity * 100)} %</span>
-        <Tooltip title={similarityInfo} enterTouchDelay={0} leaveTouchDelay={5000}>
+        <Tooltip
+          title={
+            <SimilarityInfo
+              alterodo={alterodo}
+              isAlterodo={isAlterodo}
+              baseQuestionCount={baseQuestionCount}
+              sameOrDifferentAnswerCount={sameOrDifferentAnswerCount}
+            />
+          }
+          enterTouchDelay={0}
+          leaveTouchDelay={5000}
+        >
           <IconButton color="secondary" classes={{ root: classes.infoButton }}>
             <InfoIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-      </div>
-      <div className={classes.similarity}>
-        Sur
-        <span className={classes.similarityValue}> {alterodo.commonQuestionCount}</span> question
-        {alterodo.commonQuestionCount > 1 && 's'} en commun
       </div>
     </div>
   )
@@ -93,11 +126,19 @@ const AlterodoWrapper = ({
   const classes = useStyle()
 
   if (alterodos.baseQuestionCount === 0) {
-    return <div>Ton alterodo n'est pas défini car tu n'as répondu à aucune question validée</div>
+    return (
+      <div>
+        <FormattedMessage id="alterodo.undefined.noAnswer" />
+      </div>
+    )
   }
 
   if (!alterodos.alterodo.sameAnswerCount) {
-    return <div>Ton alterodo n'est pas défini car personne n'a répondu aux questions auxquelles tu as répondu</div>
+    return (
+      <div>
+        <FormattedMessage id="alterodo.undefined.noSameQuestion" />
+      </div>
+    )
   }
 
   return (
@@ -111,12 +152,12 @@ const AlterodoWrapper = ({
       <div className={classes.actionsContainer}>
         <div>
           <MaterialButton variant="contained" size="small" fullWidth={false} color="secondary" onClick={changeAlterodo}>
-            Et ton {getAlterodoName(!isAlterodoDisplayed)} ?
+            <FormattedMessage id="alterodo.switchButton" values={{ isAlterodo: isAlterodoDisplayed }} />
           </MaterialButton>
         </div>
         <div>
           <MaterialButton className={classes.newQuestioning} size="small" color="secondary" onClick={resetQuestioning}>
-            Retourner aux questions
+            <FormattedMessage id="alterodo.backToQuestions" />
           </MaterialButton>
         </div>
       </div>

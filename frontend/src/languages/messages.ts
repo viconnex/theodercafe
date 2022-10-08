@@ -14,6 +14,21 @@ export const messages = {
     'allQuestioning.noQuestion': 'Aucune question pour les filtres sélectionnés',
     'allQuestioning.notValidated': 'Question invalidée',
     'allQuestioning.validated': 'Question validée',
+    'alterodo.similarityInfo.explanation':
+      "Sur les {baseQuestionCount} questions auxquelles tu as répondu, {alterodoGivenName} a répondu à {commonQuestionCount} de ces questions, et a choisi {isAlterodo, select, true {la même réponse} false {l'autre réponse} other {la même réponse}} sur {sameOrDifferentAnswerCount} d'entres elles.",
+    'alterodo.similarityInfo.result':
+      'Ta {isAlterodo, select, true {similarité} false {diversité} other {similarité}} avec {alterodoGivenName} est :',
+    'alterodo.title.today':
+      'Ton <alterodoTag>{isAlterodo, select, true {Alterodo} false {Varieto} other {Alterodo}}</alterodoTag> du jour est',
+    'alterodo.title.general':
+      'Ton <alterodoTag>{isAlterodo, select, true {Alterodo} false {Varieto} other {Alterodo}}</alterodoTag> est',
+    'alterodo.similarity': 'Similarité ',
+    'alterodo.diversity': 'Diversité ',
+    'alterodo.undefined.noSameQuestion':
+      "Ton alterodo n'est pas défini car personne de ta société n'a répondu aux questions auxquelles tu as répondu",
+    'alterodo.undefined.noAnswer': "Ton alterodo n'est pas défini car tu n'as répondu à aucune question validée",
+    'alterodo.switchButton': 'Et ton {isAlterodo, select, true {Varieto} false {Alterodo} other {Varieto}} ?',
+    'alterodo.backToQuestions': 'Retourner aux questions',
     'asakai.activateLive': 'Connecte-toi pour activer le live',
     'asakai.changeTodaySet': 'Changer le set du jour',
     'asakai.finish.error': "Une erreur s'est produite 🛸",
@@ -64,6 +79,21 @@ export const messages = {
     'allQuestioning.noQuestion': 'There is no question for the configured filters',
     'allQuestioning.notValidated': 'Question not validated',
     'allQuestioning.validated': 'Question validated',
+    'alterodo.similarityInfo.explanation':
+      'On the {baseQuestionCount} questions you answered, {alterodoGivenName} answered to {commonQuestionCount} of them, and chose {isAlterodo, select, true {the same answer} false {the other answer} other {the same answer}} on {sameOrDifferentAnswerCount} of them.',
+    'alterodo.similarityInfo.result':
+      'Your {isAlterodo, select, true {similarity} false {diversity} other {similarity}} with {alterodoGivenName} is:',
+    'alterodo.title.today':
+      'Today, your <alterodoTag>{isAlterodo, select, true {Alterodo} false {Varieto} other {Alterodo}}</alterodoTag> is',
+    'alterodo.title.general':
+      'Your <alterodoTag>{isAlterodo, select, true {Alterodo} false {Varieto} other {Alterodo}}</alterodoTag> est',
+    'alterodo.similarity': 'Similarity ',
+    'alterodo.diversity': 'Diversity ',
+    'alterodo.undefined.noSameQuestion':
+      'Your alterodo is not defined because no one of your company answered the questions you answered',
+    'alterodo.undefined.noAnswer': "Your Alterodo cannot be defined because you didn't answer any validated question",
+    'alterodo.switchButton': 'And your {isAlterodo, select, true {Varieto} false {Alterodo} other {Varieto}} ?',
+    'alterodo.backToQuestions': 'Back to questions',
     'asakai.activateLive': 'Login for live mode',
     'asakai.changeTodaySet': "Change today's set",
     'asakai.finish.error': 'An error occured 🛸',

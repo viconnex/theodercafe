@@ -67,6 +67,7 @@ module.exports = {
     'react/no-string-refs': 'warn',
     'react-hooks/rules-of-hooks': 'warn',
     'react-hooks/exhaustive-deps': 'warn',
+    'react/display-name': 'off',
     complexity: 'off',
     '@typescript-eslint/prefer-optional-chain': 'warn',
     '@typescript-eslint/prefer-nullish-coalescing': 'warn',

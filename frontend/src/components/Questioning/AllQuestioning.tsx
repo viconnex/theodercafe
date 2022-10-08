@@ -188,7 +188,6 @@ const AllQuestioning = ({
   const question = filteredQuestions[questionIndex]
 
   const getValidationInformation = (questionValidation: boolean | null) => {
-    const intl = useIntl()
     if (questionValidation === null) {
       return intl.formatMessage({ id: 'allQuestioning.awaitingValidation' })
     }
