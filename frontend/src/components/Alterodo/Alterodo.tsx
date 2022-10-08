@@ -3,11 +3,22 @@ import React, { useState } from 'react'
 import MaterialButton from '@material-ui/core/Button'
 import { IconButton, Tooltip } from '@material-ui/core'
 import InfoIcon from '@material-ui/icons/Info'
+import { Alterodos, UserAlterodoResponse } from 'components/Questioning/types'
 import useStyle from './style'
 
-const getAlterodoName = (isAlterodo) => (isAlterodo ? 'Alterodo' : 'Varieto')
+const getAlterodoName = (isAlterodo: boolean) => (isAlterodo ? 'Alterodo' : 'Varieto')
 
-const Alterodo = ({ alterodo, isAlterodo, baseQuestionCount, isAsakai }) => {
+const Alterodo = ({
+  alterodo,
+  isAlterodo,
+  baseQuestionCount,
+  isAsakai,
+}: {
+  alterodo: UserAlterodoResponse
+  isAlterodo: boolean
+  baseQuestionCount: number
+  isAsakai: boolean
+}) => {
   const sameOrDifferentAnswerCount = isAlterodo
     ? alterodo.sameAnswerCount
     : alterodo.commonQuestionCount - alterodo.sameAnswerCount
@@ -56,7 +67,17 @@ const Alterodo = ({ alterodo, isAlterodo, baseQuestionCount, isAsakai }) => {
   )
 }
 
-const AlterodoWrapper = ({ alterodos, resetQuestioning, isAsakai, className }) => {
+const AlterodoWrapper = ({
+  alterodos,
+  resetQuestioning,
+  isAsakai,
+  className,
+}: {
+  alterodos: Alterodos
+  resetQuestioning: () => void
+  isAsakai: boolean
+  className: string
+}) => {
   const [alterodo, setAlterodo] = useState(alterodos.alterodo)
   const [isAlterodoDisplayed, setIsAlterodoDisplayed] = useState(true)
 
@@ -82,7 +103,6 @@ const AlterodoWrapper = ({ alterodos, resetQuestioning, isAsakai, className }) =
   return (
     <div className={className}>
       <Alterodo
-        classes={classes}
         alterodo={alterodo}
         isAlterodo={isAlterodoDisplayed}
         baseQuestionCount={alterodos.baseQuestionCount}

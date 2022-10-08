@@ -1,10 +1,7 @@
-type UserAlterodoResponse = {
+export type UserAlterodoResponse = {
   givenName: string
   familyName: string
   pictureUrl: string
-}
-
-export interface SimilarityWithUserId {
   userId: number
   commonQuestionCount: number
   sameAnswerCount: number
@@ -13,8 +10,8 @@ export interface SimilarityWithUserId {
 
 export type Alterodos = {
   baseQuestionCount: number
-  alterodo: SimilarityWithUserId & UserAlterodoResponse
-  varieto: SimilarityWithUserId & UserAlterodoResponse
+  alterodo: UserAlterodoResponse
+  varieto: UserAlterodoResponse
 }
 
 export type QuestionResponse = {
