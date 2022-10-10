@@ -66,7 +66,7 @@ const WELCOME_EMAIL_FR = `
       Sur theodercafe.com/alterodo, retrouve la personne qui a le plus de similarité avec toi. 👨‍🌾
     </p>
     <p>
-      Sur theodercafe.com/mbti, tu peux remplir et voir les profils MBTI de Theodo. 🦑
+      Sur theodercafe.com/mbti, tu peux voir les profils MBTI de Theodo. 🦑
     </p>
     <p>
       Et sur theodercafe.com/carte, retrouve les réponses des Theodoers projetées sur une carte en 2d. 🗺
@@ -85,7 +85,7 @@ const WELCOME_EMAIL_FR = `
     </p>
 
     <p>
-      Le savais-tu ? Theodercafe vient de 'The oder Cafe' en Allemand.
+      PS : Theodercafe vient de 'The oder Cafe' en Allemand.
     </p>
 
     </body></html>
