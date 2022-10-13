@@ -137,6 +137,7 @@ export class QuestionService {
             }
             return {
                 id: question.id,
+                addedByUserId: question.addedByUserId,
                 categoryId: question.categoryId,
                 isClassic: question.isClassic,
                 isValidated: question.isValidated,

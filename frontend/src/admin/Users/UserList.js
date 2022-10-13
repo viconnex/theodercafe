@@ -6,13 +6,13 @@ const UserList = (props) => {
     <List {...props}>
       <Datagrid rowClick="edit">
         <TextField source="id" />
-        <TextField source="email" label="Email" />
-        <TextField source="givenName" label="Prénom" />
-        <TextField source="familyName" label="Name" />
-        <TextField source="answerCount" label="Réponses" />
-        <BooleanField source="isActive" label="Actif ?" />
+        <TextField source="email" label="email" />
+        <TextField source="givenName" label="Firstname" />
+        <TextField source="familyName" label="Lastname" />
+        <TextField source="answerCount" label="Answers count" />
+        <BooleanField source="isActive" label="Active ?" />
         <BooleanField source="isAdmin" label="Admin ?" />
-        <BooleanField source="isLoginPending" label="Compte en attente ?" />
+        <BooleanField source="isLoginPending" label="Account pending ?" />
       </Datagrid>
     </List>
   )

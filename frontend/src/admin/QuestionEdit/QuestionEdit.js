@@ -14,13 +14,13 @@ export const QuestionEdit = (props) => (
   <Edit {...props}>
     <SimpleForm>
       <TextInput source="id" />
-      <TextInput source="option1" label="Option1" />
-      <TextInput source="option2" label="Option2" />
-      <BooleanInput source="isValidated" label="Validée ?" />
-      <BooleanInput source="isJoke" label="Blague ?" />
+      <TextInput source="option1" label="Option 1" />
+      <TextInput source="option2" label="Option 2" />
+      <BooleanInput source="isValidated" label="Validated for asakai ?" />
+      <BooleanInput source="isJoke" label="Joke ?" />
       <BooleanInput source="isJokeOnSomeone" label="Private joke" />
-      <BooleanInput source="isClassic" label="Classique ?" />
-      <ReferenceInput source="category.id" reference="categories" label="Catégorie">
+      <BooleanInput source="isClassic" label="Classic ?" />
+      <ReferenceInput source="category.id" reference="categories" label="Categories">
         <SelectInput source="name" />
       </ReferenceInput>
       <ReferenceArrayInput source="questionSetIds" reference="question_set" label="Question Sets">
