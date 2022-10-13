@@ -1,7 +1,7 @@
 import { DeleteResult, EntityRepository, Repository } from 'typeorm'
 import { QuestionSet } from 'src/questionSet/questionSet.entity'
 import { Question } from './question.entity'
-import { QuestionAdmin, QuestionUpdateBody, QuestionWithCategoryDto } from './interfaces/question.dto'
+import { QuestionUpdateBody, QuestionWithCategoryDto } from './interfaces/question.dto'
 
 function shuffle<T>(array: T[]) {
     let currentIndex = array.length,
@@ -66,28 +66,12 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     findAdminList = () => {
-        return this.query(`
-            SELECT "id", "option1", "option2", "categoryId", "isClassic", "isValidated", "isJoke", "isJokeOnSomeone", "choice1count", "choice2count", "up_votes_count" AS "upVotes", "down_votes_count" AS "downVotes" FROM questions AS q
-            LEFT JOIN (
-            SELECT
-                "questionId",
-                SUM(CASE when "choice" = 1 then 1 else 0 end) as choice1count,
-                SUM(CASE when "choice" = 2 then 1 else 0 end) as choice2count
-            FROM user_to_question_choices
-            GROUP BY "questionId"
-            ) AS u_to_q_choices
-            ON q.id = "u_to_q_choices"."questionId"
-            LEFT JOIN (
-            SELECT
-                "questionId",
-                SUM(CASE when "isUpVote" = true then 1 else 0 end) as up_votes_count,
-                SUM(CASE when "isUpVote" = false then 1 else 0 end) as down_votes_count
-            FROM user_to_question_votes
-            GROUP BY "questionId"
-            ) as u_to_q_votes
-            ON q.id = "u_to_q_votes"."questionId"
-            ORDER BY "q"."id" DESC;
-        `) as Promise<QuestionAdmin[]>
+        return this.createQueryBuilder('questions')
+            .leftJoinAndSelect('questions.questionSets', 'questionSet')
+            .leftJoinAndSelect('questions.userToQuestionChoices', 'userToQuestionChoices')
+            .leftJoinAndSelect('questions.userToQuestionVotes', 'userToQuestionVotes')
+            .orderBy('questions.id', 'DESC')
+            .getMany()
     }
 
     getAsakaiBaseQueryBuilder = ({ questionSetId }: { questionSetId: number }) => {

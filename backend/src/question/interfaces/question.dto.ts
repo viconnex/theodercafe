@@ -15,19 +15,20 @@ export class QuestionPostDTO {
     readonly questionSets: { id: number | null; label: string }[]
 }
 
-export type QuestionAdmin = {
+export type AdminRequestQuestion = {
     id: number
     categoryId: number
-    choice1count: number | null
-    choice2count: number | null
-    downVotes: number | null
     isClassic: boolean
     isValidated: boolean | null
     isJoke: boolean
     isJokeOnSomeone: boolean
     option1: string
     option2: string
-    upVotes: number | null
+    questionSetIds: number[]
+    choice1Count: number | null
+    choice2Count: number | null
+    downVoteCount: number | null
+    upVoteCount: number | null
 }
 
 export type QuestionUpdateBody = {

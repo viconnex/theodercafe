@@ -23,6 +23,9 @@ export class Question {
     category: Category | null
 
     @Column()
+    categoryId: number
+
+    @Column()
     option1: string
 
     @Column()
@@ -46,7 +49,7 @@ export class Question {
     userToQuestionChoices: UserToQuestionChoice[]
 
     @OneToMany(() => UserToQuestionVote, (userToQuestionVote) => userToQuestionVote.question, { cascade: true })
-    userToQuestionVotes: UserToQuestionChoice[]
+    userToQuestionVotes: UserToQuestionVote[]
 
     @ManyToMany(() => QuestionSet, (questionSet) => questionSet.questions)
     questionSets: QuestionSet[]

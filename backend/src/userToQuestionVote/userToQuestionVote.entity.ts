@@ -15,11 +15,11 @@ export class UserToQuestionVote {
     @Exclude()
     userId: number
 
-    @ManyToOne((type) => Question, (question) => question.userToQuestionVotes, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Question, (question) => question.userToQuestionVotes, { onDelete: 'CASCADE' })
     @Exclude()
     question: Question
 
-    @ManyToOne((type) => User, (user) => user.userToQuestionVotes, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, (user) => user.userToQuestionVotes, { onDelete: 'CASCADE' })
     @Exclude()
     user: User
 

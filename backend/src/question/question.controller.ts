@@ -69,7 +69,7 @@ export class QuestionController {
 
     @Get('')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
-    async getAdminList(@Res() res: Response): Promise<void> {
+    async getAdminList(@Res() res: Response) {
         const result = await this.questionService.findAdminList()
         res.set('Access-Control-Expose-Headers', 'X-Total-Count')
         res.set('X-Total-Count', result.length.toString())

@@ -2,6 +2,7 @@ import { BadRequestException, HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
 import { Category } from 'src/category/category.entity'
+import { QuestionSet } from 'src/questionSet/questionSet.entity'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
 import { QuestionPostDTO, QuestionUpdateBody } from './interfaces/question.dto'
@@ -109,8 +110,47 @@ export class QuestionService {
         return this.questionRepository.findAll({ questionSetId })
     }
 
-    findAdminList() {
-        return this.questionRepository.findAdminList()
+    async findAdminList() {
+        const questions = await this.questionRepository.findAdminList()
+        return questions.map((question) => {
+            let choice1Count: null | number = null
+            let choice2Count: null | number = null
+            for (const choice of question.userToQuestionChoices) {
+                if (choice.choice === 1) {
+                    choice1Count = choice1Count !== null ? choice1Count + 1 : 1
+                    choice2Count = choice2Count !== null ? choice2Count : 0
+                } else {
+                    choice2Count = choice2Count !== null ? choice2Count + 1 : 1
+                    choice1Count = choice1Count !== null ? choice1Count : 0
+                }
+            }
+            let downVoteCount: null | number = null
+            let upVoteCount: null | number = null
+            for (const vote of question.userToQuestionVotes) {
+                if (!vote.isUpVote) {
+                    downVoteCount = downVoteCount !== null ? downVoteCount + 1 : 1
+                    upVoteCount = upVoteCount !== null ? upVoteCount : 0
+                } else {
+                    upVoteCount = upVoteCount !== null ? upVoteCount + 1 : 1
+                    downVoteCount = downVoteCount !== null ? downVoteCount : 0
+                }
+            }
+            return {
+                id: question.id,
+                categoryId: question.categoryId,
+                isClassic: question.isClassic,
+                isValidated: question.isValidated,
+                isJoke: question.isJoke,
+                isJokeOnSomeone: question.isJokeOnSomeone,
+                option1: question.option1,
+                option2: question.option2,
+                questionSetIds: question.questionSets.map((questionSet: QuestionSet) => questionSet.id),
+                choice1Count,
+                choice2Count,
+                upVoteCount,
+                downVoteCount,
+            }
+        })
     }
 
     async findOne(id: string) {
