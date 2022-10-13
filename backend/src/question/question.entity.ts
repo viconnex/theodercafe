@@ -22,7 +22,7 @@ export class Question {
     @ManyToOne(() => Category, (category) => category.question)
     category: Category | null
 
-    @Column()
+    @Column({ nullable: true })
     categoryId: number
 
     @Column()
@@ -62,4 +62,7 @@ export class Question {
 
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
     addedByUser: User | null
+
+    @Column({ nullable: true })
+    addedByUserId: number | null
 }
