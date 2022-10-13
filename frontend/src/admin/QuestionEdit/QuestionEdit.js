@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  AutocompleteInput,
   BooleanInput,
   Edit,
   ReferenceArrayInput,
@@ -26,6 +27,9 @@ export const QuestionEdit = (props) => (
       <ReferenceArrayInput source="questionSetIds" reference="question_set" label="Question Sets">
         <SelectArrayInput optionText="name" />
       </ReferenceArrayInput>
+      <ReferenceInput source="addedByUserId" reference="users" label="Added by">
+        <AutocompleteInput emptyValue={null} optionText="email" />
+      </ReferenceInput>
     </SimpleForm>
   </Edit>
 )

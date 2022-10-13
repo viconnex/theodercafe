@@ -167,7 +167,7 @@ export class QuestionService {
 
     async update(id: string | number, question: QuestionUpdateBody) {
         const questionSets = await this.questionSetService.findByIds(question.questionSetIds)
-        return this.questionRepository.updateQuestion(id, question, questionSets)
+        return this.questionRepository.save({ ...question, questionSets, id: Number(id) })
     }
 
     delete(id: string): Promise<DeleteResult> {

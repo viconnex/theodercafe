@@ -33,6 +33,7 @@ export type AdminRequestQuestion = {
 
 export type QuestionUpdateBody = {
     id: number
+    addedByUserId: number
     option1: string
     option2: string
     isClassic: boolean

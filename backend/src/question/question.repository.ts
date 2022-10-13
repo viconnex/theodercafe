@@ -1,7 +1,6 @@
 import { DeleteResult, EntityRepository, Repository } from 'typeorm'
-import { QuestionSet } from 'src/questionSet/questionSet.entity'
 import { Question } from './question.entity'
-import { QuestionUpdateBody, QuestionWithCategoryDto } from './interfaces/question.dto'
+import { QuestionWithCategoryDto } from './interfaces/question.dto'
 
 function shuffle<T>(array: T[]) {
     let currentIndex = array.length,
@@ -32,10 +31,6 @@ export class QuestionRepository extends Repository<Question> {
             .leftJoinAndMapMany('questions.questionSets', 'questions.questionSets', 'question_sets')
             .where('questions.id = :id', { id })
             .getOne()
-    }
-
-    updateQuestion = async (id: string | number, question: QuestionUpdateBody, questionSets: QuestionSet[]) => {
-        return this.save({ ...question, questionSets, id: Number(id) })
     }
 
     deleteQuestion = async (id: string): Promise<DeleteResult> => {
