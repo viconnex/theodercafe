@@ -1,6 +1,8 @@
 import { DeleteResult, EntityRepository, Repository } from 'typeorm'
+import { UserToQuestionChoice } from 'src/userToQuestionChoice/userToQuestionChoice.entity'
+import { UserToQuestionVote } from 'src/userToQuestionVote/userToQuestionVote.entity'
 import { Question } from './question.entity'
-import { QuestionWithCategoryDto } from './interfaces/question.dto'
+import { QuestionWithCategoryDto, RawAdminListQuestion } from './interfaces/question.dto'
 
 function shuffle<T>(array: T[]) {
     let currentIndex = array.length,
@@ -61,14 +63,32 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     findAdminList = () => {
-        return (
-            this.createQueryBuilder('questions')
-                .leftJoinAndSelect('questions.questionSets', 'questionSet')
-                // .leftJoinAndSelect('questions.userToQuestionChoices', 'userToQuestionChoices')
-                // .leftJoinAndSelect('questions.userToQuestionVotes', 'userToQuestionVotes')
-                .orderBy('questions.id', 'DESC')
-                .getMany()
-        )
+        return this.createQueryBuilder('questions')
+            .leftJoinAndSelect('questions.questionSets', 'questionSet')
+            .leftJoinAndSelect(
+                (qb) =>
+                    qb
+                        .select('"questionId"')
+                        .addSelect(`SUM(CASE when "choice" = 1 then 1 else 0 end) as choice1count`)
+                        .addSelect(`SUM(CASE when "choice" = 2 then 1 else 0 end) as choice2count`)
+                        .from(UserToQuestionChoice, 'user_to_question_choices')
+                        .groupBy('"user_to_question_choices"."questionId"'),
+                'user_to_question_choices',
+                '"user_to_question_choices"."questionId" = "questions".id',
+            )
+            .leftJoinAndSelect(
+                (qb) =>
+                    qb
+                        .select('"questionId"')
+                        .addSelect(`SUM(CASE when "isUpVote" = true then 1 else 0 end) as upVotesCount`)
+                        .addSelect(`SUM(CASE when "isUpVote" = false then 1 else 0 end) as downVotesCount`)
+                        .from(UserToQuestionVote, 'user_to_question_votes')
+                        .groupBy('"user_to_question_votes"."questionId"'),
+                'user_to_question_votes',
+                '"user_to_question_votes"."questionId" = "questions".id',
+            )
+            .orderBy('questions.id', 'DESC')
+            .getRawMany()
     }
 
     getAsakaiBaseQueryBuilder = ({ questionSetId }: { questionSetId: number }) => {

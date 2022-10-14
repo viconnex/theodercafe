@@ -5,7 +5,7 @@ import { Category } from 'src/category/category.entity'
 import { QuestionSet } from 'src/questionSet/questionSet.entity'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
-import { QuestionPostDTO, QuestionUpdateBody } from './interfaces/question.dto'
+import { AdminListQuestion, QuestionPostDTO, QuestionUpdateBody, RawAdminListQuestion } from './interfaces/question.dto'
 import { QuestioningHistoricService } from '../questioningHistoric/questioningHistoric.service'
 import { QuestionSetService } from '../questionSet/questionSet.service'
 import { Question } from './question.entity'
@@ -111,47 +111,36 @@ export class QuestionService {
     }
 
     async findAdminList() {
-        const questions = await this.questionRepository.findAdminList()
-        return questions.map((question) => {
-            const choice1Count: null | number = null
-            const choice2Count: null | number = null
-            // for (const choice of question.userToQuestionChoices) {
-            //     if (choice.choice === 1) {
-            //         choice1Count = choice1Count !== null ? choice1Count + 1 : 1
-            //         choice2Count = choice2Count !== null ? choice2Count : 0
-            //     } else {
-            //         choice2Count = choice2Count !== null ? choice2Count + 1 : 1
-            //         choice1Count = choice1Count !== null ? choice1Count : 0
-            //     }
-            // }
-            const downVoteCount: null | number = null
-            const upVoteCount: null | number = null
-            // for (const vote of question.userToQuestionVotes) {
-            //     if (!vote.isUpVote) {
-            //         downVoteCount = downVoteCount !== null ? downVoteCount + 1 : 1
-            //         upVoteCount = upVoteCount !== null ? upVoteCount : 0
-            //     } else {
-            //         upVoteCount = upVoteCount !== null ? upVoteCount + 1 : 1
-            //         downVoteCount = downVoteCount !== null ? downVoteCount : 0
-            //     }
-            // }
-            return {
-                id: question.id,
-                addedByUserId: question.addedByUserId,
-                categoryId: question.categoryId,
-                isClassic: question.isClassic,
-                isValidated: question.isValidated,
-                isJoke: question.isJoke,
-                isJokeOnSomeone: question.isJokeOnSomeone,
-                option1: question.option1,
-                option2: question.option2,
-                questionSetIds: question.questionSets.map((questionSet: QuestionSet) => questionSet.id),
-                choice1Count,
-                choice2Count,
-                upVoteCount,
-                downVoteCount,
+        // we need to get a raw result because leftJoinAndMapOne does not seem to work to add for example choice1Count property
+        const rawQuestions = (await this.questionRepository.findAdminList()) as RawAdminListQuestion[]
+
+        const questionListById: { [id: number]: AdminListQuestion } = {}
+        for (const rawQuestion of rawQuestions) {
+            if (rawQuestion.questions_id in questionListById) {
+                if (rawQuestion.questionSet_id) {
+                    questionListById[rawQuestion.questions_id].questionSetIds.push(rawQuestion.questionSet_id)
+                }
+            } else {
+                questionListById[rawQuestion.questions_id] = {
+                    id: rawQuestion.questions_id,
+                    addedByUserId: rawQuestion.questions_addedByUserId,
+                    categoryId: rawQuestion.questions_categoryId,
+                    isClassic: rawQuestion.questions_isClassic,
+                    isValidated: rawQuestion.questions_isValidated,
+                    isJoke: rawQuestion.questions_isJoke,
+                    isJokeOnSomeone: rawQuestion.questions_isJokeOnSomeone,
+                    option1: rawQuestion.questions_option1,
+                    option2: rawQuestion.questions_option2,
+                    questionSetIds: rawQuestion.questionSet_id ? [rawQuestion.questionSet_id] : [],
+                    choice1Count: rawQuestion.choice1count,
+                    choice2Count: rawQuestion.choice2count,
+                    upVotesCount: rawQuestion.upvotescount,
+                    downVotesCount: rawQuestion.downvotescount,
+                }
             }
-        })
+        }
+
+        return Object.values(questionListById)
     }
 
     async findOne(id: string) {

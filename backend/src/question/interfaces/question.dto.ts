@@ -15,20 +15,39 @@ export class QuestionPostDTO {
     readonly questionSets: { id: number | null; label: string }[]
 }
 
-export type AdminRequestQuestion = {
+export type RawAdminListQuestion = {
+    questions_id: number
+    questions_categoryId: number | null
+    questions_option1: string
+    questions_option2: string
+    questions_isClassic: boolean
+    questions_isJokeOnSomeone: boolean
+    questions_isValidated: boolean | null
+    questions_isJoke: boolean
+    questions_addedByUserId: number | null
+    questionSet_id: number | null
+    questionSet_name: 'Theodo FR'
+    choice1count: null | number
+    choice2count: null | number
+    upvotescount: null | number
+    downvotescount: null | number
+}
+
+export type AdminListQuestion = {
     id: number
-    categoryId: number
-    isClassic: boolean
-    isValidated: boolean | null
-    isJoke: boolean
-    isJokeOnSomeone: boolean
+    categoryId: number | null
     option1: string
     option2: string
+    isClassic: boolean
+    isJokeOnSomeone: boolean
+    isValidated: boolean | null
+    isJoke: boolean
+    addedByUserId: number | null
     questionSetIds: number[]
-    choice1Count: number | null
-    choice2Count: number | null
-    downVoteCount: number | null
-    upVoteCount: number | null
+    choice1Count: null | number
+    choice2Count: null | number
+    upVotesCount: null | number
+    downVotesCount: null | number
 }
 
 export type QuestionUpdateBody = {
