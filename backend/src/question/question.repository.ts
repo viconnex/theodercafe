@@ -61,12 +61,14 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     findAdminList = () => {
-        return this.createQueryBuilder('questions')
-            .leftJoinAndSelect('questions.questionSets', 'questionSet')
-            .leftJoinAndSelect('questions.userToQuestionChoices', 'userToQuestionChoices')
-            .leftJoinAndSelect('questions.userToQuestionVotes', 'userToQuestionVotes')
-            .orderBy('questions.id', 'DESC')
-            .getMany()
+        return (
+            this.createQueryBuilder('questions')
+                .leftJoinAndSelect('questions.questionSets', 'questionSet')
+                // .leftJoinAndSelect('questions.userToQuestionChoices', 'userToQuestionChoices')
+                // .leftJoinAndSelect('questions.userToQuestionVotes', 'userToQuestionVotes')
+                .orderBy('questions.id', 'DESC')
+                .getMany()
+        )
     }
 
     getAsakaiBaseQueryBuilder = ({ questionSetId }: { questionSetId: number }) => {

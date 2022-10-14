@@ -113,28 +113,28 @@ export class QuestionService {
     async findAdminList() {
         const questions = await this.questionRepository.findAdminList()
         return questions.map((question) => {
-            let choice1Count: null | number = null
-            let choice2Count: null | number = null
-            for (const choice of question.userToQuestionChoices) {
-                if (choice.choice === 1) {
-                    choice1Count = choice1Count !== null ? choice1Count + 1 : 1
-                    choice2Count = choice2Count !== null ? choice2Count : 0
-                } else {
-                    choice2Count = choice2Count !== null ? choice2Count + 1 : 1
-                    choice1Count = choice1Count !== null ? choice1Count : 0
-                }
-            }
-            let downVoteCount: null | number = null
-            let upVoteCount: null | number = null
-            for (const vote of question.userToQuestionVotes) {
-                if (!vote.isUpVote) {
-                    downVoteCount = downVoteCount !== null ? downVoteCount + 1 : 1
-                    upVoteCount = upVoteCount !== null ? upVoteCount : 0
-                } else {
-                    upVoteCount = upVoteCount !== null ? upVoteCount + 1 : 1
-                    downVoteCount = downVoteCount !== null ? downVoteCount : 0
-                }
-            }
+            const choice1Count: null | number = null
+            const choice2Count: null | number = null
+            // for (const choice of question.userToQuestionChoices) {
+            //     if (choice.choice === 1) {
+            //         choice1Count = choice1Count !== null ? choice1Count + 1 : 1
+            //         choice2Count = choice2Count !== null ? choice2Count : 0
+            //     } else {
+            //         choice2Count = choice2Count !== null ? choice2Count + 1 : 1
+            //         choice1Count = choice1Count !== null ? choice1Count : 0
+            //     }
+            // }
+            const downVoteCount: null | number = null
+            const upVoteCount: null | number = null
+            // for (const vote of question.userToQuestionVotes) {
+            //     if (!vote.isUpVote) {
+            //         downVoteCount = downVoteCount !== null ? downVoteCount + 1 : 1
+            //         upVoteCount = upVoteCount !== null ? upVoteCount : 0
+            //     } else {
+            //         upVoteCount = upVoteCount !== null ? upVoteCount + 1 : 1
+            //         downVoteCount = downVoteCount !== null ? downVoteCount : 0
+            //     }
+            // }
             return {
                 id: question.id,
                 addedByUserId: question.addedByUserId,
