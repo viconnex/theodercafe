@@ -111,7 +111,6 @@ export class QuestionService {
     }
 
     async findAdminList() {
-        // we need to get a raw result because leftJoinAndMapOne does not seem to work to add for example choice1Count property
         const rawQuestions = (await this.questionRepository.findAdminList()) as RawAdminListQuestion[]
 
         const questionListById: { [id: number]: AdminListQuestion } = {}
@@ -140,7 +139,7 @@ export class QuestionService {
             }
         }
 
-        return Object.values(questionListById)
+        return Object.values(questionListById).reverse() // object keys are sorted alphabetically so reverse() makes order by id desc
     }
 
     async findOne(id: string) {

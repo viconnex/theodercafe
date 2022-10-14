@@ -63,6 +63,8 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     findAdminList = () => {
+        // choice1count and choice2count aggregation are computed in sql because it'd take too long to load UserToQuestionChoices entities and compute the result in js
+        // we need to get a raw result because leftJoinAndMapOne does not seem to work if we want to add choice1Count property to Question entity
         return this.createQueryBuilder('questions')
             .leftJoinAndSelect('questions.questionSets', 'questionSet')
             .leftJoinAndSelect(
@@ -87,7 +89,6 @@ export class QuestionRepository extends Repository<Question> {
                 'user_to_question_votes',
                 '"user_to_question_votes"."questionId" = "questions".id',
             )
-            .orderBy('questions.id', 'DESC')
             .getRawMany()
     }
 
