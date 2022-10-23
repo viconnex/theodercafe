@@ -1,4 +1,5 @@
 steps:
+  # backend steps
   - name: gcr.io/cloud-builders/docker
     args:
       - build
@@ -29,20 +30,24 @@ steps:
     id: Deploy backend
     entrypoint: gcloud
 
-  - name: gcr.io/cloud-builders/npm:node-16.18.0
-    args: [install]
-    dir: "frontend"
+  # frontend steps
+  - name: node:16.18.0
     id: Install frontend
-  - name: gcr.io/cloud-builders/npm:node-16.18.0
     dir: "frontend"
+    entrypoint: npm
+    args: ["install"]
+  - name: node:16.18.0
+    id: Create frontend env
+    dir: "frontend"
+    entrypoint: npm
     args: ["run", "create-env"]
     env:
       - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
-    id: Create frontend env
-  - name: gcr.io/cloud-builders/npm:node-16.18.0
-    args: [run, build]
-    dir: "frontend"
+  - name: node:16.18.0
     id: Build frontend
+    dir: "frontend"
+    entrypoint: npm
+    args: [run, build]
   - name: "gcr.io/cloud-builders/gcloud"
     dir: "frontend"
     entrypoint: bash
