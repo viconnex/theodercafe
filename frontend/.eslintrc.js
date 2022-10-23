@@ -5,15 +5,14 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'plugin:react/recommended',
-    'eslint:recommended',
+    // "airbnb-typescript",
+    // "airbnb/hooks",
     'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'react-app',
+    'plugin:jest/recommended',
+    'prettier',
     'plugin:prettier/recommended',
-    'prettier/@typescript-eslint',
-    'prettier/react',
   ],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2019,
     es6: true,
@@ -21,7 +20,7 @@ module.exports = {
     node: true,
     project: 'tsconfig.json',
   },
-  plugins: ['prettier', 'react', 'import'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest', 'import'],
   rules: {
     'prettier/prettier': 'error',
     'no-console': 'warn',
@@ -91,5 +90,4 @@ module.exports = {
       version: 'detect',
     },
   },
-  parser: '@typescript-eslint/parser',
 }
