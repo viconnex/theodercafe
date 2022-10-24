@@ -49,6 +49,7 @@ export interface AsakaiEmailDTO {
     email: string
     asakaiChoices?: ChoicesByQuestion
     alterodoUserId?: number
+    varietoUserId?: number
     addedByUserId?: number | null
     userLocale: UserLocale
 }

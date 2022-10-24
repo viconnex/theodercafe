@@ -8,7 +8,7 @@ import { useSnackbar } from 'notistack'
 import { getLocale } from 'languages/messages'
 import useStyles from './style'
 
-const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
+const EmailSnackbar = ({ asakaiChoices, alterodoUserId, varietoUserId, connectedUserId }) => {
   const classes = useStyles()
   const [email, setEmail] = useState('')
   const [isSendingEmail, setIsSendingEmail] = useState(false)
@@ -23,7 +23,7 @@ const EmailSnackbar = ({ asakaiChoices, alterodoUserId, connectedUserId }) => {
     event.preventDefault()
     const uri = `/${USER_TO_QUESTIONS_CHOICES_URI}/${ASAKAI_EMAIL_PATH}`
     const userLocale = getLocale()
-    const body = { email, asakaiChoices, alterodoUserId, addedByUserId: connectedUserId, userLocale }
+    const body = { email, asakaiChoices, alterodoUserId, varietoUserId, addedByUserId: connectedUserId, userLocale }
     setIsSendingEmail(true)
     try {
       const response = await fetchRequest({ uri, method: 'POST', body })

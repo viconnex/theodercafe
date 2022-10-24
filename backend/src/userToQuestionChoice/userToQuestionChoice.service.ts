@@ -20,6 +20,7 @@ import {
 } from './userToQuestionChoice.types'
 
 import { UserService } from '../user/user.service'
+import { UserRepository } from '../user/user.repository'
 import { createUsersChoicesMatrix, getBestAlterodos } from './userToQuestionChoice.helpers'
 
 // eslint-disable-next-line
@@ -32,6 +33,8 @@ export class UserToQuestionChoiceService {
         private readonly userToQuestionChoiceRepository: UserToQuestionChoiceRepository,
         private readonly userService: UserService,
         private readonly questionService: QuestionService,
+        @InjectRepository(UserRepository)
+        private readonly userRepository: UserRepository,
     ) {}
 
     async saveChoice(questionId: number, userId: number, choice: Choice): Promise<UserToQuestionChoice> {
@@ -158,8 +161,17 @@ export class UserToQuestionChoiceService {
         return usersMap
     }
 
-    async onNewAsakaiEmail({ email, addedByUserId, asakaiChoices, alterodoUserId, userLocale }: AsakaiEmailDTO) {
+    async onNewAsakaiEmail({
+        email,
+        addedByUserId,
+        asakaiChoices,
+        alterodoUserId,
+        varietoUserId,
+        userLocale,
+    }: AsakaiEmailDTO) {
         const createUserReponse = await this.userService.createUserWithEmail(email, addedByUserId, alterodoUserId)
+
+        const asakaiVarietoUser = (await this.userRepository.findOne({ id: varietoUserId })) ?? null
 
         if (!createUserReponse) {
             return
@@ -179,6 +191,7 @@ export class UserToQuestionChoiceService {
         await this.userService.sendAlterodoLunchProposalEmail({
             newUserEmail: newUser.email,
             alterodoUser: asakaiAlterodoUser,
+            varietoUser: asakaiVarietoUser,
             coachUserEmail: addedByUser?.email,
             userLocale,
         })

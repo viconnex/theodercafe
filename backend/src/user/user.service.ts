@@ -180,11 +180,13 @@ export class UserService {
     async sendAlterodoLunchProposalEmail({
         newUserEmail,
         alterodoUser,
+        varietoUser,
         coachUserEmail,
         userLocale,
     }: {
         newUserEmail?: string
         alterodoUser: User | null
+        varietoUser: User | null
         coachUserEmail?: string
         userLocale: UserLocale
     }) {
@@ -196,6 +198,9 @@ export class UserService {
         }
         if (alterodoUser?.email) {
             recipients.push(alterodoUser.email)
+        }
+        if (varietoUser?.email) {
+            recipients.push(varietoUser.email)
         }
         if (coachUserEmail) {
             cc.push(coachUserEmail)
