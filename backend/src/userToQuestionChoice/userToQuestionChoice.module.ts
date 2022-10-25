@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { UserRepository } from '../user/user.repository'
 import { UserToQuestionChoice } from './userToQuestionChoice.entity'
 import { UserToQuestionChoiceRepository } from './userToQuestionChoice.repository'
 import { UserToQuestionChoiceService } from './userToQuestionChoice.service'
@@ -10,7 +11,7 @@ import { QuestionModule } from '../question/question.module'
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([UserToQuestionChoice, UserToQuestionChoiceRepository]),
+        TypeOrmModule.forFeature([UserToQuestionChoice, UserToQuestionChoiceRepository, UserRepository]),
         UserModule,
         UserToQuestionVoteModule,
         QuestionModule,

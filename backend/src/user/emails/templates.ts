@@ -3,7 +3,7 @@ import { UserLocale } from 'src/user/user.types'
 const ALTERODO_LUNCH_FR = `
 <html><body>
     <p>
-      Félicitations, vous êtes les Alterodos du jour !
+      Félicitations, vous êtes les Alterodos et Varietos du jour !
     </p>
     <p>
       Comme le veut la tradition, un déjeuner est à organiser pour faire plus ample connaissance.
@@ -27,7 +27,7 @@ const ALTERODO_LUNCH_FR = `
 const ALTERODO_LUNCH_EN = `
 <html><body>
     <p>
-      Congrats, you are today's Alterodos !
+      Congrats, you are today's Alterodos and Varietos !
     </p>
     <p>
       As the tradition requires, a lunch is to be organized to get to know each other better.

@@ -344,6 +344,7 @@ const AsakaiQuestioning = ({
                   connectedUserId={user?.id}
                   asakaiChoices={asakaiChoices}
                   alterodoUserId={alterodos?.alterodo.userId}
+                  varietoUserId={alterodos?.varieto.userId}
                 />
               </div>
             )}
