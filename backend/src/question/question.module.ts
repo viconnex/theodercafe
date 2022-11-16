@@ -7,12 +7,14 @@ import { Question } from './question.entity'
 import { QuestionService } from './question.service'
 import { QuestioningHistoricModule } from '../questioningHistoric/questioningHistoric.module'
 import { QuestionSetModule } from '../questionSet/questionSet.module'
+import { UserToQuestionVoteModule } from '../userToQuestionVote/userToQuestionVote.module'
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Question, QuestionRepository, CategoryRepository]),
         QuestioningHistoricModule,
         QuestionSetModule,
+        UserToQuestionVoteModule,
     ],
     controllers: [QuestionController],
     providers: [QuestionService],

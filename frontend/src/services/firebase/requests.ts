@@ -35,42 +35,46 @@ export const onAnswerChange = ({
   questionId,
   setUsersAnswers,
   setUsersVotes,
+  initialUserVotes,
 }: {
   questioningId: number
   questionId: number
   setUsersAnswers: (answers: UsersAnswers) => void
   setUsersVotes: (votes: UsersVotes) => void
+  initialUserVotes: Record<string, UpVote>
 }) => {
   const answersByUserId: Record<string, Choice> = {}
-  const votesByUserId: Record<string, UpVote> = {}
+  const votesByUserId: Record<string, UpVote> = initialUserVotes
+  let isFirstRun = true
 
   return db.collection(`questioning/${questioningId}/questions/${questionId}/users`).onSnapshot(function (snapshot) {
     let needAnswerUpdate = 0
-    let needVotesUpdate = 0
+    let needVotesUpdate = isFirstRun ? 1 : 0
+    isFirstRun = false
 
     snapshot.docChanges().forEach(function (change) {
-      const id = change.doc.id
+      const userId = change.doc.id
       const choice = change.doc.data()?.choice as Choice
       const vote = (change.doc.data()?.upVote ?? null) as UpVote
 
-      if (id in answersByUserId) {
-        if (answersByUserId[id] !== choice) {
-          answersByUserId[id] = choice
+      if (userId in answersByUserId) {
+        if (answersByUserId[userId] !== choice) {
+          answersByUserId[userId] = choice
           needAnswerUpdate += 1
         }
       } else if (choice === 1 || choice === 2) {
         needAnswerUpdate += 1
-        answersByUserId[id] = choice
+        answersByUserId[userId] = choice
       }
 
-      if (id in votesByUserId) {
-        if (votesByUserId[id] !== vote) {
-          votesByUserId[id] = vote
+      if (userId in votesByUserId) {
+        if (votesByUserId[userId] !== vote) {
+          votesByUserId[userId] = vote
           needVotesUpdate += 1
         }
       } else if (vote !== null) {
         needVotesUpdate += 1
-        votesByUserId[id] = vote
+        votesByUserId[userId] = vote
       }
     })
     if (needAnswerUpdate > 0) {
@@ -82,12 +86,12 @@ export const onAnswerChange = ({
       setUsersAnswers(answers)
     }
     if (needVotesUpdate > 0) {
-      const votes = { upVotes: 0, downVotes: 0 }
+      const votes: UsersVotes = { upVotes: 0, downVotes: 0 }
       for (const userId in votesByUserId) {
         if (null === votesByUserId[userId]) {
           continue
         }
-        const voteField = `${votesByUserId[userId] ? 'up' : 'down'}Votes` as keyof typeof votes
+        const voteField = `${votesByUserId[userId] ? 'up' : 'down'}Votes` as 'upVotes' | 'downVotes'
         votes[voteField] += 1
       }
       setUsersVotes(votes)

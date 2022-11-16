@@ -1,4 +1,12 @@
-import { Filters, QuestionResponse, QuestionsPolls } from 'components/Questioning/types'
+import {
+  AsakaiQuestionResponse,
+  CurrentUserVotes,
+  Filters,
+  QuestionResponse,
+  QuestionsPolls,
+} from 'components/Questioning/types'
+import { useEffect, useState } from 'react'
+import { User } from 'services/authentication'
 import { MBTI_CATEGORY_NAME } from 'utils/constants/questionConstants'
 
 const isNotAnsweredQuestion = (
@@ -56,3 +64,25 @@ export const filterQuestion =
 
     return true
   }
+
+export const useInitialCurrentUserVotes = ({
+  questions,
+  user,
+}: {
+  questions: AsakaiQuestionResponse[] | null
+  user: User | null
+}) => {
+  const [currentUserVotes, setCurrentUserVotes] = useState<CurrentUserVotes | null>(null)
+  useEffect(() => {
+    if (currentUserVotes || !questions || !user) {
+      return
+    }
+    const votes: CurrentUserVotes = {}
+    for (const question of questions) {
+      votes[question.id] = question.initialUsersVotes[user.id]
+    }
+    setCurrentUserVotes(votes)
+  }, [currentUserVotes, questions, user])
+
+  return { currentUserVotes, setCurrentUserVotes }
+}

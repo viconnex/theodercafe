@@ -11,9 +11,9 @@ import { LoginDialog } from 'components/Login'
 import {
   Alterodos,
   AsakaiChoices,
-  AsakaiVotes,
+  AsakaiQuestionResponse,
   Choice,
-  QuestionResponse,
+  UpVote,
   UsersAnswers,
   UsersPictures,
   UsersVotes,
@@ -26,6 +26,7 @@ import { ModeSelector } from 'components/ModeSelector'
 import Voter from 'components/Voter/Voter'
 import { computeDefaultQuestionSet, QuestionSet } from 'utils/questionSet'
 
+import { useInitialCurrentUserVotes } from 'components/Questioning/utils'
 import useStyle from './style'
 
 export const IS_LIVE_ACTIVATED_BY_DEFAULT = true
@@ -40,24 +41,24 @@ const QuestionContent = ({
   questionIndex,
   usersAnswers,
   usersVotes,
+  currentUserVote,
   asakaiChoices,
   changeQuestion,
   usersPictures,
-  asakaiVotes,
 }: {
   isLoading: boolean
   chose: (questionId: number, choice: Choice) => void
   vote: (questionId: number, vote: boolean) => void
-  questions: QuestionResponse[]
-  question: QuestionResponse | undefined
+  questions: AsakaiQuestionResponse[] | null
+  question: AsakaiQuestionResponse | undefined
   user: User | null
   questionIndex: number
   usersAnswers: UsersAnswers | null
   usersVotes: UsersVotes | null
+  currentUserVote: UpVote
   asakaiChoices: AsakaiChoices
   changeQuestion: (increment: number) => Promise<void>
   usersPictures: UsersPictures | null
-  asakaiVotes: AsakaiVotes
 }) => {
   const classes = useStyle()
   if (!question || isLoading) {
@@ -66,7 +67,7 @@ const QuestionContent = ({
   const choice = asakaiChoices[question.id]
 
   const questionVote = {
-    isUserUpVote: asakaiVotes[question.id] ?? null,
+    isUserUpVote: currentUserVote,
     upVoteCount: usersVotes?.upVotes ?? 0,
     downVoteCount: usersVotes?.downVotes ?? 0,
   }
@@ -89,7 +90,7 @@ const QuestionContent = ({
         hideRightArrow={!choice}
         questionIndex={questionIndex}
         changeQuestion={changeQuestion}
-        questionLength={questions.length}
+        questionLength={questions?.length ?? 0}
       />
       <Voter questionId={question.id} questionVote={questionVote} vote={vote} />
     </React.Fragment>
@@ -107,11 +108,10 @@ const AsakaiQuestioning = ({
   questionSets: QuestionSet[] | null
   isDataLoading: boolean
 }) => {
-  const [questions, setQuestions] = useState<QuestionResponse[]>([])
+  const [questions, setQuestions] = useState<AsakaiQuestionResponse[] | null>(null)
   const [questioningId, setQuestioningId] = useState<null | number>(null)
   const [questionIndex, setQuestionIndex] = useState(0)
   const [asakaiChoices, setAsakaiChoices] = useState<AsakaiChoices>({})
-  const [asakaiVotes, setAsakaiVotes] = useState<AsakaiVotes>({})
   const [alterodos, setAlterodos] = useState<Alterodos | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isCoachMode, setIsCoachMode] = useState(false)
@@ -120,9 +120,10 @@ const AsakaiQuestioning = ({
   const [usersVotes, setUsersVotes] = useState<UsersVotes | null>(null)
   const [openLoginDialog, setOpenLoginDialog] = useState(false)
   const { enqueueSnackbar } = useSnackbar()
+  const { currentUserVotes, setCurrentUserVotes } = useInitialCurrentUserVotes({ questions, user })
   const intl = useIntl()
 
-  const question = questions[questionIndex]
+  const question = questions?.[questionIndex] ?? undefined
 
   const fetchAndSetQuestions = async (changeQuestioning: boolean) => {
     setIsLoading(true)
@@ -151,7 +152,7 @@ const AsakaiQuestioning = ({
     }
     const { questioningId, questions } = (await response.json()) as {
       questioningId: number
-      questions: QuestionResponse[]
+      questions: AsakaiQuestionResponse[]
     }
     setIsLoading(false)
     setQuestioningId(questioningId)
@@ -175,6 +176,7 @@ const AsakaiQuestioning = ({
     const unsubscribe = onAnswerChange({
       questioningId,
       questionId: question.id,
+      initialUserVotes: question.initialUsersVotes,
       setUsersAnswers,
       setUsersVotes,
     })
@@ -201,10 +203,10 @@ const AsakaiQuestioning = ({
     if (index < 0) {
       index = 0
     }
-    if (index < questions.length && index >= 0) {
+    if (index < (questions?.length ?? 0) && index >= 0) {
       setQuestionIndex(index)
     }
-    if (index === questions.length) {
+    if (index === questions?.length) {
       if (!user) {
         setQuestionIndex(0)
       } else {
@@ -280,10 +282,13 @@ const AsakaiQuestioning = ({
     if (!user) {
       return setOpenLoginDialog(true)
     }
-    const upVote = asakaiVotes[questionId] === vote ? null : vote
-    const votes = { ...asakaiVotes }
-    votes[questionId] = upVote
-    setAsakaiVotes(votes)
+    if (!currentUserVotes) {
+      return
+    }
+    const upVote = currentUserVotes?.[questionId] === vote ? null : vote
+    const newCurrentUserVotes = { ...currentUserVotes }
+    newCurrentUserVotes[questionId] = upVote
+    setCurrentUserVotes(newCurrentUserVotes)
 
     if (firebaseUid) {
       void answerQuestioning({
@@ -330,8 +335,8 @@ const AsakaiQuestioning = ({
             questionIndex={questionIndex}
             usersAnswers={usersAnswers}
             usersVotes={usersVotes}
+            currentUserVote={currentUserVotes?.[question?.id ?? 0] ?? null}
             asakaiChoices={asakaiChoices}
-            asakaiVotes={asakaiVotes}
             changeQuestion={changeQuestion}
             usersPictures={usersPictures}
             vote={vote}

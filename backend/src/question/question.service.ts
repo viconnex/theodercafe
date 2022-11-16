@@ -2,7 +2,6 @@ import { BadRequestException, HttpException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DeepPartial, DeleteResult, FindManyOptions } from 'typeorm'
 import { Category } from 'src/category/category.entity'
-import { QuestionSet } from 'src/questionSet/questionSet.entity'
 import { QuestionRepository } from './question.repository'
 import { CategoryRepository } from '../category/category.repository'
 import { AdminListQuestion, QuestionPostDTO, QuestionUpdateBody, RawAdminListQuestion } from './interfaces/question.dto'
@@ -10,6 +9,7 @@ import { QuestioningHistoricService } from '../questioningHistoric/questioningHi
 import { QuestionSetService } from '../questionSet/questionSet.service'
 import { Question } from './question.entity'
 import { User } from '../user/user.entity'
+import { UserToQuestionVoteService } from '../userToQuestionVote/userToQuestionVote.service'
 
 @Injectable()
 export class QuestionService {
@@ -18,6 +18,7 @@ export class QuestionService {
         @InjectRepository(CategoryRepository) private readonly categoryRepository: CategoryRepository,
         private readonly questioningHistoricService: QuestioningHistoricService,
         private readonly questionSetService: QuestionSetService,
+        private readonly userToQuestionVoteService: UserToQuestionVoteService,
     ) {}
 
     async create(questionBody: QuestionPostDTO, addedByUser: User): Promise<Question> {
@@ -57,6 +58,51 @@ export class QuestionService {
         const question: Question = this.questionRepository.create(questionPayload)
 
         return this.questionRepository.save(question)
+    }
+
+    async findAsakaiSetWithVotes({
+        maxNumber,
+        findFromHistoricIfExists,
+        questionSetId,
+    }: {
+        maxNumber: number
+        findFromHistoricIfExists: boolean
+        questionSetId: number
+    }) {
+        const { questions, questioningId } = await this.findAsakaiSet({
+            maxNumber,
+            findFromHistoricIfExists,
+            questionSetId,
+        })
+
+        const userVotesByQuestionId = await this.getVotesByQuestionId(questions.map((question) => question.id))
+
+        const questionWithVotes = questions.map((question) => ({
+            ...question,
+            initialUsersVotes: userVotesByQuestionId[question.id] ?? {},
+        }))
+
+        return {
+            questions: questionWithVotes,
+            questioningId,
+        }
+    }
+    async getVotesByQuestionId(questionIds: number[]) {
+        const userToQuestionVotes = await this.userToQuestionVoteService.getUserToQuestionVotesForQuestionIds(
+            questionIds,
+        )
+        const userVotesByQuestionId: Record<string, Record<string, boolean>> = {}
+        for (const userToQuestionVote of userToQuestionVotes) {
+            if (!userVotesByQuestionId[userToQuestionVote.questionId]) {
+                userVotesByQuestionId[userToQuestionVote.questionId] = {
+                    [userToQuestionVote.userId]: userToQuestionVote.isUpVote,
+                }
+            } else {
+                userVotesByQuestionId[userToQuestionVote.questionId][userToQuestionVote.userId] =
+                    userToQuestionVote.isUpVote
+            }
+        }
+        return userVotesByQuestionId
     }
 
     async findAsakaiSet({

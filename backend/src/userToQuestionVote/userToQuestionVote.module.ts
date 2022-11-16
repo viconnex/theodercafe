@@ -9,5 +9,6 @@ import { UserToQuestionVoteController } from './userToQuestionVote.controller'
     imports: [TypeOrmModule.forFeature([UserToQuestionVote, UserToQuestionVoteRepository])],
     providers: [UserToQuestionVoteService],
     controllers: [UserToQuestionVoteController],
+    exports: [UserToQuestionVoteService],
 })
 export class UserToQuestionVoteModule {}

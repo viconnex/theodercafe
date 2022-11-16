@@ -40,7 +40,7 @@ export class QuestionController {
             throw new BadRequestException('questionSetId is required')
         }
 
-        return this.questionService.findAsakaiSet({
+        return this.questionService.findAsakaiSetWithVotes({
             maxNumber,
             findFromHistoricIfExists: true,
             questionSetId: query.questionSetId,
@@ -55,7 +55,7 @@ export class QuestionController {
             throw new BadRequestException('questionSetId is required')
         }
 
-        return this.questionService.findAsakaiSet({
+        return this.questionService.findAsakaiSetWithVotes({
             maxNumber,
             findFromHistoricIfExists: false,
             questionSetId: query.questionSetId,

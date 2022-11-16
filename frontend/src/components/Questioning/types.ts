@@ -29,16 +29,21 @@ export type UsersAnswers = {
   choice2: number[]
 }
 
-export type UsersVotes = {
-  downVotes: number
-  upVotes: number
-}
-
 export type Choice = 1 | 2
+
 export type UpVote = boolean | null
 
+export type AsakaiQuestionResponse = QuestionResponse & {
+  initialUsersVotes: Record<string, UpVote>
+}
+
+export type UsersVotes = {
+  upVotes: number
+  downVotes: number
+}
+
 export type AsakaiChoices = { [questionId: number]: Choice }
-export type AsakaiVotes = { [questionId: number]: UpVote }
+export type CurrentUserVotes = { [questionId: number]: UpVote }
 
 export type QuestionPoll = {
   choice1UserIds: number[]

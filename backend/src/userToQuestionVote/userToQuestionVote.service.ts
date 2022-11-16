@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { DeleteResult } from 'typeorm'
+import { DeleteResult, In } from 'typeorm'
 import { FormattedQuestionVote } from 'src/userToQuestionVote/types'
 import { UserToQuestionVoteRepository } from './userToQuestionVote.repository'
 import { UserToQuestionVote } from './userToQuestionVote.entity'
@@ -56,5 +56,9 @@ export class UserToQuestionVoteService {
         })
 
         return questionVotesByQuestionId
+    }
+
+    async getUserToQuestionVotesForQuestionIds(questionIds: number[]) {
+        return this.userToQuestionVoteRepository.find({ questionId: In(questionIds) })
     }
 }
