@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.REACT_APP_BACKEND_URL ?? 'https://api.theodercafe.com'
+export const API_BASE_URL = process.env.REACT_APP_BACKEND_URL
 
 export const GOOGLE_AUTH_URI = '/auth/google'
 
