@@ -5,12 +5,25 @@ Fais tes choix sur [theodercafe.com](https://theodercafe.com)
 ## Install
 
 ### Backend
-
 ```
 cd backend && cp .env.dev.dist .env.dev && cd ..
 docker-compose up
 docker exec -it backend sh
 npm run migration:run
+```
+
+### Data
+Connect to database :
+```
+docker-compose exec postgresql psql -d theodercafe -U the
+```
+Add `Theodo FR` question_set :
+```
+INSERT INTO question_set (name) values ('Theodo FR'), ('Theodo UK'), ('Theodo US');
+```
+Add an admin user. Other fields will be filled when you authenticate with you google account. Replace `{your_email}` by a google account you own email (ex: `'the@cafe.com'`).
+```
+INSERT INTO "users" (email, "isAdmin", "selectedQuestionSetId") VALUES ({your_email}, true, 1);
 ```
 
 ### Frontend
@@ -22,7 +35,7 @@ npm install
 npm run start
 ```
 
-### Authentication
+### Add a Google OAuth Client
 
 Authentication is performed via Google OAuth (see Authentication Flow schema below). To use OAuth locally, you need to:
 
@@ -35,24 +48,26 @@ Authentication is performed via Google OAuth (see Authentication Flow schema bel
 
 Docs : [passport-google-oauth20 library](http://www.passportjs.org/packages/passport-google-oauth20/)
 
-### Data
+### Install check 🤞
+Login from the frontend: `http://localhost:3000/login`.
 
-Create a user from the frontend with Google Login.
+Use the google account email you used above.
 
-Then add the role admin to the user:
+You should be able to see http://localhost:3000/admin#/questions page.
 
-```
-update "users" set "isAdmin"=true where id = 1;
-```
+## Features
 
-Logout, Login, you should be able to see http://localhost:3000/admin#/questions page
+- Add questions from frontend with the '+' button on bottom right.
+- Mark them as `Validated for Asakai` from [the admin panel](http://localhost:3000/admin#/questions).
 
-Add question and validate them via the admin panel to be able to see them on Live Mode.
+### Live Mode
+On the homepage, toggle `Live Mode` to ON. You should see a set of (max) 10 questions randomly chosen among validated questions (the Live Mode set). This set depends of the `Question Set` chosen by the user. The set is initialized every day by the first user asking for it. Or by an admin clicking `changeTodaySet` button.
 
-## Backlog
+On the admin panel, mark a question as `Classic` : the question will necessary be part of the `Live Mode` set.
 
-- In asakai mode, merge postgre db votes with live firebase votes
-- Display a single url for each question so they can be shared
+### All questions mode
+If you Toggle `Live Mode` to OFF, you may filter questions with the FILTRES menu.
+
 
 ## Database
 
@@ -71,3 +86,32 @@ Add question and validate them via the admin panel to be able to see them on Liv
 ### Authentication flow
 
 <img width="963" alt="image" src="https://user-images.githubusercontent.com/22373097/197247676-c044ea17-f0c1-414a-a86e-6ae8636a0fd2.png">
+
+## Firebase setup
+
+To run Live Mode features locally, you need to :
+- add a [firebase project](https://console.firebase.google.com/)
+- enable `Firestore Database` on this project.
+- in the project settings -> service accounts, create a Firebase Admin SDK
+  - copy the firebase service account email and paste it into the `FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL` variable of your .env.dev
+  - Generate a new private key and paste the `secret_key` value into variable. For example:
+
+  ```
+  FIREBASE_SERVICE_ACCOUNT_CLIENT_EMAIL="firebase-adminsdk-xxx@theodercafe.iam.gserviceaccount.com"
+  FIREBASE_SERVICE_ACCOUNT_PRIVATE_KEY='-----BEGIN PRIVATE KEY-----\nMIIEuaIBADANBgkq...\n-----END PRIVATE KEY-----\n'
+  ```
+- in the Cloud Firestore -> Rules, paste the following rules. It allows any authenticated to read other users' answers. But a user may only modify the answer corresponding to its `userId`.
+
+  ```
+  rules_version = '2';
+  service cloud.firestore {
+    match /databases/{database}/documents {
+      match /questioning/{questioningId}/questions/{questionId}/users/{userId}{
+        allow write: if request.auth != null && request.auth.uid == userId;
+      }
+      match /questioning/{questioningId}/questions/{questionId}/{users=**}{
+        allow read: if request.auth != null;
+      }
+    }
+  }
+  ```
