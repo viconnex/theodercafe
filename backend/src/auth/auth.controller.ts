@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common'
+import { Controller, Get, HttpException, Req, Res, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { JwtPayload } from 'src/auth/auth.types'
 import { ValidatedUser } from './google.strategy'
@@ -19,16 +19,21 @@ export class AuthController {
     googleLoginCallback(@Req() req: { user?: ValidatedUser }, @Res() res): void {
         // handles the Google OAuth2 callback
         const validatedUser = req.user
-
-        if (validatedUser) {
-            res.redirect(
-                `${process.env.FRONT_BASE_URL}?login=success&jwt_token=${
-                    validatedUser.jwt
-                }&firebase_token=${createFirebaseJWT(validatedUser.id)}`,
-            )
-        } else {
+        if (!validatedUser) {
             res.redirect(`${process.env.FRONT_BASE_URL}?login=failure`)
+            return
         }
+        let redirectUrl = `${process.env.FRONT_BASE_URL}?login=success&jwt_token=${validatedUser.jwt}`
+        let firebaseToken: null | string = null
+        try {
+            firebaseToken = createFirebaseJWT(validatedUser.id)
+        } catch (e) {
+            console.log("Couldn't create firebase token", e)
+        }
+        if (firebaseToken) {
+            redirectUrl += `&firebase_token=${firebaseToken}`
+        }
+        res.redirect(redirectUrl)
     }
 
     @Get('protected')
@@ -40,6 +45,10 @@ export class AuthController {
     @Get('refresh_firebase_token')
     @UseGuards(AuthGuard(USER_STRATEGY))
     createUserFirebaseToken(@Req() req: { user: JwtPayload }) {
-        return { token: createFirebaseJWT(req.user.id) }
+        try {
+            return { token: createFirebaseJWT(req.user.id) }
+        } catch (e) {
+            throw new HttpException("Couldn't create firebase token", 500)
+        }
     }
 }
