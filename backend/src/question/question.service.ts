@@ -141,6 +141,10 @@ export class QuestionService {
             questionSetId,
         })
 
+        if (asakaiSet.length === 0) {
+            throw new Error('No questions found for asakai set')
+        }
+
         const questioning = await this.questioningHistoricService.saveNew({
             questionIds: asakaiSet.map((question): string => question.id.toString()),
             questionSet,
