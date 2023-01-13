@@ -115,3 +115,5 @@ To run Live Mode features locally, you need to :
     }
   }
   ```
+
+  ## Database Entities

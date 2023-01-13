@@ -30,8 +30,12 @@ export class QuestionSetService {
         return questionSets
     }
 
-    async findFromName(name: PresetQuestionSet) {
-        return await this.questionSetRepository.findOne({ name })
+    async findOrCreateFromName(name: PresetQuestionSet) {
+        const existingQuestionSet = await this.questionSetRepository.findOne({ name })
+        if (existingQuestionSet) {
+            return existingQuestionSet
+        }
+        return this.questionSetRepository.save({ name })
     }
 
     async findOneOrFail(questionSetId: number) {

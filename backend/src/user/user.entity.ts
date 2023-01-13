@@ -53,7 +53,7 @@ export class User {
     @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
     asakaiAlterodoUser: User | null
 
-    @ManyToOne(() => QuestionSet, { onDelete: 'SET NULL', nullable: true })
+    @ManyToOne(() => QuestionSet, { nullable: false })
     selectedQuestionSet: QuestionSet | null
 
     @Column({ default: false })

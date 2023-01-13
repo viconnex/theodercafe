@@ -59,7 +59,9 @@ export class UserService {
             company: getCompanyFromEmail(email),
             isAdmin: false,
             ...this.getUserInfoFromProfile(profile),
-            selectedQuestionSet: await this.questionSetService.findFromName(getPresetQuestionSetFromEmail(email)),
+            selectedQuestionSet: await this.questionSetService.findOrCreateFromName(
+                getPresetQuestionSetFromEmail(email),
+            ),
         })
     }
 
@@ -153,7 +155,9 @@ export class UserService {
             addedByUser,
             asakaiAlterodoUser,
             isLoginPending: true,
-            selectedQuestionSet: await this.questionSetService.findFromName(getPresetQuestionSetFromEmail(email)),
+            selectedQuestionSet: await this.questionSetService.findOrCreateFromName(
+                getPresetQuestionSetFromEmail(email),
+            ),
         })
 
         return { newUser, addedByUser, asakaiAlterodoUser }
