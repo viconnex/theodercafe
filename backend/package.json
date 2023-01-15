@@ -16,7 +16,7 @@
         "migration:revert": "ts-node node_modules/.bin/typeorm migration:revert",
         "migration:run": "ts-node node_modules/.bin/typeorm migration:run",
         "migration:create": "ts-node node_modules/.bin/typeorm migration:create -n",
-        "start:dev": "nest start --watch",
+        "start:dev": "npm run migration:run && nest start --watch",
         "start:debug": "nest start --debug 0.0.0.0:9229 --watch",
         "start": "nest start -p ./tsconfig.json src/main.ts",
         "prestart:prod": "npm run migration:run",

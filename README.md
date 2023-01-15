@@ -8,22 +8,6 @@ Fais tes choix sur [theodercafe.com](https://theodercafe.com)
 ```
 cd backend && cp .env.dev.dist .env.dev && cd ..
 docker-compose up
-docker exec -it backend sh
-npm run migration:run
-```
-
-### Data
-Connect to database :
-```
-docker-compose exec postgresql psql -d theodercafe -U the
-```
-Add `Theodo FR` question_set :
-```
-INSERT INTO question_set (name) values ('Theodo FR'), ('Theodo UK'), ('Theodo US');
-```
-Add an admin user. Other fields will be filled when you authenticate with you google account. Replace `{your_email}` by a google account you own email (ex: `'the@cafe.com'`).
-```
-INSERT INTO "users" (email, "isAdmin", "selectedQuestionSetId") VALUES ({your_email}, true, 1);
 ```
 
 ### Frontend
@@ -35,7 +19,8 @@ npm install
 npm run start
 ```
 
-### Add a Google OAuth Client
+
+### Setup Google OAuth Client for Login
 
 Authentication is performed via Google OAuth (see Authentication Flow schema below). To use OAuth locally, you need to:
 
@@ -46,22 +31,44 @@ Authentication is performed via Google OAuth (see Authentication Flow schema bel
   - _Authorized redirect URIs_: http://localhost:8080/auth/google/callback
 - copy `Client ID` and `Client secret` and paste them in `GOOGLE_OAUTH2_CLIENT_ID` and `GOOGLE_OAUTH2_CLIENT_SECRET` variables in your `.env.dev` file
 
-Docs : [passport-google-oauth20 library](http://www.passportjs.org/packages/passport-google-oauth20/)
+Help: [passport-google-oauth20 library](http://www.passportjs.org/packages/passport-google-oauth20/)
+
+
 
 ### Install check 🤞
 Login from the frontend: `http://localhost:3000/login`.
 
-Use the google account email you used above.
+
+### Grant admin role to your user
+Connect to database :
+```
+docker-compose exec postgresql psql -d theodercafe -U the
+```
+
+```
+UPDATE "users" SET "isAdmin"=true;
+```
+
 
 You should be able to see http://localhost:3000/admin#/questions page.
 
+
+
 ## Features
 
-- Add questions from frontend with the '+' button on bottom right.
-- Mark them as `Validated for Asakai` from [the admin panel](http://localhost:3000/admin#/questions).
+Add questions from frontend with the '+' button on bottom right.
 
-### Live Mode
-On the homepage, toggle `Live Mode` to ON. You should see a set of (max) 10 questions randomly chosen among validated questions (the Live Mode set). This set depends of the `Question Set` chosen by the user. The set is initialized every day by the first user asking for it. Or by an admin clicking `changeTodaySet` button.
+
+### Live Mode (or Asakai Mode)
+Asakai Mode provides a new set quesitons every day. These quesitions are randomly chosen among "validated questions".
+
+It is also named Live Mode because you can see others choices live.
+
+You can mark a question as `Validated for Asakai` from [the admin panel](http://localhost:3000/admin#/questions).
+
+The Asakai Set also depends of the `Question Set` chosen by the user.
+
+An admin may click `changeTodaySet` button to renew the Asakai Set.
 
 On the admin panel, mark a question as `Classic` : the question will necessary be part of the `Live Mode` set.
 
@@ -71,11 +78,20 @@ If you Toggle `Live Mode` to OFF, you may filter questions with the FILTRES menu
 
 ## Database
 
-- Dev
+### Connexion
+- Dev:
   `docker-compose exec postgresql psql -d theodercafe -U the`
-
-* Prod
+- Prod
   `PGDATABASE=theodercafe gcloud sql connect theodercafe --user=the`
+### Diagram
+
+Diagram here https://dbdiagram.io/d/63c40a1b296d97641d79bfe7.
+
+Dump:
+```
+docker-compose exec postgresql pg_dump -d theodercafe -U the -s >schema.sql
+```
+
 
 ## Architecture
 
