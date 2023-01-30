@@ -49,20 +49,25 @@ docker-compose exec postgresql psql -d theodercafe -U the
 UPDATE "users" SET "isAdmin"=true;
 ```
 
-
 You should be able to see http://localhost:3000/admin#/questions page.
 
+### Add questions
+
+Add questions from frontend with the '+' button on bottom right.
+
+From the [admin panel](http://localhost:3000/admin#/questions), mark them as `Validated for asakai`.
+
+Toggle Live Mode : you should see an asakai set with validated questions.
 
 
 ## Features
 
-Add questions from frontend with the '+' button on bottom right.
 
 
 ### Live Mode (or Asakai Mode)
 Asakai Mode provides a new set quesitons every day. These quesitions are randomly chosen among "validated questions".
 
-It is also named Live Mode because you can see others choices live.
+It is also named `Live Mode` because you can see others choices live.
 
 You can mark a question as `Validated for Asakai` from [the admin panel](http://localhost:3000/admin#/questions).
 
@@ -71,6 +76,13 @@ The Asakai Set also depends of the `Question Set` chosen by the user.
 An admin may click `changeTodaySet` button to renew the Asakai Set.
 
 On the admin panel, mark a question as `Classic` : the question will necessary be part of the `Live Mode` set.
+
+Turning on `Coach Mode` enables a coach to ask the questions to a brand new Theodoer. Indeed, it will:
+- prevent from attaching the choices to the coach's account
+- propose an email form at the end of the questioning to register the new Theodoer. If the email does not exist yet:
+  - a new user is created
+  - a welcome email is sent
+  - choices made during asakai and also asakai alterodo result are attached to the new user
 
 ### All questions mode
 If you Toggle `Live Mode` to OFF, you may filter questions with the FILTRES menu.
@@ -133,3 +145,5 @@ To run Live Mode features locally, you need to :
   ```
 
   ## Database Entities
+
+  https://dbdiagram.io/d/63c40a1b296d97641d79bfe7
