@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm'
 export class AddQuestionSet1660752837411 implements MigrationInterface {
     name = 'AddQuestionSet1660752837411'
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    public async up(queryRunner: QueryRunner) {
         await queryRunner.query(
             `CREATE TABLE "question_set" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_384a616ea05ec06da55c844430b" PRIMARY KEY ("id"))`,
             undefined,
@@ -32,7 +32,7 @@ export class AddQuestionSet1660752837411 implements MigrationInterface {
         await queryRunner.startTransaction()
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: QueryRunner) {
         await queryRunner.query(
             `ALTER TABLE "question_set_questions" DROP CONSTRAINT "FK_e9933e8c55c2a9ad3334daaf3c0"`,
             undefined,

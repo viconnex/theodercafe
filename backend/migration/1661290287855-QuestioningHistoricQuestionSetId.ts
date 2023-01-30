@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm'
 export class QuestioningHistoricQuestionSetId1661290287855 implements MigrationInterface {
     name = 'QuestioningHistoricQuestionSetId1661290287855'
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    public async up(queryRunner: QueryRunner) {
         await queryRunner.query(`ALTER TABLE "questioning_historic" ADD "questionSetId" integer`, undefined)
         await queryRunner.query(
             `ALTER TABLE "questioning_historic" ADD CONSTRAINT "FK_4786ca0e1aab8f753d3eca7eab1" FOREIGN KEY ("questionSetId") REFERENCES "question_set"("id") ON DELETE SET NULL ON UPDATE NO ACTION`,
@@ -11,7 +11,7 @@ export class QuestioningHistoricQuestionSetId1661290287855 implements MigrationI
         )
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
+    public async down(queryRunner: QueryRunner) {
         await queryRunner.query(
             `ALTER TABLE "questioning_historic" DROP CONSTRAINT "FK_4786ca0e1aab8f753d3eca7eab1"`,
             undefined,

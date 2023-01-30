@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
 export class AddUserToQuestionVotes1575838987623 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<any> {
+    public async up(queryRunner: QueryRunner) {
         await queryRunner.query(
             `CREATE TABLE "user_to_question_votes" ("id" SERIAL NOT NULL, "questionId" integer NOT NULL, "userId" integer NOT NULL, "isUpVote" boolean NOT NULL, CONSTRAINT "PK_55d9bbb8a38b074c2fbdbdc11e1" PRIMARY KEY ("id"))`,
         )
@@ -13,7 +13,7 @@ export class AddUserToQuestionVotes1575838987623 implements MigrationInterface {
         )
     }
 
-    public async down(queryRunner: QueryRunner): Promise<any> {
+    public async down(queryRunner: QueryRunner) {
         await queryRunner.query(`ALTER TABLE "user_to_question_votes" DROP CONSTRAINT "FK_08371300fa7ce544923d9edcd1b"`)
         await queryRunner.query(`ALTER TABLE "user_to_question_votes" DROP CONSTRAINT "FK_325b752794b4dcc587759a064e6"`)
         await queryRunner.query(`DROP TABLE "user_to_question_votes"`)

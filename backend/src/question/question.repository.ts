@@ -2,7 +2,7 @@ import { DeleteResult, EntityRepository, Repository } from 'typeorm'
 import { UserToQuestionChoice } from 'src/userToQuestionChoice/userToQuestionChoice.entity'
 import { UserToQuestionVote } from 'src/userToQuestionVote/userToQuestionVote.entity'
 import { Question } from './question.entity'
-import { QuestionWithCategoryDto, RawAdminListQuestion } from './interfaces/question.dto'
+import { QuestionWithCategoryDto } from './interfaces/question.dto'
 
 function shuffle<T>(array: T[]) {
     let currentIndex = array.length,

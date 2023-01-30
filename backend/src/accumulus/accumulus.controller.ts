@@ -13,7 +13,7 @@ export class AccumulusController {
     }
 
     @Post()
-    async create(@Body() accumulusBody): Promise<Accumulus | BadRequestException> {
+    async create(@Body() accumulusBody: { name?: string; nuages?: string }): Promise<Accumulus | BadRequestException> {
         if (!accumulusBody['name'] || !accumulusBody['nuages']) {
             return new BadRequestException()
         }

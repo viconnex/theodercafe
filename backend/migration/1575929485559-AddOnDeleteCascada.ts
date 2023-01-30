@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
 export class AddOnDeleteCascada1575929485559 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<any> {
+    public async up(queryRunner: QueryRunner) {
         await queryRunner.query(`ALTER TABLE "user_to_question_votes" DROP CONSTRAINT "FK_325b752794b4dcc587759a064e6"`)
         await queryRunner.query(`ALTER TABLE "user_to_question_votes" DROP CONSTRAINT "FK_08371300fa7ce544923d9edcd1b"`)
         await queryRunner.query(
@@ -24,7 +24,7 @@ export class AddOnDeleteCascada1575929485559 implements MigrationInterface {
         )
     }
 
-    public async down(queryRunner: QueryRunner): Promise<any> {
+    public async down(queryRunner: QueryRunner) {
         await queryRunner.query(
             `ALTER TABLE "user_to_question_choices" DROP CONSTRAINT "FK_904ddb82376cbb8134934e4c8c6"`,
         )
