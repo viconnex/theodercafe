@@ -75,7 +75,10 @@ export class UserController {
 
     @Put(':id')
     @UseGuards(AuthGuard(ADMIN_STRATEGY))
-    async updateQuestion(@Param('id') id: number, @Body() questionBody): Promise<User> {
-        return this.userService.update(id, questionBody)
+    async updateQuestion(
+        @Param('id') id: number,
+        @Body() body: { isAdmin: boolean; isActive: boolean },
+    ): Promise<User> {
+        return this.userService.updateFromAdmin(id, { isAdmin: body.isAdmin, isActive: body.isActive })
     }
 }

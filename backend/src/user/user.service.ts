@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { QuestionService } from 'src/question/question.service'
-import { DeleteResult } from 'typeorm'
+import { DeepPartial, DeleteResult } from 'typeorm'
 import { PresetQuestionSet } from 'src/questionSet/questionSet.entity'
 import { UserRepository } from './user.repository'
 import { getCompanyFromEmail, getPresetQuestionSetFromEmail, User } from './user.entity'
@@ -33,7 +33,7 @@ export class UserService {
         return this.userRepository.findOne(id)
     }
 
-    update(id: string | number, user: User): Promise<User> {
+    updateFromAdmin(id: string | number, user: DeepPartial<User>): Promise<User> {
         return this.userRepository.save({ ...user, id: Number(id) })
     }
 
