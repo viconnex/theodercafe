@@ -96,9 +96,9 @@ export class UserService {
     }
 
     async getUsersPictures(companyDomain: CompanyDomain | null) {
-        let queryBuilder = this.userRepository.createQueryBuilder('user')
+        let queryBuilder = this.userRepository.createQueryBuilder('user').where('user.isActive = true')
         if (companyDomain) {
-            queryBuilder = queryBuilder.where('user.email LIKE :companyDomain', {
+            queryBuilder = queryBuilder.andWhere('user.email LIKE :companyDomain', {
                 companyDomain: `%@${companyDomain.domain}`,
             })
         }
