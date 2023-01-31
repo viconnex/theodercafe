@@ -33,7 +33,7 @@ export class UserService {
         return this.userRepository.findOne(id)
     }
 
-    updateFromAdmin(id: string | number, user: DeepPartial<User>): Promise<User> {
+    update(id: string | number, user: DeepPartial<User>): Promise<User> {
         return this.userRepository.save({ ...user, id: Number(id) })
     }
 

@@ -79,6 +79,6 @@ export class UserController {
         @Param('id') id: number,
         @Body() body: { isAdmin: boolean; isActive: boolean },
     ): Promise<User> {
-        return this.userService.updateFromAdmin(id, { isAdmin: body.isAdmin, isActive: body.isActive })
+        return this.userService.update(id, { isAdmin: body.isAdmin, isActive: body.isActive })
     }
 }
