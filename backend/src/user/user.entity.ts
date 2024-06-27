@@ -19,7 +19,7 @@ export const getCompanyFromEmail = (email: string): string => {
 export const getPresetQuestionSetFromEmail = (email: string) => {
     const domain = email.split('@')[1]
     if (domain === 'theodo.com') {
-        return PresetQuestionSet.TheodoUS
+        return PresetQuestionSet.TheodoFR
     }
     if (domain === 'theodo.co.uk') {
         return PresetQuestionSet.TheodoUK
