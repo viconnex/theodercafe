@@ -14,6 +14,7 @@ async function bootstrap(): Promise<void> {
         .setDescription(
             'This is the Theodercafe API description. You can find here all the endpoints to interact with the Theodercafe backend',
         )
+        .addTag('questions')
         .build()
     const document = SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('api', app, document)
