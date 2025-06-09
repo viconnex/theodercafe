@@ -17,7 +17,6 @@
     "highcharts-react-official": "^3.0.0",
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.15",
-    "node-sass": "^7.0.3",
     "notistack": "^0.8.8",
     "prop-types": "^15.7.2",
     "ra-data-json-server": "^3.12.2",
@@ -29,6 +28,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "^4.0.1",
     "react-select": "^5.4.0",
+    "sass": "^1.89.1",
     "styled-components": "^5.2.1"
   },
   "scripts": {
