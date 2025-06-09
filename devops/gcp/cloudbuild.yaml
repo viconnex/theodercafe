@@ -31,23 +31,25 @@ steps:
     entrypoint: gcloud
 
   # frontend steps
-  - name: node:16.18.0
+  - name: node:20.19.2
     id: Install frontend
     dir: "frontend"
     entrypoint: npm
     args: ["install"]
-  - name: node:16.18.0
+  - name: node:20.19.2
     id: Create frontend env
     dir: "frontend"
     entrypoint: npm
     args: ["run", "create-env"]
     env:
       - "REACT_APP_BACKEND_URL=${_REACT_APP_BACKEND_URL}"
-  - name: node:16.18.0
+  - name: node:20.19.2
     id: Build frontend
     dir: "frontend"
     entrypoint: npm
     args: [run, build]
+    env:
+      - "NODE_OPTIONS=--openssl-legacy-provider"
   - name: "gcr.io/cloud-builders/gcloud"
     dir: "frontend"
     entrypoint: bash
