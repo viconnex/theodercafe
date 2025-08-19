@@ -1,7 +1,7 @@
 h5py==2.7.1
 nltk==3.2.5
 numpy==1.13.3
-Flask==0.10.1
+Flask==1.0
 flask-cors
 wordfreq==2.2.1
 gensim==3.8.1
