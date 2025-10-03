@@ -66,7 +66,6 @@ export class UserToQuestionChoiceService {
         let queryBuilder = this.userToQuestionChoiceRepository
             .createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
-            .where('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${user.getCompanyDomain().domain}` })
 
         if (questionSetId) {
             queryBuilder = queryBuilder
@@ -125,11 +124,11 @@ export class UserToQuestionChoiceService {
         return this.createAlterodosResponse(allUserChoices.length, alterodos)
     }
 
-    async createMap(companyDomain: CompanyDomain, questionFilters: QuestionFilters): Promise<UserMap[]> {
+    async createMap(questionFilters: QuestionFilters): Promise<UserMap[]> {
         const {
             choices: userToQuestionChoices,
             count: questionCount,
-        } = await this.userToQuestionChoiceRepository.findByFiltersWithCount(companyDomain, questionFilters)
+        } = await this.userToQuestionChoiceRepository.findByFiltersWithCount(questionFilters)
 
         const userQuestionMatrixWithUserIndex = createUsersChoicesMatrix(userToQuestionChoices, questionCount)
         const data = userQuestionMatrixWithUserIndex.usersChoicesMatrix
@@ -272,9 +271,6 @@ export class UserToQuestionChoiceService {
                 questionIds: questions.map((question) => question.id),
             })
             .leftJoin('user_to_question_choices.user', 'user')
-            .andWhere('user.email LIKE :sameCompanyEmail', {
-                sameCompanyEmail: `%@${requestUser.getCompanyDomain().domain}`,
-            })
 
         const usersAnswers = await userAnswersBaseQueryBuilder.getMany()
 

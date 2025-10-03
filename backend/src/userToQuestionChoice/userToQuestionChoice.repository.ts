@@ -7,25 +7,21 @@ import { QuestionFilters } from './userToQuestionChoice.types'
 @EntityRepository(UserToQuestionChoice)
 export class UserToQuestionChoiceRepository extends Repository<UserToQuestionChoice> {
     async getOthersChoices(questionIds: string[], user: User): Promise<UserToQuestionChoice[]> {
-        const { domain } = user.getCompanyDomain()
         return this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .where('user.isActive IS true')
             .andWhere('user.isLoginPending IS false')
             .andWhere('user.id != :userId', { userId: user.id })
-            .andWhere('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${domain}` })
             .andWhere('user_to_question_choices.questionId IN (:...questionIds)', { questionIds })
             .getMany()
     }
 
     async findByFiltersWithCount(
-        companyDomain: CompanyDomain,
         questionFilters: QuestionFilters,
     ): Promise<{ choices: UserToQuestionChoice[]; count: number }> {
         let qb = this.createQueryBuilder('user_to_question_choices')
             .leftJoin('user_to_question_choices.user', 'user')
             .leftJoin('user_to_question_choices.question', 'question')
-            .where('user.email LIKE :sameCompanyEmail', { sameCompanyEmail: `%@${companyDomain.domain}` })
 
         if (questionFilters.isValidated || questionFilters.isNotValidated || questionFilters.isInValidation) {
             const validationFilters: (boolean | null)[] = []

@@ -76,7 +76,7 @@ export class UserToQuestionChoiceController {
         @Request() { user }: { user: User },
         @Query() questionFilters: QuestionFilters,
     ): Promise<UserMap[]> {
-        return await this.userToQuestionChoiceService.createMap(user.getCompanyDomain(), questionFilters)
+        return await this.userToQuestionChoiceService.createMap(questionFilters)
     }
 
     @Post('asakai/email')
