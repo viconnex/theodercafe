@@ -35,6 +35,9 @@ export class Question {
     isClassic: boolean
 
     @Column({ default: false })
+    isDeleted: boolean
+
+    @Column({ default: false })
     isJokeOnSomeone: boolean
 
     @Column({ nullable: true, type: 'boolean' })

@@ -25,6 +25,7 @@ export const QuestionList = (props) => {
           </SingleFieldList>
         </ReferenceArrayField>
         <BooleanField source="isValidated" label="Validated" />
+        <BooleanField source="isDeleted" label="Deleted" />
         <BooleanField source="isClassic" label="Classic" />
         <BooleanField source="isJoke" label="Joke" />
         <BooleanField source="isJokeOnSomeone" label="Private joke" />

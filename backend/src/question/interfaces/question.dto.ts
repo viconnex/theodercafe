@@ -21,6 +21,7 @@ export type RawAdminListQuestion = {
     questions_option1: string
     questions_option2: string
     questions_isClassic: boolean
+    questions_isDeleted: boolean
     questions_isJokeOnSomeone: boolean
     questions_isValidated: boolean | null
     questions_isJoke: boolean
@@ -39,6 +40,7 @@ export type AdminListQuestion = {
     option1: string
     option2: string
     isClassic: boolean
+    isDeleted: boolean
     isJokeOnSomeone: boolean
     isValidated: boolean | null
     isJoke: boolean

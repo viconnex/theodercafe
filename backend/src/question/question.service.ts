@@ -175,6 +175,7 @@ export class QuestionService {
                     addedByUserId: rawQuestion.questions_addedByUserId,
                     categoryId: rawQuestion.questions_categoryId,
                     isClassic: rawQuestion.questions_isClassic,
+                    isDeleted: rawQuestion.questions_isDeleted,
                     isValidated: rawQuestion.questions_isValidated,
                     isJoke: rawQuestion.questions_isJoke,
                     isJokeOnSomeone: rawQuestion.questions_isJokeOnSomeone,

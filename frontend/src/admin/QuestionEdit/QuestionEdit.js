@@ -18,6 +18,7 @@ export const QuestionEdit = (props) => (
       <TextInput source="option1" label="Option 1" />
       <TextInput source="option2" label="Option 2" />
       <BooleanInput source="isValidated" label="Validated for asakai ?" />
+      <BooleanInput source="isDeleted" label="Deleted ?" />
       <BooleanInput source="isJoke" label="Joke ?" />
       <BooleanInput source="isJokeOnSomeone" label="Private joke" />
       <BooleanInput source="isClassic" label="Classic ?" />

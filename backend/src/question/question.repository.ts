@@ -54,10 +54,16 @@ export class QuestionRepository extends Repository<Question> {
             ])
     }
 
+    getFilteredQuestionBaseQueryBuilder = () => {
+        return this.getQuestionBaseQueryBuilder()
+            .where('questions.isDeleted = false')
+            .andWhere('questions.isJokeOnSomeone = false')
+    }
+
     findAll = async ({ questionSetId }: { questionSetId?: number }) => {
-        let queryBuilder = this.getQuestionBaseQueryBuilder()
+        let queryBuilder = this.getFilteredQuestionBaseQueryBuilder()
         if (questionSetId) {
-            queryBuilder = queryBuilder.where('questionSet.id =:questionSetId', { questionSetId })
+            queryBuilder = queryBuilder.andWhere('questionSet.id =:questionSetId', { questionSetId })
         }
         return queryBuilder.orderBy('questions.id', 'ASC').getMany()
     }
@@ -93,8 +99,8 @@ export class QuestionRepository extends Repository<Question> {
     }
 
     getAsakaiBaseQueryBuilder = ({ questionSetId }: { questionSetId: number }) => {
-        return this.getQuestionBaseQueryBuilder()
-            .where('questions.isValidated = true')
+        return this.getFilteredQuestionBaseQueryBuilder()
+            .andWhere('questions.isValidated = true')
             .andWhere('questionSet.id = :questionSetId', { questionSetId })
             .orderBy('random()')
     }
